@@ -1,0 +1,52 @@
+{
+  "namespacesFlagDescription": "A comma separated list of namespaces to include when retrieveing metadata. By default namespaces are excluded.",
+  "package": {
+    "merge": {
+      "commandDescription": "Merges one SFDX package file into another.",
+      "sourceFlagDescription": "The source SFDX package. This package wins all conflict battles!",
+      "destinationFlagDescription": "The destination SFDX package which contains the merge results. It will be created if it does not exist."
+    },
+    "permissions": {
+      "commandDescription": "Retrieve all metadata related to Profile security/access permissions.",
+      "packageFlagDescription": "The path to the package file to be generated. By default the path is '%s'",
+      "metadataFlagDescription": "A comma separated list of the metadata types to include. This overrides the default list: %s."
+    },
+    "build": {
+      "commandDescription": "Builds a standard SFDX source format package file from the specified org's existing metadata.",
+      "packageFlagDescription": "The path to the package file to be generated. By default the path is '%s'",
+      "optionsFlagDescription": "A file containing the package build options. Specifying this option will create the file if it doesn't exist already.",
+      "metadataFlagDescription": "A comma separated list of metadata to include. This list overrides any exclude list in the options file."
+    }
+  },
+  "schema": {
+    "dictionary": {
+      "commandDescription": "Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.",
+      "reportFlagDescription": "The path for the data dictionary report XLSX file. This overrides the default: %s.",
+      "optionsFlagDescription": "A file containing the Data Dictionary options. Specifying this option will create the file if it doesn't exist already."
+    }
+  },
+  "source": {
+    "permissions":{
+      "commandDescription": "Generate a security report based on configured permissions.\r\nThe accuracy of this report is dependant on the configuration in the local project.\r\nIt is suggested that a permissions package be created using the acumen:package:permissions\r\ncommand and that package is retrieved from the org prior to executing this command.",
+      "sourceFlagDescription": "The source folder to start the meta scan from. The default is '%s'.",
+      "metadataFoldersFlagDescription": "A comma separated list of folders to include. This list overrides the defaults: %s.",
+      "reportFlagDescription": "The path for the permissions report XLSX file. This overrides the default: %s."
+    },
+    "delta": {
+      "sourceFlagDescription": "The source folder to start the delta scan from.",
+      "destinationFlagDescription": "The destination folder for the deltas.",
+      "forceFlagDescription": "Path to a file containing folders & files to include in the delta destination. Will override md5/git AND ignore file contents.",
+      "ignoreFlagDescription": "Path to a file containing folders & files to ignore. Will override md5/git file contents.",
+      "deleteReportFlagDescription": "Path to a file to write deleted files.",
+      "checkFlagDescription": "Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination option is provided.",
+      "git": {
+        "commandDescription": "Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt",
+        "gitFlagDescription": "The output of a git-diff command (https://git-scm.com/docs/git-diff)"
+      },
+      "md5": {
+        "commandDescription": "Uses an MD5 hash file to detect deltas.",
+        "md5FlagDescription": "The MD5 hash list file to use"
+      }
+    }
+  }
+}
