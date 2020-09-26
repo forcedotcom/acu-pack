@@ -6,19 +6,8 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 [![Version](https://img.shields.io/npm/v/acu-pack.svg)](https://npmjs.org/package/acu-pack)
 [![Downloads/week](https://img.shields.io/npm/dw/acu-pack.svg)](https://npmjs.org/package/acu-pack)
 [![License](https://img.shields.io/npm/l/acu-pack.svg)](https://github.com/michael-malling/acu-pack/blob/master/package.json)
-<!--
-[![CircleCI](https://circleci.com/gh/michael-malling/acu-pack/tree/master.svg?style=shield)](https://circleci.com/gh/michael-malling/acu-pack/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/michael-malling/acu-pack?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/acu-pack/branch/master)
-[![Codecov](https://codecov.io/gh/michael-malling/acu-pack/branch/master/graph/badge.svg)](https://codecov.io/gh/michael-malling/acu-pack)
-[![Greenkeeper](https://badges.greenkeeper.io/michael-malling/acu-pack.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/michael-malling/acu-pack/badge.svg)](https://snyk.io/test/github/michael-malling/acu-pack)
--->
 
 <!-- toc -->
-* [Debugging your plugin](#debugging-your-plugin)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
 * [Debugging your plugin](#debugging-your-plugin)
 * [Usage](#usage)
 * [Commands](#commands)
@@ -52,7 +41,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.tx
 4. In the upper left hand corner of VS Code, verify that the "Attach to Remote" launch configuration has been chosen.
 5. Hit the green play button to the left of the "Attach to Remote" launch configuration window. The debugger should now be suspended on the first line of the program. 
 6. Hit the green play button at the top middle of VS Code (this play button will be to the right of the play button that you clicked in step #5).
-<br><img src=".images/vscodeScreenshot.png" width="480" height="278"><br>
+[![Debug image](.images/vscodeScreenshot.png)]
 Congrats, you are debugging!
 
 # Usage
