@@ -15,7 +15,7 @@ _tmp/**
 
 package*.xml
 package*.json
-
+!package.json
 ~$*.*
 
 **/oclif.manifest.json
