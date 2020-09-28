@@ -15,7 +15,7 @@ _tmp/**
 
 package*.xml
 package*.json
-
+!package.json
 ~$*.*
 
 **/oclif.manifest.json
@@ -24,7 +24,7 @@ package*.json
 **/test/deploy
 **/test/source_folder
 **/test/destination_folder
-
+!**/test/lib/merge/package*.xml
 **/test/*.test.txt
 **/delta.log
 

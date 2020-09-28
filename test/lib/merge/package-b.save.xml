@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<name>ApexClass</name>
+		<members>ApexClass1</members>
+		<members>ApexClass3</members>
+		<members>ApexClass2</members>
+	</types>
+	<types>
+		<name>Report</name>
+		<members>AdministrativeReports</members>
+		<members>CoreReports</members>
+		<members>RootReport1</members>
+		<members>RootReport2</members>
+	</types>	
+	<types>
+		<name>CustomApplication</name>
+		<members>App1</members>
+		<members>App2</members>
+		<members>App3</members>
+	</types>
+	<version>47.0</version>
+</Package>
