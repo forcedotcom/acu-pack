@@ -47,6 +47,9 @@ Congrats, you are debugging!
 # Usage
 <!-- usage -->
 ```sh-session
+$ npm install ts-node
+$ npm install -g sfdx-cli
+$ npm install @salesforce/dev-config
 $ npm install -g @acumensolutions/acu-pack
 $ sfdx plugins:link @acumensolutions/acu-pack
 running command...
