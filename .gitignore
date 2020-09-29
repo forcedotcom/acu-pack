@@ -5,6 +5,7 @@
 /compiled
 /package-lock.json
 /tmp
+/oclif.manifest.json
 node_modules
 
     
@@ -15,16 +16,14 @@ _tmp/**
 
 package*.xml
 package*.json
-
+!package.json
 ~$*.*
-
-**/oclif.manifest.json
 
 **/test/force-app
 **/test/deploy
 **/test/source_folder
 **/test/destination_folder
-
+!**/test/lib/merge/package*.xml
 **/test/*.test.txt
 **/delta.log
 

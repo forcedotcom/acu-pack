@@ -8,7 +8,6 @@ import { promises as fs } from 'fs';
 import path = require('path');
 
 export default class Md5 extends CommandBase {
-
     public static description = CommandBase.messages.getMessage('source.delta.md5.commandDescription');
 
     public static examples = [`$ sfdx acumen:source:delta:md5 -m md5.txt -s force-app -d deploy

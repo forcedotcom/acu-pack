@@ -47,6 +47,9 @@ Congrats, you are debugging!
 # Usage
 <!-- usage -->
 ```sh-session
+$ npm install ts-node
+$ npm install -g sfdx-cli
+$ npm install @salesforce/dev-config
 $ npm install -g @acumensolutions/acu-pack
 $ sfdx plugins:link @acumensolutions/acu-pack
 running command...
@@ -114,8 +117,6 @@ EXAMPLE
        The options defined (options/package-options.json) are honored when building the package.
 ```
 
-_See code: [compiled\commands\acumen\package\build.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\package\build.js)_
-
 ## `sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Merges one SFDX package file into another.
@@ -144,8 +145,6 @@ EXAMPLE
   $ sfdx acumen:package:merge -s manifest/package.xml -d manifest/package-sprint17.xml
        Merges package.xml into package-sprint17.xml
 ```
-
-_See code: [compiled\commands\acumen\package\merge.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\package\merge.js)_
 
 ## `sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -189,8 +188,6 @@ EXAMPLES
        Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.
 ```
 
-_See code: [compiled\commands\acumen\package\permissions.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\package\permissions.js)_
-
 ## `sfdx acumen:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.
@@ -230,8 +227,6 @@ EXAMPLE
   $ sfdx acumen:schema:dictionary -u myOrgAlias
        Generates a DataDictionary-myOrgAlias.xlsx file from an Org's configured Object & Field metadata.
 ```
-
-_See code: [compiled\commands\acumen\schema\dictionary.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\schema\dictionary.js)_
 
 ## `sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -280,8 +275,6 @@ EXAMPLE
        -(s)ource 'force-app' and copies them to -(d)estination 'deploy'
 ```
 
-_See code: [compiled\commands\acumen\source\delta\git.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\source\delta\git.js)_
-
 ## `sfdx acumen:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uses an MD5 hash file to detect deltas.
@@ -328,8 +321,6 @@ EXAMPLE
        -(s)ource 'force-app' and copies them to -(d)estination 'deploy'
 ```
 
-_See code: [compiled\commands\acumen\source\delta\md5.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\source\delta\md5.js)_
-
 ## `sfdx acumen:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Generate a security report based on configured permissions.
@@ -367,6 +358,4 @@ EXAMPLE
   **/objects/*/fields/*.field-meta.xml, **/permissionsets/*.permissionset-meta.xml, **/profiles/*.profile-meta.xml) 
   located in 'force-app' and writes the 'PermissionsReport.xlsx' report file.
 ```
-
-_See code: [compiled\commands\acumen\source\permissions.js](https://github.com/michael-malling/acu-pack/blob/v0.0.0/compiled\commands\acumen\source\permissions.js)_
 <!-- commandsstop -->

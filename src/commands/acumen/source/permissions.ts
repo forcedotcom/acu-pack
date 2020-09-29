@@ -100,8 +100,6 @@ export default class Permissions extends CommandBase {
     `$ sfdx acumen:source:permissions -d security/report -u myOrgAlias
     Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in '${Permissions.defaultSourceFolder}' and writes the '${Permissions.defaultReportPath}' report file.`];
 
-  public static args = [{ name: 'filePath' }];
-
   protected static flagsConfig = {
     source: flags.string({
       char: 'p',

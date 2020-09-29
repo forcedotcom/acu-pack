@@ -16,7 +16,6 @@ export default class Build extends CommandBase {
     Builds a SFDX package file (./manifest/package.xml) which contains all the metadata from the myOrgAlias.
     The options defined (options/package-options.json) are honored when building the package.`];
 
-  public static args = [{ name: 'file' }];
   protected static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab'];
   protected static flagsConfig = {
     package: flags.string({

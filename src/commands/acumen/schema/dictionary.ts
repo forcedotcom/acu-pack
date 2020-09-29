@@ -12,8 +12,6 @@ import path = require('path');
 export default class Dictionary extends CommandBase {
   public static description = CommandBase.messages.getMessage('schema.dictionary.commandDescription');
 
-  public static args = [{ name: 'file' }];
-
   public static defaultReportPath = 'DataDictionary-{ORG}.xlsx';
 
   public static examples = [
