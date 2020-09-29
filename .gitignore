@@ -7,7 +7,7 @@
 /tmp
 /oclif.manifest.json
 node_modules
-
+*.tmp
     
 test/**/package-a.xml
 test/**/package-b.xml
