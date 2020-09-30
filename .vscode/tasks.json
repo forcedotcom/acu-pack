@@ -14,7 +14,7 @@
         "focus": false,
         "panel": "dedicated"
       },
-      "args": ["run", "prepack"],
+      "args": ["run", "compile"],
       "isBackground": false,
       "problemMatcher": {
         "owner": "typescript",
