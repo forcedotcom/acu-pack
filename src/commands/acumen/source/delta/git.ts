@@ -6,7 +6,6 @@ import { DeltaProvider, DeltaOptions, Delta } from '../../../../lib/delta-provid
 import path = require('path');
 
 export default class Git extends CommandBase {
-    public static args = [{ name: 'file' }];
     public static description = CommandBase.messages.getMessage('source.delta.git.commandDescription');
 
     public static examples = [`$ sfdx acumen:source:delta:git -g git.txt -s force-app -d deploy

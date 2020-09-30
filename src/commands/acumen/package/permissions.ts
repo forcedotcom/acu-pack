@@ -19,8 +19,6 @@ export default class Permissions extends CommandBase {
     Creates a package file (${Permissions.packageFileName}) which contains
     Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.`];
 
-  public static args = [{ name: 'file' }];
-
   protected static flagsConfig = {
     package: flags.string({
       char: 'x',

@@ -3,6 +3,7 @@ import { flags } from '@salesforce/command';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
 import { SfdxCore } from '../../../lib/sfdx-core';
 import { promises as fs } from 'fs';
+import { createWriteStream } from 'fs';
 import { Office } from '../../../lib/office';
 import Utils from '../../../lib/utils';
 import * as vm from 'vm';
@@ -11,8 +12,6 @@ import path = require('path');
 
 export default class Dictionary extends CommandBase {
   public static description = CommandBase.messages.getMessage('schema.dictionary.commandDescription');
-
-  public static args = [{ name: 'file' }];
 
   public static defaultReportPath = 'DataDictionary-{ORG}.xlsx';
 
@@ -39,8 +38,9 @@ export default class Dictionary extends CommandBase {
   protected static requiresUsername = true;
 
   protected options: DictionaryOptions;
-
+  private static dynamicCode;
   public async run(): Promise<void> {
+
     // Are we including namespaces?
     const namespaces = this.flags.namespaces
       ? new Set<string>(this.flags.namespaces.split())
@@ -54,39 +54,52 @@ export default class Dictionary extends CommandBase {
       this.options.loadDefaults();
     }
 
+    Dictionary.dynamicCode = Dictionary.generateDynamicCode(this.options);
+
     try {
       const username = this.flags.targetusername;
       const orgId = this.org.getOrgId();
 
-      // Add columns
-      const sheetData = [this.getColumnRow()];
+      // Reset log file
+      const sheetDataFile = 'dictionary.tmp';
+      await this.deleteFile(sheetDataFile);
+      const stream = createWriteStream(sheetDataFile, { flags: 'a' });
 
+      // Add columns
       const objectMap = await SfdxTasks.listMetadatas(username, new Set<string>(['CustomObject']), namespaces);
 
       this.ux.log(`Gathering CustomObject schemas from Org: ${username}(${orgId})`);
 
-      let counter = 0;
       const sortedTypeNames = Utils.sortArray(objectMap.get('CustomObject'));
+
+      let counter = 0;
       for (const metaDataType of sortedTypeNames) {
         this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
         try {
           const schema = await SfdxTasks.describeObject(username, metaDataType);
           for await (const row of this.getSheetRowDynamic(schema)) {
             if (row.length > 0) {
-              sheetData.push(row);
+              stream.write(`${JSON.stringify(row)}\r\n`);
             }
           }
         } catch (err) {
           this.ux.log(`FAILED: ${err.message}.`);
         }
       }
+      stream.end();
 
       try {
         const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, username);
         this.ux.log(`Writing Report: ${reportPath}`);
 
+        const sheetData = [this.getColumnRow()];
+        for await (const line of Utils.readFileAsync(sheetDataFile)) {
+          sheetData.push(JSON.parse(line));
+        }
+
         const workbookMap = new Map<string, string[][]>();
         workbookMap.set('Data Dictionary', sheetData);
+
         Office.writeXlxsWorkbook(workbookMap, reportPath);
       } catch (err) {
         this.ux.log('Error Writing XLSX Report: ' + err.message);
@@ -94,8 +107,17 @@ export default class Dictionary extends CommandBase {
       }
 
       this.ux.log('Done.');
+
+      // Clean up file at end
+      await this.deleteFile(sheetDataFile);
     } catch (err) {
       throw err;
+    }
+  }
+  private async deleteFile(sheetDataFile: string) {
+    // Clean up file at end
+    if (await Utils.pathExistsAsync(sheetDataFile)) {
+      await fs.unlink(sheetDataFile);
     }
   }
 
@@ -130,19 +152,19 @@ export default class Dictionary extends CommandBase {
           }
         }
       };
-      const dynamicCode = this.generateDynamicCode();
-      const row = vm.runInNewContext(dynamicCode, context);
+
+      const row = vm.runInNewContext(Dictionary.dynamicCode, context);
       yield row;
     }
   }
 
-  private generateDynamicCode(): string {
+  private static generateDynamicCode(options: any): string {
     let code = 'main(); function main() { const row=[];';
 
-    if (this.options.excludeFieldIfTrueFilter) {
-      code += `if( ${this.options.excludeFieldIfTrueFilter} ) { return row; } `;
+    if (options.excludeFieldIfTrueFilter) {
+      code += `if( ${options.excludeFieldIfTrueFilter} ) { return row; } `;
     }
-    for (const outputDef of this.options.outputDefs) {
+    for (const outputDef of options.outputDefs) {
       code += `row.push(${outputDef.split('|')[1]});`;
     }
     code += 'return row; }';

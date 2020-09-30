@@ -17,7 +17,6 @@
     "await-spawn": "^3.0.0",
     "glob": "^7.1.6",
     "md5-file": "^5.0.0",
-    "sfdx-cli": "^7.72.0",
     "tslib": "^1",
     "xlsx": "^0.16.6",
     "xml2js": "^0.4.23"
@@ -35,7 +34,7 @@
     "mocha": "",
     "nyc": "^14",
     "rimraf": "^3.0.2",
-    "ts-node": "^8",
+    "ts-node": "^8.10.2",
     "tslint": "^5"
   },
   "engines": {
@@ -49,23 +48,15 @@
   ],
   "homepage": "https://bitbucket.org/acumensolutions/acu-pack",
   "keywords": [
-    "sfdx-plugin"
+    "sfdx-plugin",
+    "Acumen Solutions",
+    "Salesforce",
+    "DevOps"
   ],
-  "license": "MIT",
+  "license": "UNLICENSED",
   "oclif": {
     "commands": "./compiled/commands",
     "bin": "sfdx",
-    "topics": {
-      "merge": {
-        "description": "Merges SFDX Package XML files."
-      },
-      "profile": {
-        "description": "Builds a Profile-centric SFDX Package XML file."
-      },
-      "build": {
-        "description": "Builds a package based on metadata configured in a specific Org."
-      }
-    },
     "devPlugins": [
       "@oclif/plugin-help"
     ]
