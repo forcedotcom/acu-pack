@@ -47,14 +47,11 @@ Congrats, you are debugging!
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install ts-node
-$ npm install -g sfdx-cli
-$ npm install @salesforce/dev-config
 $ npm install -g @acumensolutions/acu-pack
-$ sfdx plugins:link @acumensolutions/acu-pack
+$ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-@acumensolutions/acu-pack/0.0.0 win32-x64 node-v12.16.1
+@acumensolutions/acu-pack/1.0.0 win32-x64 node-v12.16.1
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
