@@ -37,8 +37,24 @@ export default class Dictionary extends CommandBase {
   // Comment this out if your command does not require an org username
   protected static requiresUsername = true;
 
+  private static dynamicCode: string;
+
+  private static generateDynamicCode(options: any): string {
+    let code = 'main(); function main() { const row=[];';
+
+    if (options.excludeFieldIfTrueFilter) {
+      code += `if( ${options.excludeFieldIfTrueFilter} ) { return row; } `;
+    }
+    for (const outputDef of options.outputDefs) {
+      code += `row.push(${outputDef.split('|')[1]});`;
+    }
+    code += 'return row; }';
+
+    return code;
+  }
+
   protected options: DictionaryOptions;
-  private static dynamicCode;
+
   public async run(): Promise<void> {
 
     // Are we including namespaces?
@@ -156,20 +172,6 @@ export default class Dictionary extends CommandBase {
       const row = vm.runInNewContext(Dictionary.dynamicCode, context);
       yield row;
     }
-  }
-
-  private static generateDynamicCode(options: any): string {
-    let code = 'main(); function main() { const row=[];';
-
-    if (options.excludeFieldIfTrueFilter) {
-      code += `if( ${options.excludeFieldIfTrueFilter} ) { return row; } `;
-    }
-    for (const outputDef of options.outputDefs) {
-      code += `row.push(${outputDef.split('|')[1]});`;
-    }
-    code += 'return row; }';
-
-    return code;
   }
 
   private async getOptions(optionsPath: string): Promise<DictionaryOptions> {
