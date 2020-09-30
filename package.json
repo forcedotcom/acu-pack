@@ -69,7 +69,7 @@
     "lint": "tslint --project . --config tslint.json --format stylish",
     "postpack": "rimraf oclif.manifest.json",
     "posttest": "tslint -p test -t stylish",
-    "prepack": "rimraf compiled && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "prepack": "rimraf compiled && tsc -b && oclif-dev manifest",
     "test": "mocha -r ts-node/register \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
