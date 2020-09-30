@@ -3,7 +3,6 @@
 /.nyc_output
 /dist
 /compiled
-/package-lock.json
 /tmp
 /oclif.manifest.json
 node_modules
@@ -15,8 +14,7 @@ xml-merge.log
 _tmp/**
 
 package*.xml
-package*.json
-!package.json
+package-options.json
 ~$*.*
 
 **/test/force-app
