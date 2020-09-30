@@ -53,7 +53,7 @@
     "Salesforce",
     "DevOps"
   ],
-  "private": true,
+  "license": "UNLICENSED",
   "oclif": {
     "commands": "./compiled/commands",
     "bin": "sfdx",
