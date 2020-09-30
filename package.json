@@ -1,7 +1,7 @@
 {
   "name": "@acumensolutions/acu-pack",
   "description": "SFDX CLI Extensions by Acumen Solutions Inc.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Acumen Solutions Inc.",
   "bugs": {
     "url": "https://bitbucket.org/acumensolutions/acu-pack/jira"

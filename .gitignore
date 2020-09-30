@@ -15,6 +15,7 @@ _tmp/**
 
 package*.xml
 package-options.json
+packageOptions.json
 ~$*.*
 
 **/test/force-app
