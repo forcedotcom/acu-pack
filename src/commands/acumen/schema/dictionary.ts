@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 import { createWriteStream } from 'fs';
 import { Office } from '../../../lib/office';
 import Utils from '../../../lib/utils';
-import * as vm from 'vm';
+import SchemaUtils from '../../../lib/schema-utils';
 import { DictionaryOptions } from '../../../lib/dictionary-options';
 import path = require('path');
 
@@ -37,22 +37,6 @@ export default class Dictionary extends CommandBase {
   // Comment this out if your command does not require an org username
   protected static requiresUsername = true;
 
-  private static dynamicCode: string;
-
-  private static generateDynamicCode(options: any): string {
-    let code = 'main(); function main() { const row=[];';
-
-    if (options.excludeFieldIfTrueFilter) {
-      code += `if( ${options.excludeFieldIfTrueFilter} ) { return row; } `;
-    }
-    for (const outputDef of options.outputDefs) {
-      code += `row.push(${outputDef.split('|')[1]});`;
-    }
-    code += 'return row; }';
-
-    return code;
-  }
-
   protected options: DictionaryOptions;
 
   public async run(): Promise<void> {
@@ -70,7 +54,7 @@ export default class Dictionary extends CommandBase {
       this.options.loadDefaults();
     }
 
-    Dictionary.dynamicCode = Dictionary.generateDynamicCode(this.options);
+    const dynamicCode = this.options.getDynamicCode();
 
     try {
       const username = this.flags.targetusername;
@@ -93,7 +77,7 @@ export default class Dictionary extends CommandBase {
         this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
         try {
           const schema = await SfdxTasks.describeObject(username, metaDataType);
-          for await (const row of this.getSheetRowDynamic(schema)) {
+          for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode)) {
             if (row.length > 0) {
               stream.write(`${JSON.stringify(row)}\r\n`);
             }
@@ -143,35 +127,6 @@ export default class Dictionary extends CommandBase {
       row.push(outputDef.split('|')[0]);
     }
     return row;
-  }
-
-  private * getSheetRowDynamic(schema: any): Generator<any, void, string[]> {
-
-    for (const field of schema.fields) {
-      const context = {
-        schema,
-        field,
-        getPicklistValues(fld: any): string[] {
-          const values = [];
-          for (const picklistValue of fld.picklistValues) {
-            // Show inactive values
-            values.push(`${picklistValue.active ? '' : '(-)'}${picklistValue.value}`);
-          }
-          return values;
-        },
-
-        getPicklistDefaultValue(fld: any): string {
-          for (const picklistValue of fld.picklistValues) {
-            if (picklistValue.active && picklistValue.defaultValue) {
-              return picklistValue.value;
-            }
-          }
-        }
-      };
-
-      const row = vm.runInNewContext(Dictionary.dynamicCode, context);
-      yield row;
-    }
   }
 
   private async getOptions(optionsPath: string): Promise<DictionaryOptions> {

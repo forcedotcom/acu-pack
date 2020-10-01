@@ -1,4 +1,6 @@
-export class DictionaryOptions {
+import SchemaOptions from './schema-options';
+
+export class DictionaryOptions extends SchemaOptions {
     public outputDefs = [];
     public excludeFieldIfTrueFilter: string;
 
