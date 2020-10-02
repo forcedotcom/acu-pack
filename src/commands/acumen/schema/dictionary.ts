@@ -51,7 +51,6 @@ export default class Dictionary extends CommandBase {
       this.options = await this.getOptions(this.flags.options);
     } else {
       this.options = new DictionaryOptions();
-      this.options.loadDefaults();
     }
 
     const dynamicCode = this.options.getDynamicCode();
@@ -136,7 +135,6 @@ export default class Dictionary extends CommandBase {
 
     const options = new DictionaryOptions();
     // load the default values
-    options.loadDefaults();
     const dir = path.dirname(optionsPath);
     if (dir) {
       await fs.mkdir(dir, { recursive: true });

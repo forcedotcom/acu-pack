@@ -1,9 +1,14 @@
-export default abstract class SchemaOptions {
+export default class SchemaOptions {
     public outputDefs = [];
 
     public excludeFieldIfTrueFilter: string;
 
-    public abstract loadDefaults(): void;
+    constructor(json?: any) {
+        if (json) {
+            this.outputDefs = json.outputDefs;
+            this.excludeFieldIfTrueFilter = json.excludeFieldIfTrueFilter;
+        }
+    }
 
     public getDynamicCode(): string {
         let code = 'main(); function main() { const row=[];';

@@ -2,20 +2,14 @@ import { expect } from '@salesforce/command/lib/test';
 import SchemaOptions from '../../src/lib/schema-options'
 
 class TestSchemaOptions extends SchemaOptions {
-  public outputDefs = [];
-  public excludeFieldIfTrueFilter: string;
-
-  public loadDefaults() {
-    this.outputDefs = [
-      'SchemaName|schema.name',
-      'FieldName|field.name',
-      'Label|field.label',
-      'Datatype|field.type',
-      'Length|field.length',
-      'HelpText|field.inlineHelpText'
-    ];
-    this.excludeFieldIfTrueFilter = '';
-  }
+  public outputDefs = [
+    'SchemaName|schema.name',
+    'FieldName|field.name',
+    'Label|field.label',
+    'Datatype|field.type',
+    'Length|field.length',
+    'HelpText|field.inlineHelpText'
+  ];
 };
 
 describe("SchemaOptions Tests", function () {
@@ -29,7 +23,6 @@ describe("SchemaOptions Tests", function () {
   });
   it('Loads Defaults', function () {
     const testOptions = new TestSchemaOptions();
-    testOptions.loadDefaults();
     expect(testOptions.outputDefs.length).does.not.equal(0);
     expect(testOptions.excludeFieldIfTrueFilter).is.not.null;
   });
@@ -43,7 +36,6 @@ describe("SchemaOptions Tests", function () {
 
     it("Works with loadDefaults", function () {
       const testOptions = new TestSchemaOptions();
-      testOptions.loadDefaults();
       const dynamicCode = testOptions.getDynamicCode();
 
       expect(dynamicCode).is.not.null;
