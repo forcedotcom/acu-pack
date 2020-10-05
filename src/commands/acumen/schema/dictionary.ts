@@ -7,7 +7,7 @@ import { createWriteStream } from 'fs';
 import { Office } from '../../../lib/office';
 import Utils from '../../../lib/utils';
 import SchemaUtils from '../../../lib/schema-utils';
-import { DictionaryOptions } from '../../../lib/dictionary-options';
+import SchemaOptions from '../../../lib/schema-options';
 import path = require('path');
 
 export default class Dictionary extends CommandBase {
@@ -37,7 +37,41 @@ export default class Dictionary extends CommandBase {
   // Comment this out if your command does not require an org username
   protected static requiresUsername = true;
 
-  protected options: DictionaryOptions;
+  protected options: SchemaOptions;
+
+  private defaultOptions = {
+    outputDefs: [
+      'SObjectName|schema.name',
+      'Name|field.name',
+      'Label|field.label',
+      'Datatype|field.type',
+      'Length|field.length',
+      'Precision|field.precision',
+      'Scale|field.scale',
+      'Digits|field.digits',
+      'IsCustom|field.custom',
+      'IsDeprecatedHidden|field.deprecatedAndHidden',
+      'IsAutonumber|field.autoNumber',
+      'DefaultValue|field.defaultValue',
+      'IsFormula|field.calculated',
+      'Formula|field.calculatedFormula',
+      'IsRequired|!field.nillable',
+      'IsExternalId|field.externalId',
+      'IsUnique|field.unique',
+      'IsCaseSensitive|field.caseSensitive',
+      'IsPicklist|field.picklistValues.length>0',
+      'IsPicklistDependent|field.dependentPicklist',
+      "PicklistValues|getPicklistValues(field).join(',')",
+      'PicklistValueDefault|getPicklistDefaultValue(field)',
+      'IsLookup|field.referenceTo.length>0',
+      "LookupTo|field.referenceTo.join(',')",
+      'IsCreateable|field.createable',
+      'IsUpdateable|field.updateable',
+      'IsEncrypted|field.encrypted',
+      'HelpText|field.inlineHelpText'
+    ],
+    excludeFieldIfTrueFilter: ''
+  };
 
   public async run(): Promise<void> {
 
@@ -47,11 +81,7 @@ export default class Dictionary extends CommandBase {
       : new Set<string>();
 
     // Read/Write the options file if it does not exist already
-    if (this.flags.options) {
-      this.options = await this.getOptions(this.flags.options);
-    } else {
-      this.options = new DictionaryOptions();
-    }
+    this.options = await this.getOptions(this.flags.options);
 
     const dynamicCode = this.options.getDynamicCode();
 
@@ -60,7 +90,7 @@ export default class Dictionary extends CommandBase {
       const orgId = this.org.getOrgId();
 
       // Reset log file
-      const sheetDataFile = 'dictionary.tmp';
+      const sheetDataFile = `schema-${username}.tmp`;
       await this.deleteFile(sheetDataFile);
       const stream = createWriteStream(sheetDataFile, { flags: 'a' });
 
@@ -128,12 +158,17 @@ export default class Dictionary extends CommandBase {
     return row;
   }
 
-  private async getOptions(optionsPath: string): Promise<DictionaryOptions> {
-    if (await Utils.pathExistsAsync(optionsPath)) {
-      return await SfdxCore.fileToJson<DictionaryOptions>(optionsPath);
+  private async getOptions(optionsPath: string): Promise<SchemaOptions> {
+    if (!optionsPath) {
+      return new SchemaOptions(this.defaultOptions);
     }
 
-    const options = new DictionaryOptions();
+    if (await Utils.pathExistsAsync(optionsPath)) {
+      return new SchemaOptions(await SfdxCore.fileToJson<SchemaOptions>(optionsPath));
+    }
+
+    const options = new SchemaOptions(this.defaultOptions);
+
     // load the default values
     const dir = path.dirname(optionsPath);
     if (dir) {

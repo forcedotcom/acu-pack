@@ -1,41 +1,64 @@
 import { expect } from '@salesforce/command/lib/test';
 import SchemaOptions from '../../src/lib/schema-options'
 
-class TestSchemaOptions extends SchemaOptions {
-  public outputDefs = [
-    'SchemaName|schema.name',
-    'FieldName|field.name',
-    'Label|field.label',
-    'Datatype|field.type',
-    'Length|field.length',
-    'HelpText|field.inlineHelpText'
-  ];
-};
+const outputDefs = [
+  'SchemaName|schema.name',
+  'FieldName|field.name',
+  'Label|field.label',
+  'Datatype|field.type',
+  'Length|field.length',
+  'HelpText|field.inlineHelpText'
+];
 
 describe("SchemaOptions Tests", function () {
   it('Creates New Object', function () {
-    const testOptions = new TestSchemaOptions();
+    const testOptions = new SchemaOptions();
     // It contains default data
     expect(testOptions).is.not.null;
     expect(testOptions.outputDefs).is.not.null;
     expect(testOptions.outputDefs.length).equals(0);
     expect(testOptions.excludeFieldIfTrueFilter).is.undefined;
   });
-  it('Loads Defaults', function () {
-    const testOptions = new TestSchemaOptions();
-    expect(testOptions.outputDefs.length).does.not.equal(0);
+  it('Can Handle Bad Json', function () {
+    const testOptions = new SchemaOptions({
+      testField: 'test'
+    });
+    expect(testOptions).is.not.null;
+    expect(testOptions.outputDefs).is.not.null;
+    expect(testOptions.outputDefs.length).equals(0);
+    expect(testOptions.excludeFieldIfTrueFilter).is.undefined;
+  });
+  it('Loads Partial Json', function () {
+    const testOptions = new SchemaOptions({
+      outputDefs
+    });
+    expect(testOptions).is.not.null;
+    expect(testOptions.outputDefs).is.not.null;
+    expect(testOptions.outputDefs.length).equals(outputDefs.length);
+    expect(testOptions.excludeFieldIfTrueFilter).is.undefined;
+  });
+  it('Loads Full Json', function () {
+    const testOptions = new SchemaOptions({
+      outputDefs,
+      excludeFieldIfTrueFilter: ''
+    });
+    expect(testOptions).is.not.null;
+    expect(testOptions.outputDefs).is.not.null;
+    expect(testOptions.outputDefs.length).equals(outputDefs.length);
     expect(testOptions.excludeFieldIfTrueFilter).is.not.null;
   });
   describe("getDynamicCode Tests", function () {
-    it("Works without loadDefaults", function () {
-      const testOptions = new TestSchemaOptions();
+    it("Works without outputDefs", function () {
+      const testOptions = new SchemaOptions();
       const dynamicCode = testOptions.getDynamicCode();
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.equal('main(); function main() { const row=[];return row; }');
     });
 
-    it("Works with loadDefaults", function () {
-      const testOptions = new TestSchemaOptions();
+    it("Works with Json", function () {
+      const testOptions = new SchemaOptions({
+        outputDefs
+      });
       const dynamicCode = testOptions.getDynamicCode();
 
       expect(dynamicCode).is.not.null;

@@ -2,23 +2,6 @@ import { expect } from '@salesforce/command/lib/test';
 import SchemaOptions from '../../src/lib/schema-options'
 import SchemaUtils from '../../src/lib/schema-utils'
 
-class TestSchemaOptions extends SchemaOptions {
-  public outputDefs = [];
-  public excludeFieldIfTrueFilter: string;
-
-  public loadDefaults() {
-    this.outputDefs = [
-      'SchemaName|schema.name',
-      'FieldName|field.name',
-      'Label|field.label',
-      'Datatype|field.type',
-      'Length|field.length',
-      'HelpText|field.inlineHelpText'
-    ];
-    this.excludeFieldIfTrueFilter = '';
-  }
-};
-
 describe("SchemaUtils Tests", function () {
   describe("getDynamicSchemaData Tests", function () {
     it("Can Handle Nulls", function () {
@@ -57,8 +40,17 @@ describe("SchemaUtils Tests", function () {
             inlineHelpText: 'Help Text 1',
           }],
       };
-      const testOptions = new TestSchemaOptions();
-      testOptions.loadDefaults();
+      const testOptions = new SchemaOptions({
+        outputDefs: [
+          'SchemaName|schema.name',
+          'FieldName|field.name',
+          'Label|field.label',
+          'Datatype|field.type',
+          'Length|field.length',
+          'HelpText|field.inlineHelpText'
+        ],
+        excludeFieldIfTrueFilter: ''
+      });
       const code = testOptions.getDynamicCode();
       for (const row of SchemaUtils.getDynamicSchemaData(schema, code)) {
         expect(row).is.not.null;

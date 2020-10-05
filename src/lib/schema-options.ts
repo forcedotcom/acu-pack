@@ -5,8 +5,12 @@ export default class SchemaOptions {
 
     constructor(json?: any) {
         if (json) {
-            this.outputDefs = json.outputDefs;
-            this.excludeFieldIfTrueFilter = json.excludeFieldIfTrueFilter;
+            if (json.outputDefs) {
+                this.outputDefs = json.outputDefs;
+            }
+            if (json.excludeFieldIfTrueFilter) {
+                this.excludeFieldIfTrueFilter = json.excludeFieldIfTrueFilter;
+            }
         }
     }
 
