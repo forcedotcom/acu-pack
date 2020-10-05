@@ -18,7 +18,7 @@ export default class SchemaOptions {
         let code = 'main(); function main() { const row=[];';
 
         if (this.excludeFieldIfTrueFilter) {
-            code += `if( ${this.excludeFieldIfTrueFilter} ) { return row; } `;
+            code += `if( ${this.excludeFieldIfTrueFilter} ) { return []; } `;
         }
         for (const outputDef of this.outputDefs) {
             code += `row.push(${outputDef.split('|')[1]});`;

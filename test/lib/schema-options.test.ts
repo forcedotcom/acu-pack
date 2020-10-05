@@ -54,8 +54,7 @@ describe("SchemaOptions Tests", function () {
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.equal('main(); function main() { const row=[];return row; }');
     });
-
-    it("Works with Json", function () {
+    it("Works with outputDefs", function () {
       const testOptions = new SchemaOptions({
         outputDefs
       });
@@ -64,7 +63,23 @@ describe("SchemaOptions Tests", function () {
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.contain('main(); function main() { const row=[];');
 
-      expect(dynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return row; } `);
+      expect(dynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
+
+      for (const outputDef of testOptions.outputDefs) {
+        expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+      }
+    });
+    it("Works with excludeFieldIfTrueFilter", function () {
+      const testOptions = new SchemaOptions({
+        outputDefs,
+        excludeFieldIfTrueFilter: 'field.name == "mjm"'
+      });
+      const dynamicCode = testOptions.getDynamicCode();
+
+      expect(dynamicCode).is.not.null;
+      expect(dynamicCode).to.contain('main(); function main() { const row=[];');
+
+      expect(dynamicCode).to.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
 
       for (const outputDef of testOptions.outputDefs) {
         expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
