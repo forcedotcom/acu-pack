@@ -45,19 +45,8 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.tx
 Congrats, you are debugging!
 
 # Usage
-<!-- usage -->
-```sh-session
-$ npm install -g @acumensolutions/acu-pack
-$ sfdx COMMAND
-running command...
-$ sfdx (-v|--version|version)
-@acumensolutions/acu-pack/1.0.0 win32-x64 node-v12.16.1
-$ sfdx --help [COMMAND]
-USAGE
-  $ sfdx COMMAND
-...
-```
-<!-- usagestop -->
+$ sfdx plugins:install https://[YOUR_BITBUCKET_USER]@bitbucket.org/acumensolutions/acu-pack.git
+$ sfdx acumen -h
 
 # Commands
 <!-- commands -->
