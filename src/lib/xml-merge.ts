@@ -70,13 +70,21 @@ export default class XmlMerge {
         return await (new xml2js.Parser(parserOptions).parseStringPromise((xmlString)));
     }
 
-    protected static async writeXmlFile(filename: string, merged: any) {
-        const xml = new xml2js.Builder().buildObject(merged);
-        await fs.writeFile(filename, xml);
-    }
+    public static mergeObjects(source: any, destination: any): any {
+        if (!source.Package) {
+            source['Package'] = {};
+        }
+        if (!source.Package.types) {
+            source.Package['types'] = [];
+        }
 
-    protected static mergeObjects(source: any, destination: any): any {
         const merged: any = new Object(destination);
+        if (!merged.Package) {
+            merged['Package'] = {};
+        }
+        if (!merged.Package.types) {
+            merged.Package['types'] = [];
+        }
         for (const sType of source.Package.types) {
             const dType: any = this.getType(merged.Package, sType.name[0]);
             if (!dType) {
@@ -106,5 +114,10 @@ export default class XmlMerge {
         }
         merged.Package.version = source.Package.version;
         return merged;
+    }
+
+    protected static async writeXmlFile(filename: string, merged: any) {
+        const xml = new xml2js.Builder().buildObject(merged);
+        await fs.writeFile(filename, xml);
     }
 }

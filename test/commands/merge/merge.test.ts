@@ -43,8 +43,21 @@ describe("Xml-Merge Tests", function () {
       expect(await xmlMerge.parseXmlFromFile(source));
     });
   });
-  
+
   describe('Test XmlMerge', async () => {
+    it("Can Handle Empty package", async function () {
+      let source = {
+        Package: {
+          version: "49.0"
+        }
+      };
+      const parsed = await xmlMerge.parseXmlFromFile(destination);
+      const merged = xmlMerge.mergeObjects(source, parsed);
+      expect(merged).not.null;
+      expect(merged.Package).not.null;
+      expect(merged.Package.types).not.null;
+      expect(merged.Package.types.length).equals(parsed.Package.types.length);
+    });
     it(`runs ${command}  -s ${source} -d ${destination}`, async () => {
       await xmlMerge.mergeXml(source, destination);
 
