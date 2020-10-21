@@ -19,7 +19,9 @@
     "md5-file": "^5.0.0",
     "tslib": "^1",
     "xlsx": "^0.16.6",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.4.23",
+    "xmldom": "^0.3.0",
+    "xpath": "0.0.32"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",

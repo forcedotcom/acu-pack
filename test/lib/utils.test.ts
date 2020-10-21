@@ -108,7 +108,7 @@ describe("Utils Tests", function () {
         });
     });
     describe("sortArray Test", function () {
-        it("Can can handle null", async function () {
+        it("Can handle null", async function () {
             const sortedArray = Utils.sortArray(null);
             expect(sortedArray).equal(null);
         });
@@ -123,6 +123,23 @@ describe("Utils Tests", function () {
         it("Can Handle Empty", async function () {
             const sortedArray = Utils.sortArray([]);
             expect(sortedArray.join(',')).equal([].join(','));
+        });
+    });
+    describe("selectXPath Tests", function () {
+        const xml = '<root><node index="0">data0</node><node1 index="0">data0</node1><node index="1">data1</node></root>'
+        const xpath = '//root/node/text()';
+        it("Can handle nulls", function () {
+            expect(Utils.selectXPath(null, null)).to.equal(null);
+            expect(Utils.selectXPath(xml, null)).to.equal(null);
+            expect(Utils.selectXPath(null, [])).to.equal(null);
+            expect(Utils.selectXPath(xml, [])).to.equal(null);
+            expect(Utils.selectXPath(xml, [xpath])).to.not.equal(null);
+        });
+        it("Can find values", function () {
+            
+            const results = Utils.selectXPath(xml, [xpath]);
+            expect(results.size).to.equal(1);
+            expect(results.get(xpath).length).to.equal(2);
         });
     });
 });

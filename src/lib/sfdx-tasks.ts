@@ -6,6 +6,7 @@ import { PackageOptions } from '../lib/package-options';
 import Utils from '../lib/utils';
 import { promises as fs } from 'fs';
 import { SfdxQuery } from './sfdx-query';
+import { XPathOptions } from '../lib/xpath-options';
 
 export class SfdxTasks {
 
@@ -154,6 +155,25 @@ export class SfdxTasks {
 
     public static async describeObject(usernameOrAlias: string, objectName: string): Promise<any> {
         return await SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
+    }
+
+    public static async getXPathOptionsAsync(optionsPath: string): Promise<XPathOptions> {
+        let options: XPathOptions;
+        if (optionsPath) {
+            if (await Utils.pathExistsAsync(optionsPath)) {
+                options = await SfdxCore.fileToJson<XPathOptions>(optionsPath);
+            } else {
+                options = new XPathOptions();
+                // load the default values
+                options.loadDefaults();
+                const dir = path.dirname(optionsPath);
+                if (dir) {
+                    await fs.mkdir(dir, { recursive: true });
+                }
+                await SfdxCore.jsonToFile(options, optionsPath);
+            }
+        }
+        return options;
     }
 
     protected static _folderPaths: Map<string, string> = null;
