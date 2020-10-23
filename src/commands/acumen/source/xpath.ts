@@ -19,15 +19,12 @@ export default class XPath extends CommandBase {
     })
   };
 
-  protected static requiresProject = true;
-
   public async run(): Promise<void> {
-    if (!this.flags.source) {
-      this.flags.source = 'force-app';
-    }
-
     // Read/Write the options file if it does not exist already
-    const options = await SfdxTasks.getXPathOptionsAsync(this.flags.options ?? XPath.defaultOptionsFileName);
+    const options = await SfdxTasks.getXPathOptionsAsync(
+      this.flags.options ?? XPath.defaultOptionsFileName
+    );
+
     try {
       for (const [sourceFolder, rules] of options.rules) {
         if (!sourceFolder) {
@@ -43,20 +40,20 @@ export default class XPath extends CommandBase {
           for (const rule of rules) {
             xPaths.push(rule.xPath)
           }
-          for(const [xPath,values] of Utils.selectXPath(xml, xPaths)){
+          for (const [xPath, values] of Utils.selectXPath(xml, xPaths)) {
             for (const rule of rules) {
-              if(rule.xPath == xPath){
-                for(const ruleValue of rule.values){
-                  for(const xmlValue of values){
-                    if(ruleValue.trim() == xmlValue.trim()){
-                      console.log(`${rule.name} Violation!`);
+              if (rule.xPath == xPath) {
+                for (const ruleValue of rule.values) {
+                  for (const xmlValue of values) {
+                    if (ruleValue.trim() == xmlValue.trim()) {
+                      console.log(`${rule.name} - Violation!`);
                       console.log(`\txpath: ${xPath}`);
                       console.log(`\tvalue: ${xmlValue}`);
                     }
                   }
                 }
               }
-            } 
+            }
           }
         }
       }

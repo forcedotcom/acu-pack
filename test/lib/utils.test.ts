@@ -135,11 +135,19 @@ describe("Utils Tests", function () {
             expect(Utils.selectXPath(xml, [])).to.equal(null);
             expect(Utils.selectXPath(xml, [xpath])).to.not.equal(null);
         });
-        it("Can find values", function () {
-            
+        it("Can find nodes", function () {
+            const xpath2 = "//node[@index='1']";
+            const results = Utils.selectXPath(xml, [xpath2]);
+            expect(results.size).to.equal(1);
+            expect(results.get(xpath2).length).to.equal(1);
+            expect(results.get(xpath2)[0]).to.equal('<node index="1">data1</node>');
+        });
+        it("Can find node values", function () {
             const results = Utils.selectXPath(xml, [xpath]);
             expect(results.size).to.equal(1);
             expect(results.get(xpath).length).to.equal(2);
+            expect(results.get(xpath)[0]).to.equal('data0');
+            expect(results.get(xpath)[1]).to.equal('data1');
         });
     });
 });

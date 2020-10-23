@@ -1,10 +1,23 @@
+import { SfdxCore } from './sfdx-core';
+
 export class XPathRule {
     public name: string;
     public xPath: string;
     public values: string[];
 }
 export class XPathOptions {
+    public static deserialize(serializedOptions: string): XPathOptions {
+        const xPathOptions = new XPathOptions();
+        xPathOptions.rules = new Map(JSON.parse(serializedOptions));
+        return xPathOptions;
+    }
+
     public rules: Map<string, XPathRule[]>;
+
+    public serialize(): string {
+        return JSON.stringify(Array.from(this.rules.entries()), null, SfdxCore.jsonSpaces)
+    }
+
     public loadDefaults(): void {
         this.rules = new Map();
         this.rules.set(

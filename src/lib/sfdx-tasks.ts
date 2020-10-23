@@ -161,7 +161,8 @@ export class SfdxTasks {
         let options: XPathOptions;
         if (optionsPath) {
             if (await Utils.pathExistsAsync(optionsPath)) {
-                options = await SfdxCore.fileToJson<XPathOptions>(optionsPath);
+                const data = (await fs.readFile(optionsPath)).toString();
+                options = XPathOptions.deserialize(data);
             } else {
                 options = new XPathOptions();
                 // load the default values
@@ -170,7 +171,7 @@ export class SfdxTasks {
                 if (dir) {
                     await fs.mkdir(dir, { recursive: true });
                 }
-                await SfdxCore.jsonToFile(options, optionsPath);
+                await fs.writeFile(optionsPath, options.serialize());
             }
         }
         return options;
