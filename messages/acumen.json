@@ -47,6 +47,10 @@
         "commandDescription": "Uses an MD5 hash file to detect deltas.",
         "md5FlagDescription": "The MD5 hash list file to use"
       }
+    },
+    "xpath":{
+      "commandDescription": "Validates XML against xpath selects and known bad values.",
+      "optionsFlagDescription": "A file containing the XPathOptions json. Specifying this option will create the file if it doesn't exist already."
     }
   }
 }

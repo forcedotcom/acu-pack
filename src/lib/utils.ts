@@ -2,6 +2,8 @@ import path = require('path');
 import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
+import xpath = require('xpath');
+import { DOMParser as dom } from 'xmldom';
 
 export default class Utils {
     public static async * getFilesAsync(folderPath: string, isRecursive = true) {
@@ -107,6 +109,34 @@ export default class Utils {
             });
         }
         return array;
+    }
+
+    public static selectXPath(xml: string, xpaths: string[]): Map<string, string[]> {
+        if (!xml || !xpaths || xpaths.length == 0) {
+            return null;
+        }
+        
+        const results = new Map<string, string[]>();
+        const doc = new dom().parseFromString(xml);
+
+        for (const xp of xpaths) {
+            if (!xp) {
+                results.set(xp, null);
+                continue;
+            }
+            const nodes = xpath.select(xp, doc);
+
+            if (!nodes || nodes.length == 0) {
+                results.set(xp, null);
+                continue;
+            }
+            const values = [];
+            for (const node of nodes) {
+                values.push(node.toString());
+            }
+            results.set(xp, values);
+        }
+        return results;
     }
 
     private static glob = require('util').promisify(require('glob'));
