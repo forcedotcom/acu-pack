@@ -3,6 +3,34 @@
   "problemMatcher": "$tsc-watch",
   "tasks": [
     {
+      "label": "Update README",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "command": "yarn",
+      "type": "shell",
+      "presentation": {
+        "focus": false,
+        "panel": "dedicated"
+      },
+      "args": ["run", "readme"],
+      "isBackground": false,
+      "problemMatcher": {
+        "owner": "typescript",
+        "fileLocation": "relative",
+        "pattern": {
+          "regexp": "^(.*\\.ts):(\\d*):(\\d*)(\\s*-\\s*)(error|warning|info)\\s*(TS\\d*):\\s*(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 5,
+          "code": 6,
+          "message": 7
+        }
+      }
+    },
+    {
       "label": "Compile",
       "group": {
         "kind": "build",
