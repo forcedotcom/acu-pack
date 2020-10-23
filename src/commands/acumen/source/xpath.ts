@@ -38,14 +38,14 @@ export default class XPath extends CommandBase {
           }
           const xPaths = [];
           for (const rule of rules) {
-            xPaths.push(rule.xPath)
+            xPaths.push(rule.xPath);
           }
           for (const [xPath, values] of Utils.selectXPath(xml, xPaths)) {
             for (const rule of rules) {
-              if (rule.xPath == xPath) {
+              if (rule.xPath === xPath) {
                 for (const ruleValue of rule.values) {
                   for (const xmlValue of values) {
-                    if (ruleValue.trim() == xmlValue.trim()) {
+                    if (ruleValue.trim() === xmlValue.trim()) {
                       console.log(`${rule.name} - Violation!`);
                       console.log(`\txpath: ${xPath}`);
                       console.log(`\tvalue: ${xmlValue}`);

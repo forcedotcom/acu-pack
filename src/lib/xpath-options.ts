@@ -15,7 +15,7 @@ export class XPathOptions {
     public rules: Map<string, XPathRule[]>;
 
     public serialize(): string {
-        return JSON.stringify(Array.from(this.rules.entries()), null, SfdxCore.jsonSpaces)
+        return JSON.stringify(Array.from(this.rules.entries()), null, SfdxCore.jsonSpaces);
     }
 
     public loadDefaults(): void {
@@ -36,7 +36,7 @@ export class XPathOptions {
                         'Account.NaicsDesc',
                         'Lead.PartnerAccountId',
                         'Account.YearStarted',
-                        'Account.Tradestyle'],
+                        'Account.Tradestyle']
                 },
                 {
                     name: 'Bad UserPermissions',
@@ -44,11 +44,9 @@ export class XPathOptions {
                     values: ['EnableCommunityAppLauncher',
                         'WorkDotComUserPerm',
                         'WorkCalibrationUser',
-                        'CreateContentSpace'],
+                        'CreateContentSpace']
                 }
-            ],
+            ]
         );
     }
 }
-
-

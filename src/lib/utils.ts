@@ -112,10 +112,10 @@ export default class Utils {
     }
 
     public static selectXPath(xml: string, xpaths: string[]): Map<string, string[]> {
-        if (!xml || !xpaths || xpaths.length == 0) {
+        if (!xml || !xpaths || xpaths.length === 0) {
             return null;
         }
-        
+
         const results = new Map<string, string[]>();
         const doc = new dom().parseFromString(xml);
 
@@ -126,7 +126,7 @@ export default class Utils {
             }
             const nodes = xpath.select(xp, doc);
 
-            if (!nodes || nodes.length == 0) {
+            if (!nodes || nodes.length === 0) {
                 results.set(xp, null);
                 continue;
             }
