@@ -26,4 +26,5 @@ package-options.json
 **/test/*.test.txt
 **/delta.log
 
+force-app/
 

@@ -31,7 +31,7 @@ export default class XPath extends CommandBase {
           continue;
         }
         for await (const filePath of Utils.getFilesAsync(sourceFolder)) {
-          console.log(`Processing file: '${filePath}`);
+          this.ux.log(`Processing file: '${filePath}`);
           let xml = null;
           for await (const line of Utils.readFileAsync(filePath)) {
             xml += line;
@@ -46,9 +46,12 @@ export default class XPath extends CommandBase {
                 for (const ruleValue of rule.values) {
                   for (const xmlValue of values) {
                     if (ruleValue.trim() === xmlValue.trim()) {
-                      console.log(`${rule.name} - Violation!`);
-                      console.log(`\txpath: ${xPath}`);
-                      console.log(`\tvalue: ${xmlValue}`);
+                      // Set the proper exit code to indicate violation/failure
+                      process.exitCode = 1;
+
+                      this.ux.log(`${rule.name} - Violation!`);
+                      this.ux.log(`\txpath: ${xPath}`);
+                      this.ux.log(`\tvalue: ${xmlValue}`);
                     }
                   }
                 }

@@ -14,12 +14,15 @@ export class XPathOptions {
 
     public rules: Map<string, XPathRule[]>;
 
+    constructor() {
+        this.rules = new Map();
+    }
+
     public serialize(): string {
         return JSON.stringify(Array.from(this.rules.entries()), null, SfdxCore.jsonSpaces);
     }
 
     public loadDefaults(): void {
-        this.rules = new Map();
         this.rules.set(
             'force-app/main/default/profiles/*.profile-meta.xml',
             [
