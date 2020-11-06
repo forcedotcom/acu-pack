@@ -9,7 +9,7 @@ export class SfdxCore {
     public static DEFAULT: string = 'default';
     public static EMAIL_TEMPLATE_XML_NAME: string = 'EmailTemplate';
 
-    public static bufferOptions: object = { maxBuffer: 10 * 1024 * 1024 };
+    public static bufferOptions: object = { env: { NODE_OPTIONS: null }, maxBuffer: 10 * 1024 * 1024 };
     public static jsonSpaces: number = 2;
 
     public static command(cmd: string): Promise<any> {
@@ -17,7 +17,9 @@ export class SfdxCore {
             exec(cmd, SfdxCore.bufferOptions, (error: any, stdout: any, stderr: any) => {
                 let response;
                 try {
-                    response = JSON.parse(stdout);
+                    if (stdout && String(stdout) !== '') {
+                        response = JSON.parse(stdout);
+                    }
                 } catch (err) {
                     console.warn(stdout);
                 } finally {
