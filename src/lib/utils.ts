@@ -139,5 +139,16 @@ export default class Utils {
         return results;
     }
 
+    public static async deleteFileAsync(filePath: string) {
+        if (await Utils.pathExistsAsync(filePath)) {
+            await fs.unlink(filePath);
+        }
+    }
+
+    public static async sleep(sleepMiliseconds: number = 1000) {
+        // tslint:disable-next-line no-string-based-set-timeout
+        await new Promise(resolve => setTimeout(resolve, sleepMiliseconds));
+    }
+
     private static glob = require('util').promisify(require('glob'));
 }

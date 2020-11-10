@@ -89,10 +89,10 @@ export default class Dictionary extends CommandBase {
       const username = this.flags.targetusername;
       const orgId = this.org.getOrgId();
 
-      // Reset log file
       const sheetDataFile = `schema-${username}.tmp`;
-      await this.deleteFile(sheetDataFile);
-      const stream = createWriteStream(sheetDataFile, { flags: 'a' });
+
+      // Create for writing - truncates if exists
+      const stream = createWriteStream(sheetDataFile, { flags: 'w' });
 
       // Add columns
       const objectMap = await SfdxTasks.listMetadatas(username, new Set<string>(['CustomObject']), namespaces);
@@ -138,15 +138,9 @@ export default class Dictionary extends CommandBase {
       this.ux.log('Done.');
 
       // Clean up file at end
-      await this.deleteFile(sheetDataFile);
+      await Utils.deleteFileAsync(sheetDataFile);
     } catch (err) {
       throw err;
-    }
-  }
-  private async deleteFile(sheetDataFile: string) {
-    // Clean up file at end
-    if (await Utils.pathExistsAsync(sheetDataFile)) {
-      await fs.unlink(sheetDataFile);
     }
   }
 

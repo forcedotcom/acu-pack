@@ -117,9 +117,7 @@ export abstract class DeltaProvider {
       this.deltaOptions.normalize();
     }
     // Reset log file
-    if (await Utils.pathExistsAsync(this.logFile)) {
-      await fs.unlink(this.logFile);
-    }
+    await Utils.deleteFileAsync(this.logFile);
 
     try {
       // Validate flags/options
@@ -141,7 +139,8 @@ export abstract class DeltaProvider {
       if (deleteReportFile && destination) {
         try {
           // write the deleted-files.txt report into the parent folder of the destination
-          await fs.unlink(deleteReportFile);
+          // Reset log file
+          await Utils.deleteFileAsync(deleteReportFile);
         } catch (err) {
           if (!Utils.isENOENT(err)) {
             await this.logMessage(`Unable to delete old report: ${err.message}.`);

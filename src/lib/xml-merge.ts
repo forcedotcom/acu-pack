@@ -11,9 +11,8 @@ export default class XmlMerge {
         try {
 
             // Reset log file
-            if (await Utils.pathExistsAsync(logFilePath)) {
-                await fs.unlink(logFilePath);
-            }
+            await Utils.deleteFileAsync(logFilePath);
+
             if (!(await Utils.pathExistsAsync(sourceXml))) {
                 await this.logMessage(`Source package does not exist: ${sourceXml}`, logFilePath, ux);
                 return;

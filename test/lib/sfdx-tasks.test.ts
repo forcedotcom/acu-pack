@@ -1,14 +1,11 @@
 import { expect } from '@salesforce/command/lib/test';
 import { SfdxTasks } from '../../src/lib/sfdx-tasks';
 import Utils from '../../src/lib/utils';
-import { promises as fs } from 'fs';
 
 const optionsPath = "./packageOptions.json";
 
 before('Cleanup', async () => {
-  if (await Utils.pathExistsAsync(optionsPath)) {
-    await fs.unlink(optionsPath);
-  }
+  await Utils.deleteFileAsync(optionsPath);
 });
 describe('Sfdx Tasks Tests', () => {
   describe('getPackageOptions Tests', function () {
