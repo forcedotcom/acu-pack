@@ -4,7 +4,6 @@
 /dist
 /compiled
 /tmp
-/oclif.manifest.json
 node_modules
 *.tmp
     
