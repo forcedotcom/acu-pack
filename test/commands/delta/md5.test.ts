@@ -10,7 +10,7 @@ const md5Provider = new Md5.md5DeltaProvider();
 
 beforeEach(async () => {
     for await (const testFile of Setup.createTestFiles(Setup.sourceRoot)) {
-        console.log(`created: ${testFile}`);
+        expect(testFile).is.not.null;
     }
 
     if (await Utils.pathExistsAsync(bogusMd5FilePath)) {
