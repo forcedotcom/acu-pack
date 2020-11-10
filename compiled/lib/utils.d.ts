@@ -1,0 +1,13 @@
+export default class Utils {
+    static getFilesAsync(folderPath: string, isRecursive?: boolean): any;
+    static readFileAsync(filePath: string): AsyncGenerator<any, void, unknown>;
+    static pathExistsAsync(pathToCheck: string): Promise<boolean>;
+    static getPathStat(pathToCheck: any): Promise<any>;
+    static isENOENT(err: any): boolean;
+    static copyFile(source: string, destination: string): Promise<void>;
+    static sortArray(array: any[]): any[];
+    static selectXPath(xml: string, xpaths: string[]): Map<string, string[]>;
+    static deleteFileAsync(filePath: string): Promise<void>;
+    static sleep(sleepMiliseconds?: number): Promise<void>;
+    private static glob;
+}
