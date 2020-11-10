@@ -4,6 +4,9 @@
 /dist
 /compiled
 /tmp
+
+# We need to include the oclif.manifest.json file - otherwise the sfdx plugins:install command doesn't work
+# /oclif.manifest.json
 node_modules
 *.tmp
     
