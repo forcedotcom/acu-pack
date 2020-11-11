@@ -3,7 +3,7 @@ import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
 import { SfdxTasks } from '../../../../lib/sfdx-tasks';
 
-export default class Coverage extends CommandBase {
+export default class Execute extends CommandBase {
 
   public static defaultJobStatusWaitMax = 0;
   public static description = CommandBase.messages.getMessage('apex.coverage.execute.commandDescription');
@@ -62,7 +62,7 @@ export default class Coverage extends CommandBase {
         return;
       }
 
-      const waitCountMaxSeconds = (this.flags.wait || Coverage.defaultJobStatusWaitMax) * 60;
+      const waitCountMaxSeconds = (this.flags.wait || Execute.defaultJobStatusWaitMax) * 60;
       if (!jobInfo.isDone()) {
         for await (jobInfo of SfdxTasks.waitForJobAsync(username, jobInfo, waitCountMaxSeconds)) {
           this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
