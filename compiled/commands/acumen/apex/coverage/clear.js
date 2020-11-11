@@ -11,7 +11,8 @@ class Clear extends command_base_1.CommandBase {
         const username = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         try {
-            this.ux.log(`Checking ${username}(${orgId}) for pending tests...`);
+            this.ux.log(`Connecting to Org: ${username}(${orgId})`);
+            this.ux.log(`Checking for pending tests...`);
             let recordCount = 0;
             try {
                 for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username)), _c; _c = await _b.next(), !_c.done;) {

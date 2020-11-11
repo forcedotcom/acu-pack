@@ -29,7 +29,8 @@ export default class Clear extends CommandBase {
     const username = this.flags.targetusername;
     const orgId = this.org.getOrgId();
     try {
-      this.ux.log(`Checking ${username}(${orgId}) for pending tests...`);
+      this.ux.log(`Connecting to Org: ${username}(${orgId})`);
+      this.ux.log('Checking for pending tests...');
 
       let recordCount = 0;
       for await (recordCount of SfdxQuery.waitForApexTestsAsync(username)) {
@@ -38,7 +39,7 @@ export default class Clear extends CommandBase {
         }
       }
       if (recordCount !== 0) {
-        this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`)
+        this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
         // Set the proper exit code to indicate violation/failure
         process.exitCode = 1;
         return;

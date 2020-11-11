@@ -29,13 +29,13 @@ export class SfdxJobInfo {
 }
 
 export class SfdxOrgInfo {
-    username: string;
-    id: string;
-    connectedStatus: string;
-    accessToken: string;
-    instanceUrl: string;
-    clientId: string;
-    alias: string;
+    public username: string;
+    public id: string;
+    public connectedStatus: string;
+    public accessToken: string;
+    public instanceUrl: string;
+    public clientId: string;
+    public alias: string;
 
     constructor(result: any) {
         this.username = result.username;
@@ -49,9 +49,9 @@ export class SfdxOrgInfo {
 }
 
 export class SfdxResult {
-    id: string;
-    success: boolean;
-    errors: string[];
+    public id: string;
+    public success: boolean;
+    public errors: string[];
 
     constructor(result: any) {
         this.id = result.id;

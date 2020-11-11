@@ -31,6 +31,7 @@ export default class Execute extends CommandBase {
     const username = this.flags.targetusername;
     const orgId = this.org.getOrgId();
     try {
+      this.ux.log(`Connecting to Org: ${username}(${orgId})`);
       this.ux.log('Checking for pending tests...');
 
       let recordCount = 0;
@@ -40,14 +41,14 @@ export default class Execute extends CommandBase {
         }
       }
       if (recordCount !== 0) {
-        this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`)
+        this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
         // Set the proper exit code to indicate violation/failure
         process.exitCode = 1;
         return;
       }
 
       // Execute tests (with CodeCoverage) ?
-      this.ux.log(`Gathering Test ApexClasses from Org: ${username}(${orgId})`);
+      this.ux.log('Gathering Test ApexClasses...');
       const testClasses = await SfdxQuery.getApexTestClassesAsync(username);
       if (testClasses.length === 0) {
         this.ux.log(`No Test ApexClasses exist for ${username}`);
@@ -76,7 +77,7 @@ export default class Execute extends CommandBase {
         }
       }
       this.ux.log('Apex Tests Started');
-      if (waitCountMaxSeconds != 0) {
+      if (waitCountMaxSeconds !== 0) {
         const createdDate = jobInfo.createdDate || new Date().toJSON();
         for await (recordCount of SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds, createdDate)) {
           if (recordCount === 0) {
@@ -84,7 +85,7 @@ export default class Execute extends CommandBase {
           }
         }
         if (recordCount !== 0) {
-          this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`)
+          this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
           // Set the proper exit code to indicate violation/failure
           process.exitCode = 1;
           return;

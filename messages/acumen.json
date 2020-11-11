@@ -61,7 +61,12 @@
       },
       "execute": {
         "commandDescription": "Executes Apex tests and includes Code Coverage metrics.",
-        "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. This flag is ignored if Apex Test execution is skipped."
+        "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait."
+      },
+      "report": {
+        "commandDescription": "Pull Code Coverage metrics and generates a report.",
+        "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait.",
+        "reportFlagDescription": "The optional path for the generated report."
       }
     }
   }

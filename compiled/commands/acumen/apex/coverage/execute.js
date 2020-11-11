@@ -5,12 +5,13 @@ const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const sfdx_tasks_1 = require("../../../../lib/sfdx-tasks");
-class Coverage extends command_base_1.CommandBase {
+class Execute extends command_base_1.CommandBase {
     async run() {
         var e_1, _a, e_2, _b, e_3, _c;
         const username = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         try {
+            this.ux.log(`Connecting to Org: ${username}(${orgId})`);
             this.ux.log('Checking for pending tests...');
             let recordCount = 0;
             try {
@@ -35,7 +36,7 @@ class Coverage extends command_base_1.CommandBase {
                 return;
             }
             // Execute tests (with CodeCoverage) ?
-            this.ux.log(`Gathering Test ApexClasses from Org: ${username}(${orgId})`);
+            this.ux.log(`Gathering Test ApexClasses...`);
             const testClasses = await sfdx_query_1.SfdxQuery.getApexTestClassesAsync(username);
             if (testClasses.length === 0) {
                 this.ux.log(`No Test ApexClasses exist for ${username}`);
@@ -48,7 +49,7 @@ class Coverage extends command_base_1.CommandBase {
                 process.exitCode = 1;
                 return;
             }
-            const waitCountMaxSeconds = (this.flags.wait || Coverage.defaultJobStatusWaitMax) * 60;
+            const waitCountMaxSeconds = (this.flags.wait || Execute.defaultJobStatusWaitMax) * 60;
             if (!jobInfo.isDone()) {
                 try {
                     for (var _f = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.waitForJobAsync(username, jobInfo, waitCountMaxSeconds)), _g; _g = await _f.next(), !_g.done;) {
@@ -105,23 +106,23 @@ class Coverage extends command_base_1.CommandBase {
         }
     }
 }
-exports.default = Coverage;
-Coverage.defaultJobStatusWaitMax = 0;
-Coverage.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.commandDescription');
-Coverage.examples = [
+exports.default = Execute;
+Execute.defaultJobStatusWaitMax = 0;
+Execute.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.commandDescription');
+Execute.examples = [
     `$ sfdx acumen:apex:coverage:execute -u myOrgAlias
     Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics.`,
     `$ sfdx acumen:apex:coverage:execute -u myOrgAlias -w 30
     Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test completion.`
 ];
-Coverage.flagsConfig = {
+Execute.flagsConfig = {
     wait: command_1.flags.integer({
         char: 'w',
         description: command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.waitDescription')
     })
 };
 // Comment this out if your command does not require an org username
-Coverage.requiresUsername = true;
+Execute.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-Coverage.requiresProject = false;
+Execute.requiresProject = false;
 //# sourceMappingURL=execute.js.map
