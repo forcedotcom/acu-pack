@@ -6,7 +6,8 @@ import { SfdxTasks } from '../../../../lib/sfdx-tasks';
 export default class Clear extends CommandBase {
   public static defaultJobStatusWaitMax = -1;
   public static description = CommandBase.messages.getMessage('apex.coverage.clear.commandDescription');
-  public static defaultMetadataTypes = ['ApexCodeCoverageAggregate', 'ApexCodeCoverage'];
+  //public static defaultMetadataTypes = ['ApexCodeCoverageAggregate', 'ApexCodeCoverage'];
+  public static defaultMetadataTypes = ['ApexCodeCoverageAggregate'];
   public static examples = [
     `$ sfdx acumen:apex:coverage:clear -u myOrgAlias
     Deletes the existing instances of ${Clear.defaultMetadataTypes.join(',')} from the specific Org.`
@@ -55,6 +56,7 @@ export default class Clear extends CommandBase {
       for (const metaDataType of metaDataTypes) {
         const query = `SELECT Id FROM ${metaDataType}`;
         const records = await SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
+        this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
         for (const record of records) {
           const result = await SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
           if (!result.success) {
@@ -62,6 +64,7 @@ export default class Clear extends CommandBase {
             hasFailures = true;
           }
         }
+        this.ux.log(`Cleared.`);
       }
 
       if (hasFailures) {

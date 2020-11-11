@@ -83,7 +83,9 @@ export default class Execute extends CommandBase {
           if (recordCount === 0) {
             break;
           }
+          this.ux.log(`${recordCount} Apex Test(s) remaining.`);
         }
+        
         if (recordCount !== 0) {
           this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
           // Set the proper exit code to indicate violation/failure
