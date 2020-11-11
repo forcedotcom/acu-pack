@@ -21,6 +21,26 @@ class SfdxJobInfo {
     }
 }
 exports.SfdxJobInfo = SfdxJobInfo;
+class SfdxOrgInfo {
+    constructor(result) {
+        this.username = result.username;
+        this.id = result.id;
+        this.connectedStatus = result.connectedStatus;
+        this.accessToken = result.accessToken;
+        this.instanceUrl = result.instanceUrl;
+        this.clientId = result.clientId;
+        this.alias = result.alias;
+    }
+}
+exports.SfdxOrgInfo = SfdxOrgInfo;
+class SfdxResult {
+    constructor(result) {
+        this.id = result.id;
+        this.success = result.success;
+        this.errors = result.errors;
+    }
+}
+exports.SfdxResult = SfdxResult;
 class SfdxTasks {
     static async describeMetadata(usernameOrAlias) {
         const response = await sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:describemetadata --json -u ${usernameOrAlias}`);
@@ -261,6 +281,24 @@ class SfdxTasks {
             }
             return yield tslib_1.__await(jobInfo);
         });
+    }
+    static async getOrgInfo(orgAliasOrUsername) {
+        if (!orgAliasOrUsername) {
+            return null;
+        }
+        const result = sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
+        return new SfdxOrgInfo(result);
+    }
+    static async deleteRecordById(orgAliasOrUsername, metaDataType, recordId, isToolingApi = false) {
+        if (!orgAliasOrUsername || !metaDataType || !recordId) {
+            return null;
+        }
+        let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
+        if (isToolingApi) {
+            command += ' -t';
+        }
+        const result = await sfdx_core_1.SfdxCore.command(command);
+        return new SfdxResult(result);
     }
     static async getFolderSOQLDataAsync(usernameOrAlias) {
         if (!this._folderPaths) {

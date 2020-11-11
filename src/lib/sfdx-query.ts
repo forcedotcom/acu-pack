@@ -324,4 +324,21 @@ export class SfdxQuery {
         }
     }
 
+    public static async* waitForApexTestsAsync(username: string, waitCountMaxSeconds: number, createdDate: string = new Date().toJSON()) {
+        const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;
+        const targetCount = 0;
+
+        let recordCount = 0;
+        // Check every 30 seconds or waitCountMaxSeconds so we don't waste a bunch of queries
+        const interval = waitCountMaxSeconds >= 30 ? 30000 : waitCountMaxSeconds;
+        for await (recordCount of SfdxQuery.waitForRecordCount(username, query, targetCount, waitCountMaxSeconds, interval)) {
+            if (recordCount !== targetCount) {
+                yield recordCount;
+            } else {
+                break;
+            }
+        }
+        return recordCount;
+    }
+
 }

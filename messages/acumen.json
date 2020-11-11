@@ -55,10 +55,11 @@
   },
   "apex": {
     "coverage": {
-      "commandDescription": "Optionally runs Apex Test classes and generates a code coverage report.",
-      "skipTestsDescription": "Optional - Set to true to skip test execution. The default is false.",
-      "reportFlagDescription": "The path for the code coverage report XLSX file. This overrides the default: %s.",
-      "waitDescription": "The maximum wait time (minutes) for test execution to complete. A value of -1 means infinite wait. This flag is ignored if Apex Test execution is skipped."
+      "clear": {
+        "commandDescription": "Clears the Apex Code Coverage data from the specified Org.",
+        "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)",
+        "waitDescription": "The maximum wait time (minutes) for test execution to complete. A value of -1 means infinite wait. This flag is ignored if Apex Test execution is skipped."
+      }
     }
   }
 }
