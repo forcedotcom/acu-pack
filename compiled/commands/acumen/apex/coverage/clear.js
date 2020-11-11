@@ -12,10 +12,9 @@ class Clear extends command_base_1.CommandBase {
         const orgId = this.org.getOrgId();
         try {
             this.ux.log(`Checking ${username}(${orgId}) for pending tests...`);
-            const waitCountMaxSeconds = (this.flags.wait || (Clear.defaultJobStatusWaitMax * 60));
             let recordCount = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username)), _c; _c = await _b.next(), !_c.done;) {
                     recordCount = _c.value;
                     if (recordCount === 0) {
                         break;
@@ -43,11 +42,11 @@ class Clear extends command_base_1.CommandBase {
             let hasFailures = false;
             for (const metaDataType of metaDataTypes) {
                 const query = `SELECT Id FROM ${metaDataType}`;
-                const codeCoverageIds = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
-                for (const codeCoverageId of codeCoverageIds) {
-                    const result = await sfdx_tasks_1.SfdxTasks.deleteRecordById(username, metaDataType, codeCoverageId, true);
+                const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
+                for (const record of records) {
+                    const result = await sfdx_tasks_1.SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
                     if (!result.success) {
-                        this.ux.log(`Delete Failed id: ${codeCoverageId} errors: ${result.errors.join(',')}`);
+                        this.ux.log(`Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
                         hasFailures = true;
                     }
                 }
@@ -78,10 +77,6 @@ Clear.flagsConfig = {
     metadatas: command_1.flags.string({
         char: 'm',
         description: command_base_1.CommandBase.messages.getMessage('apex.coverage.clear.metadataFlagDescription', [Clear.defaultMetadataTypes.join(',')])
-    }),
-    wait: command_1.flags.integer({
-        char: 'w',
-        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.clear.waitDescription')
     })
 };
 // Comment this out if your command does not require an org username

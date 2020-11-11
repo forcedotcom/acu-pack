@@ -57,8 +57,11 @@
     "coverage": {
       "clear": {
         "commandDescription": "Clears the Apex Code Coverage data from the specified Org.",
-        "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)",
-        "waitDescription": "The maximum wait time (minutes) for test execution to complete. A value of -1 means infinite wait. This flag is ignored if Apex Test execution is skipped."
+        "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)"
+      },
+      "execute": {
+        "commandDescription": "Executes Apex tests and includes Code Coverage metrics.",
+        "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. This flag is ignored if Apex Test execution is skipped."
       }
     }
   }

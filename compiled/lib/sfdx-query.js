@@ -282,7 +282,7 @@ class SfdxQuery {
             const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
             let counter = 0;
             let records = [];
-            while (maxCounter < 0 || counter <= maxCounter) {
+            while (maxCounter <= 0 || counter <= maxCounter) {
                 yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
                 records = yield tslib_1.__await(SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query));
                 yield yield tslib_1.__await(records.length);
@@ -293,7 +293,7 @@ class SfdxQuery {
             }
         });
     }
-    static waitForApexTestsAsync(username, waitCountMaxSeconds, createdDate = new Date().toJSON()) {
+    static waitForApexTestsAsync(username, waitCountMaxSeconds = 0, createdDate = new Date().toJSON()) {
         return tslib_1.__asyncGenerator(this, arguments, function* waitForApexTestsAsync_1() {
             var e_1, _a;
             const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;

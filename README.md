@@ -12,18 +12,24 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+* [Debugging your plugin](#debugging-your-plugin)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
 
 To debug the `acumen:apex:coverage` command: 
 ```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage -u ACUDEV
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u TRAIL
 ```
 
 Some common debug commands:
 ```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage -u ACUDEV
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u TRAIL
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:execute -u TRAIL
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:report -u TRAIL
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -o package-options.json -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
@@ -32,7 +38,6 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:permissions -p force-app
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u TRAIL
 ```
 
 2. Set some breakpoints in your command code
@@ -51,7 +56,8 @@ $ sfdx acumen -h
 
 # Commands
 <!-- commands -->
-* [`sfdx acumen:apex:coverage [-r <string>] [-s] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverage--r-string--s--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageclear--m-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagebuild--x-string--m-string--o-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -61,28 +67,52 @@ $ sfdx acumen -h
 * [`sfdx acumen:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcexpath--o-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx acumen:apex:coverage [-r <string>] [-s] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
-Optionally runs Apex Test classes and generates a code coverage report.
+Clears the Apex Code Coverage data from the specified Org.
 
 ```
 USAGE
-  $ sfdx acumen:apex:coverage [-r <string>] [-s] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] 
-  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -r, --report=report                                                               The path for the code coverage
-                                                                                    report XLSX file. This overrides the
-                                                                                    default:
-                                                                                    CodeCoverageReport-{ORG}.xlsx.
-
-  -s, --skiptests                                                                   Optional - Set to true to skip test
-                                                                                    execution. The default is false.
+  -m, --metadatas=metadatas                                                         An optional comma separated list of
+                                                                                    metadata to include. The defaults
+                                                                                    are:
+                                                                                    (ApexCodeCoverageAggregate,ApexCodeC
+                                                                                    overage.)
 
   -u, --targetusername=targetusername                                               username or alias for the target
                                                                                     org; overrides default target org
 
-  -w, --wait=wait                                                                   The maximum wait time (minutes) for
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLE
+  $ sfdx acumen:apex:coverage:clear -u myOrgAlias
+       Deletes the existing instances of ApexCodeCoverageAggregate,ApexCodeCoverage from the specific Org.
+```
+
+## `sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Executes Apex tests and includes Code Coverage metrics.
+
+```
+USAGE
+  $ sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  -w, --wait=wait                                                                   The optional wait time (minutes) for
                                                                                     test execution to complete. A value
                                                                                     of -1 means infinite wait. This flag
                                                                                     is ignored if Apex Test execution is
@@ -97,10 +127,11 @@ OPTIONS
                                                                                     this command invocation
 
 EXAMPLES
-  $ sfdx acumen:apex:coverage -u myOrgAlias -r myCodeCoverageReport.xlsx
-       Runs Apex Tests in myOrgAlias and generates a myCodeCoverageReport.xlsx coverage report.
-  $ sfdx acumen:apex:coverage -u myOrgAlias -r myCodeCoverageReport.xlsx -s true
-       Skips running Apex Tests in myOrgAlias and generates a myCodeCoverageReport.xlsx coverage report.
+  $ sfdx acumen:apex:coverage:execute -u myOrgAlias
+       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics.
+  $ sfdx acumen:apex:coverage:execute -u myOrgAlias -w 30
+       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test 
+  completion.
 ```
 
 ## `sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`

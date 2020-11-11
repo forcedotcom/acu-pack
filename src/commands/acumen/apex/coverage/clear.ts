@@ -16,10 +16,6 @@ export default class Clear extends CommandBase {
     metadatas: flags.string({
       char: 'm',
       description: CommandBase.messages.getMessage('apex.coverage.clear.metadataFlagDescription', [Clear.defaultMetadataTypes.join(',')])
-    }),
-    wait: flags.integer({
-      char: 'w',
-      description: CommandBase.messages.getMessage('apex.coverage.clear.waitDescription')
     })
   };
 
@@ -35,9 +31,8 @@ export default class Clear extends CommandBase {
     try {
       this.ux.log(`Checking ${username}(${orgId}) for pending tests...`);
 
-      const waitCountMaxSeconds = (this.flags.wait || (Clear.defaultJobStatusWaitMax * 60));
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds)) {
+      for await (recordCount of SfdxQuery.waitForApexTestsAsync(username)) {
         if (recordCount === 0) {
           break;
         }

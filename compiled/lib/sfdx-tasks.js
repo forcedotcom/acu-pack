@@ -272,7 +272,7 @@ class SfdxTasks {
         return tslib_1.__asyncGenerator(this, arguments, function* waitForJobAsync_1() {
             const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
             jobInfo.statusCount = 0;
-            while ((maxCounter < 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
+            while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
                 yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
                 jobInfo = yield tslib_1.__await(SfdxTasks.getBulkJobStatusAsync(usernameOrAlias, jobInfo));
                 jobInfo.maxStatusCount = maxCounter;

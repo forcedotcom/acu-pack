@@ -267,7 +267,7 @@ export class SfdxTasks {
     public static async* waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
         const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
         jobInfo.statusCount = 0;
-        while ((maxCounter < 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
+        while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
             await Utils.sleep(sleepMiliseconds);
 
             jobInfo = await SfdxTasks.getBulkJobStatusAsync(usernameOrAlias, jobInfo);

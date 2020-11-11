@@ -59,5 +59,5 @@ export declare class SfdxQuery {
     static getApexTestClassesAsync(usernameOrAlias: string, namespacePrefixes?: string[]): Promise<SfdxEntity[]>;
     static getCodeCoverageAsync(usernameOrAlias: string): Promise<SfdxCodeCoverage>;
     static waitForRecordCount(usernameOrAlias: string, query: string, recordCount?: number, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<number, void, unknown>;
-    static waitForApexTestsAsync(username: string, waitCountMaxSeconds: number, createdDate?: string): AsyncGenerator<number, number, unknown>;
+    static waitForApexTestsAsync(username: string, waitCountMaxSeconds?: number, createdDate?: string): AsyncGenerator<number, number, unknown>;
 }
