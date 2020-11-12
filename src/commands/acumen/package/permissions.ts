@@ -9,13 +9,13 @@ import Utils from '../../../lib/utils';
 
 export default class Permissions extends CommandBase {
   public static packageFileName = 'package-permissions.xml';
-  public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
+  public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomField', 'CustomTab', 'PermissionSet', 'Profile'];
   public static description = CommandBase.messages.getMessage('package.permissions.commandDescription');
 
   public static examples = [`$ sfdx acumen:package:permissions -u myOrgAlias
     Creates a package file (${Permissions.packageFileName}) which contains
     Profile & PermissionSet metadata related to ${Permissions.defaultMetaTypes.join(', ')} permissions.`,
-    `$ sfdx acumen:package:permissions -u myOrgAlias -m CustomObject,CustomApplication
+  `$ sfdx acumen:package:permissions -u myOrgAlias -m CustomObject,CustomApplication
     Creates a package file (${Permissions.packageFileName}) which contains
     Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.`];
 
@@ -75,6 +75,17 @@ export default class Permissions extends CommandBase {
       for (const metadata of describeMetadata) {
         if (this.metaNames.has(metadata.xmlName)) {
           describeMetadatas.add(metadata);
+          continue;
+        }
+
+        if (metadata.childXmlNames) {
+          for (const childName of metadata.childXmlNames) {
+            if (this.metaNames.has(childName)) {
+              // 'adopt' the childName as the xmlName to pull the child metadata
+              metadata.xmlName = childName;
+              describeMetadatas.add(metadata);
+            }
+          }
         }
       }
 
