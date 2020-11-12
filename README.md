@@ -77,9 +77,7 @@ USAGE
 OPTIONS
   -m, --metadatas=metadatas                                                         An optional comma separated list of
                                                                                     metadata to include. The defaults
-                                                                                    are:
-                                                                                    (ApexCodeCoverageAggregate,ApexCodeC
-                                                                                    overage.)
+                                                                                    are: (ApexCodeCoverageAggregate.)
 
   -u, --targetusername=targetusername                                               username or alias for the target
                                                                                     org; overrides default target org
@@ -94,7 +92,7 @@ OPTIONS
 
 EXAMPLE
   $ sfdx acumen:apex:coverage:clear -u myOrgAlias
-       Deletes the existing instances of ApexCodeCoverageAggregate,ApexCodeCoverage from the specific Org.
+       Deletes the existing instances of ApexCodeCoverageAggregate from the specific Org.
 ```
 
 ## `sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
@@ -113,7 +111,8 @@ OPTIONS
   -w, --wait=wait                                                                   The optional wait time (minutes) for
                                                                                     test execution to complete. A value
                                                                                     of -1 means infinite wait. A value
-                                                                                    of 0 means no wait.
+                                                                                    of 0 means no wait. The default is
+                                                                                    -1
 
   --apiversion=apiversion                                                           override the api version used for
                                                                                     api requests made by this command
@@ -125,10 +124,13 @@ OPTIONS
 
 EXAMPLES
   $ sfdx acumen:apex:coverage:execute -u myOrgAlias
-       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics.
+       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics. The command block until all tests have 
+  completed.
   $ sfdx acumen:apex:coverage:execute -u myOrgAlias -w 30
        Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test 
   completion.
+  $ sfdx acumen:apex:coverage:execute -u myOrgAlias -w 0
+       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and returns immediately.
 ```
 
 ## `sfdx acumen:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
@@ -151,7 +153,8 @@ OPTIONS
   -w, --wait=wait                                                                   The optional wait time (minutes) for
                                                                                     test execution to complete. A value
                                                                                     of -1 means infinite wait. A value
-                                                                                    of 0 means no wait.
+                                                                                    of 0 means no wait. The default is
+                                                                                    -1
 
   --apiversion=apiversion                                                           override the api version used for
                                                                                     api requests made by this command

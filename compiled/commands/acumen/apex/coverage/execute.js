@@ -49,11 +49,20 @@ class Execute extends command_base_1.CommandBase {
                 process.exitCode = 1;
                 return;
             }
-            let waitCountMaxSeconds = this.flags.wait || Execute.defaultJobStatusWaitMax;
-            if (waitCountMaxSeconds > 0) {
-                waitCountMaxSeconds *= 60;
+            this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
+            this.ux.log('Apex Tests Queued');
+            // Are we waiting?
+            if (this.flags.wait === 0) {
+                return;
             }
+            const waitCountMaxSeconds = (this.flags.wait || Execute.defaultJobStatusWaitMax) * 60;
             if (!jobInfo.isDone()) {
+                if (waitCountMaxSeconds > 0) {
+                    this.ux.log(`Waiting (${waitCountMaxSeconds} seconds) for tests to complete...`);
+                }
+                else {
+                    this.ux.log('Waiting for tests to complete...');
+                }
                 try {
                     for (var _f = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.waitForJobAsync(username, jobInfo, waitCountMaxSeconds)), _g; _g = await _f.next(), !_g.done;) {
                         jobInfo = _g.value;
@@ -74,33 +83,31 @@ class Execute extends command_base_1.CommandBase {
                     return;
                 }
             }
-            this.ux.log('Apex Tests Started');
-            if (waitCountMaxSeconds !== 0) {
-                const createdDate = jobInfo.createdDate || new Date().toJSON();
-                try {
-                    for (var _h = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds, createdDate)), _j; _j = await _h.next(), !_j.done;) {
-                        recordCount = _j.value;
-                        if (recordCount === 0) {
-                            break;
-                        }
-                        this.ux.log(`${recordCount} Apex Test(s) remaining.`);
+            this.ux.log('All Apex Tests Started');
+            const createdDate = jobInfo.createdDate || new Date().toJSON();
+            try {
+                for (var _h = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds, createdDate)), _j; _j = await _h.next(), !_j.done;) {
+                    recordCount = _j.value;
+                    if (recordCount === 0) {
+                        break;
                     }
+                    this.ux.log(`${recordCount} Apex Test(s) remaining.`);
                 }
-                catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                finally {
-                    try {
-                        if (_j && !_j.done && (_c = _h.return)) await _c.call(_h);
-                    }
-                    finally { if (e_3) throw e_3.error; }
-                }
-                if (recordCount !== 0) {
-                    this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
-                    // Set the proper exit code to indicate violation/failure
-                    process.exitCode = 1;
-                    return;
-                }
-                this.ux.log('Apex Tests Completed');
             }
+            catch (e_3_1) { e_3 = { error: e_3_1 }; }
+            finally {
+                try {
+                    if (_j && !_j.done && (_c = _h.return)) await _c.call(_h);
+                }
+                finally { if (e_3) throw e_3.error; }
+            }
+            if (recordCount !== 0) {
+                this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
+                // Set the proper exit code to indicate violation/failure
+                process.exitCode = 1;
+                return;
+            }
+            this.ux.log('Apex Tests Completed');
         }
         catch (err) {
             throw err;
@@ -124,7 +131,7 @@ Execute.examples = [
 Execute.flagsConfig = {
     wait: command_1.flags.integer({
         char: 'w',
-        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.waitDescription')
+        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.waitDescription', [Execute.defaultJobStatusWaitMax])
     })
 };
 // Comment this out if your command does not require an org username

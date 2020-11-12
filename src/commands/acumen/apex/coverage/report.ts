@@ -20,7 +20,7 @@ export default class Report extends CommandBase {
     }),
     wait: flags.integer({
       char: 'w',
-      description: CommandBase.messages.getMessage('apex.coverage.report.waitDescription')
+      description: CommandBase.messages.getMessage('apex.coverage.report.waitDescription', [Report.defaultJobStatusWaitMax])
     })
   };
 

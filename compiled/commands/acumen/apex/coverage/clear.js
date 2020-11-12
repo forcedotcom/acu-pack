@@ -45,7 +45,7 @@ class Clear extends command_base_1.CommandBase {
                 const query = `SELECT Id FROM ${metaDataType}`;
                 const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
                 this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
-                let counter = 1;
+                let counter = 0;
                 for (const record of records) {
                     const result = await sfdx_tasks_1.SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
                     if (!result.success) {
@@ -56,7 +56,7 @@ class Clear extends command_base_1.CommandBase {
                         this.ux.log(`(${++counter}/${records.length}) Deleted id: ${record.Id}`);
                     }
                 }
-                this.ux.log(`Cleared.`);
+                this.ux.log('Cleared.');
             }
             if (hasFailures) {
                 this.ux.log('Unable to clear all Code Coverage Data.');
@@ -75,7 +75,7 @@ class Clear extends command_base_1.CommandBase {
 exports.default = Clear;
 Clear.defaultJobStatusWaitMax = -1;
 Clear.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.clear.commandDescription');
-//public static defaultMetadataTypes = ['ApexCodeCoverageAggregate', 'ApexCodeCoverage'];
+// Don't include ApexCodeCoverage as these records appear to be auto-generate if they are deleted;
 Clear.defaultMetadataTypes = ['ApexCodeCoverageAggregate'];
 Clear.examples = [
     `$ sfdx acumen:apex:coverage:clear -u myOrgAlias

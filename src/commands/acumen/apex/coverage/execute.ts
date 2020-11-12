@@ -18,7 +18,7 @@ export default class Execute extends CommandBase {
   protected static flagsConfig = {
     wait: flags.integer({
       char: 'w',
-      description: CommandBase.messages.getMessage('apex.coverage.execute.waitDescription')
+      description: CommandBase.messages.getMessage('apex.coverage.execute.waitDescription', [Execute.defaultJobStatusWaitMax])
     })
   };
 

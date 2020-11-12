@@ -112,7 +112,7 @@ Report.flagsConfig = {
     }),
     wait: command_1.flags.integer({
         char: 'w',
-        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.report.waitDescription')
+        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.report.waitDescription', [Report.defaultJobStatusWaitMax])
     })
 };
 // Comment this out if your command does not require an org username

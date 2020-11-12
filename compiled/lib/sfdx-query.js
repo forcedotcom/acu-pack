@@ -304,10 +304,8 @@ class SfdxQuery {
             try {
                 for (var _b = tslib_1.__asyncValues(SfdxQuery.waitForRecordCount(username, query, targetCount, waitCountMaxSeconds, interval)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
                     recordCount = _c.value;
-                    if (recordCount !== targetCount) {
-                        yield yield tslib_1.__await(recordCount);
-                    }
-                    else {
+                    yield yield tslib_1.__await(recordCount);
+                    if (recordCount === targetCount) {
                         break;
                     }
                 }
