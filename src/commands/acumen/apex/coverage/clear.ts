@@ -57,7 +57,7 @@ export default class Clear extends CommandBase {
         const query = `SELECT Id FROM ${metaDataType}`;
         const records = await SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
         this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
-        let counter = 1;
+        let counter = 0;
         for (const record of records) {
           const result = await SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
           if (!result.success) {
