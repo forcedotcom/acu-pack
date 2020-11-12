@@ -286,7 +286,7 @@ class SfdxTasks {
         if (!orgAliasOrUsername) {
             return null;
         }
-        const result = sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
+        const result = await sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
     }
     static async deleteRecordById(orgAliasOrUsername, metaDataType, recordId, isToolingApi = false) {
@@ -299,6 +299,35 @@ class SfdxTasks {
         }
         const result = await sfdx_core_1.SfdxCore.command(command);
         return new SfdxResult(result);
+    }
+    static async deleteRecordsByIds(orgAliasOrUsername, metaDataType, recordIds, isToolingApi = false) {
+        if (!orgAliasOrUsername || !metaDataType || !recordIds) {
+            return null;
+        }
+        const results = [];
+        if (isToolingApi) {
+            const orgInfo = await this.getOrgInfo(orgAliasOrUsername);
+            const bent = require('bent');
+            const apiVersion = '50.0';
+            const headers = { Authorization: `Bearer ${orgInfo.accessToken}` };
+            const url = `${orgInfo.instanceUrl}/services/data/v${apiVersion}/tooling/sobjects`;
+            const api = bent(url, 'DELETE', headers, 204);
+            for (const recordId of recordIds) {
+                await api(`/${metaDataType}/${recordId}/`);
+                results.push(recordId);
+            }
+        }
+        else {
+            for (const recordId of recordIds) {
+                let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
+                if (isToolingApi) {
+                    command += ' -t';
+                }
+                const result = await sfdx_core_1.SfdxCore.command(command);
+                results.push(result);
+            }
+        }
+        return results;
     }
     static async getFolderSOQLDataAsync(usernameOrAlias) {
         if (!this._folderPaths) {

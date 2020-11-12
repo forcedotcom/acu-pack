@@ -300,6 +300,36 @@ export class SfdxTasks {
         return new SfdxResult(result);
     }
 
+    public static async deleteRecordsByIds(orgAliasOrUsername: string, metaDataType: string, recordIds: string[], isToolingApi = false): Promise<any[]> {
+        if (!orgAliasOrUsername || !metaDataType || !recordIds) {
+            return null;
+        }
+        const results = []
+        if (isToolingApi) {
+            const orgInfo = await this.getOrgInfo(orgAliasOrUsername);
+            const bent = require('bent');
+            const apiVersion = '50.0';
+            const headers = { Authorization: `Bearer ${orgInfo.accessToken}` };
+            const url = `${orgInfo.instanceUrl}/services/data/v${apiVersion}/tooling/sobjects`;
+            const api = bent(url, 'DELETE', headers, 204);
+            for (const recordId of recordIds) {
+                await api(`/${metaDataType}/${recordId}/`);
+                results.push(recordId);
+            }
+
+        } else {
+            for (const recordId of recordIds) {
+                let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
+                if (isToolingApi) {
+                    command += ' -t';
+                }
+                const result = await SfdxCore.command(command);
+                results.push(result);
+            }
+        }
+        return results;
+    }
+
     protected static _folderPaths: Map<string, string> = null;
 
     private static async getFolderSOQLDataAsync(usernameOrAlias: string) {
