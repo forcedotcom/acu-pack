@@ -49,6 +49,7 @@ Congrats, you are debugging!
 $ sfdx plugins:install https://[YOUR_BITBUCKET_USER]@bitbucket.org/acumensolutions/acu-pack.git
 $ sfdx acumen -h
 ```
+NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_allowlist)
 
 # Commands
 <!-- commands -->
