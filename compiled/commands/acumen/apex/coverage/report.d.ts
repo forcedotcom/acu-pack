@@ -11,6 +11,5 @@ export default class Report extends CommandBase {
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
-    private testFailures;
     run(): Promise<void>;
 }

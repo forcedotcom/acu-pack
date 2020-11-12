@@ -332,9 +332,8 @@ export class SfdxQuery {
         // Check every 30 seconds or waitCountMaxSeconds so we don't waste a bunch of queries
         const interval = waitCountMaxSeconds >= 30 ? 30000 : waitCountMaxSeconds;
         for await (recordCount of SfdxQuery.waitForRecordCount(username, query, targetCount, waitCountMaxSeconds, interval)) {
-            if (recordCount !== targetCount) {
-                yield recordCount;
-            } else {
+            yield recordCount;
+            if (recordCount === targetCount) {
                 break;
             }
         }

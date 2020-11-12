@@ -6,10 +6,6 @@ const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const office_1 = require("../../../../lib/office");
 class Report extends command_base_1.CommandBase {
-    constructor() {
-        super(...arguments);
-        this.testFailures = new Map();
-    }
     async run() {
         var e_1, _a;
         const username = this.flags.targetusername;
@@ -39,19 +35,6 @@ class Report extends command_base_1.CommandBase {
                 // Set the proper exit code to indicate violation/failure
                 process.exitCode = 1;
                 return;
-            }
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today.toJSON()} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
-            const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query);
-            for (const record of records) {
-                this.testFailures.set(`${record.ApexClass.Name}.${record.MethodName}`, {
-                    message: record.Message,
-                    stackTrace: record.StackTrace,
-                    asyncApexJobId: record.AsyncApexJobId,
-                    apexTestRunResultId: record.ApexTestRunResultId,
-                    testTimestamp: record.TestTimestamp
-                });
             }
             // Get Code Coverage Report
             this.ux.log('Getting Code Coverage Report Data.');
@@ -84,23 +67,23 @@ class Report extends command_base_1.CommandBase {
                 ]);
             }
             workbookMap.set('Code Coverage Details', sheetData);
-            // Apex Test Failures
-            if (this.testFailures.size > 0) {
-                sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
-                for (const [name, apexFailure] of this.testFailures) {
-                    const parts = name.split('.');
-                    sheetData.push([
-                        parts[0],
-                        parts[1],
-                        apexFailure.message,
-                        apexFailure.stackTrace,
-                        apexFailure.asyncApexJobId,
-                        apexFailure.apexTestRunResultId,
-                        apexFailure.testTimestamp
-                    ]);
-                }
-                workbookMap.set('Apex Test Failures', sheetData);
+            // Check Apex Test Failures
+            const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
+            const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
+            const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query);
+            sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
+            for (const record of records) {
+                sheetData.push([
+                    record.ApexClass.Name,
+                    record.MethodName,
+                    record.Message,
+                    record.StackTrace,
+                    record.AsyncApexJobId,
+                    record.ApexTestRunResultId,
+                    record.TestTimestamp
+                ]);
             }
+            workbookMap.set('Apex Test Failures', sheetData);
             const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, username);
             office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
             this.ux.log(`${reportPath} written.`);
@@ -129,7 +112,7 @@ Report.flagsConfig = {
     }),
     wait: command_1.flags.integer({
         char: 'w',
-        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.waitDescription')
+        description: command_base_1.CommandBase.messages.getMessage('apex.coverage.report.waitDescription')
     })
 };
 // Comment this out if your command does not require an org username

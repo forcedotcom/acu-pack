@@ -12,7 +12,7 @@ class Clear extends command_base_1.CommandBase {
         const orgId = this.org.getOrgId();
         try {
             this.ux.log(`Connecting to Org: ${username}(${orgId})`);
-            this.ux.log(`Checking for pending tests...`);
+            this.ux.log('Checking for pending tests...');
             let recordCount = 0;
             try {
                 for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username)), _c; _c = await _b.next(), !_c.done;) {
@@ -44,13 +44,19 @@ class Clear extends command_base_1.CommandBase {
             for (const metaDataType of metaDataTypes) {
                 const query = `SELECT Id FROM ${metaDataType}`;
                 const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
+                this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
+                let counter = 1;
                 for (const record of records) {
                     const result = await sfdx_tasks_1.SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
                     if (!result.success) {
-                        this.ux.log(`Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
+                        this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
                         hasFailures = true;
                     }
+                    else {
+                        this.ux.log(`(${++counter}/${records.length}) Deleted id: ${record.Id}`);
+                    }
                 }
+                this.ux.log(`Cleared.`);
             }
             if (hasFailures) {
                 this.ux.log('Unable to clear all Code Coverage Data.');
@@ -69,7 +75,8 @@ class Clear extends command_base_1.CommandBase {
 exports.default = Clear;
 Clear.defaultJobStatusWaitMax = -1;
 Clear.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.clear.commandDescription');
-Clear.defaultMetadataTypes = ['ApexCodeCoverageAggregate', 'ApexCodeCoverage'];
+//public static defaultMetadataTypes = ['ApexCodeCoverageAggregate', 'ApexCodeCoverage'];
+Clear.defaultMetadataTypes = ['ApexCodeCoverageAggregate'];
 Clear.examples = [
     `$ sfdx acumen:apex:coverage:clear -u myOrgAlias
     Deletes the existing instances of ${Clear.defaultMetadataTypes.join(',')} from the specific Org.`

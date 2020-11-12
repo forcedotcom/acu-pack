@@ -36,7 +36,7 @@ class Execute extends command_base_1.CommandBase {
                 return;
             }
             // Execute tests (with CodeCoverage) ?
-            this.ux.log(`Gathering Test ApexClasses...`);
+            this.ux.log('Gathering Test ApexClasses...');
             const testClasses = await sfdx_query_1.SfdxQuery.getApexTestClassesAsync(username);
             if (testClasses.length === 0) {
                 this.ux.log(`No Test ApexClasses exist for ${username}`);
@@ -49,7 +49,10 @@ class Execute extends command_base_1.CommandBase {
                 process.exitCode = 1;
                 return;
             }
-            const waitCountMaxSeconds = (this.flags.wait || Execute.defaultJobStatusWaitMax) * 60;
+            let waitCountMaxSeconds = this.flags.wait || Execute.defaultJobStatusWaitMax;
+            if (waitCountMaxSeconds > 0) {
+                waitCountMaxSeconds *= 60;
+            }
             if (!jobInfo.isDone()) {
                 try {
                     for (var _f = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.waitForJobAsync(username, jobInfo, waitCountMaxSeconds)), _g; _g = await _f.next(), !_g.done;) {
@@ -72,7 +75,7 @@ class Execute extends command_base_1.CommandBase {
                 }
             }
             this.ux.log('Apex Tests Started');
-            if (waitCountMaxSeconds != 0) {
+            if (waitCountMaxSeconds !== 0) {
                 const createdDate = jobInfo.createdDate || new Date().toJSON();
                 try {
                     for (var _h = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds, createdDate)), _j; _j = await _h.next(), !_j.done;) {
@@ -80,6 +83,7 @@ class Execute extends command_base_1.CommandBase {
                         if (recordCount === 0) {
                             break;
                         }
+                        this.ux.log(`${recordCount} Apex Test(s) remaining.`);
                     }
                 }
                 catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -107,13 +111,15 @@ class Execute extends command_base_1.CommandBase {
     }
 }
 exports.default = Execute;
-Execute.defaultJobStatusWaitMax = 0;
+Execute.defaultJobStatusWaitMax = -1;
 Execute.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.commandDescription');
 Execute.examples = [
     `$ sfdx acumen:apex:coverage:execute -u myOrgAlias
-    Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics.`,
+    Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics. The command block until all tests have completed.`,
     `$ sfdx acumen:apex:coverage:execute -u myOrgAlias -w 30
-    Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test completion.`
+    Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test completion.`,
+    `$ sfdx acumen:apex:coverage:execute -u myOrgAlias -w 0
+    Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and returns immediately.`
 ];
 Execute.flagsConfig = {
     wait: command_1.flags.integer({

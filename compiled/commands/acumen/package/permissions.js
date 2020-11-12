@@ -34,6 +34,16 @@ class Permissions extends command_base_1.CommandBase {
             for (const metadata of describeMetadata) {
                 if (this.metaNames.has(metadata.xmlName)) {
                     describeMetadatas.add(metadata);
+                    continue;
+                }
+                if (metadata.childXmlNames) {
+                    for (const childName of metadata.childXmlNames) {
+                        if (this.metaNames.has(childName)) {
+                            // 'adopt' the childName as the xmlName to pull the child metadata
+                            metadata.xmlName = childName;
+                            describeMetadatas.add(metadata);
+                        }
+                    }
                 }
             }
             this.ux.log(`Generating: ${this.packageFileName}`);

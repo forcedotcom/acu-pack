@@ -6,7 +6,7 @@ import { SfdxTasks } from '../../../../lib/sfdx-tasks';
 export default class Clear extends CommandBase {
   public static defaultJobStatusWaitMax = -1;
   public static description = CommandBase.messages.getMessage('apex.coverage.clear.commandDescription');
-  //public static defaultMetadataTypes = ['ApexCodeCoverageAggregate', 'ApexCodeCoverage'];
+  // Don't include ApexCodeCoverage as these records appear to be auto-generate if they are deleted;
   public static defaultMetadataTypes = ['ApexCodeCoverageAggregate'];
   public static examples = [
     `$ sfdx acumen:apex:coverage:clear -u myOrgAlias
@@ -57,14 +57,17 @@ export default class Clear extends CommandBase {
         const query = `SELECT Id FROM ${metaDataType}`;
         const records = await SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
         this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
+        let counter = 1;
         for (const record of records) {
           const result = await SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
           if (!result.success) {
-            this.ux.log(`Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
+            this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
             hasFailures = true;
+          } else {
+            this.ux.log(`(${++counter}/${records.length}) Deleted id: ${record.Id}`);
           }
         }
-        this.ux.log(`Cleared.`);
+        this.ux.log('Cleared.');
       }
 
       if (hasFailures) {
