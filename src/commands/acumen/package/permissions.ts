@@ -9,7 +9,7 @@ import Utils from '../../../lib/utils';
 
 export default class Permissions extends CommandBase {
   public static packageFileName = 'package-permissions.xml';
-  public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomField', 'CustomTab', 'PermissionSet', 'Profile'];
+  public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
   public static description = CommandBase.messages.getMessage('package.permissions.commandDescription');
 
   public static examples = [`$ sfdx acumen:package:permissions -u myOrgAlias
