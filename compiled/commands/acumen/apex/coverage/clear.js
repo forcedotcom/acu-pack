@@ -7,7 +7,7 @@ const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const sfdx_tasks_1 = require("../../../../lib/sfdx-tasks");
 class Clear extends command_base_1.CommandBase {
     async run() {
-        var e_1, _a;
+        var e_1, _a, e_2, _b;
         const username = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         try {
@@ -15,8 +15,8 @@ class Clear extends command_base_1.CommandBase {
             this.ux.log('Checking for pending tests...');
             let recordCount = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username)), _c; _c = await _b.next(), !_c.done;) {
-                    recordCount = _c.value;
+                for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username)), _d; _d = await _c.next(), !_d.done;) {
+                    recordCount = _d.value;
                     if (recordCount === 0) {
                         break;
                     }
@@ -25,7 +25,7 @@ class Clear extends command_base_1.CommandBase {
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
@@ -46,15 +46,24 @@ class Clear extends command_base_1.CommandBase {
                 const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
                 this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
                 let counter = 0;
-                for (const record of records) {
-                    const result = await sfdx_tasks_1.SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
-                    if (!result.success) {
-                        this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
-                        hasFailures = true;
+                try {
+                    for (var _e = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.deleteRecordsByIds(username, metaDataType, records, 'Id', true)), _f; _f = await _e.next(), !_f.done;) {
+                        const result = _f.value;
+                        if (!result.success) {
+                            this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${result.id} errors: ${result.errors.join(',')}`);
+                            hasFailures = true;
+                        }
+                        else {
+                            this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result.id}`);
+                        }
                     }
-                    else {
-                        this.ux.log(`(${++counter}/${records.length}) Deleted id: ${record.Id}`);
+                }
+                catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                finally {
+                    try {
+                        if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
                     }
+                    finally { if (e_2) throw e_2.error; }
                 }
                 this.ux.log('Cleared.');
             }

@@ -56,18 +56,19 @@ export default class Clear extends CommandBase {
       for (const metaDataType of metaDataTypes) {
         const query = `SELECT Id FROM ${metaDataType}`;
         const records = await SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
-        this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
-        let counter = 0;
-        for (const record of records) {
-          const result = await SfdxTasks.deleteRecordById(username, metaDataType, record.Id, true);
-          if (!result.success) {
-            this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${record.Id} errors: ${result.errors.join(',')}`);
-            hasFailures = true;
-          } else {
-            this.ux.log(`(${++counter}/${records.length}) Deleted id: ${record.Id}`);
+        if (records && records.length > 0) {
+          this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
+          let counter = 0;
+          for await (const result of SfdxTasks.deleteRecordsByIds(username, metaDataType, records, 'Id', true)) {
+            if (!result.success) {
+              this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${result.id} errors: ${result.errors.join(',')}`);
+              hasFailures = true;
+            } else {
+              this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result.id}`);
+            }
           }
+          this.ux.log('Cleared.');
         }
-        this.ux.log('Cleared.');
       }
 
       if (hasFailures) {

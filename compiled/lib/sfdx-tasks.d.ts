@@ -19,13 +19,13 @@ export declare class SfdxOrgInfo {
     instanceUrl: string;
     clientId: string;
     alias: string;
-    constructor(result: any);
+    constructor(result?: any);
 }
 export declare class SfdxResult {
     id: string;
     success: boolean;
     errors: string[];
-    constructor(result: any);
+    constructor(result?: any);
 }
 export declare class SfdxTasks {
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
@@ -46,7 +46,7 @@ export declare class SfdxTasks {
     static waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<SfdxJobInfo, SfdxJobInfo, unknown>;
     static getOrgInfo(orgAliasOrUsername: string): Promise<SfdxOrgInfo>;
     static deleteRecordById(orgAliasOrUsername: string, metaDataType: string, recordId: string, isToolingApi?: boolean): Promise<SfdxResult>;
-    static deleteRecordsByIds(orgAliasOrUsername: string, metaDataType: string, recordIds: string[], isToolingApi?: boolean): Promise<any[]>;
+    static deleteRecordsByIds(orgAliasOrUsername: string, metaDataType: string, records: any[], recordIdField?: string, isToolingApi?: boolean): AsyncGenerator<SfdxResult, any, unknown>;
     protected static _folderPaths: Map<string, string>;
     private static getFolderSOQLDataAsync;
     private static getFolderFullPath;

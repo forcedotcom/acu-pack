@@ -37,7 +37,10 @@ export class SfdxOrgInfo {
     public clientId: string;
     public alias: string;
 
-    constructor(result: any) {
+    constructor(result: any = null) {
+        if (!result) {
+            return;
+        }
         this.username = result.username;
         this.id = result.id;
         this.connectedStatus = result.connectedStatus;
@@ -53,7 +56,12 @@ export class SfdxResult {
     public success: boolean;
     public errors: string[];
 
-    constructor(result: any) {
+    constructor(result: any = null) {
+        if (!result) {
+            this.errors = [];
+            this.success = false;
+            return;
+        }
         this.id = result.id;
         this.success = result.success;
         this.errors = result.errors;
@@ -300,11 +308,10 @@ export class SfdxTasks {
         return new SfdxResult(result);
     }
 
-    public static async deleteRecordsByIds(orgAliasOrUsername: string, metaDataType: string, recordIds: string[], isToolingApi = false): Promise<any[]> {
-        if (!orgAliasOrUsername || !metaDataType || !recordIds) {
+    public static async* deleteRecordsByIds(orgAliasOrUsername: string, metaDataType: string, records: any[], recordIdField: string = null, isToolingApi = false) {
+        if (!orgAliasOrUsername || !metaDataType || !records) {
             return null;
         }
-        const results = []
         if (isToolingApi) {
             const orgInfo = await this.getOrgInfo(orgAliasOrUsername);
             const bent = require('bent');
@@ -312,22 +319,42 @@ export class SfdxTasks {
             const headers = { Authorization: `Bearer ${orgInfo.accessToken}` };
             const url = `${orgInfo.instanceUrl}/services/data/v${apiVersion}/tooling/sobjects`;
             const api = bent(url, 'DELETE', headers, 204);
-            for (const recordId of recordIds) {
-                await api(`/${metaDataType}/${recordId}/`);
-                results.push(recordId);
-            }
+            for (const record of records) {
+                // If we have a recordIdField - lets use it, otherwise
+                const result = new SfdxResult();
+                if (typeof record === 'string') {
+                    result.id = record;
+                } else {
+                    result.id = (recordIdField || 'id') ? record[recordIdField] : record;
+                }
 
+                try {
+                    if (!result.id) {
+                        result.errors.push('Record is null.');
+                    } else {
+                        await api(`/${metaDataType}/${result.id}/`);
+                        result.success = true;
+                    }
+                } catch (err) {
+                    // 404
+                    result.success = false;
+                    result.errors.push(err.message);
+                } finally {
+                    yield result;
+                }
+            }
         } else {
-            for (const recordId of recordIds) {
+            for (const record of records) {
+                const recordId = record[recordIdField];
                 let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
                 if (isToolingApi) {
                     command += ' -t';
                 }
-                const result = await SfdxCore.command(command);
-                results.push(result);
+                const res = await SfdxCore.command(command);
+                const result = new SfdxResult(res);
+                yield result;
             }
         }
-        return results;
     }
 
     protected static _folderPaths: Map<string, string> = null;

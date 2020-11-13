@@ -22,7 +22,10 @@ class SfdxJobInfo {
 }
 exports.SfdxJobInfo = SfdxJobInfo;
 class SfdxOrgInfo {
-    constructor(result) {
+    constructor(result = null) {
+        if (!result) {
+            return;
+        }
         this.username = result.username;
         this.id = result.id;
         this.connectedStatus = result.connectedStatus;
@@ -34,7 +37,12 @@ class SfdxOrgInfo {
 }
 exports.SfdxOrgInfo = SfdxOrgInfo;
 class SfdxResult {
-    constructor(result) {
+    constructor(result = null) {
+        if (!result) {
+            this.errors = [];
+            this.success = false;
+            return;
+        }
         this.id = result.id;
         this.success = result.success;
         this.errors = result.errors;
@@ -300,34 +308,59 @@ class SfdxTasks {
         const result = await sfdx_core_1.SfdxCore.command(command);
         return new SfdxResult(result);
     }
-    static async deleteRecordsByIds(orgAliasOrUsername, metaDataType, recordIds, isToolingApi = false) {
-        if (!orgAliasOrUsername || !metaDataType || !recordIds) {
-            return null;
-        }
-        const results = [];
-        if (isToolingApi) {
-            const orgInfo = await this.getOrgInfo(orgAliasOrUsername);
-            const bent = require('bent');
-            const apiVersion = '50.0';
-            const headers = { Authorization: `Bearer ${orgInfo.accessToken}` };
-            const url = `${orgInfo.instanceUrl}/services/data/v${apiVersion}/tooling/sobjects`;
-            const api = bent(url, 'DELETE', headers, 204);
-            for (const recordId of recordIds) {
-                await api(`/${metaDataType}/${recordId}/`);
-                results.push(recordId);
+    static deleteRecordsByIds(orgAliasOrUsername, metaDataType, records, recordIdField = null, isToolingApi = false) {
+        return tslib_1.__asyncGenerator(this, arguments, function* deleteRecordsByIds_1() {
+            if (!orgAliasOrUsername || !metaDataType || !records) {
+                return yield tslib_1.__await(null);
             }
-        }
-        else {
-            for (const recordId of recordIds) {
-                let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
-                if (isToolingApi) {
-                    command += ' -t';
+            if (isToolingApi) {
+                const orgInfo = yield tslib_1.__await(this.getOrgInfo(orgAliasOrUsername));
+                const bent = require('bent');
+                const apiVersion = '50.0';
+                const headers = { Authorization: `Bearer ${orgInfo.accessToken}` };
+                const url = `${orgInfo.instanceUrl}/services/data/v${apiVersion}/tooling/sobjects`;
+                const api = bent(url, 'DELETE', headers, 204);
+                for (const record of records) {
+                    // If we have a recordIdField - lets use it, otherwise 
+                    const result = new SfdxResult();
+                    if (typeof record === 'string') {
+                        result.id = record;
+                    }
+                    else {
+                        result.id = (recordIdField || 'id') ? record[recordIdField] : record;
+                    }
+                    try {
+                        if (!result.id) {
+                            result.errors.push('Record is null.');
+                        }
+                        else {
+                            yield tslib_1.__await(api(`/${metaDataType}/${result.id}/`));
+                            result.success = true;
+                        }
+                    }
+                    catch (err) {
+                        // 404
+                        result.success = false;
+                        result.errors.push(err.message);
+                    }
+                    finally {
+                        yield yield tslib_1.__await(result);
+                    }
                 }
-                const result = await sfdx_core_1.SfdxCore.command(command);
-                results.push(result);
             }
-        }
-        return results;
+            else {
+                for (const record of records) {
+                    const recordId = record[recordIdField];
+                    let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
+                    if (isToolingApi) {
+                        command += ' -t';
+                    }
+                    const res = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(command));
+                    const result = new SfdxResult(res);
+                    yield yield tslib_1.__await(result);
+                }
+            }
+        });
     }
     static async getFolderSOQLDataAsync(usernameOrAlias) {
         if (!this._folderPaths) {

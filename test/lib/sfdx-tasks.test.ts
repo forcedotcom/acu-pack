@@ -1,10 +1,10 @@
 import { expect } from '@salesforce/command/lib/test';
-import { SfdxTasks } from '../../src/lib/sfdx-tasks';
+import { SfdxTasks, SfdxResult } from '../../src/lib/sfdx-tasks';
 import Utils from '../../src/lib/utils';
 
 const optionsPath = "./packageOptions.json";
 // NOTE: These tests might fail without an authorized Org alias
-const orgAlias = null; //'SOQLDEV';
+const orgAlias = 'SOQLDEV';
 before('Cleanup', async () => {
   await Utils.deleteFileAsync(optionsPath);
 });
@@ -27,17 +27,20 @@ describe('Sfdx Tasks Tests', () => {
     });
   });
   describe('deleteRecordsByIds Tests', function () {
-    //this.timeout(15000); // Times out due to query
+    this.timeout(15000); // Times out due to query
     it('Can delete records', async function () {
       if (!orgAlias) {
         this.skip();
       }
       const ids = ['715r0000000XcmFAAS'];
-      const results = await SfdxTasks.deleteRecordsByIds(orgAlias, 'ApexCodeCoverageAggregate', ids, true);
-      expect(results).to.not.be.null;
-      expect(results).to.be.instanceOf(Array);
-      expect(results.length).to.equal(ids.length);
-      expect(results[0]).to.equal(ids[0]);
+      let counter = 0;
+      for await (const result of SfdxTasks.deleteRecordsByIds(orgAlias, 'ApexCodeCoverageAggregate', ids, null, true)) {
+        expect(result).to.not.be.null;
+        expect(result).to.be.instanceOf(SfdxResult);
+        expect(result.id).to.equal(ids[counter++]);
+        expect(result.success).to.be.false;
+        expect(result.errors[0]).to.equal('Not Found');
+      }
     });
   });
 });
