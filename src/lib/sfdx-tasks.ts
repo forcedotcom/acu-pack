@@ -284,7 +284,7 @@ export class SfdxTasks {
         if (!orgAliasOrUsername) {
             return null;
         }
-        const result = SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
+        const result = await SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
     }
 
