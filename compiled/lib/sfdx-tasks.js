@@ -3,13 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const ts_types_1 = require("@salesforce/ts-types");
 const sfdx_core_1 = require("./sfdx-core");
+const sfdx_query_1 = require("./sfdx-query");
 const path = require("path");
 const package_options_1 = require("../lib/package-options");
 const utils_1 = require("../lib/utils");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
-const sfdx_query_1 = require("./sfdx-query");
 const xpath_options_1 = require("../lib/xpath-options");
+const unmask_options_1 = require("../lib/unmask-options");
 class SfdxJobInfo {
     constructor() {
         this.statusCount = 0;
@@ -36,19 +37,6 @@ class SfdxOrgInfo {
     }
 }
 exports.SfdxOrgInfo = SfdxOrgInfo;
-class SfdxResult {
-    constructor(result = null) {
-        if (!result) {
-            this.errors = [];
-            this.success = false;
-            return;
-        }
-        this.id = result.id;
-        this.success = result.success;
-        this.errors = result.errors;
-    }
-}
-exports.SfdxResult = SfdxResult;
 class SfdxTasks {
     static async describeMetadata(usernameOrAlias) {
         const response = await sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:describemetadata --json -u ${usernameOrAlias}`);
@@ -297,70 +285,25 @@ class SfdxTasks {
         const result = await sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
     }
-    static async deleteRecordById(orgAliasOrUsername, metaDataType, recordId, isToolingApi = false) {
-        if (!orgAliasOrUsername || !metaDataType || !recordId) {
-            return null;
-        }
-        let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
-        if (isToolingApi) {
-            command += ' -t';
-        }
-        const result = await sfdx_core_1.SfdxCore.command(command);
-        return new SfdxResult(result);
-    }
-    static deleteRecordsByIds(orgAliasOrUsername, metaDataType, records, recordIdField = null, isToolingApi = false) {
-        return tslib_1.__asyncGenerator(this, arguments, function* deleteRecordsByIds_1() {
-            if (!orgAliasOrUsername || !metaDataType || !records) {
-                return yield tslib_1.__await(null);
-            }
-            if (isToolingApi) {
-                const orgInfo = yield tslib_1.__await(this.getOrgInfo(orgAliasOrUsername));
-                const bent = require('bent');
-                const apiVersion = '50.0';
-                const headers = { Authorization: `Bearer ${orgInfo.accessToken}` };
-                const url = `${orgInfo.instanceUrl}/services/data/v${apiVersion}/tooling/sobjects`;
-                const api = bent(url, 'DELETE', headers, 204);
-                for (const record of records) {
-                    // If we have a recordIdField - lets use it, otherwise 
-                    const result = new SfdxResult();
-                    if (typeof record === 'string') {
-                        result.id = record;
-                    }
-                    else {
-                        result.id = (recordIdField || 'id') ? record[recordIdField] : record;
-                    }
-                    try {
-                        if (!result.id) {
-                            result.errors.push('Record is null.');
-                        }
-                        else {
-                            yield tslib_1.__await(api(`/${metaDataType}/${result.id}/`));
-                            result.success = true;
-                        }
-                    }
-                    catch (err) {
-                        // 404
-                        result.success = false;
-                        result.errors.push(err.message);
-                    }
-                    finally {
-                        yield yield tslib_1.__await(result);
-                    }
-                }
+    static async getUnmaskOptionsAsync(optionsPath) {
+        let options;
+        if (optionsPath) {
+            if (await utils_1.default.pathExistsAsync(optionsPath)) {
+                const data = (await fs_1.promises.readFile(optionsPath)).toString();
+                options = unmask_options_1.UnmaskOptions.deserialize(data);
             }
             else {
-                for (const record of records) {
-                    const recordId = record[recordIdField];
-                    let command = `sfdx force:data:record:delete --json -u ${orgAliasOrUsername} -s ${metaDataType} -i ${recordId}`;
-                    if (isToolingApi) {
-                        command += ' -t';
-                    }
-                    const res = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(command));
-                    const result = new SfdxResult(res);
-                    yield yield tslib_1.__await(result);
+                options = new unmask_options_1.UnmaskOptions();
+                // load the default values
+                options.loadDefaults();
+                const dir = path.dirname(optionsPath);
+                if (dir) {
+                    await fs_1.promises.mkdir(dir, { recursive: true });
                 }
+                await fs_1.promises.writeFile(optionsPath, options.serialize());
             }
-        });
+        }
+        return options;
     }
     static async getFolderSOQLDataAsync(usernameOrAlias) {
         if (!this._folderPaths) {

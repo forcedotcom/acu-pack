@@ -1,11 +1,9 @@
 import { expect } from '@salesforce/command/lib/test';
-import { SfdxTasks, SfdxResult } from '../../src/lib/sfdx-tasks';
+import { SfdxTasks } from '../../src/lib/sfdx-tasks';
 import Utils from '../../src/lib/utils';
 
-const optionsPath = "./packageOptions.json";
-// NOTE: These tests might fail without an authorized Org alias
-const orgAlias = 'SOQLDEV';
-before('Cleanup', async () => {
+const optionsPath = "./options.json";
+beforeEach('Cleanup', async () => {
   await Utils.deleteFileAsync(optionsPath);
 });
 describe('Sfdx Tasks Tests', () => {
@@ -15,31 +13,52 @@ describe('Sfdx Tasks Tests', () => {
       expect(await Utils.pathExistsAsync(optionsPath)).to.be.false;
     });
     it('Creates New Object & File', async function () {
-      const packageOptions = await SfdxTasks.getPackageOptionsAsync(optionsPath);
+      const options = await SfdxTasks.getPackageOptionsAsync(optionsPath);
 
       // It writes the file
       expect(await Utils.pathExistsAsync(optionsPath)).is.true;
 
       // It contains default data
-      expect(packageOptions).to.not.be.null;
-      expect(packageOptions.excludeMetadataTypes).to.be.instanceOf(Array);
-      expect(packageOptions.excludeMetadataTypes.length).to.not.equal(0);
+      expect(options).to.not.be.null;
+      expect(options.excludeMetadataTypes).to.be.instanceOf(Array);
+      expect(options.excludeMetadataTypes.length).to.not.equal(0);
     });
   });
-  describe('deleteRecordsByIds Tests', function () {
-    this.timeout(15000); // Times out due to query
-    it('Can delete records', async function () {
-      if (!orgAlias) {
-        this.skip();
-      }
-      const ids = ['715r0000000XcmFAAS'];
-      let counter = 0;
-      for await (const result of SfdxTasks.deleteRecordsByIds(orgAlias, 'ApexCodeCoverageAggregate', ids, null, true)) {
-        expect(result).to.not.be.null;
-        expect(result).to.be.instanceOf(SfdxResult);
-        expect(result.id).to.equal(ids[counter++]);
-        expect(result.success).to.be.false;
-        expect(result.errors[0]).to.equal('Not Found');
+  describe('getXPathOptions Tests', function () {
+    it('Can Handle Null', async function () {
+      expect(await SfdxTasks.getXPathOptionsAsync(null)).to.be.undefined;
+      expect(await Utils.pathExistsAsync(optionsPath)).to.be.false;
+    });
+    it('Creates New Object & File', async function () {
+      const options = await SfdxTasks.getXPathOptionsAsync(optionsPath);
+
+      // It writes the file
+      expect(await Utils.pathExistsAsync(optionsPath)).is.true;
+
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.rules).to.be.instanceOf(Map);
+      expect(options.rules.size).to.not.equal(0);
+    });
+  });
+  describe('getUnmaskOptions Tests', function () {
+    it('Can Handle Null', async function () {
+      expect(await SfdxTasks.getUnmaskOptionsAsync(null)).to.be.undefined;
+      expect(await Utils.pathExistsAsync(optionsPath)).to.be.false;
+    });
+    it('Creates New Object & File', async function () {
+      const options = await SfdxTasks.getUnmaskOptionsAsync(optionsPath);
+
+      // It writes the file
+      expect(await Utils.pathExistsAsync(optionsPath)).is.true;
+
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.sandboxes).to.be.instanceOf(Map);
+      expect(options.sandboxes.size).to.not.equal(0);
+      for (const [org, users] of options.sandboxes) {
+        expect(org).to.not.be.null;
+        expect(users).to.be.instanceOf(Array);
       }
     });
   });

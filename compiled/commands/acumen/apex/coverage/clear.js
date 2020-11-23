@@ -4,7 +4,7 @@ const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
-const sfdx_tasks_1 = require("../../../../lib/sfdx-tasks");
+const sfdx_client_1 = require("../../../../lib/sfdx-client");
 class Clear extends command_base_1.CommandBase {
     async run() {
         var e_1, _a, e_2, _b;
@@ -40,34 +40,33 @@ class Clear extends command_base_1.CommandBase {
                 ? this.flags.metadatas.split(',')
                 : Clear.defaultMetadataTypes;
             this.ux.log('Clearing Code Coverage Data.');
-            let hasFailures = false;
-            for (const metaDataType of metaDataTypes) {
-                const query = `SELECT Id FROM ${metaDataType}`;
-                const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
-                this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
-                let counter = 0;
-                try {
-                    for (var _e = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.deleteRecordsByIds(username, metaDataType, records, 'Id', true)), _f; _f = await _e.next(), !_f.done;) {
-                        const result = _f.value;
-                        if (!result.success) {
-                            this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${result.id} errors: ${result.errors.join(',')}`);
-                            hasFailures = true;
+            try {
+                for (const metaDataType of metaDataTypes) {
+                    const query = `SELECT Id FROM ${metaDataType}`;
+                    const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
+                    if (records && records.length > 0) {
+                        this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
+                        let counter = 0;
+                        const sfdxClient = new sfdx_client_1.SfdxClient(username);
+                        try {
+                            for (var _e = tslib_1.__asyncValues(sfdxClient.do(sfdx_client_1.RestAction.DELETE, metaDataType, records, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE])), _f; _f = await _e.next(), !_f.done;) {
+                                const result = _f.value;
+                                this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result}`);
+                            }
                         }
-                        else {
-                            this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result.id}`);
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
+                            }
+                            finally { if (e_2) throw e_2.error; }
                         }
+                        this.ux.log('Cleared.');
                     }
                 }
-                catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
-                    }
-                    finally { if (e_2) throw e_2.error; }
-                }
-                this.ux.log('Cleared.');
             }
-            if (hasFailures) {
+            catch (err) {
+                this.ux.log(`Delete Failed: ${err.message}`);
                 this.ux.log('Unable to clear all Code Coverage Data.');
                 process.exitCode = 1;
                 return;

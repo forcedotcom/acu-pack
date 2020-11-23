@@ -150,5 +150,36 @@ export default class Utils {
         await new Promise(resolve => setTimeout(resolve, sleepMiliseconds));
     }
 
+    public static getFieldValues(records: any[], fieldName: string = 'id', mustHaveValue = false): string[] {
+        const values = [];
+        for (const record of records) {
+            values.push(Utils.getFieldValue(record, fieldName, mustHaveValue));
+        }
+        return values;
+    }
+
+    public static getFieldValue(record: any, fieldName: string = 'id', mustHaveValue = false): string {
+        if (!record) {
+            return null;
+        }
+        const value = typeof record === 'string'
+            ? record
+            : record[fieldName];
+        if (mustHaveValue && !value) {
+            throw new Error(`Required Field: ${fieldName} not found in record: ${JSON.stringify(record)}.`);
+        }
+        return value;
+    }
+
+    public static unmaskEmail(email: string, mask: string = '.invalid'): string {
+        if (!email) {
+            return null;
+        }
+        if (!email.includes(mask)) {
+            return email;
+        }
+        return email.split(mask).join('');
+    }
+
     private static glob = require('util').promisify(require('glob'));
 }

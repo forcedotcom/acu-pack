@@ -150,4 +150,15 @@ describe("Utils Tests", function () {
             expect(results.get(xpath)[1]).to.equal('data1');
         });
     });
+    describe("unmaskEmail Tests", function () {
+        it("Can handle nulls", function () {
+            expect(Utils.unmaskEmail(null)).to.equal(null);
+        });
+        it("Can unmaskEmail", function () {
+            expect(Utils.unmaskEmail('test.user@aie.army.com.soqldev.invalid')).to.equal('test.user@aie.army.com.soqldev');
+        });
+        it("Does not change unmasked email", function () {
+            expect(Utils.unmaskEmail('test.user@aie.army.com.soqldev')).to.equal('test.user@aie.army.com.soqldev');
+        });
+    });
 });

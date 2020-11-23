@@ -320,6 +320,22 @@ class SfdxQuery {
             return yield tslib_1.__await(recordCount);
         });
     }
+    // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes
+    static getInClause(values = [''], isValueNumeric = false) {
+        let inClause = '';
+        if (isValueNumeric) {
+            inClause = values.join(',');
+        }
+        else {
+            for (const value of values) {
+                if (inClause.length > 0) {
+                    inClause += ',';
+                }
+                inClause += `'${value}'`;
+            }
+        }
+        return `IN (${inClause})`;
+    }
 }
 exports.SfdxQuery = SfdxQuery;
 SfdxQuery.MAX_QUERY_LIMIT = 1000;

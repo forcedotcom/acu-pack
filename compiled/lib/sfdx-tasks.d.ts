@@ -1,6 +1,7 @@
-import { PackageOptions } from '../lib/package-options';
 import { SfdxEntity } from './sfdx-query';
+import { PackageOptions } from '../lib/package-options';
 import { XPathOptions } from '../lib/xpath-options';
+import { UnmaskOptions } from '../lib/unmask-options';
 export declare class SfdxJobInfo {
     id: string;
     batchId: string;
@@ -21,12 +22,6 @@ export declare class SfdxOrgInfo {
     alias: string;
     constructor(result?: any);
 }
-export declare class SfdxResult {
-    id: string;
-    success: boolean;
-    errors: string[];
-    constructor(result?: any);
-}
 export declare class SfdxTasks {
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
     static retrievePackage(usernameOrAlias: string, packageFilePath?: string): Promise<any>;
@@ -45,8 +40,7 @@ export declare class SfdxTasks {
     static getBulkJobStatusAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo>;
     static waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<SfdxJobInfo, SfdxJobInfo, unknown>;
     static getOrgInfo(orgAliasOrUsername: string): Promise<SfdxOrgInfo>;
-    static deleteRecordById(orgAliasOrUsername: string, metaDataType: string, recordId: string, isToolingApi?: boolean): Promise<SfdxResult>;
-    static deleteRecordsByIds(orgAliasOrUsername: string, metaDataType: string, records: any[], recordIdField?: string, isToolingApi?: boolean): AsyncGenerator<SfdxResult, any, unknown>;
+    static getUnmaskOptionsAsync(optionsPath: string): Promise<UnmaskOptions>;
     protected static _folderPaths: Map<string, string>;
     private static getFolderSOQLDataAsync;
     private static getFolderFullPath;

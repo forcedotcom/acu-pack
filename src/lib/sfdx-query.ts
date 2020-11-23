@@ -340,4 +340,20 @@ export class SfdxQuery {
         return recordCount;
     }
 
+    // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes
+    public static getInClause(values: string[] = [''], isValueNumeric = false): string {
+        let inClause = '';
+        if (isValueNumeric) {
+            inClause = values.join(',');
+        } else {
+            for (const value of values) {
+                if (inClause.length > 0) {
+                    inClause += ',';
+                }
+                inClause += `'${value}'`;
+            }
+        }
+        return `IN (${inClause})`;
+    }
+
 }

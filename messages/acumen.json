@@ -69,5 +69,14 @@
         "reportFlagDescription": "The optional path for the generated report."
       }
     }
+  },
+  "admin": {
+    "user": {
+      "unmask": {
+        "commandDescription": "Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.",
+        "userListFlagDescription": "A comma delimited list of usernames for the User objects to update.",
+        "userFileFlagDescription": "A file which contains a list of usernames for the User objects to update."
+      }
+    }
   }
 }

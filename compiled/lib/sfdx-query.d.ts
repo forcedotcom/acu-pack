@@ -60,4 +60,5 @@ export declare class SfdxQuery {
     static getCodeCoverageAsync(usernameOrAlias: string): Promise<SfdxCodeCoverage>;
     static waitForRecordCount(usernameOrAlias: string, query: string, recordCount?: number, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<number, void, unknown>;
     static waitForApexTestsAsync(username: string, waitCountMaxSeconds?: number, createdDate?: string): AsyncGenerator<number, number, unknown>;
+    static getInClause(values?: string[], isValueNumeric?: boolean): string;
 }

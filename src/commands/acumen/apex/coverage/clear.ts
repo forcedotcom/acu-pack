@@ -1,7 +1,7 @@
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
-import { SfdxTasks } from '../../../../lib/sfdx-tasks';
+import { SfdxClient, RestAction, NO_CONTENT_CODE, ApiKind } from '../../../../lib/sfdx-client';
 
 export default class Clear extends CommandBase {
   public static defaultJobStatusWaitMax = -1;
@@ -52,26 +52,22 @@ export default class Clear extends CommandBase {
         : Clear.defaultMetadataTypes;
 
       this.ux.log('Clearing Code Coverage Data.');
-      let hasFailures = false;
-      for (const metaDataType of metaDataTypes) {
-        const query = `SELECT Id FROM ${metaDataType}`;
-        const records = await SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
-        if (records && records.length > 0) {
-          this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
-          let counter = 0;
-          for await (const result of SfdxTasks.deleteRecordsByIds(username, metaDataType, records, 'Id', true)) {
-            if (!result.success) {
-              this.ux.log(`(${++counter}/${records.length}) Delete Failed id: ${result.id} errors: ${result.errors.join(',')}`);
-              hasFailures = true;
-            } else {
-              this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result.id}`);
+      try {
+        for (const metaDataType of metaDataTypes) {
+          const query = `SELECT Id FROM ${metaDataType}`;
+          const records = await SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
+          if (records && records.length > 0) {
+            this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
+            let counter = 0;
+            const sfdxClient = new SfdxClient(username);
+            for await (const result of sfdxClient.do(RestAction.DELETE, metaDataType, records, 'Id', ApiKind.TOOLING, [NO_CONTENT_CODE])) {
+              this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result}`);
             }
+            this.ux.log('Cleared.');
           }
-          this.ux.log('Cleared.');
         }
-      }
-
-      if (hasFailures) {
+      } catch (err) {
+        this.ux.log(`Delete Failed: ${err.message}`);
         this.ux.log('Unable to clear all Code Coverage Data.');
         process.exitCode = 1;
         return;
