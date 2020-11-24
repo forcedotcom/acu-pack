@@ -18,17 +18,17 @@ We recommend using the Visual Studio Code (VS Code) IDE for your plugin developm
 
 To debug the `acumen:apex:coverage` command: 
 ```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u TRAIL
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u ORG_ALIAS
 ```
 
 Some common debug commands:
 ```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:admin:user:unmask -l test.user@aie.army.com.soqldev -u SOQLDEV
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:admin:user:unmask -f ./unmask-options.json -u SOQLDEV
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u TRAIL
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:execute -u TRAIL
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:report -u TRAIL
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -o package-options.json -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:admin:user:unmask -u ORG_ALIAS -l test.user@trail.com.trail
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:admin:user:unmask -u ORG_ALIAS -f ./unmask-options.json
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:execute -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:report -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -u ORG_ALIAS -o package-options.json 
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:dictionary -u ORG_ALIAS
