@@ -3,13 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const ts_types_1 = require("@salesforce/ts-types");
 const sfdx_core_1 = require("./sfdx-core");
+const sfdx_query_1 = require("./sfdx-query");
 const path = require("path");
 const package_options_1 = require("../lib/package-options");
 const utils_1 = require("../lib/utils");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
-const sfdx_query_1 = require("./sfdx-query");
 const xpath_options_1 = require("../lib/xpath-options");
+const unmask_options_1 = require("../lib/unmask-options");
 class SfdxJobInfo {
     constructor() {
         this.statusCount = 0;
@@ -21,6 +22,21 @@ class SfdxJobInfo {
     }
 }
 exports.SfdxJobInfo = SfdxJobInfo;
+class SfdxOrgInfo {
+    constructor(result = null) {
+        if (!result) {
+            return;
+        }
+        this.username = result.username;
+        this.id = result.id;
+        this.connectedStatus = result.connectedStatus;
+        this.accessToken = result.accessToken;
+        this.instanceUrl = result.instanceUrl;
+        this.clientId = result.clientId;
+        this.alias = result.alias;
+    }
+}
+exports.SfdxOrgInfo = SfdxOrgInfo;
 class SfdxTasks {
     static async describeMetadata(usernameOrAlias) {
         const response = await sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:describemetadata --json -u ${usernameOrAlias}`);
@@ -252,7 +268,7 @@ class SfdxTasks {
         return tslib_1.__asyncGenerator(this, arguments, function* waitForJobAsync_1() {
             const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
             jobInfo.statusCount = 0;
-            while ((maxCounter < 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
+            while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
                 yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
                 jobInfo = yield tslib_1.__await(SfdxTasks.getBulkJobStatusAsync(usernameOrAlias, jobInfo));
                 jobInfo.maxStatusCount = maxCounter;
@@ -261,6 +277,33 @@ class SfdxTasks {
             }
             return yield tslib_1.__await(jobInfo);
         });
+    }
+    static async getOrgInfo(orgAliasOrUsername) {
+        if (!orgAliasOrUsername) {
+            return null;
+        }
+        const result = await sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
+        return new SfdxOrgInfo(result);
+    }
+    static async getUnmaskOptionsAsync(optionsPath) {
+        let options;
+        if (optionsPath) {
+            if (await utils_1.default.pathExistsAsync(optionsPath)) {
+                const data = (await fs_1.promises.readFile(optionsPath)).toString();
+                options = unmask_options_1.UnmaskOptions.deserialize(data);
+            }
+            else {
+                options = new unmask_options_1.UnmaskOptions();
+                // load the default values
+                options.loadDefaults();
+                const dir = path.dirname(optionsPath);
+                if (dir) {
+                    await fs_1.promises.mkdir(dir, { recursive: true });
+                }
+                await fs_1.promises.writeFile(optionsPath, options.serialize());
+            }
+        }
+        return options;
     }
     static async getFolderSOQLDataAsync(usernameOrAlias) {
         if (!this._folderPaths) {

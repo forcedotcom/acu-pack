@@ -1,6 +1,7 @@
-import { PackageOptions } from '../lib/package-options';
 import { SfdxEntity } from './sfdx-query';
+import { PackageOptions } from '../lib/package-options';
 import { XPathOptions } from '../lib/xpath-options';
+import { UnmaskOptions } from '../lib/unmask-options';
 export declare class SfdxJobInfo {
     id: string;
     batchId: string;
@@ -10,6 +11,16 @@ export declare class SfdxJobInfo {
     maxStatusCount: number;
     constructor();
     isDone(): boolean;
+}
+export declare class SfdxOrgInfo {
+    username: string;
+    id: string;
+    connectedStatus: string;
+    accessToken: string;
+    instanceUrl: string;
+    clientId: string;
+    alias: string;
+    constructor(result?: any);
 }
 export declare class SfdxTasks {
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
@@ -28,6 +39,8 @@ export declare class SfdxTasks {
     static enqueueApexTestsAsync(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage?: boolean): Promise<SfdxJobInfo>;
     static getBulkJobStatusAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo>;
     static waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<SfdxJobInfo, SfdxJobInfo, unknown>;
+    static getOrgInfo(orgAliasOrUsername: string): Promise<SfdxOrgInfo>;
+    static getUnmaskOptionsAsync(optionsPath: string): Promise<UnmaskOptions>;
     protected static _folderPaths: Map<string, string>;
     private static getFolderSOQLDataAsync;
     private static getFolderFullPath;

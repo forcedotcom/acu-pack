@@ -1,12 +1,55 @@
 import { ensureArray } from '@salesforce/ts-types';
 import { SfdxCore } from './sfdx-core';
-import { SfdxFolder } from './sfdx-query';
+import { SfdxFolder, SfdxQuery, SfdxEntity } from './sfdx-query';
 import path = require('path');
 import { PackageOptions } from '../lib/package-options';
 import Utils from '../lib/utils';
 import { promises as fs } from 'fs';
-import { SfdxQuery } from './sfdx-query';
+import { openSync, writeSync } from 'fs';
 import { XPathOptions } from '../lib/xpath-options';
+import { UnmaskOptions } from '../lib/unmask-options';
+
+export class SfdxJobInfo {
+    public id: string;
+    public batchId: string;
+    public state: string;
+    public createdDate: string;
+    public statusCount: number;
+    public maxStatusCount: number;
+
+    constructor() {
+        this.statusCount = 0;
+        this.maxStatusCount = 0;
+    }
+
+    public isDone(): boolean {
+        // Holding1, Queued, Preparing, Processing, Aborted, Completed,Failed
+        return this.state === 'Aborted' || this.state === 'Completed' || this.state === 'Failed' || this.state === 'Closed';
+    }
+}
+
+export class SfdxOrgInfo {
+    public username: string;
+    public id: string;
+    public connectedStatus: string;
+    public accessToken: string;
+    public instanceUrl: string;
+    public clientId: string;
+    public alias: string;
+
+    constructor(result: any = null) {
+        if (!result) {
+            return;
+        }
+        this.username = result.username;
+        this.id = result.id;
+        this.connectedStatus = result.connectedStatus;
+        this.accessToken = result.accessToken;
+        this.instanceUrl = result.instanceUrl;
+        this.clientId = result.clientId;
+        this.alias = result.alias;
+    }
+}
 
 export class SfdxTasks {
 
@@ -41,7 +84,7 @@ export class SfdxTasks {
 
                 // Get SOQL folder data (ONCE!)
                 if (!folderPathMap) {
-                    folderPathMap = await this.getFolderSOQLData(usernameOrAlias);
+                    folderPathMap = await this.getFolderSOQLDataAsync(usernameOrAlias);
                 }
 
                 // Iterate all the folder metas
@@ -177,11 +220,90 @@ export class SfdxTasks {
         return options;
     }
 
+    public static async enqueueApexTestsAsync(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage: boolean = false): Promise<SfdxJobInfo> {
+        if (!usernameOrAlias || !sfdxEntities) {
+            return null;
+        }
+
+        const tempFileName = 'apexTestQueueItems.csv';
+
+        // Create the file for the bulk upsert
+        // Create for writing - truncates if exists
+        const stream = openSync(tempFileName, 'w');
+        // NOTE: Do NOT include spaces between fields...results in an error
+        writeSync(stream, 'ApexClassId,ShouldSkipCodeCoverage\r\n');
+        for (const sfdxEntity of sfdxEntities) {
+            writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}\r\n`);
+        }
+
+        const command = `sfdx force:data:bulk:upsert --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
+        const results = await SfdxCore.command(command);
+        return SfdxTasks.getJobInfo(results);
+    }
+
+    public static async getBulkJobStatusAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo> {
+        if (!usernameOrAlias || !jobInfo || !jobInfo.id) {
+            return null;
+        }
+        let command = `sfdx force:data:bulk:status --json -i ${jobInfo.id} -u ${usernameOrAlias}`;
+        if (jobInfo.batchId) {
+            command += ` -b ${jobInfo.batchId}`;
+        }
+        const results = await SfdxCore.command(command);
+        const newJobInfo = SfdxTasks.getJobInfo(results);
+        newJobInfo.statusCount++;
+        return newJobInfo;
+    }
+
+    public static async* waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
+        const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
+        jobInfo.statusCount = 0;
+        while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
+            await Utils.sleep(sleepMiliseconds);
+
+            jobInfo = await SfdxTasks.getBulkJobStatusAsync(usernameOrAlias, jobInfo);
+            jobInfo.maxStatusCount = maxCounter;
+            jobInfo.statusCount++;
+
+            yield jobInfo;
+        }
+
+        return jobInfo;
+    }
+
+    public static async getOrgInfo(orgAliasOrUsername: string): Promise<SfdxOrgInfo> {
+        if (!orgAliasOrUsername) {
+            return null;
+        }
+        const result = await SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
+        return new SfdxOrgInfo(result);
+    }
+
+    public static async getUnmaskOptionsAsync(optionsPath: string): Promise<UnmaskOptions> {
+        let options: UnmaskOptions;
+        if (optionsPath) {
+            if (await Utils.pathExistsAsync(optionsPath)) {
+                const data = (await fs.readFile(optionsPath)).toString();
+                options = UnmaskOptions.deserialize(data);
+            } else {
+                options = new UnmaskOptions();
+                // load the default values
+                options.loadDefaults();
+                const dir = path.dirname(optionsPath);
+                if (dir) {
+                    await fs.mkdir(dir, { recursive: true });
+                }
+                await fs.writeFile(optionsPath, options.serialize());
+            }
+        }
+        return options;
+    }
+
     protected static _folderPaths: Map<string, string> = null;
 
-    private static async getFolderSOQLData(usernameOrAlias: string) {
+    private static async getFolderSOQLDataAsync(usernameOrAlias: string) {
         if (!this._folderPaths) {
-            const allFolders = await SfdxQuery.getFolders(usernameOrAlias);
+            const allFolders = await SfdxQuery.getFoldersAsync(usernameOrAlias);
 
             this._folderPaths = new Map<string, string>();
             for (const folder of allFolders) {
@@ -211,4 +333,20 @@ export class SfdxTasks {
         return pathParts;
     }
 
+    private static getJobInfo(results: any): SfdxJobInfo {
+        const jobInfo = new SfdxJobInfo();
+        if (results && results[0]) {
+            // If there is a jobId then we have a batch job
+            // If not its is a single job
+            if (results[0].jobId) {
+                jobInfo.id = results[0].jobId;
+                jobInfo.batchId = results[0].id;
+            } else {
+                jobInfo.id = results[0].id;
+            }
+            jobInfo.state = results[0].state;
+            jobInfo.createdDate = results[0].createdDate;
+        }
+        return jobInfo;
+    }
 }

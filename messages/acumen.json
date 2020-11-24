@@ -26,7 +26,7 @@
     }
   },
   "source": {
-    "permissions":{
+    "permissions": {
       "commandDescription": "Generate a security report based on configured permissions.\r\nThe accuracy of this report is dependant on the configuration in the local project.\r\nIt is suggested that a permissions package be created using the acumen:package:permissions\r\ncommand and that package is retrieved from the org prior to executing this command.",
       "sourceFlagDescription": "The source folder to start the meta scan from. The default is '%s'.",
       "metadataFoldersFlagDescription": "A comma separated list of folders to include. This list overrides the defaults: %s.",
@@ -48,9 +48,35 @@
         "md5FlagDescription": "The MD5 hash list file to use"
       }
     },
-    "xpath":{
+    "xpath": {
       "commandDescription": "Validates XML against xpath selects and known bad values.",
       "optionsFlagDescription": "A file containing the XPathOptions json. Specifying this option will create the file if it doesn't exist already."
+    }
+  },
+  "apex": {
+    "coverage": {
+      "clear": {
+        "commandDescription": "Clears the Apex Code Coverage data from the specified Org.",
+        "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)"
+      },
+      "execute": {
+        "commandDescription": "Executes Apex tests and includes Code Coverage metrics.",
+        "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait. The default is %s"
+      },
+      "report": {
+        "commandDescription": "Pull Code Coverage metrics and generates a report.",
+        "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait. The default is %s",
+        "reportFlagDescription": "The optional path for the generated report."
+      }
+    }
+  },
+  "admin": {
+    "user": {
+      "unmask": {
+        "commandDescription": "Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.",
+        "userListFlagDescription": "A comma delimited list of usernames for the User objects to update.",
+        "userFileFlagDescription": "A file which contains a list of usernames for the User objects to update."
+      }
     }
   }
 }

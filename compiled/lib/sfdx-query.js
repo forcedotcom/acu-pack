@@ -282,7 +282,7 @@ class SfdxQuery {
             const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
             let counter = 0;
             let records = [];
-            while (maxCounter < 0 || counter <= maxCounter) {
+            while (maxCounter <= 0 || counter <= maxCounter) {
                 yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
                 records = yield tslib_1.__await(SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query));
                 yield yield tslib_1.__await(records.length);
@@ -292,6 +292,49 @@ class SfdxQuery {
                 }
             }
         });
+    }
+    static waitForApexTestsAsync(username, waitCountMaxSeconds = 0, createdDate = new Date().toJSON()) {
+        return tslib_1.__asyncGenerator(this, arguments, function* waitForApexTestsAsync_1() {
+            var e_1, _a;
+            const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;
+            const targetCount = 0;
+            let recordCount = 0;
+            // Check every 30 seconds or waitCountMaxSeconds so we don't waste a bunch of queries
+            const interval = waitCountMaxSeconds >= 30 ? 30000 : waitCountMaxSeconds;
+            try {
+                for (var _b = tslib_1.__asyncValues(SfdxQuery.waitForRecordCount(username, query, targetCount, waitCountMaxSeconds, interval)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                    recordCount = _c.value;
+                    yield yield tslib_1.__await(recordCount);
+                    if (recordCount === targetCount) {
+                        break;
+                    }
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+            return yield tslib_1.__await(recordCount);
+        });
+    }
+    // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes
+    static getInClause(values = [''], isValueNumeric = false) {
+        let inClause = '';
+        if (isValueNumeric) {
+            inClause = values.join(',');
+        }
+        else {
+            for (const value of values) {
+                if (inClause.length > 0) {
+                    inClause += ',';
+                }
+                inClause += `'${value}'`;
+            }
+        }
+        return `IN (${inClause})`;
     }
 }
 exports.SfdxQuery = SfdxQuery;

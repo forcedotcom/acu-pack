@@ -158,6 +158,34 @@ class Utils {
         // tslint:disable-next-line no-string-based-set-timeout
         await new Promise(resolve => setTimeout(resolve, sleepMiliseconds));
     }
+    static getFieldValues(records, fieldName = 'id', mustHaveValue = false) {
+        const values = [];
+        for (const record of records) {
+            values.push(Utils.getFieldValue(record, fieldName, mustHaveValue));
+        }
+        return values;
+    }
+    static getFieldValue(record, fieldName = 'id', mustHaveValue = false) {
+        if (!record) {
+            return null;
+        }
+        const value = typeof record === 'string'
+            ? record
+            : record[fieldName];
+        if (mustHaveValue && !value) {
+            throw new Error(`Required Field: ${fieldName} not found in record: ${JSON.stringify(record)}.`);
+        }
+        return value;
+    }
+    static unmaskEmail(email, mask = '.invalid') {
+        if (!email) {
+            return null;
+        }
+        if (!email.includes(mask)) {
+            return email;
+        }
+        return email.split(mask).join('');
+    }
 }
 exports.default = Utils;
 Utils.glob = require('util').promisify(require('glob'));

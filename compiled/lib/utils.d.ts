@@ -9,5 +9,8 @@ export default class Utils {
     static selectXPath(xml: string, xpaths: string[]): Map<string, string[]>;
     static deleteFileAsync(filePath: string): Promise<void>;
     static sleep(sleepMiliseconds?: number): Promise<void>;
+    static getFieldValues(records: any[], fieldName?: string, mustHaveValue?: boolean): string[];
+    static getFieldValue(record: any, fieldName?: string, mustHaveValue?: boolean): string;
+    static unmaskEmail(email: string, mask?: string): string;
     private static glob;
 }

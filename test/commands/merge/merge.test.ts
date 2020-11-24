@@ -1,4 +1,3 @@
-import { promises as fs } from 'fs';
 import path = require('path');
 import { expect } from '@salesforce/command/lib/test';
 import Utils from '../../../src/lib/utils'
@@ -12,12 +11,8 @@ describe("Xml-Merge Tests", function () {
 
   async function cleanUp() {
     try {
-      if (await Utils.pathExistsAsync(source)) {
-        await fs.unlink(source);
-      }
-      if (await Utils.pathExistsAsync(destination)) {
-        await fs.unlink(destination);
-      }
+      await Utils.deleteFileAsync(source);
+      await Utils.deleteFileAsync(destination);
       return true;
     } catch (err) {
       console.log(err);
