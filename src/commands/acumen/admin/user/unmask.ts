@@ -69,8 +69,17 @@ export default class Unmask extends CommandBase {
 
       this.ux.log('Retrieving Users...');
 
-      const query = `SELECT Id, username, IsActive, Email FROM User WHERE IsActive=true AND Title = 'Contractor' AND Email LIKE '%.invalid' AND Username ${SfdxQuery.getInClause(usernames)}`;
+      const query = `SELECT Id, username, IsActive, Email FROM User WHERE IsActive=true AND Email LIKE '%.invalid' AND Username ${SfdxQuery.getInClause(usernames)}`;
+      this.ux.log('');
+      this.ux.log(query);
+
       const users = await SfdxQuery.doSoqlQueryAsync(username, query);
+
+      this.ux.log('');
+      this.ux.log('Users Found:');
+      for (const user of users) {
+        this.ux.log(user.Username);
+      }
 
       const patchObj = {
         allOrNone: false,
