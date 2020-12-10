@@ -32,3 +32,5 @@ package-options.json
 force-app/
 
 .sfdx
+
+DataDictionary-*
