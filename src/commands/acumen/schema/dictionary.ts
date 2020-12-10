@@ -102,15 +102,21 @@ export default class Dictionary extends CommandBase {
       const sortedTypeNames = Utils.sortArray(objectMap.get('CustomObject'));
 
       let counter = 0;
+      const schemas = new Set<string>();
       for (const metaDataType of sortedTypeNames) {
         this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
         try {
           const schema = await SfdxTasks.describeObject(username, metaDataType);
+          // Avoid duplicates (Account)
+          if (schemas.has(schema.name)) {
+            continue;
+          }
           for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode)) {
             if (row.length > 0) {
               stream.write(`${JSON.stringify(row)}\r\n`);
             }
           }
+          schemas.add(schema.name);
         } catch (err) {
           this.ux.log(`FAILED: ${err.message}.`);
         }
