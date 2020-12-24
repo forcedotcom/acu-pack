@@ -1,55 +1,79 @@
+import { OptionsBase } from './options';
 import { SfdxCore } from './sfdx-core';
 
-export class UnmaskOptions {
+export class UnmaskOptions extends OptionsBase {
     public static defaultUserQuery = "SELECT Id, username, IsActive, Email FROM User WHERE IsActive=true AND Email LIKE '%.invalid'";
-
-    public static deserialize(serializedOptions: string): UnmaskOptions {
-        const unmaskOptions = new UnmaskOptions();
-        const options = JSON.parse(serializedOptions);
-        if (options.sandboxes) {
-            unmaskOptions.sandboxes = new Map(options.sandboxes);
-        }
-        if (options.userQuery) {
-            unmaskOptions.userQuery = options.userQuery;
-        }
-        return unmaskOptions;
-    }
 
     public sandboxes: Map<string, string[]>;
 
     public userQuery: string;
 
     constructor() {
+        super();
         this.sandboxes = new Map();
         this.userQuery = UnmaskOptions.defaultUserQuery;
     }
 
-    public serialize(): string {
-        return JSON.stringify({
-            userQuery: this.userQuery,
-            sandboxes: Array.from(this.sandboxes.entries())
-        }, null, SfdxCore.jsonSpaces);
+    public async deserialize(serializedOptions: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!serializedOptions) {
+                    return null;
+                }
+                const options = JSON.parse(serializedOptions);
+                if (options.sandboxes) {
+                    this.sandboxes = new Map(options.sandboxes);
+                }
+                if (options.userQuery) {
+                    this.userQuery = options.userQuery;
+                }
+                resolve();
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 
-    public loadDefaults(): void {
-        this.userQuery = UnmaskOptions.defaultUserQuery;
-        this.sandboxes.set(
-            'SNDBX1',
-            [
-                'test.user@aie.army.com.sndbx1'
-            ]
-        );
-        this.sandboxes.set(
-            'SNDBX2',
-            [
-                'test.user@aie.army.com.sndbx2'
-            ]
-        );
-        this.sandboxes.set(
-            'SNDBX3',
-            [
-                'test.user@aie.army.com.sndbx3'
-            ]
-        );
+    public async serialize(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            try {
+                resolve(JSON.stringify({
+                    userQuery: this.userQuery,
+                    sandboxes: Array.from(this.sandboxes.entries())
+                }, null, SfdxCore.jsonSpaces));
+
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    public async loadDefaults(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                this.userQuery = UnmaskOptions.defaultUserQuery;
+                this.sandboxes.set(
+                    'SNDBX1',
+                    [
+                        'test.user@aie.army.com.sndbx1'
+                    ]
+                );
+                this.sandboxes.set(
+                    'SNDBX2',
+                    [
+                        'test.user@aie.army.com.sndbx2'
+                    ]
+                );
+                this.sandboxes.set(
+                    'SNDBX3',
+                    [
+                        'test.user@aie.army.com.sndbx3'
+                    ]
+                );
+            } catch (err) {
+                reject(err);
+            }
+            resolve();
+        });
     }
 }

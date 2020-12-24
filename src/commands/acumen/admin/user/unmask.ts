@@ -1,7 +1,7 @@
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
-import { SfdxTasks } from '../../../../lib/sfdx-tasks';
+import { OptionsFactory } from '../../../../lib/options-factory';
 import { SfdxClient, RestAction } from '../../../../lib/sfdx-client';
 import Utils from '../../../../lib/utils';
 import { UnmaskOptions } from '../../../../lib/unmask-options';
@@ -48,7 +48,7 @@ export default class Unmask extends CommandBase {
       if (this.flags.userlist) {
         usernames = this.flags.userlist.split(',');
       } else if (this.flags.userfile) {
-        options = await SfdxTasks.getUnmaskOptionsAsync(this.flags.userfile);
+        options = await OptionsFactory.get(UnmaskOptions, this.flags.userfile);
         if (!options) {
           this.ux.log(`Unable to read options file: ${this.flags.userfile}.`);
           // Set the proper exit code to indicate violation/failure

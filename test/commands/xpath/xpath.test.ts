@@ -4,13 +4,15 @@ import { expect } from '@salesforce/command/lib/test';
 import { spawnSync } from 'child_process';
 import Utils from '../../../src/lib/utils'
 import { XPathOptions } from '../../../src/lib/xpath-options';
+import { OptionsFactory } from '../../../src/lib/options-factory';
 
 const optionsPath = 'exit-code-options.json';
 const xmlPath = 'exit-code.profile-meta.xml';
 
-before(async () => {
-  const options = new XPathOptions();
+beforeEach(async () => {
+  const options = await OptionsFactory.get(XPathOptions);
   // load the default values
+  options.rules.clear();
   options.rules.set('exit-code.profile-meta.xml', [
     {
       name: 'Bad FieldPermissions',
@@ -20,16 +22,16 @@ before(async () => {
       ]
     }
   ]);
-  await fs.writeFile(optionsPath, options.serialize());
+  await options.save(optionsPath);
 });
 
-after(async () => {
+afterEach(async () => {
   await Utils.deleteFileAsync(optionsPath);
   await Utils.deleteFileAsync(xmlPath);
 });
 
 describe("XPath Tests", function () {
-  this.timeout(5000); // Times out due to blocking spawnSync otherwise
+  this.timeout(50000); // Times out due to blocking spawnSync otherwise
 
   it("Returns Exit Code 0", async () => {
     await fs.writeFile(xmlPath, `<?xml version="1.0" encoding="UTF-8"?>

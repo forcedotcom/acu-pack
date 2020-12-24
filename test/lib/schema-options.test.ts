@@ -1,4 +1,5 @@
 import { expect } from '@salesforce/command/lib/test';
+import { OptionsFactory } from '../../src/lib/options-factory';
 import SchemaOptions from '../../src/lib/schema-options'
 
 const outputDefs = [
@@ -11,53 +12,25 @@ const outputDefs = [
 ];
 
 describe("SchemaOptions Tests", function () {
-  it('Creates New Object', function () {
-    const testOptions = new SchemaOptions();
+  it('Creates New Object', async function () {
+    const testOptions = await OptionsFactory.get(SchemaOptions);
     // It contains default data
     expect(testOptions).is.not.null;
     expect(testOptions.outputDefs).is.not.null;
-    expect(testOptions.outputDefs.length).equals(0);
-    expect(testOptions.excludeFieldIfTrueFilter).is.undefined;
-  });
-  it('Can Handle Bad Json', function () {
-    const testOptions = new SchemaOptions({
-      testField: 'test'
-    });
-    expect(testOptions).is.not.null;
-    expect(testOptions.outputDefs).is.not.null;
-    expect(testOptions.outputDefs.length).equals(0);
-    expect(testOptions.excludeFieldIfTrueFilter).is.undefined;
-  });
-  it('Loads Partial Json', function () {
-    const testOptions = new SchemaOptions({
-      outputDefs
-    });
-    expect(testOptions).is.not.null;
-    expect(testOptions.outputDefs).is.not.null;
-    expect(testOptions.outputDefs.length).equals(outputDefs.length);
-    expect(testOptions.excludeFieldIfTrueFilter).is.undefined;
-  });
-  it('Loads Full Json', function () {
-    const testOptions = new SchemaOptions({
-      outputDefs,
-      excludeFieldIfTrueFilter: ''
-    });
-    expect(testOptions).is.not.null;
-    expect(testOptions.outputDefs).is.not.null;
-    expect(testOptions.outputDefs.length).equals(outputDefs.length);
-    expect(testOptions.excludeFieldIfTrueFilter).is.not.null;
+    expect(testOptions.outputDefs.length).to.not.equal(0);
+    expect(testOptions.excludeFieldIfTrueFilter).to.equal('');
   });
   describe("getDynamicCode Tests", function () {
-    it("Works without outputDefs", function () {
-      const testOptions = new SchemaOptions();
+    it("Works without outputDefs", async function () {
+      const testOptions = await OptionsFactory.get(SchemaOptions);
+      testOptions.outputDefs = [];
       const dynamicCode = testOptions.getDynamicCode();
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.equal('main(); function main() { const row=[];return row; }');
     });
-    it("Works with outputDefs", function () {
-      const testOptions = new SchemaOptions({
-        outputDefs
-      });
+    it("Works with outputDefs", async function () {
+      const testOptions = await OptionsFactory.get(SchemaOptions);
+      testOptions.outputDefs = outputDefs;
       const dynamicCode = testOptions.getDynamicCode();
 
       expect(dynamicCode).is.not.null;
@@ -69,11 +42,10 @@ describe("SchemaOptions Tests", function () {
         expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
       }
     });
-    it("Works with excludeFieldIfTrueFilter", function () {
-      const testOptions = new SchemaOptions({
-        outputDefs,
-        excludeFieldIfTrueFilter: 'field.name == "mjm"'
-      });
+    it("Works with excludeFieldIfTrueFilter", async function () {
+      const testOptions = await OptionsFactory.get(SchemaOptions);
+      testOptions.outputDefs = outputDefs;
+      testOptions.excludeFieldIfTrueFilter = 'field.name == "mjm"';
       const dynamicCode = testOptions.getDynamicCode();
 
       expect(dynamicCode).is.not.null;

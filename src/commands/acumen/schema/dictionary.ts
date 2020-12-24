@@ -1,8 +1,7 @@
 import { CommandBase } from '../../../lib/command-base';
 import { flags } from '@salesforce/command';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
-import { SfdxCore } from '../../../lib/sfdx-core';
-import { promises as fs } from 'fs';
+import { OptionsFactory } from '../../../lib/options-factory';
 import { createWriteStream } from 'fs';
 import { Office } from '../../../lib/office';
 import Utils from '../../../lib/utils';
@@ -39,40 +38,6 @@ export default class Dictionary extends CommandBase {
 
   protected options: SchemaOptions;
 
-  private defaultOptions = {
-    outputDefs: [
-      'SObjectName|schema.name',
-      'Name|field.name',
-      'Label|field.label',
-      'Datatype|field.type',
-      'Length|field.length',
-      'Precision|field.precision',
-      'Scale|field.scale',
-      'Digits|field.digits',
-      'IsCustom|field.custom',
-      'IsDeprecatedHidden|field.deprecatedAndHidden',
-      'IsAutonumber|field.autoNumber',
-      'DefaultValue|field.defaultValue',
-      'IsFormula|field.calculated',
-      'Formula|field.calculatedFormula',
-      'IsRequired|!field.nillable',
-      'IsExternalId|field.externalId',
-      'IsUnique|field.unique',
-      'IsCaseSensitive|field.caseSensitive',
-      'IsPicklist|field.picklistValues.length>0',
-      'IsPicklistDependent|field.dependentPicklist',
-      "PicklistValues|getPicklistValues(field).join(',')",
-      'PicklistValueDefault|getPicklistDefaultValue(field)',
-      'IsLookup|field.referenceTo.length>0',
-      "LookupTo|field.referenceTo.join(',')",
-      'IsCreateable|field.createable',
-      'IsUpdateable|field.updateable',
-      'IsEncrypted|field.encrypted',
-      'HelpText|field.inlineHelpText'
-    ],
-    excludeFieldIfTrueFilter: ''
-  };
-
   public async run(): Promise<void> {
 
     // Are we including namespaces?
@@ -81,7 +46,7 @@ export default class Dictionary extends CommandBase {
       : new Set<string>();
 
     // Read/Write the options file if it does not exist already
-    this.options = await this.getOptions(this.flags.options);
+    this.options = await OptionsFactory.get(SchemaOptions, this.flags.options);
 
     const dynamicCode = this.options.getDynamicCode();
 
@@ -156,25 +121,5 @@ export default class Dictionary extends CommandBase {
       row.push(outputDef.split('|')[0]);
     }
     return row;
-  }
-
-  private async getOptions(optionsPath: string): Promise<SchemaOptions> {
-    if (!optionsPath) {
-      return new SchemaOptions(this.defaultOptions);
-    }
-
-    if (await Utils.pathExistsAsync(optionsPath)) {
-      return new SchemaOptions(await SfdxCore.fileToJson<SchemaOptions>(optionsPath));
-    }
-
-    const options = new SchemaOptions(this.defaultOptions);
-
-    // load the default values
-    const dir = path.dirname(optionsPath);
-    if (dir) {
-      await fs.mkdir(dir, { recursive: true });
-    }
-    await SfdxCore.jsonToFile(options, optionsPath);
-    return options;
   }
 }

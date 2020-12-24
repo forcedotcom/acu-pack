@@ -4,13 +4,14 @@ const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
-const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
+const options_factory_1 = require("../../../lib/options-factory");
+const xpath_options_1 = require("../../../lib/xpath-options");
 class XPath extends command_base_1.CommandBase {
     async run() {
         var e_1, _a, e_2, _b;
         var _c;
         // Read/Write the options file if it does not exist already
-        const options = await sfdx_tasks_1.SfdxTasks.getXPathOptionsAsync((_c = this.flags.options, (_c !== null && _c !== void 0 ? _c : XPath.defaultOptionsFileName)));
+        const options = await options_factory_1.OptionsFactory.get(xpath_options_1.XPathOptions, (_c = this.flags.options, (_c !== null && _c !== void 0 ? _c : XPath.defaultOptionsFileName)));
         try {
             for (const [sourceFolder, rules] of options.rules) {
                 if (!sourceFolder) {

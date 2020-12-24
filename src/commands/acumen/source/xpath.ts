@@ -1,7 +1,8 @@
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
 import Utils from '../../../lib/utils';
-import { SfdxTasks } from '../../../lib/sfdx-tasks';
+import { OptionsFactory } from '../../../lib/options-factory';
+import { XPathOptions } from '../../../lib/xpath-options';
 
 export default class XPath extends CommandBase {
 
@@ -21,9 +22,7 @@ export default class XPath extends CommandBase {
 
   public async run(): Promise<void> {
     // Read/Write the options file if it does not exist already
-    const options = await SfdxTasks.getXPathOptionsAsync(
-      this.flags.options ?? XPath.defaultOptionsFileName
-    );
+    const options = await OptionsFactory.get(XPathOptions, this.flags.options ?? XPath.defaultOptionsFileName);
 
     try {
       for (const [sourceFolder, rules] of options.rules) {

@@ -1,39 +1,45 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
+const options_factory_1 = require("../../../../lib/options-factory");
 const sfdx_client_1 = require("../../../../lib/sfdx-client");
 const utils_1 = require("../../../../lib/utils");
+const unmask_options_1 = require("../../../../lib/unmask-options");
 class Unmask extends command_base_1.CommandBase {
     async run() {
-        var e_1, _a;
         const username = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         let hasErrors = false;
         try {
             this.ux.log(`Connecting to Org: ${username}(${orgId})`);
             this.ux.log('Unmasking users...');
-            let usernames;
+            let usernames = null;
+            let options = new unmask_options_1.UnmaskOptions();
             if (this.flags.userlist) {
                 usernames = this.flags.userlist.split(',');
             }
             else if (this.flags.userfile) {
-                usernames = [];
-                try {
-                    for (var _b = tslib_1.__asyncValues(utils_1.default.readFileAsync(this.flags.userFile)), _c; _c = await _b.next(), !_c.done;) {
-                        const un = _c.value;
-                        usernames.push(un);
+                options = await options_factory_1.OptionsFactory.get(unmask_options_1.UnmaskOptions, this.flags.userfile);
+                if (!options) {
+                    this.ux.log(`Unable to read options file: ${this.flags.userfile}.`);
+                    // Set the proper exit code to indicate violation/failure
+                    process.exitCode = 1;
+                    return;
+                }
+                for (const [org, orgUsers] of options.sandboxes) {
+                    if (username.toUpperCase() === org.toUpperCase()) {
+                        usernames = orgUsers;
+                        break;
                     }
                 }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
-                    }
-                    finally { if (e_1) throw e_1.error; }
-                }
+            }
+            if (!options.userQuery) {
+                this.ux.log('No userQuery defined.');
+                // Set the proper exit code to indicate violation/failure
+                process.exitCode = 1;
+                return;
             }
             if (!usernames || usernames.length === 0) {
                 this.ux.log('No usernames specified.');
@@ -42,8 +48,20 @@ class Unmask extends command_base_1.CommandBase {
                 return;
             }
             this.ux.log('Retrieving Users...');
-            const query = `SELECT Id, username, IsActive, Email FROM User WHERE IsActive=true AND Title = 'Contractor' AND Email LIKE '%.invalid' AND Username ${sfdx_query_1.SfdxQuery.getInClause(usernames)}`;
+            const query = `${options.userQuery} AND Username ${sfdx_query_1.SfdxQuery.getInClause(usernames)}`;
+            this.ux.log('');
+            this.ux.log('User Query:');
+            this.ux.log(query);
+            this.ux.log('');
             const users = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query);
+            if (!users || users.length === 0) {
+                this.ux.log('No Users Found.');
+                return;
+            }
+            this.ux.log('Users Found:');
+            for (const user of users) {
+                this.ux.log(user.Username);
+            }
             const patchObj = {
                 allOrNone: false,
                 records: []

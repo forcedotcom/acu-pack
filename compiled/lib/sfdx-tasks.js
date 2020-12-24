@@ -5,12 +5,8 @@ const ts_types_1 = require("@salesforce/ts-types");
 const sfdx_core_1 = require("./sfdx-core");
 const sfdx_query_1 = require("./sfdx-query");
 const path = require("path");
-const package_options_1 = require("../lib/package-options");
 const utils_1 = require("../lib/utils");
 const fs_1 = require("fs");
-const fs_2 = require("fs");
-const xpath_options_1 = require("../lib/xpath-options");
-const unmask_options_1 = require("../lib/unmask-options");
 class SfdxJobInfo {
     constructor() {
         this.statusCount = 0;
@@ -192,47 +188,8 @@ class SfdxTasks {
             }
         });
     }
-    static async getPackageOptionsAsync(optionsPath) {
-        let options;
-        if (optionsPath) {
-            if (await utils_1.default.pathExistsAsync(optionsPath)) {
-                options = await sfdx_core_1.SfdxCore.fileToJson(optionsPath);
-            }
-            else {
-                options = new package_options_1.PackageOptions();
-                // load the default values
-                options.loadDefaults();
-                const dir = path.dirname(optionsPath);
-                if (dir) {
-                    await fs_1.promises.mkdir(dir, { recursive: true });
-                }
-                await sfdx_core_1.SfdxCore.jsonToFile(options, optionsPath);
-            }
-        }
-        return options;
-    }
     static async describeObject(usernameOrAlias, objectName) {
         return await sfdx_core_1.SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
-    }
-    static async getXPathOptionsAsync(optionsPath) {
-        let options;
-        if (optionsPath) {
-            if (await utils_1.default.pathExistsAsync(optionsPath)) {
-                const data = (await fs_1.promises.readFile(optionsPath)).toString();
-                options = xpath_options_1.XPathOptions.deserialize(data);
-            }
-            else {
-                options = new xpath_options_1.XPathOptions();
-                // load the default values
-                options.loadDefaults();
-                const dir = path.dirname(optionsPath);
-                if (dir) {
-                    await fs_1.promises.mkdir(dir, { recursive: true });
-                }
-                await fs_1.promises.writeFile(optionsPath, options.serialize());
-            }
-        }
-        return options;
     }
     static async enqueueApexTestsAsync(usernameOrAlias, sfdxEntities, shouldSkipCodeCoverage = false) {
         if (!usernameOrAlias || !sfdxEntities) {
@@ -241,11 +198,11 @@ class SfdxTasks {
         const tempFileName = 'apexTestQueueItems.csv';
         // Create the file for the bulk upsert
         // Create for writing - truncates if exists
-        const stream = fs_2.openSync(tempFileName, 'w');
+        const stream = fs_1.openSync(tempFileName, 'w');
         // NOTE: Do NOT include spaces between fields...results in an error
-        fs_2.writeSync(stream, 'ApexClassId,ShouldSkipCodeCoverage\r\n');
+        fs_1.writeSync(stream, 'ApexClassId,ShouldSkipCodeCoverage\r\n');
         for (const sfdxEntity of sfdxEntities) {
-            fs_2.writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}\r\n`);
+            fs_1.writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}\r\n`);
         }
         const command = `sfdx force:data:bulk:upsert --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
         const results = await sfdx_core_1.SfdxCore.command(command);
@@ -284,26 +241,6 @@ class SfdxTasks {
         }
         const result = await sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
-    }
-    static async getUnmaskOptionsAsync(optionsPath) {
-        let options;
-        if (optionsPath) {
-            if (await utils_1.default.pathExistsAsync(optionsPath)) {
-                const data = (await fs_1.promises.readFile(optionsPath)).toString();
-                options = unmask_options_1.UnmaskOptions.deserialize(data);
-            }
-            else {
-                options = new unmask_options_1.UnmaskOptions();
-                // load the default values
-                options.loadDefaults();
-                const dir = path.dirname(optionsPath);
-                if (dir) {
-                    await fs_1.promises.mkdir(dir, { recursive: true });
-                }
-                await fs_1.promises.writeFile(optionsPath, options.serialize());
-            }
-        }
-        return options;
     }
     static async getFolderSOQLDataAsync(usernameOrAlias) {
         if (!this._folderPaths) {

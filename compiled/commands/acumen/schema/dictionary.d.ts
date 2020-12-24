@@ -12,8 +12,6 @@ export default class Dictionary extends CommandBase {
     };
     protected static requiresUsername: boolean;
     protected options: SchemaOptions;
-    private defaultOptions;
     run(): Promise<void>;
     private getColumnRow;
-    private getOptions;
 }
