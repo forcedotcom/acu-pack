@@ -1,4 +1,5 @@
 import { expect } from '@salesforce/command/lib/test';
+import { OptionsFactory } from '../../src/lib/options-factory';
 import SchemaOptions from '../../src/lib/schema-options'
 import SchemaUtils from '../../src/lib/schema-utils'
 
@@ -23,18 +24,20 @@ describe("SchemaUtils Tests", function () {
         inlineHelpText: 'Help Text 1',
       }],
   };
-  const testOptions = new SchemaOptions({
-    outputDefs: [
+  let testOptions: SchemaOptions;
+
+  beforeEach(async function () {
+    testOptions = await OptionsFactory.get(SchemaOptions);
+    testOptions.outputDefs = [
       'SchemaName|schema.name',
       'FieldName|field.name',
       'Label|field.label',
       'Datatype|field.type',
       'Length|field.length',
       'HelpText|field.inlineHelpText'
-    ],
-    excludeFieldIfTrueFilter: ''
+    ];
+    testOptions.excludeFieldIfTrueFilter = '';
   });
-
   describe("getDynamicSchemaData Tests", function () {
     it("Can Handle Nulls", function () {
       expect(() => Array.from(SchemaUtils.getDynamicSchemaData(null, null))).to.throw('The schema argument cannot be null.');

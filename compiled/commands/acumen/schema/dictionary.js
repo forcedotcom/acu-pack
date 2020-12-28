@@ -4,51 +4,14 @@ const tslib_1 = require("tslib");
 const command_base_1 = require("../../../lib/command-base");
 const command_1 = require("@salesforce/command");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
-const sfdx_core_1 = require("../../../lib/sfdx-core");
+const options_factory_1 = require("../../../lib/options-factory");
 const fs_1 = require("fs");
-const fs_2 = require("fs");
 const office_1 = require("../../../lib/office");
 const utils_1 = require("../../../lib/utils");
 const schema_utils_1 = require("../../../lib/schema-utils");
 const schema_options_1 = require("../../../lib/schema-options");
 const path = require("path");
 class Dictionary extends command_base_1.CommandBase {
-    constructor() {
-        super(...arguments);
-        this.defaultOptions = {
-            outputDefs: [
-                'SObjectName|schema.name',
-                'Name|field.name',
-                'Label|field.label',
-                'Datatype|field.type',
-                'Length|field.length',
-                'Precision|field.precision',
-                'Scale|field.scale',
-                'Digits|field.digits',
-                'IsCustom|field.custom',
-                'IsDeprecatedHidden|field.deprecatedAndHidden',
-                'IsAutonumber|field.autoNumber',
-                'DefaultValue|field.defaultValue',
-                'IsFormula|field.calculated',
-                'Formula|field.calculatedFormula',
-                'IsRequired|!field.nillable',
-                'IsExternalId|field.externalId',
-                'IsUnique|field.unique',
-                'IsCaseSensitive|field.caseSensitive',
-                'IsPicklist|field.picklistValues.length>0',
-                'IsPicklistDependent|field.dependentPicklist',
-                "PicklistValues|getPicklistValues(field).join(',')",
-                'PicklistValueDefault|getPicklistDefaultValue(field)',
-                'IsLookup|field.referenceTo.length>0',
-                "LookupTo|field.referenceTo.join(',')",
-                'IsCreateable|field.createable',
-                'IsUpdateable|field.updateable',
-                'IsEncrypted|field.encrypted',
-                'HelpText|field.inlineHelpText'
-            ],
-            excludeFieldIfTrueFilter: ''
-        };
-    }
     async run() {
         var e_1, _a, e_2, _b;
         // Are we including namespaces?
@@ -56,23 +19,28 @@ class Dictionary extends command_base_1.CommandBase {
             ? new Set(this.flags.namespaces.split())
             : new Set();
         // Read/Write the options file if it does not exist already
-        this.options = await this.getOptions(this.flags.options);
+        this.options = await options_factory_1.OptionsFactory.get(schema_options_1.default, this.flags.options);
         const dynamicCode = this.options.getDynamicCode();
         try {
             const username = this.flags.targetusername;
             const orgId = this.org.getOrgId();
             const sheetDataFile = `schema-${username}.tmp`;
             // Create for writing - truncates if exists
-            const stream = fs_2.createWriteStream(sheetDataFile, { flags: 'w' });
+            const stream = fs_1.createWriteStream(sheetDataFile, { flags: 'w' });
             // Add columns
             const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(username, new Set(['CustomObject']), namespaces);
             this.ux.log(`Gathering CustomObject schemas from Org: ${username}(${orgId})`);
             const sortedTypeNames = utils_1.default.sortArray(objectMap.get('CustomObject'));
             let counter = 0;
+            const schemas = new Set();
             for (const metaDataType of sortedTypeNames) {
                 this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
                 try {
                     const schema = await sfdx_tasks_1.SfdxTasks.describeObject(username, metaDataType);
+                    // Avoid duplicates (Account)
+                    if (schemas.has(schema.name)) {
+                        continue;
+                    }
                     try {
                         for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode)), _d; _d = await _c.next(), !_d.done;) {
                             const row = _d.value;
@@ -88,6 +56,7 @@ class Dictionary extends command_base_1.CommandBase {
                         }
                         finally { if (e_1) throw e_1.error; }
                     }
+                    schemas.add(schema.name);
                 }
                 catch (err) {
                     this.ux.log(`FAILED: ${err.message}.`);
@@ -133,22 +102,6 @@ class Dictionary extends command_base_1.CommandBase {
             row.push(outputDef.split('|')[0]);
         }
         return row;
-    }
-    async getOptions(optionsPath) {
-        if (!optionsPath) {
-            return new schema_options_1.default(this.defaultOptions);
-        }
-        if (await utils_1.default.pathExistsAsync(optionsPath)) {
-            return new schema_options_1.default(await sfdx_core_1.SfdxCore.fileToJson(optionsPath));
-        }
-        const options = new schema_options_1.default(this.defaultOptions);
-        // load the default values
-        const dir = path.dirname(optionsPath);
-        if (dir) {
-            await fs_1.promises.mkdir(dir, { recursive: true });
-        }
-        await sfdx_core_1.SfdxCore.jsonToFile(options, optionsPath);
-        return options;
     }
 }
 exports.default = Dictionary;

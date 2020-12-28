@@ -1,12 +1,13 @@
+import { OptionsBase } from './options';
 export declare class XPathRule {
     name: string;
     xPath: string;
     values: string[];
 }
-export declare class XPathOptions {
-    static deserialize(serializedOptions: string): XPathOptions;
+export declare class XPathOptions extends OptionsBase {
     rules: Map<string, XPathRule[]>;
     constructor();
-    serialize(): string;
-    loadDefaults(): void;
+    deserialize(serializedOptions: string): Promise<void>;
+    serialize(): Promise<string>;
+    loadDefaults(): Promise<void>;
 }

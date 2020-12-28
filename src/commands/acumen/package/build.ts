@@ -6,6 +6,7 @@ import Utils from '../../../lib/utils';
 import { PackageOptions } from '../../../lib/package-options';
 import path = require('path');
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
+import { OptionsFactory } from '../../../lib/options-factory';
 
 export default class Build extends CommandBase {
   public static description = CommandBase.messages.getMessage('package.build.commandDescription');
@@ -53,10 +54,10 @@ export default class Build extends CommandBase {
     let options: PackageOptions;
     // Read/Write the options file if it does not exist already
     if (this.flags.options) {
-      options = await SfdxTasks.getPackageOptionsAsync(this.flags.options);
+      options = await OptionsFactory.get(PackageOptions, this.flags.options);
     } else {
       options = new PackageOptions();
-      options.loadDefaults();
+      await options.loadDefaults();
     }
 
     const excluded = new Set<string>(options.excludeMetadataTypes);

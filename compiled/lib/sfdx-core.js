@@ -66,13 +66,6 @@ class SfdxCore {
         const sfdxPackage = SfdxCore.createPackage(metadataMap);
         await fs_1.promises.writeFile(packageFilePath, new xml2js.Builder().buildObject(sfdxPackage));
     }
-    static async fileToJson(filePath) {
-        const data = (await fs_1.promises.readFile(filePath)).toString();
-        return JSON.parse(data);
-    }
-    static async jsonToFile(jsonObject, filePath) {
-        await fs_1.promises.writeFile(filePath, JSON.stringify(jsonObject, null, SfdxCore.jsonSpaces));
-    }
 }
 exports.SfdxCore = SfdxCore;
 SfdxCore.ASTERIX = '*';

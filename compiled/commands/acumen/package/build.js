@@ -9,6 +9,7 @@ const utils_1 = require("../../../lib/utils");
 const package_options_1 = require("../../../lib/package-options");
 const path = require("path");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
+const options_factory_1 = require("../../../lib/options-factory");
 class Build extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
@@ -21,11 +22,11 @@ class Build extends command_base_1.CommandBase {
         let options;
         // Read/Write the options file if it does not exist already
         if (this.flags.options) {
-            options = await sfdx_tasks_1.SfdxTasks.getPackageOptionsAsync(this.flags.options);
+            options = await options_factory_1.OptionsFactory.get(package_options_1.PackageOptions, this.flags.options);
         }
         else {
             options = new package_options_1.PackageOptions();
-            options.loadDefaults();
+            await options.loadDefaults();
         }
         const excluded = new Set(options.excludeMetadataTypes);
         // Are we including namespaces?

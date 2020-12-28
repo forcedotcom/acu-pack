@@ -2,12 +2,8 @@ import { ensureArray } from '@salesforce/ts-types';
 import { SfdxCore } from './sfdx-core';
 import { SfdxFolder, SfdxQuery, SfdxEntity } from './sfdx-query';
 import path = require('path');
-import { PackageOptions } from '../lib/package-options';
 import Utils from '../lib/utils';
-import { promises as fs } from 'fs';
 import { openSync, writeSync } from 'fs';
-import { XPathOptions } from '../lib/xpath-options';
-import { UnmaskOptions } from '../lib/unmask-options';
 
 export class SfdxJobInfo {
     public id: string;
@@ -177,47 +173,8 @@ export class SfdxTasks {
         }
     }
 
-    public static async getPackageOptionsAsync(optionsPath: string): Promise<PackageOptions> {
-        let options: PackageOptions;
-        if (optionsPath) {
-            if (await Utils.pathExistsAsync(optionsPath)) {
-                options = await SfdxCore.fileToJson<PackageOptions>(optionsPath);
-            } else {
-                options = new PackageOptions();
-                // load the default values
-                options.loadDefaults();
-                const dir = path.dirname(optionsPath);
-                if (dir) {
-                    await fs.mkdir(dir, { recursive: true });
-                }
-                await SfdxCore.jsonToFile(options, optionsPath);
-            }
-        }
-        return options;
-    }
-
     public static async describeObject(usernameOrAlias: string, objectName: string): Promise<any> {
         return await SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
-    }
-
-    public static async getXPathOptionsAsync(optionsPath: string): Promise<XPathOptions> {
-        let options: XPathOptions;
-        if (optionsPath) {
-            if (await Utils.pathExistsAsync(optionsPath)) {
-                const data = (await fs.readFile(optionsPath)).toString();
-                options = XPathOptions.deserialize(data);
-            } else {
-                options = new XPathOptions();
-                // load the default values
-                options.loadDefaults();
-                const dir = path.dirname(optionsPath);
-                if (dir) {
-                    await fs.mkdir(dir, { recursive: true });
-                }
-                await fs.writeFile(optionsPath, options.serialize());
-            }
-        }
-        return options;
     }
 
     public static async enqueueApexTestsAsync(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage: boolean = false): Promise<SfdxJobInfo> {
@@ -277,26 +234,6 @@ export class SfdxTasks {
         }
         const result = await SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
-    }
-
-    public static async getUnmaskOptionsAsync(optionsPath: string): Promise<UnmaskOptions> {
-        let options: UnmaskOptions;
-        if (optionsPath) {
-            if (await Utils.pathExistsAsync(optionsPath)) {
-                const data = (await fs.readFile(optionsPath)).toString();
-                options = UnmaskOptions.deserialize(data);
-            } else {
-                options = new UnmaskOptions();
-                // load the default values
-                options.loadDefaults();
-                const dir = path.dirname(optionsPath);
-                if (dir) {
-                    await fs.mkdir(dir, { recursive: true });
-                }
-                await fs.writeFile(optionsPath, options.serialize());
-            }
-        }
-        return options;
     }
 
     protected static _folderPaths: Map<string, string> = null;

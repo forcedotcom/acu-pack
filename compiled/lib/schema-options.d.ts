@@ -1,6 +1,7 @@
-export default class SchemaOptions {
+import { OptionsBase } from './options';
+export default class SchemaOptions extends OptionsBase {
     outputDefs: any[];
     excludeFieldIfTrueFilter: string;
-    constructor(json?: any);
     getDynamicCode(): string;
+    protected loadDefaults(): Promise<void>;
 }

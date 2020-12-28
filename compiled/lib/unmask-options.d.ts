@@ -1,7 +1,10 @@
-export declare class UnmaskOptions {
-    static deserialize(serializedOptions: string): UnmaskOptions;
+import { OptionsBase } from './options';
+export declare class UnmaskOptions extends OptionsBase {
+    static defaultUserQuery: string;
     sandboxes: Map<string, string[]>;
+    userQuery: string;
     constructor();
-    serialize(): string;
-    loadDefaults(): void;
+    deserialize(serializedOptions: string): Promise<void>;
+    serialize(): Promise<string>;
+    loadDefaults(): Promise<void>;
 }

@@ -17,6 +17,4 @@ export declare class SfdxCore {
     };
     static createPackage(packageTypes: Map<string, string[]>, version?: string): any;
     static writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string): Promise<void>;
-    static fileToJson<T>(filePath: string): Promise<T>;
-    static jsonToFile(jsonObject: object, filePath: string): Promise<void>;
 }

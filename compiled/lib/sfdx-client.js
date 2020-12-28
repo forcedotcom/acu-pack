@@ -12,14 +12,12 @@ var RestAction;
     RestAction["DELETE"] = "DELETE";
     RestAction["PATCH"] = "PATCH";
 })(RestAction = exports.RestAction || (exports.RestAction = {}));
-;
 var ApiKind;
 (function (ApiKind) {
     ApiKind["DEFAULT"] = "";
     ApiKind["TOOLING"] = "tooling";
     ApiKind["COMPOSITE"] = "composite";
 })(ApiKind = exports.ApiKind || (exports.ApiKind = {}));
-;
 class RestResult {
     constructor() {
         this.isError = false;
@@ -284,7 +282,7 @@ class SfdxClient {
     async handleResponse(apiKind = ApiKind.DEFAULT, apiPromise, recordIdField = SfdxClient.defailtIdField, record = null) {
         const result = new RestResult();
         try {
-            if (apiKind != ApiKind.COMPOSITE && record) {
+            if (apiKind !== ApiKind.COMPOSITE && record) {
                 result.id = utils_1.default.getFieldValue(record, recordIdField, true);
                 // Delete the id field as SFDC API restuen BAD_REQUEST if the object has an ID
                 delete record[recordIdField];
