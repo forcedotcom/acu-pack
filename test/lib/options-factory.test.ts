@@ -12,6 +12,11 @@ describe('OptionsFactory Tests', () => {
     expect(await OptionsFactory.get(PackageOptions)).to.not.be.undefined;
     expect(await OptionsFactory.get(PackageOptions, null)).to.not.be.undefined;
   });
+  it('Load method is invoked', async function () {
+    const options = await OptionsFactory.get(PackageOptions);
+    expect(options.excludeMetadataTypes).to.be.instanceOf(Array);
+    expect(options.excludeMetadataTypes.length).to.not.equal(0);
+  });
   it('Creates Options File', async function () {
     const options = await OptionsFactory.get(PackageOptions, optionsPath);
     expect(options).to.not.be.undefined;
