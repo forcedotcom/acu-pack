@@ -9,11 +9,11 @@ const utils_1 = require("../../../../lib/utils");
 const unmask_options_1 = require("../../../../lib/unmask-options");
 class Unmask extends command_base_1.CommandBase {
     async run() {
-        const username = this.flags.targetusername;
+        const orgAlias = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         let hasErrors = false;
         try {
-            this.ux.log(`Connecting to Org: ${username}(${orgId})`);
+            this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
             this.ux.log('Unmasking users...');
             let usernames = null;
             let options = new unmask_options_1.UnmaskOptions();
@@ -29,7 +29,7 @@ class Unmask extends command_base_1.CommandBase {
                     return;
                 }
                 for (const [org, orgUsers] of options.sandboxes) {
-                    if (username.toUpperCase() === org.toUpperCase()) {
+                    if (orgAlias.toUpperCase() === org.toUpperCase()) {
                         usernames = orgUsers;
                         break;
                     }
@@ -48,25 +48,45 @@ class Unmask extends command_base_1.CommandBase {
                 return;
             }
             this.ux.log('Retrieving Users...');
-            const query = `${options.userQuery} AND Username ${sfdx_query_1.SfdxQuery.getInClause(usernames)}`;
+            const query = `${options.userQuery} WHERE Username ${sfdx_query_1.SfdxQuery.getInClause(usernames)}`;
             this.ux.log('');
             this.ux.log('User Query:');
             this.ux.log(query);
             this.ux.log('');
-            const users = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query);
-            if (!users || users.length === 0) {
-                this.ux.log('No Users Found.');
-                return;
+            const foundMap = new Map();
+            foundMap.set(true, []);
+            foundMap.set(false, []);
+            const unmaskUsers = [];
+            const users = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(orgAlias, query);
+            this.ux.log('User Query Results:');
+            for (const username of usernames) {
+                let found = false;
+                for (const user of users) {
+                    if (username === user.Username) {
+                        found = true;
+                        if (user.Email.endsWith('.invalid')) {
+                            unmaskUsers.push(user);
+                        }
+                        break;
+                    }
+                }
+                foundMap.get(found).push(username);
             }
-            this.ux.log('Users Found:');
-            for (const user of users) {
-                this.ux.log(user.Username);
+            for (const [found, names] of foundMap.entries()) {
+                this.ux.log(`${found ? 'Found' : 'NOT Found'}:`);
+                for (const name of names) {
+                    this.ux.log(`\t${name}`);
+                }
+            }
+            if (!unmaskUsers || unmaskUsers.length === 0) {
+                this.ux.log('No Masked Users Found.');
+                return;
             }
             const patchObj = {
                 allOrNone: false,
                 records: []
             };
-            for (const user of users) {
+            for (const user of unmaskUsers) {
                 user.newEmail = utils_1.default.unmaskEmail(user.Email);
                 patchObj.records.push({
                     attributes: { type: 'User' },
@@ -76,10 +96,10 @@ class Unmask extends command_base_1.CommandBase {
             }
             if (patchObj.records.length !== 0) {
                 this.ux.log('Unmasking Users...');
-                const sfdxClient = new sfdx_client_1.SfdxClient(username);
+                const sfdxClient = new sfdx_client_1.SfdxClient(orgAlias);
                 const results = await sfdxClient.doComposite(sfdx_client_1.RestAction.PATCH, patchObj);
                 for (const result of results) {
-                    for (const user of users) {
+                    for (const user of unmaskUsers) {
                         if (user.Id === result.id) {
                             if (result.success) {
                                 this.ux.log(`${user.Username} ${user.Email} => ${user.newEmail}`);

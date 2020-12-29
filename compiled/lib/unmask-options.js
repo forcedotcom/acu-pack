@@ -63,5 +63,5 @@ class UnmaskOptions extends options_1.OptionsBase {
     }
 }
 exports.UnmaskOptions = UnmaskOptions;
-UnmaskOptions.defaultUserQuery = "SELECT Id, username, IsActive, Email FROM User WHERE IsActive=true AND Email LIKE '%.invalid'";
+UnmaskOptions.defaultUserQuery = 'SELECT Id, username, IsActive, Email FROM User';
 //# sourceMappingURL=unmask-options.js.map

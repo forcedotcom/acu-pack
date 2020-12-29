@@ -8,14 +8,14 @@ const sfdx_client_1 = require("../../../../lib/sfdx-client");
 class Clear extends command_base_1.CommandBase {
     async run() {
         var e_1, _a, e_2, _b;
-        const username = this.flags.targetusername;
+        const orgAlias = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         try {
-            this.ux.log(`Connecting to Org: ${username}(${orgId})`);
+            this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
             this.ux.log('Checking for pending tests...');
             let recordCount = 0;
             try {
-                for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username)), _d; _d = await _c.next(), !_d.done;) {
+                for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(orgAlias)), _d; _d = await _c.next(), !_d.done;) {
                     recordCount = _d.value;
                     if (recordCount === 0) {
                         break;
@@ -43,11 +43,11 @@ class Clear extends command_base_1.CommandBase {
             try {
                 for (const metaDataType of metaDataTypes) {
                     const query = `SELECT Id FROM ${metaDataType}`;
-                    const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query, null, null, true);
+                    const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(orgAlias, query, null, null, true);
                     if (records && records.length > 0) {
                         this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
                         let counter = 0;
-                        const sfdxClient = new sfdx_client_1.SfdxClient(username);
+                        const sfdxClient = new sfdx_client_1.SfdxClient(orgAlias);
                         try {
                             for (var _e = tslib_1.__asyncValues(sfdxClient.do(sfdx_client_1.RestAction.DELETE, metaDataType, records, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE])), _f; _f = await _e.next(), !_f.done;) {
                                 const result = _f.value;
