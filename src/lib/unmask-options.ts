@@ -2,7 +2,7 @@ import { OptionsBase } from './options';
 import { SfdxCore } from './sfdx-core';
 
 export class UnmaskOptions extends OptionsBase {
-    public static defaultUserQuery = "SELECT Id, username, IsActive, Email FROM User WHERE IsActive=true AND Email LIKE '%.invalid'";
+    public static defaultUserQuery = 'SELECT Id, username, IsActive, Email FROM User';
 
     public sandboxes: Map<string, string[]>;
 

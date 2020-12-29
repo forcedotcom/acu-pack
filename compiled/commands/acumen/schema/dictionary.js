@@ -22,21 +22,21 @@ class Dictionary extends command_base_1.CommandBase {
         this.options = await options_factory_1.OptionsFactory.get(schema_options_1.default, this.flags.options);
         const dynamicCode = this.options.getDynamicCode();
         try {
-            const username = this.flags.targetusername;
+            const orgAlias = this.flags.targetusername;
             const orgId = this.org.getOrgId();
-            const sheetDataFile = `schema-${username}.tmp`;
+            const sheetDataFile = `schema-${orgAlias}.tmp`;
             // Create for writing - truncates if exists
             const stream = fs_1.createWriteStream(sheetDataFile, { flags: 'w' });
             // Add columns
-            const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(username, new Set(['CustomObject']), namespaces);
-            this.ux.log(`Gathering CustomObject schemas from Org: ${username}(${orgId})`);
+            const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(orgAlias, new Set(['CustomObject']), namespaces);
+            this.ux.log(`Gathering CustomObject schemas from Org: ${orgAlias}(${orgId})`);
             const sortedTypeNames = utils_1.default.sortArray(objectMap.get('CustomObject'));
             let counter = 0;
             const schemas = new Set();
             for (const metaDataType of sortedTypeNames) {
                 this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
                 try {
-                    const schema = await sfdx_tasks_1.SfdxTasks.describeObject(username, metaDataType);
+                    const schema = await sfdx_tasks_1.SfdxTasks.describeObject(orgAlias, metaDataType);
                     // Avoid duplicates (Account)
                     if (schemas.has(schema.name)) {
                         continue;
@@ -64,7 +64,7 @@ class Dictionary extends command_base_1.CommandBase {
             }
             stream.end();
             try {
-                const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, username);
+                const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, orgAlias);
                 this.ux.log(`Writing Report: ${reportPath}`);
                 const sheetData = [this.getColumnRow()];
                 try {

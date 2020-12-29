@@ -11,7 +11,7 @@ const utils_1 = require("../../../lib/utils");
 class Permissions extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
-        const username = this.flags.targetusername;
+        const orgAlias = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         // Gather metadata names to include
         const metaNames = utils_1.default.sortArray(this.flags.metadata
@@ -28,8 +28,8 @@ class Permissions extends command_base_1.CommandBase {
             throw new core_1.SfdxError(`The specified package folder does not exist: '${packageDir}'`);
         }
         try {
-            this.ux.log(`Gathering metadata from Org: ${username}(${orgId})`);
-            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(username);
+            this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
             const describeMetadatas = new Set();
             for (const metadata of describeMetadata) {
                 if (this.metaNames.has(metadata.xmlName)) {
@@ -50,7 +50,7 @@ class Permissions extends command_base_1.CommandBase {
             const metadataMap = new Map();
             let counter = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(username, describeMetadatas, this.namespaces)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, this.namespaces)), _c; _c = await _b.next(), !_c.done;) {
                     const entry = _c.value;
                     metadataMap.set(entry.name, entry.members);
                     this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name}`);

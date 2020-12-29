@@ -8,15 +8,15 @@ const office_1 = require("../../../../lib/office");
 class Report extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
-        const username = this.flags.targetusername;
+        const orgAlias = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         try {
-            this.ux.log(`Connecting to Org: ${username}(${orgId})`);
+            this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
             this.ux.log('Checking for pending tests...');
             const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
             let recordCount = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(username, waitCountMaxSeconds)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(orgAlias, waitCountMaxSeconds)), _c; _c = await _b.next(), !_c.done;) {
                     recordCount = _c.value;
                     if (recordCount === 0) {
                         break;
@@ -38,11 +38,11 @@ class Report extends command_base_1.CommandBase {
             }
             // Get Code Coverage Report
             this.ux.log('Getting Code Coverage Report Data.');
-            const codeCoverage = await sfdx_query_1.SfdxQuery.getCodeCoverageAsync(username);
+            const codeCoverage = await sfdx_query_1.SfdxQuery.getCodeCoverageAsync(orgAlias);
             codeCoverage.calculateCodeCoverage();
             const workbookMap = new Map();
             // Code Coverage
-            workbookMap.set(`${username} Code Coverage`, [
+            workbookMap.set(`${orgAlias} Code Coverage`, [
                 ['Total Classes',
                     'Total Lines',
                     'Total Covered',
@@ -70,7 +70,7 @@ class Report extends command_base_1.CommandBase {
             // Check Apex Test Failures
             const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
             const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
-            const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(username, query);
+            const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(orgAlias, query);
             sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
             for (const record of records) {
                 sheetData.push([
@@ -84,7 +84,7 @@ class Report extends command_base_1.CommandBase {
                 ]);
             }
             workbookMap.set('Apex Test Failures', sheetData);
-            const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, username);
+            const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, orgAlias);
             office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
             this.ux.log(`${reportPath} written.`);
         }

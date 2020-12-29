@@ -67,14 +67,14 @@ export default class Build extends CommandBase {
       ? new Set<string>(this.flags.namespaces.split())
       : new Set<string>();
 
-    const username = this.flags.targetusername;
+    const orgAlias = this.flags.targetusername;
     const orgId = this.org.getOrgId();
     try {
 
       const describeMetadatas = new Set<object>();
 
-      this.ux.log(`Gathering metadata from Org: ${username}(${orgId})`);
-      const describeMetadata = await SfdxTasks.describeMetadata(username);
+      this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+      const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
 
       let forceMetadataTypes: Set<string> = null;
       if (this.flags.metadata) {
@@ -94,7 +94,7 @@ export default class Build extends CommandBase {
 
       const metadataMap = new Map<string, string[]>();
       let counter = 0;
-      for await (const entry of SfdxTasks.getTypesForPackage(username, describeMetadatas, namespaces)) {
+      for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
         metadataMap.set(entry.name, entry.members);
         this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
       }

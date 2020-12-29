@@ -51,18 +51,18 @@ export default class Dictionary extends CommandBase {
     const dynamicCode = this.options.getDynamicCode();
 
     try {
-      const username = this.flags.targetusername;
+      const orgAlias = this.flags.targetusername;
       const orgId = this.org.getOrgId();
 
-      const sheetDataFile = `schema-${username}.tmp`;
+      const sheetDataFile = `schema-${orgAlias}.tmp`;
 
       // Create for writing - truncates if exists
       const stream = createWriteStream(sheetDataFile, { flags: 'w' });
 
       // Add columns
-      const objectMap = await SfdxTasks.listMetadatas(username, new Set<string>(['CustomObject']), namespaces);
+      const objectMap = await SfdxTasks.listMetadatas(orgAlias, new Set<string>(['CustomObject']), namespaces);
 
-      this.ux.log(`Gathering CustomObject schemas from Org: ${username}(${orgId})`);
+      this.ux.log(`Gathering CustomObject schemas from Org: ${orgAlias}(${orgId})`);
 
       const sortedTypeNames = Utils.sortArray(objectMap.get('CustomObject'));
 
@@ -71,7 +71,7 @@ export default class Dictionary extends CommandBase {
       for (const metaDataType of sortedTypeNames) {
         this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
         try {
-          const schema = await SfdxTasks.describeObject(username, metaDataType);
+          const schema = await SfdxTasks.describeObject(orgAlias, metaDataType);
           // Avoid duplicates (Account)
           if (schemas.has(schema.name)) {
             continue;
@@ -89,7 +89,7 @@ export default class Dictionary extends CommandBase {
       stream.end();
 
       try {
-        const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, username);
+        const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, orgAlias);
         this.ux.log(`Writing Report: ${reportPath}`);
 
         const sheetData = [this.getColumnRow()];

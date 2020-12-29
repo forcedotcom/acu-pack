@@ -33,12 +33,12 @@ class Build extends command_base_1.CommandBase {
         const namespaces = this.flags.namespaces
             ? new Set(this.flags.namespaces.split())
             : new Set();
-        const username = this.flags.targetusername;
+        const orgAlias = this.flags.targetusername;
         const orgId = this.org.getOrgId();
         try {
             const describeMetadatas = new Set();
-            this.ux.log(`Gathering metadata from Org: ${username}(${orgId})`);
-            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(username);
+            this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
             let forceMetadataTypes = null;
             if (this.flags.metadata) {
                 forceMetadataTypes = new Set();
@@ -56,7 +56,7 @@ class Build extends command_base_1.CommandBase {
             const metadataMap = new Map();
             let counter = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(username, describeMetadatas, namespaces)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _c; _c = await _b.next(), !_c.done;) {
                     const entry = _c.value;
                     metadataMap.set(entry.name, entry.members);
                     this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
