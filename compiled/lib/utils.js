@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const path = require("path");
+const xml2js = require("xml2js");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
 const readline_1 = require("readline");
@@ -150,9 +151,11 @@ class Utils {
         return results;
     }
     static async deleteFileAsync(filePath) {
-        if (await Utils.pathExistsAsync(filePath)) {
-            await fs_1.promises.unlink(filePath);
+        if (!(await Utils.pathExistsAsync(filePath))) {
+            return false;
         }
+        await fs_1.promises.unlink(filePath);
+        return true;
     }
     static async sleep(sleepMiliseconds = 1000) {
         // tslint:disable-next-line no-string-based-set-timeout
@@ -186,7 +189,33 @@ class Utils {
         }
         return email.split(mask).join('');
     }
+    static async writeObjectToXmlFile(filename, metadata, xmlOptions) {
+        if (!filename || !metadata) {
+            return null;
+        }
+        const options = (xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions);
+        let xml = new xml2js.Builder(options).buildObject(metadata);
+        if (options.eofChar) {
+            xml += options.eofChar;
+        }
+        await fs_1.promises.writeFile(filename, xml);
+        return filename;
+    }
+    static async readObjectFromXmlFile(filePath, xmlOptions) {
+        if (!filePath) {
+            return null;
+        }
+        const options = (xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions);
+        const xmlString = await fs_1.promises.readFile(filePath, options.encoding);
+        return await (new xml2js.Parser(options).parseStringPromise((xmlString)));
+    }
 }
 exports.default = Utils;
+Utils.defaultXmlOptions = {
+    renderOpts: { pretty: true, indent: '    ', newline: '\n' },
+    xmldec: { version: '1.0', encoding: 'UTF-8' },
+    eofChar: '\n',
+    encoding: 'utf-8'
+};
 Utils.glob = require('util').promisify(require('glob'));
 //# sourceMappingURL=utils.js.map

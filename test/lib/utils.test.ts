@@ -6,6 +6,7 @@ import path = require('path');
 
 const testItemCount = 5
 var testFilePath = undefined;
+const testObject = { test: true };
 beforeEach(async () => {
     for await (const testFile of Setup.createTestFiles(Setup.sourceRoot, testItemCount)) {
         // Do test specific stuff here?
@@ -159,6 +160,48 @@ describe("Utils Tests", function () {
         });
         it("Does not change unmasked email", function () {
             expect(Utils.unmaskEmail('test.user@aie.army.com.soqldev')).to.equal('test.user@aie.army.com.soqldev');
+        });
+    });
+    describe("writeObjectToXmlFile Test", function () {
+        var testFilePath = `${Setup.sourceRoot}/writeObjectToXmlFileTest.txt`;
+        beforeEach(async function () {
+            await Utils.deleteFileAsync(testFilePath);
+        });
+        it("Can Handle Null", async function () {
+            let result = await Utils.writeObjectToXmlFile(null, null, null);
+            expect(result).equal(null);
+
+            result = await Utils.writeObjectToXmlFile(null, null);
+            expect(result).equal(null);
+
+            result = await Utils.writeObjectToXmlFile(null, {});
+            expect(result).equal(null);
+
+        });
+        it("Can Write File", async function () {
+            const result = await Utils.writeObjectToXmlFile(testFilePath, testObject);
+            expect(result).to.not.equal(null);
+            const exists = await Utils.pathExistsAsync(result);
+            expect(exists).to.be.true;
+        });
+    });
+    describe("readObjectFromXmlFile Test", function () {
+        var testFilePath = `${Setup.sourceRoot}/readObjectFromXmlFileTest.txt`;
+        beforeEach(async function () {
+            await fs.appendFile(testFilePath, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root><test>true</test></root>`);
+        });
+        it("Can Handle Null", async function () {
+            let result = await Utils.readObjectFromXmlFile(null, null);
+            expect(result).equal(null);
+
+            result = await Utils.readObjectFromXmlFile(null);
+            expect(result).equal(null);
+
+        });
+        it("Can Read File", async function () {
+            const result = await Utils.readObjectFromXmlFile(testFilePath);
+            expect(result).to.not.equal(null);
+            expect(result.root.test[0]).to.equal('true');
         });
     });
 });

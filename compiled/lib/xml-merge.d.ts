@@ -4,5 +4,4 @@ export default class XmlMerge {
     static logMessage(message: string, logFile: string, ux?: any): Promise<void>;
     static parseXmlFromFile(filePath: string, parserOptions?: any): Promise<any>;
     static mergeObjects(source: any, destination: any): any;
-    protected static writeXmlFile(filename: string, merged: any): Promise<void>;
 }

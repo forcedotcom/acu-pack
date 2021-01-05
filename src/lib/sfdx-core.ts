@@ -1,6 +1,4 @@
 import { exec } from 'child_process';
-import * as xml2js from 'xml2js';
-import { promises as fs } from 'fs';
 import Utils from '../lib/utils';
 
 export class SfdxCore {
@@ -67,9 +65,9 @@ export class SfdxCore {
         return packageObj;
     }
 
-    public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string): Promise<void> {
+    public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, eofChar = null): Promise<void> {
         // Convert into Package format
         const sfdxPackage = SfdxCore.createPackage(metadataMap);
-        await fs.writeFile(packageFilePath, new xml2js.Builder().buildObject(sfdxPackage));
+        await Utils.writeObjectToXmlFile(packageFilePath, sfdxPackage, eofChar);
     }
 }

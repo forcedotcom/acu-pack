@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
-const xml2js = require("xml2js");
-const fs_1 = require("fs");
 const utils_1 = require("../lib/utils");
 class SfdxCore {
     static command(cmd) {
@@ -61,10 +59,10 @@ class SfdxCore {
         }
         return packageObj;
     }
-    static async writePackageFile(metadataMap, packageFilePath) {
+    static async writePackageFile(metadataMap, packageFilePath, eofChar = null) {
         // Convert into Package format
         const sfdxPackage = SfdxCore.createPackage(metadataMap);
-        await fs_1.promises.writeFile(packageFilePath, new xml2js.Builder().buildObject(sfdxPackage));
+        await utils_1.default.writeObjectToXmlFile(packageFilePath, sfdxPackage, eofChar);
     }
 }
 exports.SfdxCore = SfdxCore;

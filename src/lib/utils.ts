@@ -1,4 +1,5 @@
 import path = require('path');
+import * as xml2js from 'xml2js';
 import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
@@ -6,6 +7,14 @@ import xpath = require('xpath');
 import { DOMParser as dom } from 'xmldom';
 
 export default class Utils {
+
+    public static defaultXmlOptions = {
+        renderOpts: { pretty: true, indent: '    ', newline: '\n' },
+        xmldec: { version: '1.0', encoding: 'UTF-8' },
+        eofChar: '\n',
+        encoding: 'utf-8'
+    };
+
     public static async * getFilesAsync(folderPath: string, isRecursive = true) {
         let fileItems;
         // If we have a wildcarded path - lets use glob
@@ -139,13 +148,15 @@ export default class Utils {
         return results;
     }
 
-    public static async deleteFileAsync(filePath: string) {
-        if (await Utils.pathExistsAsync(filePath)) {
-            await fs.unlink(filePath);
+    public static async deleteFileAsync(filePath: string): Promise<boolean> {
+        if (!(await Utils.pathExistsAsync(filePath))) {
+            return false;
         }
+        await fs.unlink(filePath);
+        return true;
     }
 
-    public static async sleep(sleepMiliseconds: number = 1000) {
+    public static async sleep(sleepMiliseconds: number = 1000): Promise<void> {
         // tslint:disable-next-line no-string-based-set-timeout
         await new Promise(resolve => setTimeout(resolve, sleepMiliseconds));
     }
@@ -179,6 +190,31 @@ export default class Utils {
             return email;
         }
         return email.split(mask).join('');
+    }
+
+    public static async writeObjectToXmlFile(filename: string, metadata: any, xmlOptions?: any): Promise<string> {
+        if (!filename || !metadata) {
+            return null;
+        }
+        const options = xmlOptions ?? Utils.defaultXmlOptions;
+        let xml = new xml2js.Builder(options).buildObject(metadata);
+
+        if (options.eofChar) {
+            xml += options.eofChar;
+        }
+        await fs.writeFile(filename, xml);
+
+        return filename;
+    }
+
+    public static async readObjectFromXmlFile(filePath: string, xmlOptions?: any): Promise<any> {
+        if (!filePath) {
+            return null;
+        }
+        const options = xmlOptions ?? Utils.defaultXmlOptions;
+        const xmlString = await fs.readFile(filePath, options.encoding);
+
+        return await (new xml2js.Parser(options).parseStringPromise((xmlString)));
     }
 
     private static glob = require('util').promisify(require('glob'));

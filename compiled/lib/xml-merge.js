@@ -26,7 +26,7 @@ class XmlMerge {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
                 merged = source;
             }
-            await this.writeXmlFile(destinationXml, merged);
+            await utils_1.default.writeObjectToXmlFile(destinationXml, merged);
             await this.logMessage(`Merged package written: ${destinationXml}`, logFilePath, ux);
         }
         catch (err) {
@@ -107,10 +107,6 @@ class XmlMerge {
         }
         merged.Package.version = source.Package.version;
         return merged;
-    }
-    static async writeXmlFile(filename, merged) {
-        const xml = new xml2js.Builder().buildObject(merged);
-        await fs_1.promises.writeFile(filename, xml);
     }
 }
 exports.default = XmlMerge;

@@ -16,5 +16,5 @@ export declare class SfdxCore {
         };
     };
     static createPackage(packageTypes: Map<string, string[]>, version?: string): any;
-    static writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string): Promise<void>;
+    static writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, eofChar?: any): Promise<void>;
 }
