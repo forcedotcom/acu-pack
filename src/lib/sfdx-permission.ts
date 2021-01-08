@@ -78,10 +78,13 @@ export class FieldDetail extends MetadataDetail {
 export abstract class MetaDataPermission extends Named {
     public r: boolean;
     public abstract toXmlObj(): any;
+    
     public toString(): string {
+        let result = '';
         if (this.r) {
-            return 'R ';
+            result += 'R ';
         }
+        return result;
     }
 }
 
@@ -101,6 +104,14 @@ export class FieldPermission extends MetaDataPermission {
             field: this.name,
             readable: this.r
         };
+    }
+
+    public toString(): string {
+        let result = super.toString();
+        if (this.u) {
+            result += 'U ';
+        }
+        return result;
     }
 }
 
@@ -449,18 +460,18 @@ export class SfdxPermission {
     public static getPermisionString(permissionSet: Named) {
         let result = '';
         if (permissionSet instanceof ObjectPermission) {
-            result = (permissionSet as ObjectPermission).toString();
+            result += (permissionSet as ObjectPermission).toString();
         } else if (permissionSet instanceof FieldPermission) {
-            result = (permissionSet as FieldPermission).toString();
+            result += (permissionSet as FieldPermission).toString();
         } else if (permissionSet instanceof TabPermission) {
-            result = (permissionSet as TabPermission).toString();
+            result += (permissionSet as TabPermission).toString();
         } else if (permissionSet instanceof RecordTypePermission ||
             permissionSet instanceof ApplicationPermission) {
-            result = (permissionSet as DefaultablePermission).toString();
+            result += (permissionSet as DefaultablePermission).toString();
         } else if (permissionSet instanceof UserPermission ||
             permissionSet instanceof ClassPermission ||
             permissionSet instanceof PagePermission) {
-            result = (permissionSet as MetaDataPermission).toString();
+            result += (permissionSet as MetaDataPermission).toString();
         }
         return result.length === 0
             ? ''

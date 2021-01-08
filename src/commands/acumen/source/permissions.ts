@@ -4,9 +4,9 @@ import Utils from '../../../lib/utils';
 import { Office } from '../../../lib/office';
 import path = require('path');
 import { SfdxPermission, ObjectDetail, FieldDetail, PermissionSet, MetadataDetail } from '../../../lib/sfdx-permission';
+import SfdxProject from '../../../lib/sfdx-project';
 
 export default class Permissions extends CommandBase {
-  public static defaultSourceFolder = 'force-app';
   public static defaultReportPath = 'PermissionsReport.xlsx';
   // Order Matters here!
   public static defaultMetadataFolders = [
@@ -18,21 +18,25 @@ export default class Permissions extends CommandBase {
 
   public static description = CommandBase.messages.getMessage('source.permissions.commandDescription');
   public static examples = [
-    `$ sfdx acumen:source:permissions -d security/report -u myOrgAlias
-    Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in '${Permissions.defaultSourceFolder}' and writes the '${Permissions.defaultReportPath}' report file.`];
+    `$ sfdx acumen:source:permissions -u myOrgAlias
+    Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in default project source location and writes the '${Permissions.defaultReportPath}' report file.`,
+  ];
 
   protected static flagsConfig = {
     source: flags.string({
       char: 'p',
-      description: CommandBase.messages.getMessage('source.permissions.sourceFlagDescription', [Permissions.defaultSourceFolder])
+      description: CommandBase.messages.getMessage('source.permissions.sourceFlagDescription'),
+      required: false
     }),
     report: flags.string({
       char: 'r',
-      description: CommandBase.messages.getMessage('source.permissions.reportFlagDescription', [Permissions.defaultReportPath])
+      description: CommandBase.messages.getMessage('source.permissions.reportFlagDescription', [Permissions.defaultReportPath]),
+      required: false
     }),
     folders: flags.string({
       char: 'f',
-      description: CommandBase.messages.getMessage('source.permissions.metadataFoldersFlagDescription', [Permissions.defaultMetadataFolders.join(', ')])
+      description: CommandBase.messages.getMessage('source.permissions.metadataFoldersFlagDescription', [Permissions.defaultMetadataFolders.join(', ')]),
+      required: false
     })
   };
 
@@ -47,7 +51,7 @@ export default class Permissions extends CommandBase {
 
   public async run(): Promise<void> {
     if (!this.flags.source) {
-      this.flags.source = 'force-app';
+      this.flags.source = (await SfdxProject.default()).getDefaultDirectory();
     }
 
     // Are we including namespaces?
@@ -79,7 +83,6 @@ export default class Permissions extends CommandBase {
         }
       }
       this.ux.log('Building Permissions Report');
-
       workbookMap.set('Objects', this.buildSheet('objectPermissions', this.objectMetadata));
       workbookMap.set('Fields', this.buildSheet('fieldPermissions', this.fieldMetadata));
       workbookMap.set('Users', this.buildSheet('userPermissions'));
@@ -87,7 +90,7 @@ export default class Permissions extends CommandBase {
       workbookMap.set('Apex Pages', this.buildSheet('pageAccesses'));
       workbookMap.set('Applications', this.buildSheet('applicationVisibilities'));
       workbookMap.set('Tabs', this.buildSheet('tabVisibilities'));
-      workbookMap.set('Record Types', this.buildSheet('recordTypeAccesses'));
+      workbookMap.set('Record Types', this.buildSheet('recordTypeVisibilities'));
 
     } catch (err) {
       throw err;

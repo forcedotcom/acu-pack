@@ -28,9 +28,9 @@
   "source": {
     "permissions": {
       "commandDescription": "Generate a security report based on configured permissions.\r\nThe accuracy of this report is dependant on the configuration in the local project.\r\nIt is suggested that a permissions package be created using the acumen:package:permissions\r\ncommand and that package is retrieved from the org prior to executing this command.",
-      "sourceFlagDescription": "The source folder to start the meta scan from. The default is '%s'.",
-      "metadataFoldersFlagDescription": "A comma separated list of folders to include. This list overrides the defaults: %s.",
-      "reportFlagDescription": "The path for the permissions report XLSX file. This overrides the default: %s."
+      "sourceFlagDescription": "OPTIONAL: The source folder to start the meta scan from. Overrides the project's default package directory folder.",
+      "metadataFoldersFlagDescription": "OPTIONAL: A comma separated list of folders to include. This list overrides the defaults: %s.",
+      "reportFlagDescription": "OPTIONAL: The path for the permissions report XLSX file. This overrides the default: %s."
     },
     "delta": {
       "sourceFlagDescription": "The source folder to start the delta scan from.",

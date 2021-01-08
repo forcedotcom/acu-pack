@@ -245,12 +245,7 @@ export default class Utils {
         const currentCwd = path.resolve(process.cwd());
         const newCwd = path.resolve(newCwdPath);
         if (currentCwd !== newCwd) {
-            try {
-                process.chdir(newCwdPath);
-            } catch (err) {
-                throw new Error(`Unable to set path to: ${newCwdPath}`);
-            }
-            return newCwd;
+            process.chdir(newCwdPath);
         }
         return currentCwd;
     }

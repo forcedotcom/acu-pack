@@ -33,5 +33,5 @@ force-app/
 
 .sfdx
 
-DataDictionary-*
 results.txt
+/*.xlsx
