@@ -78,8 +78,15 @@ export default class Unmask extends CommandBase {
       }
 
       this.ux.log('Retrieving Users...');
-
-      const query = `${options.userQuery} WHERE Username ${SfdxQuery.getInClause(usernames)}`;
+      if (!options.userQuery.endsWith(' ')) {
+        options.userQuery += ' ';
+      }
+      if (!options.userQuery.toUpperCase().includes('WHERE')) {
+        options.userQuery += 'WHERE';
+      } else {
+        options.userQuery += 'AND';
+      }
+      const query = `${options.userQuery} Username ${SfdxQuery.getInClause(usernames)}`;
 
       this.ux.log('');
       this.ux.log('User Query:');
