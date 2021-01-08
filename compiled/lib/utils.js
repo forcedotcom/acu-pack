@@ -50,8 +50,8 @@ class Utils {
             }
         });
     }
-    static readFileAsync(filePath) {
-        return tslib_1.__asyncGenerator(this, arguments, function* readFileAsync_1() {
+    static readFileLinesAsync(filePath) {
+        return tslib_1.__asyncGenerator(this, arguments, function* readFileLinesAsync_1() {
             var e_1, _a;
             if (!(yield tslib_1.__await(Utils.pathExistsAsync(filePath)))) {
                 return yield tslib_1.__await(void 0);
@@ -99,9 +99,15 @@ class Utils {
     static isENOENT(err) {
         return err && err.code === 'ENOENT';
     }
+    static async mkDirPath(destination, hasFileName = false) {
+        if (!destination) {
+            return;
+        }
+        await fs_1.promises.mkdir(hasFileName ? path.dirname(destination) : destination, { recursive: true });
+    }
     static async copyFile(source, destination) {
         try {
-            await fs_1.promises.mkdir(path.dirname(destination), { recursive: true });
+            await Utils.mkDirPath(destination, true);
             await fs_1.promises.copyFile(source, destination);
         }
         catch (err) {
@@ -189,8 +195,8 @@ class Utils {
         }
         return email.split(mask).join('');
     }
-    static async writeObjectToXmlFile(filename, metadata, xmlOptions) {
-        if (!filename || !metadata) {
+    static writeObjectToXml(metadata, xmlOptions) {
+        if (!metadata) {
             return null;
         }
         const options = (xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions);
@@ -198,8 +204,16 @@ class Utils {
         if (options.eofChar) {
             xml += options.eofChar;
         }
-        await fs_1.promises.writeFile(filename, xml);
-        return filename;
+        return xml;
+    }
+    static async writeObjectToXmlFile(filePath, metadata, xmlOptions) {
+        if (!filePath || !metadata) {
+            return null;
+        }
+        await Utils.mkDirPath(filePath, true);
+        const xml = Utils.writeObjectToXml(metadata, xmlOptions);
+        await fs_1.promises.writeFile(filePath, xml);
+        return filePath;
     }
     static async readObjectFromXmlFile(filePath, xmlOptions) {
         if (!filePath) {

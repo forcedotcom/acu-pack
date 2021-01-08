@@ -1,7 +1,10 @@
 import { exec } from 'child_process';
 import Utils from '../lib/utils';
+import SfdxProject from '../lib/sfdx-project';
 
 export class SfdxCore {
+    public static DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
+
     public static ASTERIX: string = '*';
     public static MAIN: string = 'main';
     public static DEFAULT: string = 'default';
@@ -13,7 +16,7 @@ export class SfdxCore {
     public static command(cmd: string): Promise<any> {
         return new Promise((resolve, reject) => {
             exec(cmd, SfdxCore.bufferOptions, (error: any, stdout: any, stderr: any) => {
-                let response;
+                let response: any;
                 try {
                     if (stdout && String(stdout) !== '') {
                         response = JSON.parse(stdout);
@@ -43,10 +46,10 @@ export class SfdxCore {
         return {
             Package: {
                 $: {
-                    xmlns: 'http://soap.sforce.com/2006/04/metadata'
+                    xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 types: [],
-                version: version || '48'
+                version: version || SfdxProject.DEFAULT_PACKAGE_VERSION
             }
         };
     }

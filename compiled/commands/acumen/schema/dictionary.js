@@ -28,7 +28,7 @@ class Dictionary extends command_base_1.CommandBase {
             // Create for writing - truncates if exists
             const stream = fs_1.createWriteStream(sheetDataFile, { flags: 'w' });
             // Add columns
-            const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(orgAlias, new Set(['CustomObject']), namespaces);
+            const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);
             this.ux.log(`Gathering CustomObject schemas from Org: ${orgAlias}(${orgId})`);
             const sortedTypeNames = utils_1.default.sortArray(objectMap.get('CustomObject'));
             let counter = 0;
@@ -68,7 +68,7 @@ class Dictionary extends command_base_1.CommandBase {
                 this.ux.log(`Writing Report: ${reportPath}`);
                 const sheetData = [this.getColumnRow()];
                 try {
-                    for (var _e = tslib_1.__asyncValues(utils_1.default.readFileAsync(sheetDataFile)), _f; _f = await _e.next(), !_f.done;) {
+                    for (var _e = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(sheetDataFile)), _f; _f = await _e.next(), !_f.done;) {
                         const line = _f.value;
                         sheetData.push(JSON.parse(line));
                     }

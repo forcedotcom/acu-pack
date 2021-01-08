@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
 const fs_1 = require("fs");
-const xml2js = require("xml2js");
 const path = require("path");
 class XmlMerge {
     static async mergeXml(sourceXml, destinationXml, ux) {
@@ -15,10 +14,10 @@ class XmlMerge {
                 await this.logMessage(`Source package does not exist: ${sourceXml}`, logFilePath, ux);
                 return;
             }
-            const source = await this.parseXmlFromFile(sourceXml);
+            const source = await utils_1.default.readObjectFromXmlFile(sourceXml);
             await this.logMessage(`Parsed source package: ${sourceXml}`, logFilePath, ux);
             if (await utils_1.default.pathExistsAsync(destinationXml)) {
-                const destination = await this.parseXmlFromFile(destinationXml);
+                const destination = await utils_1.default.readObjectFromXmlFile(destinationXml);
                 await this.logMessage(`Parsed destination package: ${destinationXml}`, logFilePath, ux);
                 merged = this.mergeObjects(source, destination);
             }
@@ -55,13 +54,6 @@ class XmlMerge {
         if (ux) {
             ux.log(message);
         }
-    }
-    static async parseXmlFromFile(filePath, parserOptions) {
-        if (!filePath) {
-            return null;
-        }
-        const xmlString = await fs_1.promises.readFile(filePath, 'utf8');
-        return await (new xml2js.Parser(parserOptions).parseStringPromise((xmlString)));
     }
     static mergeObjects(source, destination) {
         if (!source.Package) {

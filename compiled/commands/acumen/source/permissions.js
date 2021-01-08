@@ -7,43 +7,7 @@ const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
 const office_1 = require("../../../lib/office");
 const path = require("path");
-const xml_merge_1 = require("../../../lib/xml-merge");
-// @ts-ignore
-const tabVisibilityKind = {
-    OFF: 'DefaultOff',
-    ON: 'DefaultOn',
-    HIDDEN: 'Hidden'
-};
-class MetadataDetail {
-}
-class ObjectDetail extends MetadataDetail {
-}
-class FieldDetail extends MetadataDetail {
-}
-class NamedPermission {
-}
-class ReadPermission extends NamedPermission {
-}
-class FieldPermission extends ReadPermission {
-}
-class ClassPermission extends ReadPermission {
-}
-class UserPermission extends ReadPermission {
-}
-class PagePermission extends ReadPermission {
-}
-class DefaultablePermission extends ReadPermission {
-}
-class RecordTypePermission extends DefaultablePermission {
-}
-class ApplicationPermission extends DefaultablePermission {
-}
-class TabPermission extends ReadPermission {
-}
-class ObjectPermission extends FieldPermission {
-}
-class PermissionSet {
-}
+const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 class Permissions extends command_base_1.CommandBase {
     constructor() {
         super(...arguments);
@@ -79,7 +43,7 @@ class Permissions extends command_base_1.CommandBase {
                 try {
                     for (var _b = tslib_1.__asyncValues(utils_1.default.getFilesAsync(folder)), _c; _c = await _b.next(), !_c.done;) {
                         const filePath = _c.value;
-                        const json = await xml_merge_1.default.parseXmlFromFile(filePath);
+                        const json = await utils_1.default.readObjectFromXmlFile(filePath);
                         if (json.CustomObject) {
                             this.processObjectMeta(filePath, json);
                         }
@@ -135,7 +99,7 @@ class Permissions extends command_base_1.CommandBase {
                     metaDataToPermissionsMap.set(apiName, []);
                 }
                 const sheetData = metaDataToPermissionsMap.get(apiName);
-                sheetData.push([permissionSetName, this.getPermisionString(perm)]);
+                sheetData.push([permissionSetName, sfdx_permission_1.SfdxPermission.getPermisionString(perm)]);
                 metaDataToPermissionsMap.set(apiName, sheetData);
             }
         }
@@ -211,198 +175,23 @@ class Permissions extends command_base_1.CommandBase {
         }
         return workbookSheet;
     }
-    getPermisionString(permissionSet) {
-        let result = '';
-        if (permissionSet instanceof ObjectPermission) {
-            const perm = permissionSet;
-            if (perm.modAll) {
-                return 'All';
-            }
-            if (perm.c) {
-                result += 'C ';
-            }
-            if (perm.r) {
-                result += 'R ';
-            }
-            if (perm.u) {
-                result += 'U ';
-            }
-            if (perm.d) {
-                result += 'D ';
-            }
-            if (perm.viewAll) {
-                result += 'V ';
-            }
-        }
-        else if (permissionSet instanceof FieldPermission) {
-            const perm = permissionSet;
-            if (perm.r) {
-                result += 'R ';
-            }
-            if (perm.u) {
-                result += 'U ';
-            }
-        }
-        else if (permissionSet instanceof TabPermission) {
-            const perm = permissionSet;
-            if (perm.r) {
-                result += 'R ';
-            }
-            if (perm.visibility) {
-                switch (perm.visibility) {
-                    case tabVisibilityKind.ON:
-                        result += 'ON ';
-                        break;
-                    case tabVisibilityKind.OFF:
-                        result += 'OFF ';
-                        break;
-                    case tabVisibilityKind.HIDDEN:
-                        result += 'HIDE ';
-                        break;
-                }
-            }
-        }
-        else if (permissionSet instanceof RecordTypePermission ||
-            permissionSet instanceof ApplicationPermission) {
-            const perm = permissionSet;
-            if (perm.r) {
-                result += 'R ';
-            }
-            if (perm.default) {
-                result += '* ';
-            }
-        }
-        else if (permissionSet instanceof UserPermission ||
-            permissionSet instanceof ClassPermission ||
-            permissionSet instanceof PagePermission) {
-            const perm = permissionSet;
-            if (perm.r) {
-                result += 'R ';
-            }
-        }
-        return result.length === 0
-            ? ''
-            : result.trimRight();
-    }
     getObjectDetails(name) {
-        return this.objectMetadata.get(name) || new ObjectDetail();
+        return this.objectMetadata.get(name) || new sfdx_permission_1.ObjectDetail();
     }
     getFieldDetails(name) {
-        return this.fieldMetadata.get(name) || new FieldDetail();
+        return this.fieldMetadata.get(name) || new sfdx_permission_1.FieldDetail();
     }
     processObjectMeta(filePath, json) {
-        const name = path.basename(filePath.split('.')[0]);
-        const objectDetail = this.getObjectDetails(name);
-        objectDetail.label = this.getValue(json.CustomObject.label);
-        objectDetail.intSharingModel = this.getValue(json.CustomObject.sharingModel);
-        objectDetail.extSharingModel = this.getValue(json.CustomObject.externalSharingModel);
-        objectDetail.visibility = this.getValue(json.CustomObject.visibility);
-        this.objectMetadata.set(name, objectDetail);
+        const objectDetail = sfdx_permission_1.ObjectDetail.fromXml(filePath, json);
+        this.objectMetadata.set(objectDetail.name, objectDetail);
     }
     processFieldMeta(filePath, json) {
-        const objectName = path.parse(path.dirname(path.dirname(filePath))).name;
-        const fullname = `${objectName}.${path.basename(filePath.split('.')[0])}`;
-        const fieldDetail = this.getFieldDetails(fullname);
-        fieldDetail.label = this.getValue(json.CustomField.label);
-        fieldDetail.description = this.getValue(json.CustomField.description);
-        fieldDetail.type = this.getValue(json.CustomField.type);
-        fieldDetail.encryptionScheme = this.getValue(json.CustomField.encryptionScheme);
-        this.fieldMetadata.set(fullname, fieldDetail);
+        const fieldDetail = sfdx_permission_1.FieldDetail.fromXml(filePath, json);
+        this.fieldMetadata.set(fieldDetail.name, fieldDetail);
     }
     processPermissionSetMeta(filePath, json) {
-        const name = path.basename(filePath.split('.')[0]);
-        const permSet = this.permissions.get(name) || new PermissionSet();
-        const root = json.PermissionSet || json.Profile;
-        permSet.isProfile = json.Profile ? true : false;
-        for (const fldPerm of root.fieldPermissions || []) {
-            const fieldPermission = new FieldPermission();
-            fieldPermission.name = this.getValue(fldPerm.field);
-            fieldPermission.u = this.getValue(fldPerm.editable) || false;
-            fieldPermission.r = this.getValue(fldPerm.readable) || false;
-            if (!permSet.fieldPermissions) {
-                permSet.fieldPermissions = new Map();
-            }
-            permSet.fieldPermissions.set(fieldPermission.name, fieldPermission);
-        }
-        for (const usrPerm of root.userPermissions || []) {
-            const userPermission = new UserPermission();
-            userPermission.r = this.getValue(usrPerm.enabled) || false;
-            userPermission.name = this.getValue(usrPerm.name);
-            if (!permSet.userPermissions) {
-                permSet.userPermissions = new Map();
-            }
-            permSet.userPermissions.set(userPermission.name, userPermission);
-        }
-        for (const classPerm of root.classAccesses || []) {
-            const classPermission = new ClassPermission();
-            classPermission.r = this.getValue(classPerm.enabled) || false;
-            classPermission.name = this.getValue(classPerm.apexClass);
-            if (!permSet.classAccesses) {
-                permSet.classAccesses = new Map();
-            }
-            permSet.classAccesses.set(classPermission.name, classPermission);
-        }
-        for (const pagePerm of root.pageAccesses || []) {
-            const pagePermission = new PagePermission();
-            pagePermission.r = this.getValue(pagePerm.enabled) || false;
-            pagePermission.name = this.getValue(pagePerm.apexPage);
-            if (!permSet.pageAccesses) {
-                permSet.pageAccesses = new Map();
-            }
-            permSet.pageAccesses.set(pagePermission.name, pagePermission);
-        }
-        for (const recPerm of root.recordTypeVisibilities || []) {
-            const recPermission = new RecordTypePermission();
-            recPermission.r = this.getValue(recPerm.visible) || false;
-            recPermission.name = this.getValue(recPerm.recordType);
-            recPermission.default = this.getValue(recPerm.default);
-            if (!permSet.recordTypeAccesses) {
-                permSet.recordTypeAccesses = new Map();
-            }
-            permSet.recordTypeAccesses.set(recPermission.name, recPermission);
-        }
-        for (const tabPerm of root.tabVisibilities || []) {
-            const tabPermission = new TabPermission();
-            tabPermission.visibility = this.getValue(tabPerm.visibility);
-            tabPermission.name = this.getValue(tabPerm.tab);
-            if (!permSet.tabVisibilities) {
-                permSet.tabVisibilities = new Map();
-            }
-            permSet.tabVisibilities.set(tabPermission.name, tabPermission);
-        }
-        for (const appPerm of root.applicationVisibilities || []) {
-            const appPermission = new ApplicationPermission();
-            appPermission.r = this.getValue(appPerm.visible);
-            appPermission.default = this.getValue(appPerm.default);
-            appPermission.name = this.getValue(appPerm.application);
-            if (!permSet.applicationVisibilities) {
-                permSet.applicationVisibilities = new Map();
-            }
-            permSet.applicationVisibilities.set(appPermission.name, appPermission);
-        }
-        for (const objPerm of root.objectPermissions || []) {
-            const objPermission = new ObjectPermission();
-            objPermission.name = this.getValue(objPerm.object);
-            objPermission.c = this.getValue(objPerm.allowCreate);
-            objPermission.r = this.getValue(objPerm.allowRead);
-            objPermission.u = this.getValue(objPerm.allowEdit);
-            objPermission.d = this.getValue(objPerm.allowDelete);
-            objPermission.viewAll = this.getValue(objPerm.viewAllRecords);
-            objPermission.modAll = this.getValue(objPerm.modifyAllRecords);
-            if (!permSet.objectPermissions) {
-                permSet.objectPermissions = new Map();
-            }
-            permSet.objectPermissions.set(objPermission.name, objPermission);
-        }
-        this.permissions.set(name, permSet);
-    }
-    getValue(json) {
-        const value = json && json instanceof Array
-            ? json[0]
-            : json;
-        return value === 'true' || value === 'false'
-            ? value === 'true'
-            : value;
+        const permSet = sfdx_permission_1.PermissionSet.fromXml(filePath, json);
+        this.permissions.set(permSet.name, permSet);
     }
 }
 exports.default = Permissions;

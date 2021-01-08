@@ -27,7 +27,7 @@ export abstract class OptionsBase {
         }
         const dir = path.dirname(optionsPath);
         if (dir) {
-            await fs.mkdir(dir, { recursive: true });
+            await Utils.mkDirPath(dir);
         }
         await fs.writeFile(optionsPath, (await this.serialize()));
     }

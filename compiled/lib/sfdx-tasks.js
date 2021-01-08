@@ -289,5 +289,6 @@ class SfdxTasks {
     }
 }
 exports.SfdxTasks = SfdxTasks;
+SfdxTasks.defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
 SfdxTasks._folderPaths = null;
 //# sourceMappingURL=sfdx-tasks.js.map

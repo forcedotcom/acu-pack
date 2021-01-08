@@ -3,7 +3,6 @@ import { flags } from '@salesforce/command';
 import { AnyJson } from '@salesforce/ts-types';
 export default class Permissions extends CommandBase {
     static packageFileName: string;
-    static defaultMetaTypes: string[];
     static description: string;
     static examples: string[];
     protected static flagsConfig: {

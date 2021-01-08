@@ -3,18 +3,18 @@ import { flags } from '@salesforce/command';
 import { SfdxError } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
+import { SfdxPermission } from '../../../lib/sfdx-permission';
 import { SfdxCore } from '../../../lib/sfdx-core';
 import path = require('path');
 import Utils from '../../../lib/utils';
 
 export default class Permissions extends CommandBase {
   public static packageFileName = 'package-permissions.xml';
-  public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
   public static description = CommandBase.messages.getMessage('package.permissions.commandDescription');
 
   public static examples = [`$ sfdx acumen:package:permissions -u myOrgAlias
     Creates a package file (${Permissions.packageFileName}) which contains
-    Profile & PermissionSet metadata related to ${Permissions.defaultMetaTypes.join(', ')} permissions.`,
+    Profile & PermissionSet metadata related to ${SfdxPermission.defaultPermissionMetaTypes.join(', ')} permissions.`,
   `$ sfdx acumen:package:permissions -u myOrgAlias -m CustomObject,CustomApplication
     Creates a package file (${Permissions.packageFileName}) which contains
     Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.`];
@@ -26,7 +26,7 @@ export default class Permissions extends CommandBase {
     }),
     metadata: flags.string({
       char: 'm',
-      description: CommandBase.messages.getMessage('package.permissions.metadataFlagDescription', [Permissions.defaultMetaTypes.join(', ')])
+      description: CommandBase.messages.getMessage('package.permissions.metadataFlagDescription', [SfdxPermission.defaultPermissionMetaTypes.join(', ')])
     }),
     namespaces: flags.string({
       char: 'n',
@@ -52,7 +52,7 @@ export default class Permissions extends CommandBase {
     // Gather metadata names to include
     const metaNames = Utils.sortArray(this.flags.metadata
       ? this.flags.metadata.split()
-      : Permissions.defaultMetaTypes);
+      : SfdxPermission.defaultPermissionMetaTypes);
     this.metaNames = new Set(metaNames);
 
     // Are we including namespaces?

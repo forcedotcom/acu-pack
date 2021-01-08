@@ -49,6 +49,8 @@ export class SfdxOrgInfo {
 
 export class SfdxTasks {
 
+    public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
+
     public static async describeMetadata(usernameOrAlias: string): Promise<any[]> {
         const response = await SfdxCore.command(`sfdx force:mdapi:describemetadata --json -u ${usernameOrAlias}`);
         return !response || !response.metadataObjects
@@ -105,7 +107,7 @@ export class SfdxTasks {
         }
     }
 
-    public static async listMetadatas(usernameOrAlias: string, metadataTypes: Set<string>, namespaces: Set<string> = null): Promise<Map<string, string[]>> {
+    public static async listMetadatas(usernameOrAlias: string, metadataTypes: Iterable<string>, namespaces: Set<string> = null): Promise<Map<string, string[]>> {
         const response = new Map<string, string[]>();
         for (const metadataType of metadataTypes) {
             const results = await SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} -u ${usernameOrAlias}`);

@@ -20,6 +20,7 @@ export declare class SfdxOrgInfo {
     constructor(result?: any);
 }
 export declare class SfdxTasks {
+    static defaultMetaTypes: string[];
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
     static retrievePackage(usernameOrAlias: string, packageFilePath?: string): Promise<any>;
     static initializeProject(projectName: string): Promise<string>;
@@ -27,7 +28,7 @@ export declare class SfdxTasks {
         name: any;
         members: any[];
     }, void, unknown>;
-    static listMetadatas(usernameOrAlias: string, metadataTypes: Set<string>, namespaces?: Set<string>): Promise<Map<string, string[]>>;
+    static listMetadatas(usernameOrAlias: string, metadataTypes: Iterable<string>, namespaces?: Set<string>): Promise<Map<string, string[]>>;
     static listMetadata(usernameOrAlias: string, metadataType: string, namespaces?: Set<string>): AsyncGenerator<any, void, unknown>;
     static listMetadataInFolder(usernameOrAlias: string, metadataType: string, folderName: string, namespaces?: Set<string>): AsyncGenerator<any, void, unknown>;
     static describeObject(usernameOrAlias: string, objectName: string): Promise<any>;

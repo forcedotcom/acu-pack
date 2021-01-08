@@ -124,7 +124,7 @@ class DeltaProvider {
             if (ignoreFile) {
                 await this.logMessage('Ignore Set:');
                 try {
-                    for (var _g = tslib_1.__asyncValues(utils_1.default.readFileAsync(ignoreFile)), _h; _h = await _g.next(), !_h.done;) {
+                    for (var _g = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(ignoreFile)), _h; _h = await _g.next(), !_h.done;) {
                         const line = _h.value;
                         try {
                             for (var _j = tslib_1.__asyncValues(utils_1.default.getFilesAsync(line)), _k; _k = await _j.next(), !_k.done;) {
@@ -174,7 +174,7 @@ class DeltaProvider {
                     // 'act' like new files and are copiied to the destination.
                     await this.logMessage('Puring force file entries from deltas.', true);
                     try {
-                        for (var _l = tslib_1.__asyncValues(utils_1.default.readFileAsync(forceFile)), _m; _m = await _l.next(), !_m.done;) {
+                        for (var _l = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(forceFile)), _m; _m = await _l.next(), !_m.done;) {
                             const line = _m.value;
                             try {
                                 for (var _o = tslib_1.__asyncValues(utils_1.default.getFilesAsync(line)), _p; _p = await _o.next(), !_p.done;) {
@@ -289,7 +289,7 @@ class DeltaProvider {
         if (deltaFilePath && this.deltas.size === 0) {
             await this.logMessage(`Loading delta file: ${deltaFilePath}`);
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.readFileAsync(deltaFilePath)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(deltaFilePath)), _c; _c = await _b.next(), !_c.done;) {
                     const line = _c.value;
                     if (!line || !line.trim()) {
                         continue;

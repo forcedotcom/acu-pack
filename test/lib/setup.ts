@@ -20,7 +20,7 @@ export default class Setup {
 
         var deltaKind = 'A'
         var myPath = folder;
-        await fs.mkdir(myPath, { recursive: true });
+        await Utils.mkDirPath(myPath);
         for (let x = 0; x < count; x++) {
             for (let y = 0; y < count; y++) {
                 var filePath = path.join(myPath, `myfile${y}.txt`);
@@ -31,7 +31,7 @@ export default class Setup {
                 yield filePath;
             }
             myPath = path.join(myPath, 'sub_' + x);
-            await fs.mkdir(myPath, { recursive: true });
+            await Utils.mkDirPath(myPath);
         }
     }
 }

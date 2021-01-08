@@ -51,6 +51,12 @@
     "xpath": {
       "commandDescription": "Validates XML against xpath selects and known bad values.",
       "optionsFlagDescription": "A file containing the XPathOptions json. Specifying this option will create the file if it doesn't exist already."
+    },
+    "profile": {
+      "commandDescription": "Determines the compatibility for one or more profiles metadat data files with a specified Org",
+      "profilePathFlagDescription": "OPTIONAL: Path to the profile(s) to evaluate. This overrides the default: %s.",
+      "outputFoldersFlagDescription": "OPTIONAL: The output folder path for the modified profile metadata files. The existing files are overwritten if not specififed.",
+      "modifyFlagDescription": "OPTIONAL: Setting this flag to true will updated the existing metadat to remove the incompatibile entries."
     }
   },
   "apex": {

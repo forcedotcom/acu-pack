@@ -82,7 +82,7 @@ export default class Md5 extends CommandBase {
                 if (!await Utils.pathExistsAsync(md5FilePath)) {
                     const folder = path.dirname(md5FilePath);
                     if (folder && !await Utils.pathExistsAsync(folder)) {
-                        await fs.mkdir(folder);
+                        await Utils.mkDirPath(folder);
                     }
                 } else {
                     await fs.unlink(md5FilePath);

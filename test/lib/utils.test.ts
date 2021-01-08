@@ -41,8 +41,8 @@ describe("Utils Tests", function () {
             expect(files[0]).equal(testFilePath);
         });
     });
-    describe("readFileAsync Test", function () {
-        var testFilePath = `${Setup.sourceRoot}/readFileAsyncTest.txt`;
+    describe("readFileLinesAsync Test", function () {
+        var testFilePath = `${Setup.sourceRoot}/readFileLinesAsyncTest.txt`;
         var testFileLineCount = 25;
         beforeEach(async function () {
             for (let index = 0; index < testFileLineCount; index++) {
@@ -51,14 +51,14 @@ describe("Utils Tests", function () {
         });
         it("Can read file", async function () {
             var lines = [];
-            for await (const file of Utils.readFileAsync(testFilePath)) {
+            for await (const file of Utils.readFileLinesAsync(testFilePath)) {
                 lines.push(file);
             }
             expect(lines.length).equal(testFileLineCount);
         });
         it("Can Handle Missing Files", async function () {
             var lines = [];
-            for await (const file of Utils.readFileAsync(bogusPath)) {
+            for await (const file of Utils.readFileLinesAsync(bogusPath)) {
                 lines.push(file);
             }
             expect(lines.length).equal(0);

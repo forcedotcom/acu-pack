@@ -26,7 +26,7 @@ class OptionsBase {
         }
         const dir = path.dirname(optionsPath);
         if (dir) {
-            await fs_1.promises.mkdir(dir, { recursive: true });
+            await utils_1.default.mkDirPath(dir);
         }
         await fs_1.promises.writeFile(optionsPath, (await this.serialize()));
     }

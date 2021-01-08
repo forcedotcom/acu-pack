@@ -32,7 +32,7 @@ export default class XPath extends CommandBase {
         for await (const filePath of Utils.getFilesAsync(sourceFolder)) {
           this.ux.log(`Processing file: '${filePath}`);
           let xml = null;
-          for await (const line of Utils.readFileAsync(filePath)) {
+          for await (const line of Utils.readFileLinesAsync(filePath)) {
             xml += line;
           }
           const xPaths = [];

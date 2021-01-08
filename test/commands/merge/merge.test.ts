@@ -30,15 +30,6 @@ describe("Xml-Merge Tests", function () {
     await cleanUp();
   });
 
-  describe("parseXmlFromFile Tests", function () {
-    it("Can Handle Nulls", async function () {
-      expect(await xmlMerge.parseXmlFromFile(null)).is.null;
-    });
-    it("Can Parse XMl Files", async function () {
-      expect(await xmlMerge.parseXmlFromFile(source));
-    });
-  });
-
   describe('Test XmlMerge', async () => {
     it("Can Handle Empty package", async function () {
       let source = {
@@ -46,7 +37,7 @@ describe("Xml-Merge Tests", function () {
           version: "49.0"
         }
       };
-      const parsed = await xmlMerge.parseXmlFromFile(destination);
+      const parsed = await Utils.readObjectFromXmlFile(destination);
       const merged = xmlMerge.mergeObjects(source, parsed);
       expect(merged).not.null;
       expect(merged.Package).not.null;
@@ -58,7 +49,7 @@ describe("Xml-Merge Tests", function () {
 
       expect(await Utils.pathExistsAsync(destination));
 
-      const merged = await xmlMerge.parseXmlFromFile(destination);
+      const merged = await Utils.readObjectFromXmlFile(destination);
       expect(merged).not.null;
       expect(merged.Package).not.null;
       expect(merged.Package.types).not.null;

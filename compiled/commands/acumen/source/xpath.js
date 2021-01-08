@@ -23,7 +23,7 @@ class XPath extends command_base_1.CommandBase {
                         this.ux.log(`Processing file: '${filePath}`);
                         let xml = null;
                         try {
-                            for (var _f = tslib_1.__asyncValues(utils_1.default.readFileAsync(filePath)), _g; _g = await _f.next(), !_g.done;) {
+                            for (var _f = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(filePath)), _g; _g = await _f.next(), !_g.done;) {
                                 const line = _g.value;
                                 xml += line;
                             }

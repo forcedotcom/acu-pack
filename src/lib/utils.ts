@@ -53,7 +53,7 @@ export default class Utils {
         }
     }
 
-    public static async * readFileAsync(filePath: string) {
+    public static async * readFileLinesAsync(filePath: string) {
         if (!(await Utils.pathExistsAsync(filePath))) {
             return;
         }
@@ -70,6 +70,13 @@ export default class Utils {
         for await (const line of rl) {
             yield line;
         }
+    }
+
+    public static async readFileAsync(filePath: string, options?: any): Promise<string> {
+        if (!(await Utils.pathExistsAsync(filePath))) {
+            return null;
+        }
+        return (await fs.readFile(filePath, options)).toString();
     }
 
     public static async pathExistsAsync(pathToCheck: string): Promise<boolean> {
@@ -94,9 +101,17 @@ export default class Utils {
         return err && err.code === 'ENOENT';
     }
 
+    public static async mkDirPath(destination: string, hasFileName = false): Promise<void> {
+        if (!destination) {
+            return;
+        }
+        await fs.mkdir(hasFileName ? path.dirname(destination) : destination, { recursive: true });
+
+    }
+
     public static async copyFile(source: string, destination: string): Promise<void> {
         try {
-            await fs.mkdir(path.dirname(destination), { recursive: true });
+            await Utils.mkDirPath(destination, true);
             await fs.copyFile(source, destination);
         } catch (err) {
             if (Utils.isENOENT(err)) {
@@ -192,8 +207,8 @@ export default class Utils {
         return email.split(mask).join('');
     }
 
-    public static async writeObjectToXmlFile(filename: string, metadata: any, xmlOptions?: any): Promise<string> {
-        if (!filename || !metadata) {
+    public static writeObjectToXml(metadata: any, xmlOptions?: any): string {
+        if (!metadata) {
             return null;
         }
         const options = xmlOptions ?? Utils.defaultXmlOptions;
@@ -202,9 +217,18 @@ export default class Utils {
         if (options.eofChar) {
             xml += options.eofChar;
         }
-        await fs.writeFile(filename, xml);
+        return xml;
+    }
 
-        return filename;
+    public static async writeObjectToXmlFile(filePath: string, metadata: any, xmlOptions?: any): Promise<string> {
+        if (!filePath || !metadata) {
+            return null;
+        }
+        await Utils.mkDirPath(filePath, true);
+        const xml = Utils.writeObjectToXml(metadata, xmlOptions);
+        await fs.writeFile(filePath, xml);
+
+        return filePath;
     }
 
     public static async readObjectFromXmlFile(filePath: string, xmlOptions?: any): Promise<any> {
@@ -215,6 +239,20 @@ export default class Utils {
         const xmlString = await fs.readFile(filePath, options.encoding);
 
         return await (new xml2js.Parser(options).parseStringPromise((xmlString)));
+    }
+
+    public static setCwd(newCwdPath: string): string {
+        const currentCwd = path.resolve(process.cwd());
+        const newCwd = path.resolve(newCwdPath);
+        if (currentCwd !== newCwd) {
+            try {
+                process.chdir(newCwdPath);
+            } catch (err) {
+                throw new Error(`Unable to set path to: ${newCwdPath}`);
+            }
+            return newCwd;
+        }
+        return currentCwd;
     }
 
     private static glob = require('util').promisify(require('glob'));

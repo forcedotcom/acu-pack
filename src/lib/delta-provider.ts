@@ -150,7 +150,7 @@ export abstract class DeltaProvider {
 
       if (ignoreFile) {
         await this.logMessage('Ignore Set:');
-        for await (const line of Utils.readFileAsync(ignoreFile)) {
+        for await (const line of Utils.readFileLinesAsync(ignoreFile)) {
           for await (const filePath of Utils.getFilesAsync(line)) {
             ignoreSet.add(path.normalize(filePath));
             await this.logMessage(`\t${filePath}`);
@@ -184,7 +184,7 @@ export abstract class DeltaProvider {
           // Remove the force entries from the hash so they
           // 'act' like new files and are copiied to the destination.
           await this.logMessage('Puring force file entries from deltas.', true);
-          for await (const line of Utils.readFileAsync(forceFile)) {
+          for await (const line of Utils.readFileLinesAsync(forceFile)) {
             for await (const filePath of Utils.getFilesAsync(line)) {
               if (this.deltas.delete(filePath)) {
                 await this.logMessage(`Purged: ${filePath}`, true);
@@ -258,7 +258,7 @@ export abstract class DeltaProvider {
     deltaFilePath = deltaFilePath ? path.normalize(deltaFilePath) : this.deltaOptions.deltaFilePath;
     if (deltaFilePath && this.deltas.size === 0) {
       await this.logMessage(`Loading delta file: ${deltaFilePath}`);
-      for await (const line of Utils.readFileAsync(deltaFilePath)) {
+      for await (const line of Utils.readFileLinesAsync(deltaFilePath)) {
         if (!line || !line.trim()) {
           continue;
         }

@@ -48,7 +48,16 @@ class Unmask extends command_base_1.CommandBase {
                 return;
             }
             this.ux.log('Retrieving Users...');
-            const query = `${options.userQuery} WHERE Username ${sfdx_query_1.SfdxQuery.getInClause(usernames)}`;
+            if (!options.userQuery.endsWith(' ')) {
+                options.userQuery += ' ';
+            }
+            if (!options.userQuery.toUpperCase().includes('WHERE')) {
+                options.userQuery += 'WHERE';
+            }
+            else {
+                options.userQuery += 'AND';
+            }
+            const query = `${options.userQuery} Username ${sfdx_query_1.SfdxQuery.getInClause(usernames)}`;
             this.ux.log('');
             this.ux.log('User Query:');
             this.ux.log(query);

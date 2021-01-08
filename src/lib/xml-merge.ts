@@ -1,6 +1,5 @@
 import Utils from './utils';
 import { promises as fs } from 'fs';
-import * as xml2js from 'xml2js';
 import path = require('path');
 
 export default class XmlMerge {
@@ -18,11 +17,11 @@ export default class XmlMerge {
                 return;
             }
 
-            const source = await this.parseXmlFromFile(sourceXml);
+            const source = await Utils.readObjectFromXmlFile(sourceXml);
             await this.logMessage(`Parsed source package: ${sourceXml}`, logFilePath, ux);
 
             if (await Utils.pathExistsAsync(destinationXml)) {
-                const destination = await this.parseXmlFromFile(destinationXml);
+                const destination = await Utils.readObjectFromXmlFile(destinationXml);
                 await this.logMessage(`Parsed destination package: ${destinationXml}`, logFilePath, ux);
 
                 merged = this.mergeObjects(source, destination);
@@ -59,14 +58,6 @@ export default class XmlMerge {
         if (ux) {
             ux.log(message);
         }
-    }
-
-    public static async parseXmlFromFile(filePath: string, parserOptions?: any) {
-        if (!filePath) {
-            return null;
-        }
-        const xmlString = await fs.readFile(filePath, 'utf8');
-        return await (new xml2js.Parser(parserOptions).parseStringPromise((xmlString)));
     }
 
     public static mergeObjects(source: any, destination: any): any {

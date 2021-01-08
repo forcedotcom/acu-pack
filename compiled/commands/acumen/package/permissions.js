@@ -5,6 +5,7 @@ const command_base_1 = require("../../../lib/command-base");
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
+const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_core_1 = require("../../../lib/sfdx-core");
 const path = require("path");
 const utils_1 = require("../../../lib/utils");
@@ -16,7 +17,7 @@ class Permissions extends command_base_1.CommandBase {
         // Gather metadata names to include
         const metaNames = utils_1.default.sortArray(this.flags.metadata
             ? this.flags.metadata.split()
-            : Permissions.defaultMetaTypes);
+            : sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes);
         this.metaNames = new Set(metaNames);
         // Are we including namespaces?
         this.namespaces = this.flags.namespaces
@@ -81,11 +82,10 @@ class Permissions extends command_base_1.CommandBase {
 }
 exports.default = Permissions;
 Permissions.packageFileName = 'package-permissions.xml';
-Permissions.defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
 Permissions.description = command_base_1.CommandBase.messages.getMessage('package.permissions.commandDescription');
 Permissions.examples = [`$ sfdx acumen:package:permissions -u myOrgAlias
     Creates a package file (${Permissions.packageFileName}) which contains
-    Profile & PermissionSet metadata related to ${Permissions.defaultMetaTypes.join(', ')} permissions.`,
+    Profile & PermissionSet metadata related to ${sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes.join(', ')} permissions.`,
     `$ sfdx acumen:package:permissions -u myOrgAlias -m CustomObject,CustomApplication
     Creates a package file (${Permissions.packageFileName}) which contains
     Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.`];
@@ -96,7 +96,7 @@ Permissions.flagsConfig = {
     }),
     metadata: command_1.flags.string({
         char: 'm',
-        description: command_base_1.CommandBase.messages.getMessage('package.permissions.metadataFlagDescription', [Permissions.defaultMetaTypes.join(', ')])
+        description: command_base_1.CommandBase.messages.getMessage('package.permissions.metadataFlagDescription', [sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes.join(', ')])
     }),
     namespaces: command_1.flags.string({
         char: 'n',

@@ -60,7 +60,7 @@ export default class Dictionary extends CommandBase {
       const stream = createWriteStream(sheetDataFile, { flags: 'w' });
 
       // Add columns
-      const objectMap = await SfdxTasks.listMetadatas(orgAlias, new Set<string>(['CustomObject']), namespaces);
+      const objectMap = await SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);
 
       this.ux.log(`Gathering CustomObject schemas from Org: ${orgAlias}(${orgId})`);
 
@@ -93,7 +93,7 @@ export default class Dictionary extends CommandBase {
         this.ux.log(`Writing Report: ${reportPath}`);
 
         const sheetData = [this.getColumnRow()];
-        for await (const line of Utils.readFileAsync(sheetDataFile)) {
+        for await (const line of Utils.readFileLinesAsync(sheetDataFile)) {
           sheetData.push(JSON.parse(line));
         }
 

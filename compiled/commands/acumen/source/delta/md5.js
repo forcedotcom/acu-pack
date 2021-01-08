@@ -108,7 +108,7 @@ Md5.md5DeltaProvider = class extends delta_provider_1.DeltaProvider {
                 if (!(yield tslib_1.__await(utils_1.default.pathExistsAsync(md5FilePath)))) {
                     const folder = path.dirname(md5FilePath);
                     if (folder && !(yield tslib_1.__await(utils_1.default.pathExistsAsync(folder)))) {
-                        yield tslib_1.__await(fs_1.promises.mkdir(folder));
+                        yield tslib_1.__await(utils_1.default.mkDirPath(folder));
                     }
                 }
                 else {
