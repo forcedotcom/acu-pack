@@ -78,7 +78,7 @@ export class FieldDetail extends MetadataDetail {
 export abstract class MetaDataPermission extends Named {
     public r: boolean;
     public abstract toXmlObj(): any;
-    
+
     public toString(): string {
         let result = '';
         if (this.r) {
