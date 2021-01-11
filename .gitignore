@@ -21,7 +21,24 @@ package-options.json
 *Options.json
 ~$*.*
 
-**/test/force-app
+force-app
+!**/test/force-app
+
+**/test/force-app/main/default/profiles/*
+!**/test/force-app/main/default/profiles/sample.*.xml
+
+**/test/force-app/main/default/permissionsets/*
+!**/test/force-app/main/default/permissionsets/sample.*.xml
+
+**/test/force-app/main/default/objects/Address__c/*
+!**/test/force-app/main/default/objects/Address__c/fields
+
+**/test/force-app/main/default/objects/Address__c/fields/*
+!**/test/force-app/main/default/objects/Address__c/fields/Zip__c.field-meta.xml
+
+**/test/force-app/main/default/objects/Asset/*
+!**/test/force-app/main/default/objects/Asset/Asset.object-meta.xml
+
 **/test/deploy
 **/test/source_folder
 **/test/destination_folder
@@ -29,7 +46,8 @@ package-options.json
 **/test/*.test.*
 **/delta.log
 
-force-app/
+
+demo/*
 
 .sfdx
 

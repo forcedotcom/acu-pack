@@ -5,7 +5,7 @@ import Utils from '../../src/lib/utils';
 const unknownId = '00000000001';
 
 // NOTE: These tests might fail without an authorized Org alias
-const orgAlias = null // 'SOQLDEV';
+const orgAlias = 'SOQLDEV';
 let sfdxClient: SfdxClient;
 enum ApiTestKind {
   DEFAULT = 'Account',
@@ -38,6 +38,11 @@ before('Init', async function () {
       console.log(`Got ${ApiTestKind.USER.toString()} Test Data.`);
 
     } catch (err) {
+      if (err.name === 'NoOrgFound') {
+        console.warn(`Invalid OrgAlias: '${orgAlias}'. SfdxClient tests will be skipped.`);
+        sfdxClient = null;
+        return;
+      }
       dataErr = err;
     }
 

@@ -196,7 +196,7 @@ Permissions.defaultMetadataFolders = [
 Permissions.description = command_base_1.CommandBase.messages.getMessage('source.permissions.commandDescription');
 Permissions.examples = [
     `$ sfdx acumen:source:permissions -u myOrgAlias
-    Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in default project source location and writes the '${Permissions.defaultReportPath}' report file.`,
+    Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in default project source location and writes the '${Permissions.defaultReportPath}' report file.`
 ];
 Permissions.flagsConfig = {
     source: command_1.flags.string({

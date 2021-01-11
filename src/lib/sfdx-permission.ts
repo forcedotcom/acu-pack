@@ -20,6 +20,10 @@ export abstract class MetadataDetail extends Named {
 
 export class ObjectDetail extends MetadataDetail {
     public static fromXml(filePath: string, json: any): ObjectDetail {
+        if (!filePath || !json) {
+            return null;
+        }
+
         const detail = new ObjectDetail();
         detail.name = path.basename(filePath.split('.')[0]);
         detail.label = this.getValue(json.CustomObject.label);
@@ -48,10 +52,14 @@ export class ObjectDetail extends MetadataDetail {
 
 export class FieldDetail extends MetadataDetail {
     public static fromXml(filePath: string, json: any): FieldDetail {
+        if (!filePath || !json) {
+            return null;
+        }
+
         const objectName = path.parse(path.dirname(path.dirname(filePath))).name;
 
         const detail = new FieldDetail();
-        detail.name = `${objectName}.${path.basename(filePath.split('.')[0])}`;
+        detail.name = `${objectName}.${this.getValue(json.CustomField.fullName)}`;
         detail.label = this.getValue(json.CustomField.label);
         detail.description = this.getValue(json.CustomField.description);
         detail.type = this.getValue(json.CustomField.type);
@@ -90,6 +98,10 @@ export abstract class MetaDataPermission extends Named {
 
 export class FieldPermission extends MetaDataPermission {
     public static fromXml(json: any): FieldPermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new FieldPermission();
         permission.u = this.getValue(json.editable) || false;
         permission.name = this.getValue(json.field);
@@ -117,6 +129,10 @@ export class FieldPermission extends MetaDataPermission {
 
 export class ClassPermission extends MetaDataPermission {
     public static fromXml(json: any): ClassPermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new ClassPermission();
         permission.name = this.getValue(json.apexClass);
         permission.r = this.getValue(json.enabled) || false;
@@ -133,6 +149,10 @@ export class ClassPermission extends MetaDataPermission {
 
 export class UserPermission extends MetaDataPermission {
     public static fromXml(json: any): UserPermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new UserPermission();
         permission.r = this.getValue(json.enabled) || false;
         permission.name = this.getValue(json.name);
@@ -149,6 +169,10 @@ export class UserPermission extends MetaDataPermission {
 
 export class PagePermission extends MetaDataPermission {
     public static fromXml(json: any): PagePermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new PagePermission();
         permission.name = this.getValue(json.apexPage);
         permission.r = this.getValue(json.enabled) || false;
@@ -177,6 +201,10 @@ export abstract class DefaultablePermission extends MetaDataPermission {
 
 export class RecordTypePermission extends DefaultablePermission {
     public static fromXml(json: any): RecordTypePermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new RecordTypePermission();
         permission.default = this.getValue(json.default);
         permission.name = this.getValue(json.recordType);
@@ -195,6 +223,10 @@ export class RecordTypePermission extends DefaultablePermission {
 
 export class ApplicationPermission extends DefaultablePermission {
     public static fromXml(json: any): ApplicationPermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new ApplicationPermission();
         permission.name = this.getValue(json.application);
         permission.default = this.getValue(json.default);
@@ -213,6 +245,10 @@ export class ApplicationPermission extends DefaultablePermission {
 
 export class TabPermission extends MetaDataPermission {
     public static fromXMl(json: any): TabPermission {
+        if (!json) {
+            return null;
+        }
+
         const tabPermission = new TabPermission();
         tabPermission.setName(this.getValue(json.tab));
         tabPermission.visibility = this.getValue(json.visibility);
@@ -269,6 +305,10 @@ export class TabPermission extends MetaDataPermission {
 
 export class ObjectPermission extends FieldPermission {
     public static fromXml(json: any): ObjectPermission {
+        if (!json) {
+            return null;
+        }
+
         const permission = new ObjectPermission();
         permission.c = this.getValue(json.allowCreate);
         permission.d = this.getValue(json.allowDelete);
@@ -320,6 +360,9 @@ export class ObjectPermission extends FieldPermission {
 
 export class PermissionSet extends Named {
     public static fromXml(filePath: string, json: any): PermissionSet {
+        if (!filePath || !json) {
+            return null;
+        }
         const permSet = new PermissionSet();
         permSet.name = path.basename(filePath.split('.')[0]);
         permSet.isProfile = json.Profile ? true : false;
