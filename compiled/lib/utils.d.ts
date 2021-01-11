@@ -14,6 +14,7 @@ export default class Utils {
     };
     static getFilesAsync(folderPath: string, isRecursive?: boolean): any;
     static readFileLinesAsync(filePath: string): AsyncGenerator<any, void, unknown>;
+    static readFileAsync(filePath: string, options?: any): Promise<string>;
     static pathExistsAsync(pathToCheck: string): Promise<boolean>;
     static getPathStat(pathToCheck: any): Promise<any>;
     static isENOENT(err: any): boolean;
@@ -29,5 +30,6 @@ export default class Utils {
     static writeObjectToXml(metadata: any, xmlOptions?: any): string;
     static writeObjectToXmlFile(filePath: string, metadata: any, xmlOptions?: any): Promise<string>;
     static readObjectFromXmlFile(filePath: string, xmlOptions?: any): Promise<any>;
+    static setCwd(newCwdPath: string): string;
     private static glob;
 }

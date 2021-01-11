@@ -63,9 +63,11 @@ class FieldDetail extends MetadataDetail {
 exports.FieldDetail = FieldDetail;
 class MetaDataPermission extends Named {
     toString() {
+        let result = '';
         if (this.r) {
-            return 'R ';
+            result += 'R ';
         }
+        return result;
     }
 }
 exports.MetaDataPermission = MetaDataPermission;
@@ -83,6 +85,13 @@ class FieldPermission extends MetaDataPermission {
             field: this.name,
             readable: this.r
         };
+    }
+    toString() {
+        let result = super.toString();
+        if (this.u) {
+            result += 'U ';
+        }
+        return result;
     }
 }
 exports.FieldPermission = FieldPermission;
@@ -372,22 +381,22 @@ class SfdxPermission {
     static getPermisionString(permissionSet) {
         let result = '';
         if (permissionSet instanceof ObjectPermission) {
-            result = permissionSet.toString();
+            result += permissionSet.toString();
         }
         else if (permissionSet instanceof FieldPermission) {
-            result = permissionSet.toString();
+            result += permissionSet.toString();
         }
         else if (permissionSet instanceof TabPermission) {
-            result = permissionSet.toString();
+            result += permissionSet.toString();
         }
         else if (permissionSet instanceof RecordTypePermission ||
             permissionSet instanceof ApplicationPermission) {
-            result = permissionSet.toString();
+            result += permissionSet.toString();
         }
         else if (permissionSet instanceof UserPermission ||
             permissionSet instanceof ClassPermission ||
             permissionSet instanceof PagePermission) {
-            result = permissionSet.toString();
+            result += permissionSet.toString();
         }
         return result.length === 0
             ? ''

@@ -79,6 +79,12 @@ class Utils {
             }
         });
     }
+    static async readFileAsync(filePath, options) {
+        if (!(await Utils.pathExistsAsync(filePath))) {
+            return null;
+        }
+        return (await fs_1.promises.readFile(filePath, options)).toString();
+    }
     static async pathExistsAsync(pathToCheck) {
         try {
             await fs_1.promises.access(pathToCheck);
@@ -222,6 +228,17 @@ class Utils {
         const options = (xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions);
         const xmlString = await fs_1.promises.readFile(filePath, options.encoding);
         return await (new xml2js.Parser(options).parseStringPromise((xmlString)));
+    }
+    static setCwd(newCwdPath) {
+        if (!newCwdPath) {
+            return null;
+        }
+        const currentCwd = path.resolve(process.cwd());
+        const newCwd = path.resolve(newCwdPath);
+        if (currentCwd !== newCwd) {
+            process.chdir(newCwdPath);
+        }
+        return currentCwd;
     }
 }
 exports.default = Utils;

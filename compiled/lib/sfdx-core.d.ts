@@ -1,7 +1,5 @@
 export declare class SfdxCore {
     static DEFAULT_XML_NAMESPACE: string;
-    static DEFAULT_PACKAGE_VERSION: string;
-    static DEFAULT_PROJECT_FILE_NAME: string;
     static ASTERIX: string;
     static MAIN: string;
     static DEFAULT: string;
@@ -20,5 +18,4 @@ export declare class SfdxCore {
     };
     static createPackage(packageTypes: Map<string, string[]>, version?: string): any;
     static writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, eofChar?: any): Promise<void>;
-    static getProjectInfo(): Promise<any>;
 }

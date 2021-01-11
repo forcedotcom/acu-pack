@@ -3,8 +3,7 @@ import { CommandBase } from '../../../lib/command-base';
 import { PermissionSet } from '../../../lib/sfdx-permission';
 export default class Profile extends CommandBase {
     static defaultSourceFolder: string;
-    static defaultProfileGlob: string;
-    static defaultPermSetGlob: string;
+    static defaultPermissionsGlobs: string[];
     static description: string;
     static examples: string[];
     protected static flagsConfig: {

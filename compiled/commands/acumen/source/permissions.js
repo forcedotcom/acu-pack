@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
-const core_1 = require("@salesforce/core");
 const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
 const office_1 = require("../../../lib/office");
 const path = require("path");
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
+const sfdx_project_1 = require("../../../lib/sfdx-project");
 class Permissions extends command_base_1.CommandBase {
     constructor() {
         super(...arguments);
@@ -16,23 +16,13 @@ class Permissions extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
         if (!this.flags.source) {
-            this.flags.source = 'force-app';
+            this.flags.source = (await sfdx_project_1.default.default()).getDefaultDirectory();
         }
         // Are we including namespaces?
         const folders = this.flags.folders
             ? this.flags.folders.split()
             : Permissions.defaultMetadataFolders;
-        const defaultCwd = path.resolve(process.cwd());
-        const appCwd = path.resolve(this.flags.source);
-        if (defaultCwd !== appCwd) {
-            try {
-                process.chdir(this.flags.source);
-                this.ux.log(`Scanning metadata in: ${this.flags.source}`);
-            }
-            catch (err) {
-                throw new core_1.SfdxError(`Unable to set path to: ${this.flags.source}`);
-            }
-        }
+        const originalCwd = utils_1.default.setCwd(this.flags.source);
         const workbookMap = new Map();
         try {
             this.objectMetadata = new Map();
@@ -71,14 +61,14 @@ class Permissions extends command_base_1.CommandBase {
             workbookMap.set('Apex Pages', this.buildSheet('pageAccesses'));
             workbookMap.set('Applications', this.buildSheet('applicationVisibilities'));
             workbookMap.set('Tabs', this.buildSheet('tabVisibilities'));
-            workbookMap.set('Record Types', this.buildSheet('recordTypeAccesses'));
+            workbookMap.set('Record Types', this.buildSheet('recordTypeVisibilities'));
         }
         catch (err) {
             throw err;
         }
         finally {
-            if (defaultCwd !== appCwd) {
-                process.chdir(defaultCwd);
+            if (originalCwd !== this.flags.source) {
+                process.chdir(originalCwd);
             }
         }
         const reportPath = path.resolve(this.flags.report || Permissions.defaultReportPath);
@@ -195,7 +185,6 @@ class Permissions extends command_base_1.CommandBase {
     }
 }
 exports.default = Permissions;
-Permissions.defaultSourceFolder = 'force-app';
 Permissions.defaultReportPath = 'PermissionsReport.xlsx';
 // Order Matters here!
 Permissions.defaultMetadataFolders = [
@@ -206,21 +195,24 @@ Permissions.defaultMetadataFolders = [
 ];
 Permissions.description = command_base_1.CommandBase.messages.getMessage('source.permissions.commandDescription');
 Permissions.examples = [
-    `$ sfdx acumen:source:permissions -d security/report -u myOrgAlias
-    Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in '${Permissions.defaultSourceFolder}' and writes the '${Permissions.defaultReportPath}' report file.`
+    `$ sfdx acumen:source:permissions -u myOrgAlias
+    Reads security information from source-formatted configuration files (${Permissions.defaultMetadataFolders.join(', ')}) located in default project source location and writes the '${Permissions.defaultReportPath}' report file.`,
 ];
 Permissions.flagsConfig = {
     source: command_1.flags.string({
         char: 'p',
-        description: command_base_1.CommandBase.messages.getMessage('source.permissions.sourceFlagDescription', [Permissions.defaultSourceFolder])
+        description: command_base_1.CommandBase.messages.getMessage('source.permissions.sourceFlagDescription'),
+        required: false
     }),
     report: command_1.flags.string({
         char: 'r',
-        description: command_base_1.CommandBase.messages.getMessage('source.permissions.reportFlagDescription', [Permissions.defaultReportPath])
+        description: command_base_1.CommandBase.messages.getMessage('source.permissions.reportFlagDescription', [Permissions.defaultReportPath]),
+        required: false
     }),
     folders: command_1.flags.string({
         char: 'f',
-        description: command_base_1.CommandBase.messages.getMessage('source.permissions.metadataFoldersFlagDescription', [Permissions.defaultMetadataFolders.join(', ')])
+        description: command_base_1.CommandBase.messages.getMessage('source.permissions.metadataFoldersFlagDescription', [Permissions.defaultMetadataFolders.join(', ')]),
+        required: false
     })
 };
 Permissions.requiresProject = true;

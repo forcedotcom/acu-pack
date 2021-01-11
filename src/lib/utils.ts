@@ -242,6 +242,9 @@ export default class Utils {
     }
 
     public static setCwd(newCwdPath: string): string {
+        if (!newCwdPath) {
+            return null;
+        }
         const currentCwd = path.resolve(process.cwd());
         const newCwd = path.resolve(newCwdPath);
         if (currentCwd !== newCwd) {

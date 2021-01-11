@@ -2,7 +2,6 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
 import { ObjectDetail, FieldDetail, PermissionSet, MetadataDetail } from '../../../lib/sfdx-permission';
 export default class Permissions extends CommandBase {
-    static defaultSourceFolder: string;
     static defaultReportPath: string;
     static defaultMetadataFolders: string[];
     static description: string;

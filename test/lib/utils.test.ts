@@ -204,4 +204,82 @@ describe("Utils Tests", function () {
             expect(result.root.test[0]).to.equal('true');
         });
     });
+    describe("setCwd Test", function () {
+        it("Can Handle Null", async function () {
+            expect(Utils.setCwd(null)).equal(null);
+
+        });
+        it("Can Set Absolute Current Working Directory", async function () {
+            const testCwd = path.resolve(path.dirname(testFilePath));
+            const cwd = process.cwd();
+            const result = Utils.setCwd(testCwd);
+            expect(result).equal(cwd);
+            expect(process.cwd()).equal(testCwd);
+        });
+        it("Can Set Relative Current Working Directory", async function () {
+            const testCwd = path.dirname(testFilePath);
+            const fillTestCwd = path.resolve(testCwd);
+            const cwd = process.cwd();
+            const result = Utils.setCwd(testCwd);
+            expect(result).equal(path.resolve(cwd));
+            expect(process.cwd()).equal(fillTestCwd);
+        });
+        it("Does not change Current Working Directory is same", async function () {
+            const cwd = process.cwd();
+            const result = Utils.setCwd(cwd);
+            expect(result).equal(cwd);
+        });
+    });
+    describe("mkDirPath Test", function () {
+        const testDirPath = 'testDir1\\testDir2'
+        const testDirFilePath = `${testDirPath}}\\testFile.txt`
+        afterEach(async () => {
+            if ((await Utils.pathExistsAsync(testDirPath))) {
+                await fs.rmdir(testDirPath);
+            }
+        });
+        it("Can Handle Null", async function () {
+            expect(await Utils.mkDirPath(null)).to.be.undefined;
+            expect(await Utils.mkDirPath(null, null)).to.be.undefined;
+            expect(await Utils.mkDirPath(null, true)).to.be.undefined;
+        });
+        it("Can Make Absolute Directory Path", async function () {
+            const fullPath = path.join(process.cwd(), testDirPath);
+
+            let exists = await Utils.pathExistsAsync(fullPath);
+            expect(exists).to.be.false;
+
+            await Utils.mkDirPath(fullPath);
+
+            exists = await Utils.pathExistsAsync(fullPath);
+            expect(exists).to.be.true;
+        });
+        it("Can Make Relative Directory Path", async function () {
+            const fullPath = path.join(process.cwd(), testDirPath);
+
+            let exists = await Utils.pathExistsAsync(fullPath);
+            expect(exists).to.be.false;
+
+            await Utils.mkDirPath(testDirPath);
+
+            exists = await Utils.pathExistsAsync(fullPath);
+            expect(exists).to.be.true;
+        });
+        it("Can Handle Paths with File Names", async function () {
+            const fullPath = path.join(process.cwd(), testDirFilePath);
+
+            let exists = await Utils.pathExistsAsync(fullPath);
+            expect(exists).to.be.false;
+
+            await Utils.mkDirPath(fullPath, true);
+
+            // The file does not exist
+            exists = await Utils.pathExistsAsync(fullPath);
+            expect(exists).to.be.false;
+
+            // but the folder does
+            exists = await Utils.pathExistsAsync(path.dirname(fullPath));
+            expect(exists).to.be.true;
+        });
+    });
 });

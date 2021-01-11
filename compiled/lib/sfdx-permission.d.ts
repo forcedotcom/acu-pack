@@ -29,6 +29,7 @@ export declare class FieldPermission extends MetaDataPermission {
     static fromXml(json: any): FieldPermission;
     u: boolean;
     toXmlObj(): any;
+    toString(): string;
 }
 export declare class ClassPermission extends MetaDataPermission {
     static fromXml(json: any): ClassPermission;
@@ -55,15 +56,11 @@ export declare class ApplicationPermission extends DefaultablePermission {
     toXmlObj(): any;
 }
 export declare class TabPermission extends MetaDataPermission {
-    const tabVisibilityKind: {
-        OFF: string;
-        ON: string;
-        HIDDEN: string;
-    };
     static fromXMl(json: any): TabPermission;
     private static standardPrefix;
     visibility: string;
     isStandard: boolean;
+    private tabVisibilityKind;
     setName(name: string): void;
     toString(): string;
     toXmlObj(): any;

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const utils_1 = require("../lib/utils");
+const sfdx_project_1 = require("../lib/sfdx-project");
 class SfdxCore {
     static command(cmd) {
         return new Promise((resolve, reject) => {
@@ -43,7 +44,7 @@ class SfdxCore {
                     xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 types: [],
-                version: version || SfdxCore.DEFAULT_PACKAGE_VERSION
+                version: version || sfdx_project_1.default.DEFAULT_PACKAGE_VERSION
             }
         };
     }
@@ -64,17 +65,9 @@ class SfdxCore {
         const sfdxPackage = SfdxCore.createPackage(metadataMap);
         await utils_1.default.writeObjectToXmlFile(packageFilePath, sfdxPackage, eofChar);
     }
-    static async getProjectInfo() {
-        if (!utils_1.default.pathExistsAsync(SfdxCore.DEFAULT_PROJECT_FILE_NAME)) {
-            return null;
-        }
-        //return Utils.readFileLinesAsync()
-    }
 }
 exports.SfdxCore = SfdxCore;
 SfdxCore.DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
-SfdxCore.DEFAULT_PACKAGE_VERSION = '50';
-SfdxCore.DEFAULT_PROJECT_FILE_NAME = 'sfdx-project.json';
 SfdxCore.ASTERIX = '*';
 SfdxCore.MAIN = 'main';
 SfdxCore.DEFAULT = 'default';
