@@ -298,7 +298,7 @@ export class TabPermission extends MetaDataPermission {
     public toXmlObj(): any {
         return {
             tab: this.name,
-            visibility: this.r
+            visibility: this.visibility
         };
     }
 }

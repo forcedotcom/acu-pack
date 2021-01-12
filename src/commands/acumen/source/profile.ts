@@ -2,10 +2,8 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
 import Utils from '../../../lib/utils';
 import path = require('path');
-// import xmlMerge from '../../../lib/xml-merge';
 import { SfdxPermission, PermissionSet } from '../../../lib/sfdx-permission';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
-import SfdxProject from '../../../lib/sfdx-project';
 
 export default class Profile extends CommandBase {
   public static defaultSourceFolder: string = null;
@@ -45,12 +43,9 @@ export default class Profile extends CommandBase {
   protected permissions: Map<string, PermissionSet>;
 
   public async run(): Promise<void> {
-    const project = await SfdxProject.default();
-    Profile.defaultSourceFolder = project.getDefaultDirectory();
-
     const sourceFolders = !this.flags.source
       ? Profile.defaultPermissionsGlobs
-      : [this.flags.source];
+      : this.flags.source.split(',');
 
     const orgAlias = this.flags.targetusername;
 
@@ -63,12 +58,11 @@ export default class Profile extends CommandBase {
     let gotStandardTabs = false;
 
     for (const sourceFolder of sourceFolders) {
+      if (!sourceFolder) {
+        continue;
+      }
       this.ux.log(`Reading metadata in: ${sourceFolder}`);
-      for await (const filePath of Utils.getFilesAsync(sourceFolder)) {
-        if (!filePath.startsWith(Profile.defaultSourceFolder)) {
-          this.ux.log(`\tSkipping (non-source): ${filePath}`);
-          continue;
-        }
+      for await (const filePath of Utils.getFilesAsync(sourceFolder.trim())) {
         this.ux.log(`\tProcessing: ${filePath}`);
         const json = await Utils.readObjectFromXmlFile(filePath);
 

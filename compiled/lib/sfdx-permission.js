@@ -256,7 +256,7 @@ class TabPermission extends MetaDataPermission {
     toXmlObj() {
         return {
             tab: this.name,
-            visibility: this.r
+            visibility: this.visibility
         };
     }
 }

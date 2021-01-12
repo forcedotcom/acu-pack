@@ -5,18 +5,14 @@ const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
 const path = require("path");
-// import xmlMerge from '../../../lib/xml-merge';
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
-const sfdx_project_1 = require("../../../lib/sfdx-project");
 class Profile extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
-        const project = await sfdx_project_1.default.default();
-        Profile.defaultSourceFolder = project.getDefaultDirectory();
         const sourceFolders = !this.flags.source
             ? Profile.defaultPermissionsGlobs
-            : [this.flags.source];
+            : this.flags.source.split(',');
         const orgAlias = this.flags.targetusername;
         this.ux.log('Gathering securable metadata information from Org:');
         this.ux.log(`${sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes}`);
@@ -24,14 +20,13 @@ class Profile extends command_base_1.CommandBase {
         this.permissions = new Map();
         let gotStandardTabs = false;
         for (const sourceFolder of sourceFolders) {
+            if (!sourceFolder) {
+                continue;
+            }
             this.ux.log(`Reading metadata in: ${sourceFolder}`);
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.getFilesAsync(sourceFolder)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(utils_1.default.getFilesAsync(sourceFolder.trim())), _c; _c = await _b.next(), !_c.done;) {
                     const filePath = _c.value;
-                    if (!filePath.startsWith(Profile.defaultSourceFolder)) {
-                        this.ux.log(`\tSkipping (non-source): ${filePath}`);
-                        continue;
-                    }
                     this.ux.log(`\tProcessing: ${filePath}`);
                     const json = await utils_1.default.readObjectFromXmlFile(filePath);
                     if (!json.PermissionSet && !json.Profile) {

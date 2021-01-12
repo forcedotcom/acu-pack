@@ -54,7 +54,7 @@
     },
     "profile": {
       "commandDescription": "Determines the compatibility for one or more profiles metadat data files with a specified Org",
-      "profilePathFlagDescription": "OPTIONAL: Path to the profile(s) to evaluate. This overrides the default: %s.",
+      "profilePathFlagDescription": "OPTIONAL: Comma separated path to the Profile and/or PermissionsSet  metadata to evaluate. This overrides the defaults: %s.",
       "outputFoldersFlagDescription": "OPTIONAL: The output folder path for the modified profile metadata files. The existing files are overwritten if not specififed.",
       "modifyFlagDescription": "OPTIONAL: Setting this flag to true will updated the existing metadat to remove the incompatibile entries."
     }

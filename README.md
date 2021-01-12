@@ -8,10 +8,13 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 [![License](https://img.shields.io/npm/l/acu-pack.svg)](https://bitbucket.org/acumensolutions/acu-pack/src/master/package.json)
 
 <!-- toc -->
+
 * [Debugging your plugin](#debugging-your-plugin)
 * [Usage](#usage)
 * [Commands](#commands)
+
 <!-- tocstop -->
+
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
@@ -56,6 +59,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 
 # Commands
 <!-- commands -->
+
 * [`sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageclear--m-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -517,8 +521,8 @@ OPTIONS
       specififed.
 
   -p, --source=source
-      OPTIONAL: Path to the profile(s) to evaluate. This overrides the default: 
-      **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml.
+      OPTIONAL: Comma separated path to the Profile and/or PermissionsSet  metadata to evaluate. This overrides the 
+      defaults: **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml.
 
   -u, --targetusername=targetusername
       username or alias for the target org; overrides default target org
@@ -565,4 +569,5 @@ EXAMPLE
   $ sfdx acumen:source:xpath -o ./xpathOptions.json"
        Validates the project source from the x-path rules specified in 'xpath-options.json'
 ```
+
 <!-- commandsstop -->
