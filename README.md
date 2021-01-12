@@ -12,10 +12,6 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-* [Debugging your plugin](#debugging-your-plugin)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
@@ -60,7 +56,6 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 
 # Commands
 <!-- commands -->
-
 * [`sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageclear--m-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -476,14 +471,15 @@ USAGE
 
 OPTIONS
   -f, --folders=folders
-      A comma separated list of folders to include. This list overrides the defaults: **/objects/*/*.object-meta.xml, 
-      **/objects/*/fields/*.field-meta.xml, **/permissionsets/*.permissionset-meta.xml, **/profiles/*.profile-meta.xml.
+      OPTIONAL: A comma separated list of folders to include. This list overrides the defaults: 
+      **/objects/*/*.object-meta.xml, **/objects/*/fields/*.field-meta.xml, **/permissionsets/*.permissionset-meta.xml, 
+      **/profiles/*.profile-meta.xml.
 
   -p, --source=source
-      The source folder to start the meta scan from. The default is 'force-app'.
+      OPTIONAL: The source folder to start the meta scan from. Overrides the project's default package directory folder.
 
   -r, --report=report
-      The path for the permissions report XLSX file. This overrides the default: PermissionsReport.xlsx.
+      OPTIONAL: The path for the permissions report XLSX file. This overrides the default: PermissionsReport.xlsx.
 
   --json
       format output as json
@@ -497,10 +493,10 @@ DESCRIPTION
   command and that package is retrieved from the org prior to executing this command.
 
 EXAMPLE
-  $ sfdx acumen:source:permissions -d security/report -u myOrgAlias
+  $ sfdx acumen:source:permissions -u myOrgAlias
        Reads security information from source-formatted configuration files (**/objects/*/*.object-meta.xml, 
   **/objects/*/fields/*.field-meta.xml, **/permissionsets/*.permissionset-meta.xml, **/profiles/*.profile-meta.xml) 
-  located in 'force-app' and writes the 'PermissionsReport.xlsx' report file.
+  located in default project source location and writes the 'PermissionsReport.xlsx' report file.
 ```
 
 ## `sfdx acumen:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
@@ -513,38 +509,36 @@ USAGE
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -m, --modify                                                                      OPTIONAL: Setting this flag to true
-                                                                                    will updated the existing metadat to
-                                                                                    remove the incompatibile entries.
+  -m, --modify
+      OPTIONAL: Setting this flag to true will updated the existing metadat to remove the incompatibile entries.
 
-  -o, --output=output                                                               OPTIONAL: The output folder path for
-                                                                                    the modified profile metadata files.
-                                                                                    The existing files are overwritten
-                                                                                    if not specififed.
+  -o, --output=output
+      OPTIONAL: The output folder path for the modified profile metadata files. The existing files are overwritten if not 
+      specififed.
 
-  -p, --source=source                                                               OPTIONAL: Path to the profile(s) to
-                                                                                    evaluate. This overrides the
-                                                                                    default:
-                                                                                    **/profiles/*.profile-meta.xml.
+  -p, --source=source
+      OPTIONAL: Path to the profile(s) to evaluate. This overrides the default: 
+      **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml.
 
-  -u, --targetusername=targetusername                                               username or alias for the target
-                                                                                    org; overrides default target org
+  -u, --targetusername=targetusername
+      username or alias for the target org; overrides default target org
 
-  --apiversion=apiversion                                                           override the api version used for
-                                                                                    api requests made by this command
+  --apiversion=apiversion
+      override the api version used for api requests made by this command
 
-  --json                                                                            format output as json
+  --json
+      format output as json
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)
+      [default: warn] logging level for this command invocation
 
 EXAMPLES
   $ sfdx acumen:source:profile -u myOrgAlias
-       Compares the profile metadata files in **/profiles/*.profile-meta.xml to the specified Org to detemrine 
-  deployment compatibility.
+       Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml 
+  to the specified Org to detemrine deployment compatibility.
   $ sfdx acumen:source:profile -m true -u myOrgAlias
-       Compares the profile metadata files in **/profiles/*.profile-meta.xml to the specified Org to detemrine 
-  deployment compatibility.
+       Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml 
+  to the specified Org to detemrine deployment compatibility.
 ```
 
 ## `sfdx acumen:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
