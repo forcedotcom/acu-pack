@@ -457,7 +457,7 @@ export class PermissionSet extends Named {
         return xmlObj;
     }
 
-    public getPermissionCollection(metadataName: string): Map<string, Named> {
+    public getPermissionCollection(metadataName: string): Map<string, MetaDataPermission> {
         switch (metadataName) {
             case SfdxPermission.apexPage:
                 return this.pageAccesses;

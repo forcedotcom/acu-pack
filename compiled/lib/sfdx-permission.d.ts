@@ -87,7 +87,7 @@ export declare class PermissionSet extends Named {
     objectPermissions: Map<string, ObjectPermission>;
     constructor();
     toXmlObj(): any;
-    getPermissionCollection(metadataName: string): Map<string, Named>;
+    getPermissionCollection(metadataName: string): Map<string, MetaDataPermission>;
 }
 export declare class SfdxPermission {
     static apexClass: string;

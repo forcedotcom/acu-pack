@@ -15,5 +15,4 @@ export default class Profile extends CommandBase {
     protected static requiresUsername: boolean;
     protected permissions: Map<string, PermissionSet>;
     run(): Promise<void>;
-    protected getErrors(typeNames: Iterable<string>, permissionNames: Iterable<string>): string[];
 }

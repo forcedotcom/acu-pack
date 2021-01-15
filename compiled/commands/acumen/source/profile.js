@@ -101,23 +101,10 @@ class Profile extends command_base_1.CommandBase {
         if (gotStandardTabs) {
             this.ux.log('(*) WARNING: Standard Tab permissions detected.');
             this.ux.log('Salesforce does not expose Standard Tabs via the Metadata API.');
-            this.ux.log(`Compatibility with ${orgAlias} can only be ensured if these permissions are removed.`);
+            this.ux.log(`Compatibility with '${orgAlias}' can only be ensured if these permissions are removed.`);
         }
         this.ux.log('Done.');
         return;
-    }
-    getErrors(typeNames, permissionNames) {
-        if (!typeNames || !permissionNames) {
-            return [];
-        }
-        const types = new Set(typeNames);
-        const errors = [];
-        for (const permName of permissionNames) {
-            if (!types.has(permName)) {
-                errors.push(`${permName} NOT found.`);
-            }
-        }
-        return errors;
     }
 }
 exports.default = Profile;
