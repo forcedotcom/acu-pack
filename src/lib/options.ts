@@ -35,7 +35,13 @@ export abstract class OptionsBase {
     protected deserialize(serializedOptionBase: string): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
-                resolve(JSON.parse(serializedOptionBase));
+                const options = JSON.parse(serializedOptionBase);
+                for (const field of Object.keys(options)) {
+                    if (this[field]) {
+                        this[field] = options[field];
+                    }
+                }
+                resolve();
             } catch (err) {
                 reject(err);
             }

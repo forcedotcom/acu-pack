@@ -1,6 +1,8 @@
 import { OptionsBase } from './options';
 
 export default class SchemaOptions extends OptionsBase {
+    public excludeCustomObjectNames: string[] = [];
+    public includeCustomObjectNames: string[] = [];
     public outputDefs = [];
 
     public excludeFieldIfTrueFilter: string;
