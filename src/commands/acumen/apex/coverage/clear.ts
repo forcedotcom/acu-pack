@@ -34,7 +34,7 @@ export default class Clear extends CommandBase {
       this.ux.log('Checking for pending tests...');
 
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTestsAsync(orgAlias)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias)) {
         if (recordCount === 0) {
           break;
         }
@@ -55,7 +55,7 @@ export default class Clear extends CommandBase {
       try {
         for (const metaDataType of metaDataTypes) {
           const query = `SELECT Id FROM ${metaDataType}`;
-          const records = await SfdxQuery.doSoqlQueryAsync(orgAlias, query, null, null, true);
+          const records = await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, true);
           if (records && records.length > 0) {
             this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
             let counter = 0;

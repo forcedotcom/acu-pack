@@ -5,7 +5,7 @@ import Utils from '../../src/lib/utils';
 
 const optionsPath = "./options.json";
 beforeEach('Cleanup', async () => {
-  await Utils.deleteFileAsync(optionsPath);
+  await Utils.deleteFile(optionsPath);
 });
 describe('OptionsFactory Tests', () => {
   it('Can Handle Null', async function () {
@@ -21,7 +21,7 @@ describe('OptionsFactory Tests', () => {
     const options = await OptionsFactory.get(PackageOptions, optionsPath);
     expect(options).to.not.be.undefined;
     
-    const fileExists = await Utils.pathExistsAsync(optionsPath);
+    const fileExists = await Utils.pathExists(optionsPath);
     expect(fileExists).to.be.true;
   });
 });

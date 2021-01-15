@@ -93,10 +93,10 @@ class DeltaProvider {
             this.deltaOptions.normalize();
         }
         // Reset log file
-        await utils_1.default.deleteFileAsync(this.logFile);
+        await utils_1.default.deleteFile(this.logFile);
         try {
             // Validate flags/options
-            const result = await this.validateDeltaOptionsAsync(deltaOptions);
+            const result = await this.validateDeltaOptions(deltaOptions);
             if (result) {
                 throw new Error(result);
             }
@@ -113,7 +113,7 @@ class DeltaProvider {
                 try {
                     // write the deleted-files.txt report into the parent folder of the destination
                     // Reset log file
-                    await utils_1.default.deleteFileAsync(deleteReportFile);
+                    await utils_1.default.deleteFile(deleteReportFile);
                 }
                 catch (err) {
                     if (!utils_1.default.isENOENT(err)) {
@@ -124,10 +124,10 @@ class DeltaProvider {
             if (ignoreFile) {
                 await this.logMessage('Ignore Set:');
                 try {
-                    for (var _g = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(ignoreFile)), _h; _h = await _g.next(), !_h.done;) {
+                    for (var _g = tslib_1.__asyncValues(utils_1.default.readFileLines(ignoreFile)), _h; _h = await _g.next(), !_h.done;) {
                         const line = _h.value;
                         try {
-                            for (var _j = tslib_1.__asyncValues(utils_1.default.getFilesAsync(line)), _k; _k = await _j.next(), !_k.done;) {
+                            for (var _j = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _k; _k = await _j.next(), !_k.done;) {
                                 const filePath = _k.value;
                                 ignoreSet.add(path.normalize(filePath));
                                 await this.logMessage(`\t${filePath}`);
@@ -150,7 +150,7 @@ class DeltaProvider {
                     finally { if (e_1) throw e_1.error; }
                 }
             }
-            if (!this.diffAsync) {
+            if (!this.diff) {
                 await this.logMessage('Unable to find a diff method.', true);
                 return;
             }
@@ -167,17 +167,17 @@ class DeltaProvider {
                 await this.logMessage(`Begin Diff (${this.name})`);
             }
             // try and load the delta file
-            await this.loadDeltaFileAsync();
+            await this.loadDeltaFile();
             if (forceFile) {
                 if (this.deltas.size > 0) {
                     // Remove the force entries from the hash so they
                     // 'act' like new files and are copiied to the destination.
                     await this.logMessage('Puring force file entries from deltas.', true);
                     try {
-                        for (var _l = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(forceFile)), _m; _m = await _l.next(), !_m.done;) {
+                        for (var _l = tslib_1.__asyncValues(utils_1.default.readFileLines(forceFile)), _m; _m = await _l.next(), !_m.done;) {
                             const line = _m.value;
                             try {
-                                for (var _o = tslib_1.__asyncValues(utils_1.default.getFilesAsync(line)), _p; _p = await _o.next(), !_p.done;) {
+                                for (var _o = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _p; _p = await _o.next(), !_p.done;) {
                                     const filePath = _p.value;
                                     if (this.deltas.delete(filePath)) {
                                         await this.logMessage(`Purged: ${filePath}`, true);
@@ -204,7 +204,7 @@ class DeltaProvider {
             }
             await this.logMessage(`Scanning folder: ${source}.`, true);
             try {
-                for (var _q = tslib_1.__asyncValues(this.diffAsync(source)), _r; _r = await _q.next(), !_r.done;) {
+                for (var _q = tslib_1.__asyncValues(this.diff(source)), _r; _r = await _q.next(), !_r.done;) {
                     const delta = _r.value;
                     const deltaKind = delta.deltaKind;
                     const deltaFile = delta.deltaFile;
@@ -232,7 +232,7 @@ class DeltaProvider {
                         case DeltaProvider.deltaTypeKind.M:
                             try {
                                 // check the source folder for associated files.
-                                for (var _s = tslib_1.__asyncValues(utils_1.default.getFilesAsync(path.dirname(deltaFile), false)), _t; _t = await _s.next(), !_t.done;) {
+                                for (var _s = tslib_1.__asyncValues(utils_1.default.getFiles(path.dirname(deltaFile), false)), _t; _t = await _s.next(), !_t.done;) {
                                     const filePath = _t.value;
                                     if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
                                         // are we ignoring this file?
@@ -282,14 +282,14 @@ class DeltaProvider {
             await this.logMessage('Done', true);
         }
     }
-    async loadDeltaFileAsync(deltaFilePath) {
+    async loadDeltaFile(deltaFilePath) {
         var e_7, _a;
         // only load the hash once
         deltaFilePath = deltaFilePath ? path.normalize(deltaFilePath) : this.deltaOptions.deltaFilePath;
         if (deltaFilePath && this.deltas.size === 0) {
             await this.logMessage(`Loading delta file: ${deltaFilePath}`);
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(deltaFilePath)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(utils_1.default.readFileLines(deltaFilePath)), _c; _c = await _b.next(), !_c.done;) {
                     const line = _c.value;
                     if (!line || !line.trim()) {
                         continue;
@@ -322,7 +322,7 @@ class DeltaProvider {
             console.log(message);
         }
     }
-    async validateDeltaOptionsAsync(deltaOptions) {
+    async validateDeltaOptions(deltaOptions) {
         if (!deltaOptions.source) {
             return 'No delta -s(ource) specified.';
         }

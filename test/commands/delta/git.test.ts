@@ -13,7 +13,7 @@ beforeEach(async () => {
         expect(testFile).is.not.null;
     }
 
-    if (await Utils.pathExistsAsync(bogusGitFilePath)) {
+    if (await Utils.pathExists(bogusGitFilePath)) {
         await fs.unlink(bogusGitFilePath);
     }
     gitProvider.deltas.clear();
@@ -27,33 +27,33 @@ describe("GitDeltaProvider Tests", function () {
         expect(gitProvider.deltaLineToken).equals('\t');
     });
 
-    describe("loadDeltaFileAsync Tests", function () {
+    describe("loadDeltaFile Tests", function () {
         it("Can handle null", async function () {
             expect(gitProvider.deltas.size).equals(0);
-            await gitProvider.loadDeltaFileAsync(null);
+            await gitProvider.loadDeltaFile(null);
             expect(gitProvider.deltas.size).equals(0);
         });
         it("Can load git diff file", async function () {
             expect(gitProvider.deltas.size).equals(0);
-            await gitProvider.loadDeltaFileAsync(Setup.gitFilePath);
+            await gitProvider.loadDeltaFile(Setup.gitFilePath);
             expect(gitProvider.deltas.size).not.equals(0);
         });
         it("Can't handle missing git diff file", async function () {
             expect(gitProvider.deltas.size).equals(0);
-            await gitProvider.loadDeltaFileAsync(bogusGitFilePath);
+            await gitProvider.loadDeltaFile(bogusGitFilePath);
             expect(gitProvider.deltas.size).equals(0);
         });
     });
 
-    describe("diffAsync Tests", function () {
+    describe("diff Tests", function () {
         it("Can NOT build missing git file", async function () {
             expect(gitProvider.deltas.size).equals(0);
             
             gitProvider.deltaOptions.deltaFilePath = bogusGitFilePath;
-            await gitProvider.loadDeltaFileAsync();
+            await gitProvider.loadDeltaFile();
 
             const diffSet = new Set();
-            for await (const diff of gitProvider.diffAsync( Setup.sourceRoot)) {
+            for await (const diff of gitProvider.diff( Setup.sourceRoot)) {
                 diffSet.add(diff);
             }
             expect(diffSet.size).equals(0);
@@ -62,10 +62,10 @@ describe("GitDeltaProvider Tests", function () {
             expect(gitProvider.deltas.size).equals(0);
             
             gitProvider.deltaOptions.deltaFilePath = Setup.gitFilePath;
-            await gitProvider.loadDeltaFileAsync();
+            await gitProvider.loadDeltaFile();
 
             const diffSet = new Set();
-            for await (const diff of gitProvider.diffAsync(Setup.sourceRoot)) {
+            for await (const diff of gitProvider.diff(Setup.sourceRoot)) {
                 diffSet.add(diff);
             }
             // since there was no hash file - there were no deltas returned as they are all new
@@ -74,36 +74,36 @@ describe("GitDeltaProvider Tests", function () {
             expect(diffSet.size).equals(gitProvider.deltas.size);
         });
     });
-    describe("validateDeltaOptionsAsync Tests", function () {
+    describe("validateDeltaOptions Tests", function () {
         it("Checks missing minimum required", async function () {
             const deltaOptions = new DeltaOptions();
             
             // NOT OK
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.equal('No delta -g(it) file specified or specified file does not exist.');
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.equal('No delta -g(it) file specified or specified file does not exist.');
 
             // NOT OK
             deltaOptions.deltaFilePath = Setup.gitFilePath;
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.equal('No delta -s(ource) specified.');
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.equal('No delta -s(ource) specified.');
             
             // OK
             deltaOptions.source = Setup.sourceRoot;
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.destination = Setup.destinationRoot;
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.forceFile = 'force.txt';
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.ignoreFile = 'ignore.txt';
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.deleteReportFile = 'delete.txt';
-            expect(await gitProvider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
         });
     });
 });

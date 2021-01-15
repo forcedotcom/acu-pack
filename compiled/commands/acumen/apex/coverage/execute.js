@@ -15,7 +15,7 @@ class Execute extends command_base_1.CommandBase {
             this.ux.log('Checking for pending tests...');
             let recordCount = 0;
             try {
-                for (var _d = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(orgAlias)), _e; _e = await _d.next(), !_e.done;) {
+                for (var _d = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(orgAlias)), _e; _e = await _d.next(), !_e.done;) {
                     recordCount = _e.value;
                     if (recordCount === 0) {
                         break;
@@ -37,13 +37,13 @@ class Execute extends command_base_1.CommandBase {
             }
             // Execute tests (with CodeCoverage) ?
             this.ux.log('Gathering Test ApexClasses...');
-            const testClasses = await sfdx_query_1.SfdxQuery.getApexTestClassesAsync(orgAlias);
+            const testClasses = await sfdx_query_1.SfdxQuery.getApexTestClasses(orgAlias);
             if (testClasses.length === 0) {
                 this.ux.log(`No Test ApexClasses exist for ${orgAlias}`);
                 return;
             }
             // Enqueue the Apex tests
-            let jobInfo = await sfdx_tasks_1.SfdxTasks.enqueueApexTestsAsync(orgAlias, testClasses);
+            let jobInfo = await sfdx_tasks_1.SfdxTasks.enqueueApexTests(orgAlias, testClasses);
             if (!jobInfo) {
                 this.ux.log('An unknown error occurred enqueuing Apex Tests');
                 process.exitCode = 1;
@@ -64,7 +64,7 @@ class Execute extends command_base_1.CommandBase {
                     this.ux.log('Waiting for tests to complete...');
                 }
                 try {
-                    for (var _f = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.waitForJobAsync(orgAlias, jobInfo, waitCountMaxSeconds)), _g; _g = await _f.next(), !_g.done;) {
+                    for (var _f = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.waitForJob(orgAlias, jobInfo, waitCountMaxSeconds)), _g; _g = await _f.next(), !_g.done;) {
                         jobInfo = _g.value;
                         this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
                     }
@@ -86,7 +86,7 @@ class Execute extends command_base_1.CommandBase {
             this.ux.log('All Apex Tests Started');
             const createdDate = jobInfo.createdDate || new Date().toJSON();
             try {
-                for (var _h = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(orgAlias, waitCountMaxSeconds, createdDate)), _j; _j = await _h.next(), !_j.done;) {
+                for (var _h = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(orgAlias, waitCountMaxSeconds, createdDate)), _j; _j = await _h.next(), !_j.done;) {
                     recordCount = _j.value;
                     if (recordCount === 0) {
                         break;

@@ -16,7 +16,7 @@ class Report extends command_base_1.CommandBase {
             const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
             let recordCount = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTestsAsync(orgAlias, waitCountMaxSeconds)), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(orgAlias, waitCountMaxSeconds)), _c; _c = await _b.next(), !_c.done;) {
                     recordCount = _c.value;
                     if (recordCount === 0) {
                         break;
@@ -38,7 +38,7 @@ class Report extends command_base_1.CommandBase {
             }
             // Get Code Coverage Report
             this.ux.log('Getting Code Coverage Report Data.');
-            const codeCoverage = await sfdx_query_1.SfdxQuery.getCodeCoverageAsync(orgAlias);
+            const codeCoverage = await sfdx_query_1.SfdxQuery.getCodeCoverage(orgAlias);
             codeCoverage.calculateCodeCoverage();
             const workbookMap = new Map();
             // Code Coverage
@@ -70,7 +70,7 @@ class Report extends command_base_1.CommandBase {
             // Check Apex Test Failures
             const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
             const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
-            const records = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(orgAlias, query);
+            const records = await sfdx_query_1.SfdxQuery.doSoqlQuery(orgAlias, query);
             sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
             for (const record of records) {
                 sheetData.push([

@@ -17,32 +17,32 @@ beforeEach(async () => {
 });
 describe("Utils Tests", function () {
     const bogusPath = 'bogus_path';
-    describe("getFilesAsync Test", function () {
+    describe("getFiles Test", function () {
         it("Can find files", async function () {
             const files = [];
-            for await (const file of Utils.getFilesAsync(Setup.sourceRoot)) {
+            for await (const file of Utils.getFiles(Setup.sourceRoot)) {
                 files.push(file);
             }
             expect(files.length).equal(testItemCount * testItemCount);
         });
         it("Can Handle Missing Folders", async function () {
             var files = [];
-            for await (const file of Utils.getFilesAsync(bogusPath)) {
+            for await (const file of Utils.getFiles(bogusPath)) {
                 files.push(file);
             }
             expect(files.length).equal(0);
         });
         it("Can Handle File Path", async function () {
             var files = [];
-            for await (const file of Utils.getFilesAsync(testFilePath)) {
+            for await (const file of Utils.getFiles(testFilePath)) {
                 files.push(file);
             }
             expect(files.length).equal(1);
             expect(files[0]).equal(testFilePath);
         });
     });
-    describe("readFileLinesAsync Test", function () {
-        var testFilePath = `${Setup.sourceRoot}/readFileLinesAsyncTest.txt`;
+    describe("readFileLines Test", function () {
+        var testFilePath = `${Setup.sourceRoot}/readFileLinesTest.txt`;
         var testFileLineCount = 25;
         beforeEach(async function () {
             for (let index = 0; index < testFileLineCount; index++) {
@@ -51,25 +51,25 @@ describe("Utils Tests", function () {
         });
         it("Can read file", async function () {
             var lines = [];
-            for await (const file of Utils.readFileLinesAsync(testFilePath)) {
+            for await (const file of Utils.readFileLines(testFilePath)) {
                 lines.push(file);
             }
             expect(lines.length).equal(testFileLineCount);
         });
         it("Can Handle Missing Files", async function () {
             var lines = [];
-            for await (const file of Utils.readFileLinesAsync(bogusPath)) {
+            for await (const file of Utils.readFileLines(bogusPath)) {
                 lines.push(file);
             }
             expect(lines.length).equal(0);
         });
     });
-    describe("pathExistsAsync Test", function () {
+    describe("pathExists Test", function () {
         it("Can find file", async function () {
-            expect((await Utils.pathExistsAsync(testFilePath)));
+            expect((await Utils.pathExists(testFilePath)));
         });
         it("Can Handle Missing Files", async function () {
-            expect((await Utils.pathExistsAsync(bogusPath))).false;
+            expect((await Utils.pathExists(bogusPath))).false;
         });
     });
     describe("isENOENT Test", function () {
@@ -86,7 +86,7 @@ describe("Utils Tests", function () {
         it("Can copy file", async function () {
             var destination = path.join(Setup.destinationRoot, path.basename(testFilePath));
             await Utils.copyFile(testFilePath, destination)
-            var isSuccess = await Utils.pathExistsAsync(destination);
+            var isSuccess = await Utils.pathExists(destination);
             expect(isSuccess).true;
         });
     });
@@ -165,7 +165,7 @@ describe("Utils Tests", function () {
     describe("writeObjectToXmlFile Test", function () {
         var testFilePath = `${Setup.sourceRoot}/writeObjectToXmlFileTest.txt`;
         beforeEach(async function () {
-            await Utils.deleteFileAsync(testFilePath);
+            await Utils.deleteFile(testFilePath);
         });
         it("Can Handle Null", async function () {
             let result = await Utils.writeObjectToXmlFile(null, null, null);
@@ -181,7 +181,7 @@ describe("Utils Tests", function () {
         it("Can Write File", async function () {
             const result = await Utils.writeObjectToXmlFile(testFilePath, testObject);
             expect(result).to.not.equal(null);
-            const exists = await Utils.pathExistsAsync(result);
+            const exists = await Utils.pathExists(result);
             expect(exists).to.be.true;
         });
     });
@@ -234,7 +234,7 @@ describe("Utils Tests", function () {
         const testDirPath = 'testDir1\\testDir2'
         const testDirFilePath = `${testDirPath}}\\testFile.txt`
         afterEach(async () => {
-            if ((await Utils.pathExistsAsync(testDirPath))) {
+            if ((await Utils.pathExists(testDirPath))) {
                 await fs.rmdir(testDirPath);
             }
         });
@@ -246,39 +246,39 @@ describe("Utils Tests", function () {
         it("Can Make Absolute Directory Path", async function () {
             const fullPath = path.join(process.cwd(), testDirPath);
 
-            let exists = await Utils.pathExistsAsync(fullPath);
+            let exists = await Utils.pathExists(fullPath);
             expect(exists).to.be.false;
 
             await Utils.mkDirPath(fullPath);
 
-            exists = await Utils.pathExistsAsync(fullPath);
+            exists = await Utils.pathExists(fullPath);
             expect(exists).to.be.true;
         });
         it("Can Make Relative Directory Path", async function () {
             const fullPath = path.join(process.cwd(), testDirPath);
 
-            let exists = await Utils.pathExistsAsync(fullPath);
+            let exists = await Utils.pathExists(fullPath);
             expect(exists).to.be.false;
 
             await Utils.mkDirPath(testDirPath);
 
-            exists = await Utils.pathExistsAsync(fullPath);
+            exists = await Utils.pathExists(fullPath);
             expect(exists).to.be.true;
         });
         it("Can Handle Paths with File Names", async function () {
             const fullPath = path.join(process.cwd(), testDirFilePath);
 
-            let exists = await Utils.pathExistsAsync(fullPath);
+            let exists = await Utils.pathExists(fullPath);
             expect(exists).to.be.false;
 
             await Utils.mkDirPath(fullPath, true);
 
             // The file does not exist
-            exists = await Utils.pathExistsAsync(fullPath);
+            exists = await Utils.pathExists(fullPath);
             expect(exists).to.be.false;
 
             // but the folder does
-            exists = await Utils.pathExistsAsync(path.dirname(fullPath));
+            exists = await Utils.pathExists(path.dirname(fullPath));
             expect(exists).to.be.true;
         });
     });

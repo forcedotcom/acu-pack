@@ -11,7 +11,7 @@ const fieldMetadataFilePath = './test/force-app/main/default/objects/Address__c/
 
 describe('Sfdx Permission Tests', () => {
   before(async () => {
-    const exists = await Utils.pathExistsAsync(path.resolve(profileMetadataFilePath));
+    const exists = await Utils.pathExists(path.resolve(profileMetadataFilePath));
     expect(exists).to.be.true;
 
 

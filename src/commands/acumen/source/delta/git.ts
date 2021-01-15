@@ -26,7 +26,7 @@ export default class Git extends CommandBase {
             return CommandBase.messages.getMessage(name);
         }
 
-        public async * diffAsync(source?: string): AsyncGenerator<Delta, any, any> {
+        public async * diff(source?: string): AsyncGenerator<Delta, any, any> {
             // git has already done all of the hashing/diffing for us
             source = source ? path.normalize(source) : this.deltaOptions.source;
             for (const [deltaFile, deltaKind] of this.deltas) {
@@ -38,12 +38,12 @@ export default class Git extends CommandBase {
                 yield new Delta(deltaKind, deltaFile);
             }
         }
-        public async validateDeltaOptionsAsync(deltaOptions: DeltaOptions): Promise<string> {
+        public async validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string> {
             // Currently we don't allow creating the git-diff file
-            if (!deltaOptions.deltaFilePath || !(await Utils.pathExistsAsync(deltaOptions.deltaFilePath))) {
+            if (!deltaOptions.deltaFilePath || !(await Utils.pathExists(deltaOptions.deltaFilePath))) {
                 return 'No delta -g(it) file specified or specified file does not exist.';
             }
-            return await super.validateDeltaOptionsAsync(deltaOptions);
+            return await super.validateDeltaOptions(deltaOptions);
         }
     };
 

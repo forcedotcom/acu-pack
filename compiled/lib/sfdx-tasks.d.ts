@@ -32,12 +32,12 @@ export declare class SfdxTasks {
     static listMetadata(usernameOrAlias: string, metadataType: string, namespaces?: Set<string>): AsyncGenerator<any, void, unknown>;
     static listMetadataInFolder(usernameOrAlias: string, metadataType: string, folderName: string, namespaces?: Set<string>): AsyncGenerator<any, void, unknown>;
     static describeObject(usernameOrAlias: string, objectName: string): Promise<any>;
-    static enqueueApexTestsAsync(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage?: boolean): Promise<SfdxJobInfo>;
-    static getBulkJobStatusAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo>;
-    static waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<SfdxJobInfo, SfdxJobInfo, unknown>;
+    static enqueueApexTests(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage?: boolean): Promise<SfdxJobInfo>;
+    static getBulkJobStatus(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo>;
+    static waitForJob(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<SfdxJobInfo, SfdxJobInfo, unknown>;
     static getOrgInfo(orgAliasOrUsername: string): Promise<SfdxOrgInfo>;
     protected static _folderPaths: Map<string, string>;
-    private static getFolderSOQLDataAsync;
+    private static getFolderSOQLData;
     private static getFolderFullPath;
     private static getJobInfo;
 }

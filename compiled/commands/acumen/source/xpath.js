@@ -18,12 +18,12 @@ class XPath extends command_base_1.CommandBase {
                     continue;
                 }
                 try {
-                    for (var _d = tslib_1.__asyncValues(utils_1.default.getFilesAsync(sourceFolder)), _e; _e = await _d.next(), !_e.done;) {
+                    for (var _d = tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder)), _e; _e = await _d.next(), !_e.done;) {
                         const filePath = _e.value;
                         this.ux.log(`Processing file: '${filePath}`);
                         let xml = null;
                         try {
-                            for (var _f = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(filePath)), _g; _g = await _f.next(), !_g.done;) {
+                            for (var _f = tslib_1.__asyncValues(utils_1.default.readFileLines(filePath)), _g; _g = await _f.next(), !_g.done;) {
                                 const line = _g.value;
                                 xml += line;
                             }

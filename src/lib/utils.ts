@@ -15,7 +15,7 @@ export default class Utils {
         encoding: 'utf-8'
     };
 
-    public static async * getFilesAsync(folderPath: string, isRecursive = true) {
+    public static async * getFiles(folderPath: string, isRecursive = true) {
         let fileItems;
         // If we have a wildcarded path - lets use glob
         const isGlob = await this.glob.hasMagic(folderPath);
@@ -45,7 +45,7 @@ export default class Utils {
                 const filePath = path.join(folderPath, fileName);
                 if ((await fs.stat(filePath)).isDirectory() && isRecursive) {
                     // recurse folders
-                    yield* await Utils.getFilesAsync(filePath);
+                    yield* await Utils.getFiles(filePath);
                 } else {
                     yield path.normalize(filePath);
                 }
@@ -53,8 +53,8 @@ export default class Utils {
         }
     }
 
-    public static async * readFileLinesAsync(filePath: string) {
-        if (!(await Utils.pathExistsAsync(filePath))) {
+    public static async * readFileLines(filePath: string) {
+        if (!(await Utils.pathExists(filePath))) {
             return;
         }
 
@@ -72,14 +72,14 @@ export default class Utils {
         }
     }
 
-    public static async readFileAsync(filePath: string, options?: any): Promise<string> {
-        if (!(await Utils.pathExistsAsync(filePath))) {
+    public static async readFile(filePath: string, options?: any): Promise<string> {
+        if (!(await Utils.pathExists(filePath))) {
             return null;
         }
         return (await fs.readFile(filePath, options)).toString();
     }
 
-    public static async pathExistsAsync(pathToCheck: string): Promise<boolean> {
+    public static async pathExists(pathToCheck: string): Promise<boolean> {
         try {
             await fs.access(pathToCheck);
             return true;
@@ -92,7 +92,7 @@ export default class Utils {
     }
 
     public static async getPathStat(pathToCheck): Promise<any> {
-        return !pathToCheck || !(await Utils.pathExistsAsync(pathToCheck))
+        return !pathToCheck || !(await Utils.pathExists(pathToCheck))
             ? null
             : await fs.stat(pathToCheck);
     }
@@ -163,8 +163,8 @@ export default class Utils {
         return results;
     }
 
-    public static async deleteFileAsync(filePath: string): Promise<boolean> {
-        if (!(await Utils.pathExistsAsync(filePath))) {
+    public static async deleteFile(filePath: string): Promise<boolean> {
+        if (!(await Utils.pathExists(filePath))) {
             return false;
         }
         await fs.unlink(filePath);

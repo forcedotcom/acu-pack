@@ -18,7 +18,7 @@ class TestProvider extends DeltaProvider {
     }
   }
 
-  public async * diffAsync(source: string) {
+  public async * diff(source: string) {
     if (source)
       return null;
   }

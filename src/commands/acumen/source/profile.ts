@@ -62,7 +62,7 @@ export default class Profile extends CommandBase {
         continue;
       }
       this.ux.log(`Reading metadata in: ${sourceFolder}`);
-      for await (const filePath of Utils.getFilesAsync(sourceFolder.trim())) {
+      for await (const filePath of Utils.getFiles(sourceFolder.trim())) {
         this.ux.log(`\tProcessing: ${filePath}`);
         const json = await Utils.readObjectFromXmlFile(filePath);
 

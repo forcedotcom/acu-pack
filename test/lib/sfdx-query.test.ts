@@ -4,18 +4,18 @@ import { SfdxQuery, SfdxCodeCoverage } from '../../src/lib/sfdx-query';
 // NOTE: These tests might fail without an authorized Org alias
 const orgAlias = null; //'ACUDEV';
 describe('Sfdx Query Tests', () => {
-  describe('getApexTestClassesAsync Tests', function () {
+  describe('getApexTestClasses Tests', function () {
     this.timeout(15000); // Times out due to query
     it('Can Handle Null', async function () {
-      expect(await SfdxQuery.getApexTestClassesAsync(null)).to.be.null;
-      expect(await SfdxQuery.getApexTestClassesAsync(null, null)).to.be.null;
-      expect(await SfdxQuery.getApexTestClassesAsync(null, [''])).to.be.null;
+      expect(await SfdxQuery.getApexTestClasses(null)).to.be.null;
+      expect(await SfdxQuery.getApexTestClasses(null, null)).to.be.null;
+      expect(await SfdxQuery.getApexTestClasses(null, [''])).to.be.null;
     });
     it('Can get Test Classes', async function () {
       if (!orgAlias) {
         this.skip();
       }
-      const testClasses = await SfdxQuery.getApexTestClassesAsync(orgAlias);
+      const testClasses = await SfdxQuery.getApexTestClasses(orgAlias);
       expect(testClasses).to.not.be.null;
       expect(testClasses).to.be.instanceOf(Array);
       expect(testClasses.length).to.not.equal(0);
@@ -24,23 +24,23 @@ describe('Sfdx Query Tests', () => {
       if (!orgAlias) {
         this.skip();
       }
-      const testClasses = await SfdxQuery.getApexTestClassesAsync(orgAlias, ['ltngsharing']);
+      const testClasses = await SfdxQuery.getApexTestClasses(orgAlias, ['ltngsharing']);
       expect(testClasses).to.not.be.null;
       expect(testClasses).to.be.instanceOf(Array);
       expect(testClasses.length).to.equal(0);
     });
   });
-  describe('getCodeCoverageAsync Tests', function () {
+  describe('getCodeCoverage Tests', function () {
     this.timeout(15000); // Times out due to query
 
     it('Can Handle Null', async function () {
-      expect(await SfdxQuery.getCodeCoverageAsync(null)).to.be.null;
+      expect(await SfdxQuery.getCodeCoverage(null)).to.be.null;
     });
     it('Can get Code Coverage', async function () {
       if (!orgAlias) {
         this.skip();
       }
-      const codeCoverage = await SfdxQuery.getCodeCoverageAsync(orgAlias);
+      const codeCoverage = await SfdxQuery.getCodeCoverage(orgAlias);
       codeCoverage.calculateCodeCoverage();
       expect(codeCoverage).to.not.be.null;
       expect(codeCoverage).to.be.instanceOf(SfdxCodeCoverage);

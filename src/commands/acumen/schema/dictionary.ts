@@ -80,7 +80,7 @@ export default class Dictionary extends CommandBase {
         this.ux.log(`Writing Report: ${reportPath}`);
 
         const sheetData = [this.getColumnRow()];
-        for await (const line of Utils.readFileLinesAsync(sheetDataFile)) {
+        for await (const line of Utils.readFileLines(sheetDataFile)) {
           sheetData.push(JSON.parse(line));
         }
 
@@ -96,7 +96,7 @@ export default class Dictionary extends CommandBase {
       this.ux.log('Done.');
 
       // Clean up file at end
-      await Utils.deleteFileAsync(sheetDataFile);
+      await Utils.deleteFile(sheetDataFile);
     } catch (err) {
       throw err;
     }

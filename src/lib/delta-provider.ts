@@ -62,7 +62,7 @@ export abstract class DeltaProvider {
 
   public abstract processDeltaLine(deltaLine: string): void;
   public abstract getMessage(name: string): string;
-  public abstract diffAsync(source: string): AsyncGenerator<Delta, any, any>;
+  public abstract diff(source: string): AsyncGenerator<Delta, any, any>;
 
   public getFlagsConfig(flagsConfig: any): any {
     if (!flagsConfig) {
@@ -117,11 +117,11 @@ export abstract class DeltaProvider {
       this.deltaOptions.normalize();
     }
     // Reset log file
-    await Utils.deleteFileAsync(this.logFile);
+    await Utils.deleteFile(this.logFile);
 
     try {
       // Validate flags/options
-      const result = await this.validateDeltaOptionsAsync(deltaOptions);
+      const result = await this.validateDeltaOptions(deltaOptions);
       if (result) {
         throw new Error(result);
       }
@@ -140,7 +140,7 @@ export abstract class DeltaProvider {
         try {
           // write the deleted-files.txt report into the parent folder of the destination
           // Reset log file
-          await Utils.deleteFileAsync(deleteReportFile);
+          await Utils.deleteFile(deleteReportFile);
         } catch (err) {
           if (!Utils.isENOENT(err)) {
             await this.logMessage(`Unable to delete old report: ${err.message}.`);
@@ -150,15 +150,15 @@ export abstract class DeltaProvider {
 
       if (ignoreFile) {
         await this.logMessage('Ignore Set:');
-        for await (const line of Utils.readFileLinesAsync(ignoreFile)) {
-          for await (const filePath of Utils.getFilesAsync(line)) {
+        for await (const line of Utils.readFileLines(ignoreFile)) {
+          for await (const filePath of Utils.getFiles(line)) {
             ignoreSet.add(path.normalize(filePath));
             await this.logMessage(`\t${filePath}`);
           }
         }
       }
 
-      if (!this.diffAsync) {
+      if (!this.diff) {
         await this.logMessage('Unable to find a diff method.', true);
         return;
       }
@@ -177,15 +177,15 @@ export abstract class DeltaProvider {
       }
 
       // try and load the delta file
-      await this.loadDeltaFileAsync();
+      await this.loadDeltaFile();
 
       if (forceFile) {
         if (this.deltas.size > 0) {
           // Remove the force entries from the hash so they
           // 'act' like new files and are copiied to the destination.
           await this.logMessage('Puring force file entries from deltas.', true);
-          for await (const line of Utils.readFileLinesAsync(forceFile)) {
-            for await (const filePath of Utils.getFilesAsync(line)) {
+          for await (const line of Utils.readFileLines(forceFile)) {
+            for await (const filePath of Utils.getFiles(line)) {
               if (this.deltas.delete(filePath)) {
                 await this.logMessage(`Purged: ${filePath}`, true);
               }
@@ -195,7 +195,7 @@ export abstract class DeltaProvider {
       }
 
       await this.logMessage(`Scanning folder: ${source}.`, true);
-      for await (const delta of this.diffAsync(source)) {
+      for await (const delta of this.diff(source)) {
         const deltaKind = delta.deltaKind;
         const deltaFile = delta.deltaFile;
 
@@ -222,7 +222,7 @@ export abstract class DeltaProvider {
           case DeltaProvider.deltaTypeKind.A:
           case DeltaProvider.deltaTypeKind.M:
             // check the source folder for associated files.
-            for await (const filePath of Utils.getFilesAsync(path.dirname(deltaFile), false)) {
+            for await (const filePath of Utils.getFiles(path.dirname(deltaFile), false)) {
               if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
                 // are we ignoring this file?
                 if (ignoreSet.has(filePath)) {
@@ -253,12 +253,12 @@ export abstract class DeltaProvider {
     }
   }
 
-  public async loadDeltaFileAsync(deltaFilePath?: string): Promise<void> {
+  public async loadDeltaFile(deltaFilePath?: string): Promise<void> {
     // only load the hash once
     deltaFilePath = deltaFilePath ? path.normalize(deltaFilePath) : this.deltaOptions.deltaFilePath;
     if (deltaFilePath && this.deltas.size === 0) {
       await this.logMessage(`Loading delta file: ${deltaFilePath}`);
-      for await (const line of Utils.readFileLinesAsync(deltaFilePath)) {
+      for await (const line of Utils.readFileLines(deltaFilePath)) {
         if (!line || !line.trim()) {
           continue;
         }
@@ -283,7 +283,7 @@ export abstract class DeltaProvider {
     }
   }
 
-  public async validateDeltaOptionsAsync(deltaOptions: DeltaOptions): Promise<string> {
+  public async validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string> {
     if (!deltaOptions.source) {
       return 'No delta -s(ource) specified.';
     }

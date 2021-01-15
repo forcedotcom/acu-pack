@@ -47,7 +47,7 @@ export default class Build extends CommandBase {
     const packageFileName = this.flags.package || Build.defaultPackageFileName;
     const packageDir = path.dirname(packageFileName);
 
-    if (packageDir && !await Utils.pathExistsAsync(packageDir)) {
+    if (packageDir && !await Utils.pathExists(packageDir)) {
       throw new SfdxError(`The specified package folder does not exist: '${packageDir}'`);
     }
 

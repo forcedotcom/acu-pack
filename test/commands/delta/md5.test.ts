@@ -13,7 +13,7 @@ beforeEach(async () => {
         expect(testFile).is.not.null;
     }
 
-    if (await Utils.pathExistsAsync(bogusMd5FilePath)) {
+    if (await Utils.pathExists(bogusMd5FilePath)) {
         await fs.unlink(bogusMd5FilePath);
     }
     md5Provider.deltas.clear();
@@ -27,31 +27,31 @@ describe("Md5DeltaProvider Tests", function () {
         expect(md5Provider.deltaLineToken).equals('=');
     });
 
-    describe("loadDeltaFileAsync Tests", function () {
+    describe("loadDeltaFile Tests", function () {
         it("Can handle null", async function () {
             expect(md5Provider.deltas.size).equals(0);
-            await md5Provider.loadDeltaFileAsync(null);
+            await md5Provider.loadDeltaFile(null);
             expect(md5Provider.deltas.size).equals(0);
         });
         it("Can load md5 diff file", async function () {
             expect(md5Provider.deltas.size).equals(0);
-            await md5Provider.loadDeltaFileAsync(Setup.md5FilePath);
+            await md5Provider.loadDeltaFile(Setup.md5FilePath);
             expect(md5Provider.deltas.size).not.equals(0);
         });
         it("Can't handle missing md5 diff file", async function () {
             expect(md5Provider.deltas.size).equals(0);
-            await md5Provider.loadDeltaFileAsync(bogusMd5FilePath);
+            await md5Provider.loadDeltaFile(bogusMd5FilePath);
             expect(md5Provider.deltas.size).equals(0);
         });
     });
 
-    describe("diffAsync Tests", function () {
+    describe("diff Tests", function () {
         it("Can build missing md5 file", async function () {
             md5Provider.deltaOptions.deltaFilePath = bogusMd5FilePath;
-            md5Provider.loadDeltaFileAsync()
+            md5Provider.loadDeltaFile()
             expect(md5Provider.deltas.size).equals(0);
             const diffSet = new Set();
-            for await (const diff of md5Provider.diffAsync(Setup.sourceRoot)) {
+            for await (const diff of md5Provider.diff(Setup.sourceRoot)) {
                 diffSet.add(diff);
             }
             // since there was no hash file - there were no deltas returned as they are all new
@@ -63,7 +63,7 @@ describe("Md5DeltaProvider Tests", function () {
             md5Provider.deltaOptions.deltaFilePath = Setup.md5FilePath;
             expect(md5Provider.deltas.size).equals(0);
             const diffSet = new Set();
-            for await (const diff of md5Provider.diffAsync(Setup.sourceRoot)) {
+            for await (const diff of md5Provider.diff(Setup.sourceRoot)) {
                 diffSet.add(diff);
             }
             // since there was no hash file - there were no deltas returned as they are all new
@@ -72,36 +72,36 @@ describe("Md5DeltaProvider Tests", function () {
             expect(diffSet.size).equals(md5Provider.deltas.size);
         });
     });
-    describe("validateDeltaOptionsAsync Tests", function () {
+    describe("validateDeltaOptions Tests", function () {
         it("Checks missing minimum required", async function () {
             const deltaOptions = new DeltaOptions();
 
             // NOT OK
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.equal('No delta -s(ource) specified.');
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.equal('No delta -s(ource) specified.');
 
             // OK
             deltaOptions.deltaFilePath = Setup.md5FilePath;
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.equal('No delta -s(ource) specified.');
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.equal('No delta -s(ource) specified.');
 
             // OK
             deltaOptions.source = Setup.sourceRoot;
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.destination = Setup.destinationRoot;
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.forceFile = 'force.txt';
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.ignoreFile = 'ignore.txt';
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.be.null;
 
             // OK
             deltaOptions.deleteReportFile = 'delete.txt';
-            expect(await md5Provider.validateDeltaOptionsAsync(deltaOptions)).to.be.null;
+            expect(await md5Provider.validateDeltaOptions(deltaOptions)).to.be.null;
         });
     });
 });

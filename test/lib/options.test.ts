@@ -7,7 +7,7 @@ import Utils from '../../src/lib/utils';
 
 const optionsPath = "./options.json";
 beforeEach('Cleanup', async () => {
-  await Utils.deleteFileAsync(optionsPath);
+  await Utils.deleteFile(optionsPath);
 });
 describe('Options Tests', () => {
   describe('PackageOptions Tests', function () {
@@ -15,7 +15,7 @@ describe('Options Tests', () => {
       const options = await OptionsFactory.get(PackageOptions, optionsPath);
 
       // It writes the file
-      expect(await Utils.pathExistsAsync(optionsPath)).is.true;
+      expect(await Utils.pathExists(optionsPath)).is.true;
 
       // It contains default data
       expect(options).to.not.be.null;
@@ -28,7 +28,7 @@ describe('Options Tests', () => {
       const options = await OptionsFactory.get(XPathOptions, optionsPath);
 
       // It writes the file
-      expect(await Utils.pathExistsAsync(optionsPath)).is.true;
+      expect(await Utils.pathExists(optionsPath)).is.true;
 
       // It contains default data
       expect(options).to.not.be.null;
@@ -43,7 +43,7 @@ describe('Options Tests', () => {
       expect(options.userQuery.length).to.not.equal(0);
 
       // It writes the file
-      expect(await Utils.pathExistsAsync(optionsPath)).is.true;
+      expect(await Utils.pathExists(optionsPath)).is.true;
 
       // It contains default data
       expect(options).to.not.be.null;
@@ -60,7 +60,7 @@ describe('Options Tests', () => {
       expect(options.userQuery.length).to.not.equal(0);
 
       // It writes the file
-      expect(await Utils.pathExistsAsync(optionsPath)).is.true;
+      expect(await Utils.pathExists(optionsPath)).is.true;
 
       options.userQuery = 'MJM';
       await options.save(optionsPath);

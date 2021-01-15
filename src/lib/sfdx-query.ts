@@ -95,9 +95,9 @@ export class SfdxQuery {
     public static MAX_QUERY_LIMIT = 1000;
 
     // Query Custom Application info - they are called TabSet in SOQL
-    public static async getCustomApplicationsAsync(usernameOrAlias: string): Promise<SfdxEntity[]> {
+    public static async getCustomApplications(usernameOrAlias: string): Promise<SfdxEntity[]> {
         const query = "SELECT Id, ApplicationId, Label FROM AppMenuItem WHERE Type='TabSet'";
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const customApplications = [];
         for (const record of records) {
             const customApplication = new SfdxEntity();
@@ -111,9 +111,9 @@ export class SfdxQuery {
     // Get current SetupEntityAccess types i.e. ApexClass, ApexPage,TabeSet, etc...
     // https://developer.salesforce.com/docs/atlas.en-us.226.0.object_reference.meta/object_reference/sforce_api_objects_setupentityaccess.htm
     //
-    public static async getSetupEntityTypesAsync(usernameOrAlias: string): Promise<string[]> {
+    public static async getSetupEntityTypes(usernameOrAlias: string): Promise<string[]> {
         const query = 'SELECT SetupEntityType FROM SetupEntityAccess GROUP BY SetupEntityType';
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const setupEntityTypes = [];
         for (const record of records) {
             setupEntityTypes.push(record.SetupEntityType);
@@ -123,9 +123,9 @@ export class SfdxQuery {
 
     // Get the SfdxFolder structure. SFDX only return parent folder information in the metadata. Need to build grandparent
     // structure for Reports, Dashboards, etc...
-    public static async getFoldersAsync(usernameOrAlias: string): Promise<SfdxFolder[]> {
+    public static async getFolders(usernameOrAlias: string): Promise<SfdxFolder[]> {
         const query = 'SELECT Id,ParentId,Name,DeveloperName,Type FROM Folder ORDER BY ParentId';
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const folders = [];
         for (const record of records) {
             const folder = new SfdxFolder();
@@ -140,9 +140,9 @@ export class SfdxQuery {
     }
 
     // Pulls SfdxPermissionSet for Profile & PermissionsSet info
-    public static async getPermissionsAsync(usernameOrAlias: string): Promise<Map<string, SfdxPermissionSet>> {
+    public static async getPermissions(usernameOrAlias: string): Promise<Map<string, SfdxPermissionSet>> {
         const query = 'SELECT Id,Name,Profile.Name,IsOwnedByProfile FROM PermissionSet ORDER BY Profile.Name, Name';
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const profileMap = new Map<string, SfdxPermissionSet>();
         for (const record of records) {
             const profile = new SfdxPermissionSet();
@@ -156,9 +156,9 @@ export class SfdxQuery {
     }
 
     // Gets the SfdxObjectPermission Permissions for the specified object type
-    public static async getObjectPermissionsAsync(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxObjectPermission[]> {
+    public static async getObjectPermissions(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxObjectPermission[]> {
         const query = `SELECT Id,ParentId,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsModifyAllRecords,PermissionsRead,PermissionsViewAllRecords,SObjectType FROM ObjectPermissions WHERE SObjectType='${customObjectTypeName}' ORDER BY SObjectType`;
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const objPerms = new Array<SfdxObjectPermission>();
         for (const record of records) {
             const perm = new SfdxObjectPermission();
@@ -177,9 +177,9 @@ export class SfdxQuery {
     }
 
     // Get the SfdxFieldPermission permissions for the specific object type
-    public static async getFieldPermissionsAsync(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxFieldPermission[]> {
+    public static async getFieldPermissions(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxFieldPermission[]> {
         const query = `SELECT Id,ParentId,PermissionsEdit,PermissionsRead,Field FROM FieldPermissions WHERE SobjectType = '${customObjectTypeName}' ORDER BY Field`;
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const objPerms = new Array<SfdxFieldPermission>();
         for (const record of records) {
             const perm = new SfdxFieldPermission();
@@ -194,13 +194,13 @@ export class SfdxQuery {
     }
 
     // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes
-    public static async getSetupEntityAccessForTypesAsync(usernameOrAlias: string, setupEntityTypeNames: string[]): Promise<SfdxSeupEntityAccess[]> {
+    public static async getSetupEntityAccessForTypes(usernameOrAlias: string, setupEntityTypeNames: string[]): Promise<SfdxSeupEntityAccess[]> {
         const entityTypes = setupEntityTypeNames
             ? setupEntityTypeNames.join("','")
             : '';
 
         const query = `SELECT SetupEntityId,SetupEntityType FROM SetupEntityAccess WHERE SetupEntityType IN ('${entityTypes}') GROUP BY SetupEntityId,SetupEntityType ORDER BY SetupEntityType`;
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const seupEntityAccesses = [];
         for (const record of records) {
             const seupEntityAccess = new SfdxSeupEntityAccess();
@@ -211,7 +211,7 @@ export class SfdxQuery {
         return seupEntityAccesses;
     }
 
-    public static async doSoqlQueryAsync(usernameOrAlias: string, query: string, recordOffset: number = null, recordLimit: number = null, isToolingAPIQuery: boolean = false): Promise<any[]> {
+    public static async doSoqlQuery(usernameOrAlias: string, query: string, recordOffset: number = null, recordLimit: number = null, isToolingAPIQuery: boolean = false): Promise<any[]> {
         const records = [];
         const queryCmd = isToolingAPIQuery ? 'sfdx force:data:soql:query -t' : 'sfdx force:data:soql:query';
         if (!recordLimit) {
@@ -243,7 +243,7 @@ export class SfdxQuery {
     }
 
     // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes
-    public static async getApexTestClassesAsync(usernameOrAlias: string, namespacePrefixes: string[] = ['']): Promise<SfdxEntity[]> {
+    public static async getApexTestClasses(usernameOrAlias: string, namespacePrefixes: string[] = ['']): Promise<SfdxEntity[]> {
         if (!usernameOrAlias) {
             return null;
         }
@@ -261,7 +261,7 @@ export class SfdxQuery {
             query += ` IN (${namespaces})`;
         }
         query += ' ORDER BY Name ASC';
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query, null, null, true);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query, null, null, true);
         const apexClasses = [];
         for (const record of records) {
             let isTest = false;
@@ -287,14 +287,14 @@ export class SfdxQuery {
         return apexClasses;
     }
 
-    public static async getCodeCoverageAsync(usernameOrAlias: string): Promise<SfdxCodeCoverage> {
+    public static async getCodeCoverage(usernameOrAlias: string): Promise<SfdxCodeCoverage> {
         if (!usernameOrAlias) {
             return null;
         }
         const codeCoverage = new SfdxCodeCoverage();
         codeCoverage.codeCoverage = [];
         const query = 'SELECT ApexClassOrTrigger.Name,ApexClassOrTriggerId,NumLinesCovered,NumLinesUncovered,Coverage FROM ApexCodeCoverageAggregate ORDER BY ApexClassOrTrigger.Name ASC';
-        const records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query, null, null, true);
+        const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query, null, null, true);
         for (const record of records) {
             const coverageItem = new SfdxCodeCoverageItem();
             coverageItem.id = record.ApexClassOrTriggerId;
@@ -313,7 +313,7 @@ export class SfdxQuery {
         while (maxCounter <= 0 || counter <= maxCounter) {
             await Utils.sleep(sleepMiliseconds);
 
-            records = await SfdxQuery.doSoqlQueryAsync(usernameOrAlias, query);
+            records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
             yield records.length;
 
             counter++;
@@ -324,7 +324,7 @@ export class SfdxQuery {
         }
     }
 
-    public static async* waitForApexTestsAsync(username: string, waitCountMaxSeconds = 0, createdDate: string = new Date().toJSON()) {
+    public static async* waitForApexTests(username: string, waitCountMaxSeconds = 0, createdDate: string = new Date().toJSON()) {
         const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;
         const targetCount = 0;
 

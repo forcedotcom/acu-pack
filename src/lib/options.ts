@@ -64,7 +64,7 @@ export abstract class OptionsBase {
         if (!optionsPath) {
             return null;
         }
-        if (await Utils.pathExistsAsync(optionsPath)) {
+        if (await Utils.pathExists(optionsPath)) {
             return (await fs.readFile(optionsPath)).toString();
         } else {
             return null;

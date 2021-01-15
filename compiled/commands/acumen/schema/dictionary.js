@@ -14,23 +14,15 @@ const path = require("path");
 class Dictionary extends command_base_1.CommandBase {
     async run() {
         var e_1, _a, e_2, _b;
-        // Are we including namespaces?
-        const namespaces = this.flags.namespaces
-            ? new Set(this.flags.namespaces.split())
-            : new Set();
         // Read/Write the options file if it does not exist already
         this.options = await options_factory_1.OptionsFactory.get(schema_options_1.default, this.flags.options);
         const dynamicCode = this.options.getDynamicCode();
         try {
             const orgAlias = this.flags.targetusername;
-            const orgId = this.org.getOrgId();
             const sheetDataFile = `schema-${orgAlias}.tmp`;
+            const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
             // Create for writing - truncates if exists
             const stream = fs_1.createWriteStream(sheetDataFile, { flags: 'w' });
-            // Add columns
-            const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);
-            this.ux.log(`Gathering CustomObject schemas from Org: ${orgAlias}(${orgId})`);
-            const sortedTypeNames = utils_1.default.sortArray(objectMap.get('CustomObject'));
             let counter = 0;
             const schemas = new Set();
             for (const metaDataType of sortedTypeNames) {
@@ -68,7 +60,7 @@ class Dictionary extends command_base_1.CommandBase {
                 this.ux.log(`Writing Report: ${reportPath}`);
                 const sheetData = [this.getColumnRow()];
                 try {
-                    for (var _e = tslib_1.__asyncValues(utils_1.default.readFileLinesAsync(sheetDataFile)), _f; _f = await _e.next(), !_f.done;) {
+                    for (var _e = tslib_1.__asyncValues(utils_1.default.readFileLines(sheetDataFile)), _f; _f = await _e.next(), !_f.done;) {
                         const line = _f.value;
                         sheetData.push(JSON.parse(line));
                     }
@@ -90,7 +82,7 @@ class Dictionary extends command_base_1.CommandBase {
             }
             this.ux.log('Done.');
             // Clean up file at end
-            await utils_1.default.deleteFileAsync(sheetDataFile);
+            await utils_1.default.deleteFile(sheetDataFile);
         }
         catch (err) {
             throw err;
@@ -102,6 +94,26 @@ class Dictionary extends command_base_1.CommandBase {
             row.push(outputDef.split('|')[0]);
         }
         return row;
+    }
+    async getSortedTypeNames(orgAlias) {
+        let typeNames = null;
+        if (this.options.includeCustomObjectNames && this.options.includeCustomObjectNames.length > 0) {
+            this.ux.log('Gathering CustomObject names from options');
+            typeNames = new Set(this.options.includeCustomObjectNames);
+        }
+        else {
+            // Are we including namespaces?
+            const namespaces = this.flags.namespaces
+                ? new Set(this.flags.namespaces.split())
+                : new Set();
+            this.ux.log(`Gathering CustomObject names from Org: ${orgAlias}(${this.org.getOrgId()})`);
+            const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);
+            typeNames = new Set(objectMap.get('CustomObject'));
+        }
+        if (this.options.excludeCustomObjectNames) {
+            this.options.excludeCustomObjectNames.forEach(item => typeNames.delete(item));
+        }
+        return utils_1.default.sortArray(Array.from(typeNames));
     }
 }
 exports.default = Dictionary;

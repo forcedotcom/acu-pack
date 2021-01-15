@@ -33,7 +33,13 @@ class OptionsBase {
     deserialize(serializedOptionBase) {
         return new Promise((resolve, reject) => {
             try {
-                resolve(JSON.parse(serializedOptionBase));
+                const options = JSON.parse(serializedOptionBase);
+                for (const field of Object.keys(options)) {
+                    if (this[field]) {
+                        this[field] = options[field];
+                    }
+                }
+                resolve();
             }
             catch (err) {
                 reject(err);
@@ -54,7 +60,7 @@ class OptionsBase {
         if (!optionsPath) {
             return null;
         }
-        if (await utils_1.default.pathExistsAsync(optionsPath)) {
+        if (await utils_1.default.pathExists(optionsPath)) {
             return (await fs_1.promises.readFile(optionsPath)).toString();
         }
         else {

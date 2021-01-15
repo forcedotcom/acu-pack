@@ -43,8 +43,8 @@ Git.gitDeltaProvider = class extends delta_provider_1.DeltaProvider {
     getMessage(name) {
         return command_base_1.CommandBase.messages.getMessage(name);
     }
-    diffAsync(source) {
-        return tslib_1.__asyncGenerator(this, arguments, function* diffAsync_1() {
+    diff(source) {
+        return tslib_1.__asyncGenerator(this, arguments, function* diff_1() {
             // git has already done all of the hashing/diffing for us
             source = source ? path.normalize(source) : this.deltaOptions.source;
             for (const [deltaFile, deltaKind] of this.deltas) {
@@ -57,12 +57,12 @@ Git.gitDeltaProvider = class extends delta_provider_1.DeltaProvider {
             }
         });
     }
-    async validateDeltaOptionsAsync(deltaOptions) {
+    async validateDeltaOptions(deltaOptions) {
         // Currently we don't allow creating the git-diff file
-        if (!deltaOptions.deltaFilePath || !(await utils_1.default.pathExistsAsync(deltaOptions.deltaFilePath))) {
+        if (!deltaOptions.deltaFilePath || !(await utils_1.default.pathExists(deltaOptions.deltaFilePath))) {
             return 'No delta -g(it) file specified or specified file does not exist.';
         }
-        return await super.validateDeltaOptionsAsync(deltaOptions);
+        return await super.validateDeltaOptions(deltaOptions);
     }
 };
 Git.flagsConfig = delta_command_1.DeltaCommandBase.getFlagsConfig({

@@ -66,7 +66,7 @@ class Unmask extends command_base_1.CommandBase {
             foundMap.set(true, []);
             foundMap.set(false, []);
             const unmaskUsers = [];
-            const users = await sfdx_query_1.SfdxQuery.doSoqlQueryAsync(orgAlias, query);
+            const users = await sfdx_query_1.SfdxQuery.doSoqlQuery(orgAlias, query);
             this.ux.log('User Query Results:');
             for (const username of usernames) {
                 let found = false;
