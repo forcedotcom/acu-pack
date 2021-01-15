@@ -73,12 +73,6 @@ class Permissions extends command_base_1.CommandBase {
         }
         return;
     }
-    logAsync(...args) {
-        return new Promise((resolve, reject) => {
-            this.ux.log(...args);
-            resolve();
-        });
-    }
 }
 exports.default = Permissions;
 Permissions.packageFileName = 'package-permissions.xml';

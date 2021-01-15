@@ -106,11 +106,4 @@ export default class Permissions extends CommandBase {
     }
     return;
   }
-
-  protected logAsync(...args: string[]): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.ux.log(...args);
-      resolve();
-    });
-  }
 }
