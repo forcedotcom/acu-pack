@@ -82,7 +82,7 @@ export class SfdxTasks {
 
                 // Get SOQL folder data (ONCE!)
                 if (!folderPathMap) {
-                    folderPathMap = await this.getFolderSOQLDataAsync(usernameOrAlias);
+                    folderPathMap = await this.getFolderSOQLData(usernameOrAlias);
                 }
 
                 // Iterate all the folder metas
@@ -179,7 +179,7 @@ export class SfdxTasks {
         return await SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
     }
 
-    public static async enqueueApexTestsAsync(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage: boolean = false): Promise<SfdxJobInfo> {
+    public static async enqueueApexTests(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage: boolean = false): Promise<SfdxJobInfo> {
         if (!usernameOrAlias || !sfdxEntities) {
             return null;
         }
@@ -200,7 +200,7 @@ export class SfdxTasks {
         return SfdxTasks.getJobInfo(results);
     }
 
-    public static async getBulkJobStatusAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo> {
+    public static async getBulkJobStatus(usernameOrAlias: string, jobInfo: SfdxJobInfo): Promise<SfdxJobInfo> {
         if (!usernameOrAlias || !jobInfo || !jobInfo.id) {
             return null;
         }
@@ -214,13 +214,13 @@ export class SfdxTasks {
         return newJobInfo;
     }
 
-    public static async* waitForJobAsync(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
+    public static async* waitForJob(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
         const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
         jobInfo.statusCount = 0;
         while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
             await Utils.sleep(sleepMiliseconds);
 
-            jobInfo = await SfdxTasks.getBulkJobStatusAsync(usernameOrAlias, jobInfo);
+            jobInfo = await SfdxTasks.getBulkJobStatus(usernameOrAlias, jobInfo);
             jobInfo.maxStatusCount = maxCounter;
             jobInfo.statusCount++;
 
@@ -240,9 +240,9 @@ export class SfdxTasks {
 
     protected static _folderPaths: Map<string, string> = null;
 
-    private static async getFolderSOQLDataAsync(usernameOrAlias: string) {
+    private static async getFolderSOQLData(usernameOrAlias: string): Promise<Map<string, string>> {
         if (!this._folderPaths) {
-            const allFolders = await SfdxQuery.getFoldersAsync(usernameOrAlias);
+            const allFolders = await SfdxQuery.getFolders(usernameOrAlias);
 
             this._folderPaths = new Map<string, string>();
             for (const folder of allFolders) {

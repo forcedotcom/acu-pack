@@ -36,7 +36,7 @@ export default class Execute extends CommandBase {
       this.ux.log('Checking for pending tests...');
 
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTestsAsync(orgAlias)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias)) {
         if (recordCount === 0) {
           break;
         }
@@ -50,14 +50,14 @@ export default class Execute extends CommandBase {
 
       // Execute tests (with CodeCoverage) ?
       this.ux.log('Gathering Test ApexClasses...');
-      const testClasses = await SfdxQuery.getApexTestClassesAsync(orgAlias);
+      const testClasses = await SfdxQuery.getApexTestClasses(orgAlias);
       if (testClasses.length === 0) {
         this.ux.log(`No Test ApexClasses exist for ${orgAlias}`);
         return;
       }
 
       // Enqueue the Apex tests
-      let jobInfo = await SfdxTasks.enqueueApexTestsAsync(orgAlias, testClasses);
+      let jobInfo = await SfdxTasks.enqueueApexTests(orgAlias, testClasses);
       if (!jobInfo) {
         this.ux.log('An unknown error occurred enqueuing Apex Tests');
         process.exitCode = 1;
@@ -82,7 +82,7 @@ export default class Execute extends CommandBase {
           this.ux.log('Waiting for tests to complete...');
         }
 
-        for await (jobInfo of SfdxTasks.waitForJobAsync(orgAlias, jobInfo, waitCountMaxSeconds)) {
+        for await (jobInfo of SfdxTasks.waitForJob(orgAlias, jobInfo, waitCountMaxSeconds)) {
           this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
         }
 
@@ -95,7 +95,7 @@ export default class Execute extends CommandBase {
       }
       this.ux.log('All Apex Tests Started');
       const createdDate = jobInfo.createdDate || new Date().toJSON();
-      for await (recordCount of SfdxQuery.waitForApexTestsAsync(orgAlias, waitCountMaxSeconds, createdDate)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias, waitCountMaxSeconds, createdDate)) {
         if (recordCount === 0) {
           break;
         }

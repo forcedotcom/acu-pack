@@ -26,8 +26,8 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await Utils.deleteFileAsync(optionsPath);
-  await Utils.deleteFileAsync(xmlPath);
+  await Utils.deleteFile(optionsPath);
+  await Utils.deleteFile(xmlPath);
 });
 
 describe("XPath Tests", function () {
@@ -49,7 +49,7 @@ describe("XPath Tests", function () {
     </Profile>`);
     const result = spawnSync(path.join(path.resolve(process.cwd()), './bin/run.cmd'), ['acumen:source:xpath', '-o', optionsPath]);
     expect(result.status).to.equal(0);
-    await Utils.deleteFileAsync(xmlPath);
+    await Utils.deleteFile(xmlPath);
   });
   it("Returns Exit Code 1", async () => {
     await fs.writeFile(xmlPath, `<?xml version="1.0" encoding="UTF-8"?>
@@ -67,6 +67,6 @@ describe("XPath Tests", function () {
     </Profile>`);
     const result = spawnSync(path.join(path.resolve(process.cwd()), './bin/run.cmd'), ['acumen:source:xpath', '-o', optionsPath]);
     expect(result.status).to.equal(1);
-    await Utils.deleteFileAsync(xmlPath);
+    await Utils.deleteFile(xmlPath);
   });
 });

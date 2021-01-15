@@ -16,7 +16,7 @@ class Build extends command_base_1.CommandBase {
         // Validate the package path
         const packageFileName = this.flags.package || Build.defaultPackageFileName;
         const packageDir = path.dirname(packageFileName);
-        if (packageDir && !await utils_1.default.pathExistsAsync(packageDir)) {
+        if (packageDir && !await utils_1.default.pathExists(packageDir)) {
             throw new core_1.SfdxError(`The specified package folder does not exist: '${packageDir}'`);
         }
         let options;

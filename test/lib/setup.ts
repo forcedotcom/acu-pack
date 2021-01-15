@@ -12,8 +12,8 @@ export default class Setup {
 
         // clean up previous folder & files
         // These files are created at the testing root folder
-        await Utils.deleteFileAsync(Setup.md5FilePath);
-        await Utils.deleteFileAsync(Setup.gitFilePath);
+        await Utils.deleteFile(Setup.md5FilePath);
+        await Utils.deleteFile(Setup.gitFilePath);
 
         // @ts-ignore
         await fs.rmdir(folder, { recursive: true });

@@ -29,10 +29,10 @@ export default class XPath extends CommandBase {
         if (!sourceFolder) {
           continue;
         }
-        for await (const filePath of Utils.getFilesAsync(sourceFolder)) {
+        for await (const filePath of Utils.getFiles(sourceFolder)) {
           this.ux.log(`Processing file: '${filePath}`);
           let xml = null;
-          for await (const line of Utils.readFileLinesAsync(filePath)) {
+          for await (const line of Utils.readFileLines(filePath)) {
             xml += line;
           }
           const xPaths = [];

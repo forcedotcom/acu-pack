@@ -69,7 +69,7 @@ export default class Permissions extends CommandBase {
 
       for (const folder of folders) {
         this.ux.log(`Scanning metadata in: ${folder}`);
-        for await (const filePath of Utils.getFilesAsync(folder)) {
+        for await (const filePath of Utils.getFiles(folder)) {
           const json = await Utils.readObjectFromXmlFile(filePath);
           if (json.CustomObject) {
             this.processObjectMeta(filePath, json);

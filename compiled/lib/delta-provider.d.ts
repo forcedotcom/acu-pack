@@ -27,10 +27,10 @@ export declare abstract class DeltaProvider {
     abstract deltas: Map<string, any>;
     abstract processDeltaLine(deltaLine: string): void;
     abstract getMessage(name: string): string;
-    abstract diffAsync(source: string): AsyncGenerator<Delta, any, any>;
+    abstract diff(source: string): AsyncGenerator<Delta, any, any>;
     getFlagsConfig(flagsConfig: any): any;
     run(deltaOptions: DeltaOptions): Promise<void>;
-    loadDeltaFileAsync(deltaFilePath?: string): Promise<void>;
+    loadDeltaFile(deltaFilePath?: string): Promise<void>;
     logMessage(message: string, includeConsole?: boolean): Promise<void>;
-    validateDeltaOptionsAsync(deltaOptions: DeltaOptions): Promise<string>;
+    validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string>;
 }

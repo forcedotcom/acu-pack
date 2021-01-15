@@ -10,13 +10,13 @@ export default class Git extends CommandBase {
             deltas: Map<string, any>;
             processDeltaLine(deltaLine: string): void;
             getMessage(name: string): string;
-            diffAsync(source?: string): AsyncGenerator<Delta, any, any>;
-            validateDeltaOptionsAsync(deltaOptions: DeltaOptions): Promise<string>;
+            diff(source?: string): AsyncGenerator<Delta, any, any>;
+            validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string>;
             logFile: string;
             deltaOptions: DeltaOptions;
             getFlagsConfig(flagsConfig: any): any;
             run(deltaOptions: DeltaOptions): Promise<void>;
-            loadDeltaFileAsync(deltaFilePath?: string): Promise<void>;
+            loadDeltaFile(deltaFilePath?: string): Promise<void>;
             logMessage(message: string, includeConsole?: boolean): Promise<void>;
         };
         deltaTypeKind: {

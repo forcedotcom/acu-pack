@@ -48,17 +48,17 @@ export declare class SfdxCodeCoverageItem extends SfdxEntity {
 }
 export declare class SfdxQuery {
     static MAX_QUERY_LIMIT: number;
-    static getCustomApplicationsAsync(usernameOrAlias: string): Promise<SfdxEntity[]>;
-    static getSetupEntityTypesAsync(usernameOrAlias: string): Promise<string[]>;
-    static getFoldersAsync(usernameOrAlias: string): Promise<SfdxFolder[]>;
-    static getPermissionsAsync(usernameOrAlias: string): Promise<Map<string, SfdxPermissionSet>>;
-    static getObjectPermissionsAsync(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxObjectPermission[]>;
-    static getFieldPermissionsAsync(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxFieldPermission[]>;
-    static getSetupEntityAccessForTypesAsync(usernameOrAlias: string, setupEntityTypeNames: string[]): Promise<SfdxSeupEntityAccess[]>;
-    static doSoqlQueryAsync(usernameOrAlias: string, query: string, recordOffset?: number, recordLimit?: number, isToolingAPIQuery?: boolean): Promise<any[]>;
-    static getApexTestClassesAsync(usernameOrAlias: string, namespacePrefixes?: string[]): Promise<SfdxEntity[]>;
-    static getCodeCoverageAsync(usernameOrAlias: string): Promise<SfdxCodeCoverage>;
+    static getCustomApplications(usernameOrAlias: string): Promise<SfdxEntity[]>;
+    static getSetupEntityTypes(usernameOrAlias: string): Promise<string[]>;
+    static getFolders(usernameOrAlias: string): Promise<SfdxFolder[]>;
+    static getPermissions(usernameOrAlias: string): Promise<Map<string, SfdxPermissionSet>>;
+    static getObjectPermissions(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxObjectPermission[]>;
+    static getFieldPermissions(usernameOrAlias: string, customObjectTypeName: string): Promise<SfdxFieldPermission[]>;
+    static getSetupEntityAccessForTypes(usernameOrAlias: string, setupEntityTypeNames: string[]): Promise<SfdxSeupEntityAccess[]>;
+    static doSoqlQuery(usernameOrAlias: string, query: string, recordOffset?: number, recordLimit?: number, isToolingAPIQuery?: boolean): Promise<any[]>;
+    static getApexTestClasses(usernameOrAlias: string, namespacePrefixes?: string[]): Promise<SfdxEntity[]>;
+    static getCodeCoverage(usernameOrAlias: string): Promise<SfdxCodeCoverage>;
     static waitForRecordCount(usernameOrAlias: string, query: string, recordCount?: number, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<number, void, unknown>;
-    static waitForApexTestsAsync(username: string, waitCountMaxSeconds?: number, createdDate?: string): AsyncGenerator<number, number, unknown>;
+    static waitForApexTests(username: string, waitCountMaxSeconds?: number, createdDate?: string): AsyncGenerator<number, number, unknown>;
     static getInClause(values?: string[], isValueNumeric?: boolean): string;
 }

@@ -45,13 +45,13 @@ Md5.md5DeltaProvider = class extends delta_provider_1.DeltaProvider {
     getMessage(name) {
         return command_base_1.CommandBase.messages.getMessage(name);
     }
-    diffAsync(source) {
-        return tslib_1.__asyncGenerator(this, arguments, function* diffAsync_1() {
+    diff(source) {
+        return tslib_1.__asyncGenerator(this, arguments, function* diff_1() {
             var e_1, _a;
             let hasUpdates = false;
             source = source ? path.normalize(source) : this.deltaOptions.source;
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.getFilesAsync(source)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(utils_1.default.getFiles(source)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
                     const deltaFile = _c.value;
                     if (source && !deltaFile.startsWith(source)) {
                         yield tslib_1.__await(this.logMessage(`Skipping delta file line: '${deltaFile}' not in source path: '${source}'.`, true));
@@ -105,9 +105,9 @@ Md5.md5DeltaProvider = class extends delta_provider_1.DeltaProvider {
             if (hasUpdates) {
                 const md5FilePath = this.deltaOptions.deltaFilePath;
                 yield tslib_1.__await(this.logMessage('Updating hash file...', true));
-                if (!(yield tslib_1.__await(utils_1.default.pathExistsAsync(md5FilePath)))) {
+                if (!(yield tslib_1.__await(utils_1.default.pathExists(md5FilePath)))) {
                     const folder = path.dirname(md5FilePath);
-                    if (folder && !(yield tslib_1.__await(utils_1.default.pathExistsAsync(folder)))) {
+                    if (folder && !(yield tslib_1.__await(utils_1.default.pathExists(folder)))) {
                         yield tslib_1.__await(utils_1.default.mkDirPath(folder));
                     }
                 }

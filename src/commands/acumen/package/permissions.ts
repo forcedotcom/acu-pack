@@ -63,7 +63,7 @@ export default class Permissions extends CommandBase {
     this.packageFileName = this.flags.package || Permissions.packageFileName;
 
     const packageDir = path.dirname(this.packageFileName);
-    if (packageDir && !await Utils.pathExistsAsync(packageDir)) {
+    if (packageDir && !await Utils.pathExists(packageDir)) {
       throw new SfdxError(`The specified package folder does not exist: '${packageDir}'`);
     }
 
@@ -105,12 +105,5 @@ export default class Permissions extends CommandBase {
       throw err;
     }
     return;
-  }
-
-  protected logAsync(...args: string[]): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.ux.log(...args);
-      resolve();
-    });
   }
 }

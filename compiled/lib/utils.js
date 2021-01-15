@@ -9,8 +9,8 @@ const readline_1 = require("readline");
 const xpath = require("xpath");
 const xmldom_1 = require("xmldom");
 class Utils {
-    static getFilesAsync(folderPath, isRecursive = true) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getFilesAsync_1() {
+    static getFiles(folderPath, isRecursive = true) {
+        return tslib_1.__asyncGenerator(this, arguments, function* getFiles_1() {
             let fileItems;
             // If we have a wildcarded path - lets use glob
             const isGlob = yield tslib_1.__await(this.glob.hasMagic(folderPath));
@@ -41,7 +41,7 @@ class Utils {
                     const filePath = path.join(folderPath, fileName);
                     if ((yield tslib_1.__await(fs_1.promises.stat(filePath))).isDirectory() && isRecursive) {
                         // recurse folders
-                        yield tslib_1.__await(yield* tslib_1.__asyncDelegator(tslib_1.__asyncValues(yield tslib_1.__await(Utils.getFilesAsync(filePath)))));
+                        yield tslib_1.__await(yield* tslib_1.__asyncDelegator(tslib_1.__asyncValues(yield tslib_1.__await(Utils.getFiles(filePath)))));
                     }
                     else {
                         yield yield tslib_1.__await(path.normalize(filePath));
@@ -50,10 +50,10 @@ class Utils {
             }
         });
     }
-    static readFileLinesAsync(filePath) {
-        return tslib_1.__asyncGenerator(this, arguments, function* readFileLinesAsync_1() {
+    static readFileLines(filePath) {
+        return tslib_1.__asyncGenerator(this, arguments, function* readFileLines_1() {
             var e_1, _a;
-            if (!(yield tslib_1.__await(Utils.pathExistsAsync(filePath)))) {
+            if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
                 return yield tslib_1.__await(void 0);
             }
             const rl = readline_1.createInterface({
@@ -79,13 +79,13 @@ class Utils {
             }
         });
     }
-    static async readFileAsync(filePath, options) {
-        if (!(await Utils.pathExistsAsync(filePath))) {
+    static async readFile(filePath, options) {
+        if (!(await Utils.pathExists(filePath))) {
             return null;
         }
         return (await fs_1.promises.readFile(filePath, options)).toString();
     }
-    static async pathExistsAsync(pathToCheck) {
+    static async pathExists(pathToCheck) {
         try {
             await fs_1.promises.access(pathToCheck);
             return true;
@@ -98,7 +98,7 @@ class Utils {
         }
     }
     static async getPathStat(pathToCheck) {
-        return !pathToCheck || !(await Utils.pathExistsAsync(pathToCheck))
+        return !pathToCheck || !(await Utils.pathExists(pathToCheck))
             ? null
             : await fs_1.promises.stat(pathToCheck);
     }
@@ -162,8 +162,8 @@ class Utils {
         }
         return results;
     }
-    static async deleteFileAsync(filePath) {
-        if (!(await Utils.pathExistsAsync(filePath))) {
+    static async deleteFile(filePath) {
+        if (!(await Utils.pathExists(filePath))) {
             return false;
         }
         await fs_1.promises.unlink(filePath);

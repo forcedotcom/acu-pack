@@ -26,15 +26,15 @@ before('Init', async function () {
   const getData = async () => {
     try {
       let query = `SELECT Id, Name, Description FROM ${ApiTestKind.DEFAULT.toString()} LIMIT 5`;
-      testData.set(ApiTestKind.DEFAULT, await SfdxQuery.doSoqlQueryAsync(orgAlias, query, null, null, false));
+      testData.set(ApiTestKind.DEFAULT, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
       console.log(`Got ${ApiTestKind.DEFAULT.toString()} Test Data.`);
 
       query = `SELECT Id FROM ${ApiTestKind.TOOLING.toString()} LIMIT 5`;
-      testData.set(ApiTestKind.TOOLING, await SfdxQuery.doSoqlQueryAsync(orgAlias, query, null, null, true));
+      testData.set(ApiTestKind.TOOLING, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, true));
       console.log(`Got ${ApiTestKind.TOOLING.toString()} Test Data.`);
 
       query = `SELECT Id, Username, FirstName, Email FROM ${ApiTestKind.USER.toString()} LIMIT 5`;
-      testData.set(ApiTestKind.USER, await SfdxQuery.doSoqlQueryAsync(orgAlias, query, null, null, false));
+      testData.set(ApiTestKind.USER, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
       console.log(`Got ${ApiTestKind.USER.toString()} Test Data.`);
 
     } catch (err) {

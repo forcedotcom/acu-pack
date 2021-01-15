@@ -25,7 +25,7 @@ class Permissions extends command_base_1.CommandBase {
             : new Set();
         this.packageFileName = this.flags.package || Permissions.packageFileName;
         const packageDir = path.dirname(this.packageFileName);
-        if (packageDir && !await utils_1.default.pathExistsAsync(packageDir)) {
+        if (packageDir && !await utils_1.default.pathExists(packageDir)) {
             throw new core_1.SfdxError(`The specified package folder does not exist: '${packageDir}'`);
         }
         try {
@@ -72,12 +72,6 @@ class Permissions extends command_base_1.CommandBase {
             throw err;
         }
         return;
-    }
-    logAsync(...args) {
-        return new Promise((resolve, reject) => {
-            this.ux.log(...args);
-            resolve();
-        });
     }
 }
 exports.default = Permissions;

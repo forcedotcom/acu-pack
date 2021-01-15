@@ -9,14 +9,14 @@ class XmlMerge {
         const logFilePath = path.join(path.dirname(destinationXml), 'xml-merge.log');
         try {
             // Reset log file
-            await utils_1.default.deleteFileAsync(logFilePath);
-            if (!(await utils_1.default.pathExistsAsync(sourceXml))) {
+            await utils_1.default.deleteFile(logFilePath);
+            if (!(await utils_1.default.pathExists(sourceXml))) {
                 await this.logMessage(`Source package does not exist: ${sourceXml}`, logFilePath, ux);
                 return;
             }
             const source = await utils_1.default.readObjectFromXmlFile(sourceXml);
             await this.logMessage(`Parsed source package: ${sourceXml}`, logFilePath, ux);
-            if (await utils_1.default.pathExistsAsync(destinationXml)) {
+            if (await utils_1.default.pathExists(destinationXml)) {
                 const destination = await utils_1.default.readObjectFromXmlFile(destinationXml);
                 await this.logMessage(`Parsed destination package: ${destinationXml}`, logFilePath, ux);
                 merged = this.mergeObjects(source, destination);

@@ -4,6 +4,8 @@ const options_1 = require("./options");
 class SchemaOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);
+        this.excludeCustomObjectNames = [];
+        this.includeCustomObjectNames = [];
         this.outputDefs = [];
     }
     getDynamicCode() {

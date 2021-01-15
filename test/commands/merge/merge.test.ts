@@ -11,8 +11,8 @@ describe("Xml-Merge Tests", function () {
 
   async function cleanUp() {
     try {
-      await Utils.deleteFileAsync(source);
-      await Utils.deleteFileAsync(destination);
+      await Utils.deleteFile(source);
+      await Utils.deleteFile(destination);
       return true;
     } catch (err) {
       console.log(err);
@@ -47,7 +47,7 @@ describe("Xml-Merge Tests", function () {
     it(`runs ${command}  -s ${source} -d ${destination}`, async () => {
       await xmlMerge.mergeXml(source, destination);
 
-      expect(await Utils.pathExistsAsync(destination));
+      expect(await Utils.pathExists(destination));
 
       const merged = await Utils.readObjectFromXmlFile(destination);
       expect(merged).not.null;

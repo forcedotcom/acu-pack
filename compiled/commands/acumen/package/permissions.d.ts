@@ -17,5 +17,4 @@ export default class Permissions extends CommandBase {
     protected orgId: string;
     protected packageFileName: string;
     run(): Promise<AnyJson>;
-    protected logAsync(...args: string[]): Promise<void>;
 }

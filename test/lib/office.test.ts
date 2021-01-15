@@ -6,11 +6,11 @@ const testFilePath = './output.test.xlsx';
 const data = new Map<string, string[][]>();
 
 before('Cleanup', async () => {
-    await Utils.deleteFileAsync(testFilePath);
+    await Utils.deleteFile(testFilePath);
     data.set('book', [['row1col1', 'row1col2'],['row2col1','row2col2'],['row3col1','row3col2']]);
 });
 after('Cleanup', async () => {
-    await Utils.deleteFileAsync(testFilePath);
+    await Utils.deleteFile(testFilePath);
 });
 describe("Office Tests", function () {
     describe("writeXlxsWorkbook Test", function () {
@@ -28,7 +28,7 @@ describe("Office Tests", function () {
         });
         it("Writes XLXS File", async function () {
             Office.writeXlxsWorkbook(data, testFilePath);
-            expect(await Utils.pathExistsAsync(testFilePath)).to.be.true;
+            expect(await Utils.pathExists(testFilePath)).to.be.true;
         });
     });
 });

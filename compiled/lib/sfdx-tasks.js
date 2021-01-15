@@ -74,7 +74,7 @@ class SfdxTasks {
                         : `${describeMetadata.xmlName}Folder`;
                     // Get SOQL folder data (ONCE!)
                     if (!folderPathMap) {
-                        folderPathMap = yield tslib_1.__await(this.getFolderSOQLDataAsync(usernameOrAlias));
+                        folderPathMap = yield tslib_1.__await(this.getFolderSOQLData(usernameOrAlias));
                     }
                     try {
                         // Iterate all the folder metas
@@ -191,7 +191,7 @@ class SfdxTasks {
     static async describeObject(usernameOrAlias, objectName) {
         return await sfdx_core_1.SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
     }
-    static async enqueueApexTestsAsync(usernameOrAlias, sfdxEntities, shouldSkipCodeCoverage = false) {
+    static async enqueueApexTests(usernameOrAlias, sfdxEntities, shouldSkipCodeCoverage = false) {
         if (!usernameOrAlias || !sfdxEntities) {
             return null;
         }
@@ -208,7 +208,7 @@ class SfdxTasks {
         const results = await sfdx_core_1.SfdxCore.command(command);
         return SfdxTasks.getJobInfo(results);
     }
-    static async getBulkJobStatusAsync(usernameOrAlias, jobInfo) {
+    static async getBulkJobStatus(usernameOrAlias, jobInfo) {
         if (!usernameOrAlias || !jobInfo || !jobInfo.id) {
             return null;
         }
@@ -221,13 +221,13 @@ class SfdxTasks {
         newJobInfo.statusCount++;
         return newJobInfo;
     }
-    static waitForJobAsync(usernameOrAlias, jobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
-        return tslib_1.__asyncGenerator(this, arguments, function* waitForJobAsync_1() {
+    static waitForJob(usernameOrAlias, jobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
+        return tslib_1.__asyncGenerator(this, arguments, function* waitForJob_1() {
             const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
             jobInfo.statusCount = 0;
             while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
                 yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
-                jobInfo = yield tslib_1.__await(SfdxTasks.getBulkJobStatusAsync(usernameOrAlias, jobInfo));
+                jobInfo = yield tslib_1.__await(SfdxTasks.getBulkJobStatus(usernameOrAlias, jobInfo));
                 jobInfo.maxStatusCount = maxCounter;
                 jobInfo.statusCount++;
                 yield yield tslib_1.__await(jobInfo);
@@ -242,9 +242,9 @@ class SfdxTasks {
         const result = await sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
     }
-    static async getFolderSOQLDataAsync(usernameOrAlias) {
+    static async getFolderSOQLData(usernameOrAlias) {
         if (!this._folderPaths) {
-            const allFolders = await sfdx_query_1.SfdxQuery.getFoldersAsync(usernameOrAlias);
+            const allFolders = await sfdx_query_1.SfdxQuery.getFolders(usernameOrAlias);
             this._folderPaths = new Map();
             for (const folder of allFolders) {
                 if (!folder) {

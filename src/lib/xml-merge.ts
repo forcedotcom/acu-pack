@@ -10,9 +10,9 @@ export default class XmlMerge {
         try {
 
             // Reset log file
-            await Utils.deleteFileAsync(logFilePath);
+            await Utils.deleteFile(logFilePath);
 
-            if (!(await Utils.pathExistsAsync(sourceXml))) {
+            if (!(await Utils.pathExists(sourceXml))) {
                 await this.logMessage(`Source package does not exist: ${sourceXml}`, logFilePath, ux);
                 return;
             }
@@ -20,7 +20,7 @@ export default class XmlMerge {
             const source = await Utils.readObjectFromXmlFile(sourceXml);
             await this.logMessage(`Parsed source package: ${sourceXml}`, logFilePath, ux);
 
-            if (await Utils.pathExistsAsync(destinationXml)) {
+            if (await Utils.pathExists(destinationXml)) {
                 const destination = await Utils.readObjectFromXmlFile(destinationXml);
                 await this.logMessage(`Parsed destination package: ${destinationXml}`, logFilePath, ux);
 

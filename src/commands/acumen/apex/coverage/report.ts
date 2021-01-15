@@ -39,7 +39,7 @@ export default class Report extends CommandBase {
 
       const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTestsAsync(orgAlias, waitCountMaxSeconds)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias, waitCountMaxSeconds)) {
         if (recordCount === 0) {
           break;
         }
@@ -54,7 +54,7 @@ export default class Report extends CommandBase {
       // Get Code Coverage Report
       this.ux.log('Getting Code Coverage Report Data.');
 
-      const codeCoverage = await SfdxQuery.getCodeCoverageAsync(orgAlias);
+      const codeCoverage = await SfdxQuery.getCodeCoverage(orgAlias);
       codeCoverage.calculateCodeCoverage();
       const workbookMap = new Map<string, string[][]>();
 
@@ -88,7 +88,7 @@ export default class Report extends CommandBase {
       // Check Apex Test Failures
       const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
       const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
-      const records = await SfdxQuery.doSoqlQueryAsync(orgAlias, query);
+      const records = await SfdxQuery.doSoqlQuery(orgAlias, query);
 
       sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
       for (const record of records) {

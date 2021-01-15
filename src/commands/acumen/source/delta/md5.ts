@@ -28,11 +28,11 @@ export default class Md5 extends CommandBase {
             return CommandBase.messages.getMessage(name);
         }
 
-        public async * diffAsync(source: string): AsyncGenerator<Delta, any, any> {
+        public async * diff(source: string): AsyncGenerator<Delta, any, any> {
             let hasUpdates = false;
             source = source ? path.normalize(source) : this.deltaOptions.source;
 
-            for await (const deltaFile of Utils.getFilesAsync(source)) {
+            for await (const deltaFile of Utils.getFiles(source)) {
                 if (source && !deltaFile.startsWith(source)) {
                     await this.logMessage(`Skipping delta file line: '${deltaFile}' not in source path: '${source}'.`, true);
                     continue;
@@ -79,9 +79,9 @@ export default class Md5 extends CommandBase {
             if (hasUpdates) {
                 const md5FilePath = this.deltaOptions.deltaFilePath;
                 await this.logMessage('Updating hash file...', true);
-                if (!await Utils.pathExistsAsync(md5FilePath)) {
+                if (!await Utils.pathExists(md5FilePath)) {
                     const folder = path.dirname(md5FilePath);
-                    if (folder && !await Utils.pathExistsAsync(folder)) {
+                    if (folder && !await Utils.pathExists(folder)) {
                         await Utils.mkDirPath(folder);
                     }
                 } else {

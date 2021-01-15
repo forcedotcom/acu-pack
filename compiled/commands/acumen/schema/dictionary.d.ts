@@ -14,4 +14,5 @@ export default class Dictionary extends CommandBase {
     protected options: SchemaOptions;
     run(): Promise<void>;
     private getColumnRow;
+    private getSortedTypeNames;
 }
