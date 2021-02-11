@@ -21,11 +21,12 @@ var ApiKind;
 class RestResult {
     constructor() {
         this.isError = false;
+        this.isBinary = false;
     }
     throw() {
         throw this.getError();
     }
-    getResult() {
+    getContent() {
         return this.getError() || this.body || this.id;
     }
     getError() {
@@ -87,7 +88,7 @@ class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
     async getById(metaDataType, id, apiKind = ApiKind.DEFAULT) {
         if (!metaDataType) {
@@ -100,7 +101,7 @@ class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
     getByIds(metaDataType, ids, apiKind = ApiKind.DEFAULT) {
         return tslib_1.__asyncGenerator(this, arguments, function* getByIds_1() {
@@ -117,7 +118,7 @@ class SfdxClient {
                     if (result.isError) {
                         result.throw();
                     }
-                    yield yield tslib_1.__await(result.getResult());
+                    yield yield tslib_1.__await(result);
                 }
             }
             catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -144,7 +145,7 @@ class SfdxClient {
                     if (result.isError) {
                         result.throw();
                     }
-                    yield yield tslib_1.__await(result.getResult());
+                    yield yield tslib_1.__await(result);
                 }
             }
             catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -167,7 +168,7 @@ class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
     updateByRecords(metaDataType, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
         return tslib_1.__asyncGenerator(this, arguments, function* updateByRecords_1() {
@@ -185,7 +186,7 @@ class SfdxClient {
                     if (result.isError) {
                         result.throw();
                     }
-                    yield yield tslib_1.__await(result.getResult());
+                    yield yield tslib_1.__await(result);
                 }
             }
             catch (e_4_1) { e_4 = { error: e_4_1 }; }
@@ -210,7 +211,7 @@ class SfdxClient {
                         if (result.isError) {
                             result.throw();
                         }
-                        yield yield tslib_1.__await(result.getResult());
+                        yield yield tslib_1.__await(result.getContent());
                     }
                 }
                 catch (e_5_1) { e_5 = { error: e_5_1 }; }
@@ -235,33 +236,33 @@ class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
     async doInternal(action = RestAction.GET, metaDataType = null, record = null, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
-        await this.initialize(false);
-        const api = this.getApiMethod(action, metaDataType, apiKind, validStatusCodes || [200]);
-        return await this.handleResponse(apiKind, api, null, record);
+        const uri = await this.getUri(metaDataType, null, apiKind);
+        return await this.handleResponse(action, uri, record, validStatusCodes);
     }
-    async doInternalById(action = RestAction.GET, metaDataType = null, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
-        await this.initialize(false);
-        const api = this.getApiMethod(action, metaDataType, apiKind, validStatusCodes);
-        return await this.handleResponse(apiKind, api, recordIdField, record);
-    }
-    doInternalByIds(action = RestAction.GET, metaDataType = null, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
+    doInternalByIds(action = RestAction.GET, metaDataType = null, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         return tslib_1.__asyncGenerator(this, arguments, function* doInternalByIds_1() {
-            yield tslib_1.__await(this.initialize(false));
-            const api = this.getApiMethod(action, metaDataType, apiKind, validStatusCodes);
             for (const record of records) {
-                yield yield tslib_1.__await(yield tslib_1.__await(this.handleResponse(apiKind, api, recordIdField, record)));
+                yield yield tslib_1.__await(yield tslib_1.__await(this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes)));
             }
         });
     }
-    getApiMethod(action = RestAction.GET, metaDataType = null, apiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
-        const uri = this.getUri(apiKind, metaDataType);
-        const api = this.bent(uri, action.toString(), this.headers, validStatusCodes);
-        return api;
+    async doInternalById(action = RestAction.GET, metaDataType = null, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
+        let id = null;
+        if (apiKind !== ApiKind.COMPOSITE && record) {
+            id = utils_1.default.getFieldValue(record, recordIdField, true);
+            // Delete the id field as SFDC API restuen BAD_REQUEST if the object has an ID
+            delete record[recordIdField];
+        }
+        const uri = await this.getUri(metaDataType, id, apiKind);
+        const result = await this.handleResponse(action, uri, record, validStatusCodes);
+        result.id = id;
+        return result;
     }
-    getUri(apiKind = ApiKind.DEFAULT, metaDataType = null) {
+    async getUri(metaDataType = null, id = null, apiKind = ApiKind.DEFAULT) {
+        await this.initialize(false);
         let uri = `${this.orgInfo.instanceUrl}/services/data/v${this.apiVersion}/`;
         switch (apiKind) {
             case ApiKind.TOOLING:
@@ -275,19 +276,22 @@ class SfdxClient {
         }
         uri += 'sobjects/';
         if (metaDataType) {
-            uri += metaDataType + '/';
+            const parts = metaDataType.split('.');
+            uri += parts[0] + '/';
+            if (id) {
+                uri += id + '/';
+            }
+            if (parts.length > 1) {
+                uri += parts[1] + '/';
+            }
         }
         return uri;
     }
-    async handleResponse(apiKind = ApiKind.DEFAULT, apiPromise, recordIdField = SfdxClient.defailtIdField, record = null) {
+    async handleResponse(action = RestAction.GET, uri, record = null, validStatusCodes = null) {
         const result = new RestResult();
         try {
-            if (apiKind !== ApiKind.COMPOSITE && record) {
-                result.id = utils_1.default.getFieldValue(record, recordIdField, true);
-                // Delete the id field as SFDC API restuen BAD_REQUEST if the object has an ID
-                delete record[recordIdField];
-            }
-            const response = await apiPromise(result.id, record);
+            const apiPromise = this.bent(action.toString(), this.headers, validStatusCodes || [200]);
+            const response = await apiPromise(uri, record);
             // Do we have content?
             result.code = response.statusCode;
             switch (result.code) {
@@ -295,7 +299,14 @@ class SfdxClient {
                     return result;
                 default:
                     // Read payload
-                    result.body = await response.json();
+                    response.content_type = response.headers['content-type'];
+                    if (response.content_type === 'application/octetstream') {
+                        result.body = Buffer.from(await response.arrayBuffer());
+                        response.isBinary = true;
+                    }
+                    else {
+                        result.body = await response.json();
+                    }
                     return result;
             }
         }
