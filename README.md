@@ -8,6 +8,10 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 [![License](https://img.shields.io/npm/l/acu-pack.svg)](https://bitbucket.org/acumensolutions/acu-pack/src/master/package.json)
 
 <!-- toc -->
+* [Debugging your plugin](#debugging-your-plugin)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 
 * [Debugging your plugin](#debugging-your-plugin)
 * [Usage](#usage)
@@ -61,11 +65,11 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 
 # Commands
 <!-- commands -->
-
 * [`sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageclear--m-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagebuild--x-string--m-string--o-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -215,6 +219,56 @@ OPTIONS
 EXAMPLE
   $ sfdx acumen:apex:coverage:report -u myOrgAlias -r myCodeCoverageReport.xlsx
        Pulls the Code Coverage metrics from myOrgAlias and generates a CodeCoverageReport-myOrgAlias.xlsx report.
+```
+
+## `sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Performs the GET REST action against the specified URL/URI.
+
+```
+USAGE
+  $ sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] 
+  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -i, --ids=ids                                                                     (required) A comma delimited list of
+                                                                                    Ids to get. A file will be written
+                                                                                    for each Id provided
+
+  -m, --metadata=metadata                                                           (required) The metadata to execute
+                                                                                    the API against. The dot operator
+                                                                                    can be used to retrieve a specific
+                                                                                    field (i.e.
+                                                                                    ContentVersion.VersionData)
+
+  -o, --output=output                                                               OPTIONAL: The output folder path for
+                                                                                    the files. The current directory is
+                                                                                    the default.
+
+  -t, --tooling                                                                     Set to true to specify the Tooling
+                                                                                    API.
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLES
+  $ sfdx acumen:api:get -u myOrgAlias -m ContentVersion -i 068r0000003slVtAAI
+       Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
+  writes the body to 068r0000003slVtAAI.json.
+  $ sfdx acumen:api:get -u myOrgAlias -m ContentVersion.VersionData -i 068r0000003slVtAAI
+       Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
+  writes the VersionData field value body to 068r0000003slVtAAI.json.
+  $ sfdx acumen:api:get -u myOrgAlias -t true -m ContentVersion -i 068r0000003slVtAAI -o ./output/files
+       Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
+  writes the body to ./output/files/068r0000003slVtAAI.json.
 ```
 
 ## `sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
@@ -571,5 +625,4 @@ EXAMPLE
   $ sfdx acumen:source:xpath -o ./xpathOptions.json"
        Validates the project source from the x-path rules specified in 'xpath-options.json'
 ```
-
 <!-- commandsstop -->
