@@ -40,6 +40,8 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u SOQLDEV -m true -o
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m Account -i INSTANCE_ID
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
 ```
 
 2. Set some breakpoints in your command code

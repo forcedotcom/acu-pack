@@ -218,7 +218,7 @@ class Utils {
         }
         await Utils.mkDirPath(filePath, true);
         const xml = Utils.writeObjectToXml(metadata, xmlOptions);
-        await fs_1.promises.writeFile(filePath, xml);
+        await Utils.writeFile(filePath, xml);
         return filePath;
     }
     static async readObjectFromXmlFile(filePath, xmlOptions) {
@@ -239,6 +239,9 @@ class Utils {
             process.chdir(newCwdPath);
         }
         return currentCwd;
+    }
+    static async writeFile(path, contents) {
+        await fs_1.promises.writeFile(path, contents);
     }
 }
 exports.default = Utils;
