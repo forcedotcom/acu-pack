@@ -226,7 +226,7 @@ export default class Utils {
         }
         await Utils.mkDirPath(filePath, true);
         const xml = Utils.writeObjectToXml(metadata, xmlOptions);
-        await fs.writeFile(filePath, xml);
+        await Utils.writeFile(filePath, xml);
 
         return filePath;
     }
@@ -251,6 +251,10 @@ export default class Utils {
             process.chdir(newCwdPath);
         }
         return currentCwd;
+    }
+
+    public static async writeFile(filePath: string, contents: any): Promise<void> {
+        await fs.writeFile(filePath, contents);
     }
 
     private static glob = require('util').promisify(require('glob'));

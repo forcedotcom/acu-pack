@@ -11,7 +11,8 @@ enum ApiTestKind {
   DEFAULT = 'Account',
   USER = 'User',
   TOOLING = 'ApexCodeCoverageAggregate',
-  UNKNOWN = 'Bogus'
+  UNKNOWN = 'Bogus',
+  FILE = 'ContentVersion'
 }
 
 const testData = new Map<ApiTestKind, any[]>();
@@ -36,6 +37,10 @@ before('Init', async function () {
       query = `SELECT Id, Username, FirstName, Email FROM ${ApiTestKind.USER.toString()} LIMIT 5`;
       testData.set(ApiTestKind.USER, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
       console.log(`Got ${ApiTestKind.USER.toString()} Test Data.`);
+
+      query = `SELECT Id, VersionData FROM ${ApiTestKind.FILE.toString()} ORDER BY CreatedDate DESC LIMIT 5`;
+      testData.set(ApiTestKind.FILE, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
+      console.log(`Got ${ApiTestKind.FILE.toString()} Test Data.`);
 
     } catch (err) {
       if (err.name === 'NoOrgFound') {
@@ -71,7 +76,7 @@ describe('Rest Client Tests', () => {
         this.skip();
       }
       const metaDataType = ApiTestKind.DEFAULT.toString();
-      const result = await sfdxClient.getMetadataSchema(metaDataType);
+      const result = (await sfdxClient.getMetadataSchema(metaDataType)).getContent();
       expect(result).to.not.be.undefined;
       expect(result.objectDescribe).to.not.be.undefined;
       expect(result.objectDescribe.name).to.equal(metaDataType);
@@ -81,7 +86,7 @@ describe('Rest Client Tests', () => {
         this.skip();
       }
       const metaDataType = ApiTestKind.TOOLING.toString();
-      const result = await sfdxClient.getMetadataSchema(metaDataType, ApiKind.TOOLING);
+      const result = (await sfdxClient.getMetadataSchema(metaDataType, ApiKind.TOOLING)).getContent();
       expect(result).to.not.be.undefined;
       expect(result.objectDescribe).to.not.be.undefined;
       expect(result.objectDescribe.name).to.equal(metaDataType);
@@ -92,7 +97,7 @@ describe('Rest Client Tests', () => {
       }
       const unknownMetaDataType = ApiTestKind.UNKNOWN.toString();
       try {
-        await sfdxClient.getMetadataSchema(unknownMetaDataType);
+        (await sfdxClient.getMetadataSchema(unknownMetaDataType)).getContent();
       } catch (err) {
         expect(err.message).to.contain('(404) Not Found');
       }
@@ -103,7 +108,7 @@ describe('Rest Client Tests', () => {
       }
       const metaDataType = ApiTestKind.DEFAULT.toString();
       try {
-        await sfdxClient.getById(metaDataType, unknownId);
+        (await sfdxClient.getById(metaDataType, unknownId)).getContent();
       } catch (err) {
         expect(err.message).to.contain('(404) Not Found');
       }
@@ -114,7 +119,7 @@ describe('Rest Client Tests', () => {
       }
       const unknownMetaDataType = ApiTestKind.UNKNOWN.toString();
       try {
-        await sfdxClient.getMetadataSchema(unknownMetaDataType, ApiKind.TOOLING);
+        (await sfdxClient.getMetadataSchema(unknownMetaDataType, ApiKind.TOOLING)).getContent();
       } catch (err) {
         expect(err.message).to.contain('(404) Not Found');
       }
@@ -125,7 +130,7 @@ describe('Rest Client Tests', () => {
       }
       const metaDataType = ApiTestKind.DEFAULT.toString();
       try {
-        await sfdxClient.getById(metaDataType, unknownId, ApiKind.TOOLING);
+        (await sfdxClient.getById(metaDataType, unknownId, ApiKind.TOOLING)).getContent();
       } catch (err) {
         expect(err.message).to.contain('(404) Not Found');
       }
@@ -137,7 +142,7 @@ describe('Rest Client Tests', () => {
       const metaDataType = ApiTestKind.TOOLING.toString();
       const ids = Utils.getFieldValues(testData.get(ApiTestKind.TOOLING), 'Id', true);
       for (const id of ids) {
-        const result = await sfdxClient.getById(metaDataType, id, ApiKind.TOOLING)
+        const result = (await sfdxClient.getById(metaDataType, id, ApiKind.TOOLING)).getContent();
         expect(result).to.not.be.null;
         expect(result.Id).to.equal(id);
       }
@@ -150,8 +155,9 @@ describe('Rest Client Tests', () => {
       const ids = Utils.getFieldValues(testData.get(ApiTestKind.TOOLING), 'Id', true);
       let counter = 0;
       for await (const result of sfdxClient.getByIds(metaDataType, ids, ApiKind.TOOLING)) {
-        expect(result).to.not.be.null;
-        expect(result.Id).to.equal(ids[counter++]);
+        const content = result.getContent();
+        expect(content).to.not.be.null;
+        expect(content.Id).to.equal(ids[counter++]);
       }
     });
     it('Can get Default Instance', async function () {
@@ -161,9 +167,25 @@ describe('Rest Client Tests', () => {
       const metaDataType = ApiTestKind.DEFAULT.toString();
       const ids = Utils.getFieldValues(testData.get(ApiTestKind.DEFAULT), 'Id', true);
       for (const id of ids) {
-        const result = await sfdxClient.getById(metaDataType, id)
+        const result = (await sfdxClient.getById(metaDataType, id)).getContent();
         expect(result).to.not.be.null;
         expect(result.Id).to.equal(id);
+      }
+    });
+    it('Can get VersionData from ContentVersion', async function () {
+      if (!sfdxClient) {
+        this.skip();
+      }
+      let metaDataType = ApiTestKind.FILE.toString();
+      const ids = Utils.getFieldValues(testData.get(ApiTestKind.FILE), 'Id', true);
+      for (let id of ids) {
+        const result = await sfdxClient.getById(metaDataType+'.VersionData', id);
+        expect(result).to.not.be.null;
+        expect(result.id).to.equal(id);
+        expect(result.id).to.equal(id);
+        expect(result.isBinary).to.be.true;
+        const bytes = (result).getContent();
+        expect(bytes instanceof Buffer).to.be.true;
       }
     });
     it('Can get Default Instances', async function () {
@@ -174,8 +196,9 @@ describe('Rest Client Tests', () => {
       const ids = Utils.getFieldValues(testData.get(ApiTestKind.DEFAULT), 'Id', true);
       let counter = 0;
       for await (const result of sfdxClient.getByIds(metaDataType, ids)) {
-        expect(result).to.not.be.null;
-        expect(result.Id).to.equal(ids[counter++]);
+        const content = result.getContent();
+        expect(content).to.not.be.null;
+        expect(content.Id).to.equal(ids[counter++]);
       }
     });
     it('Can update Default Instance', async function () {
@@ -185,7 +208,7 @@ describe('Rest Client Tests', () => {
       const metaDataType = ApiTestKind.DEFAULT.toString();
       const desc = new Date().toJSON();
       for (const record of testData.get(ApiTestKind.DEFAULT)) {
-        const result = await sfdxClient.updateByRecord(metaDataType, { Id: record.Id, Description: desc }, 'Id');
+        const result = (await sfdxClient.updateByRecord(metaDataType, { Id: record.Id, Description: desc }, 'Id')).getContent();
         expect(result).to.not.be.null;
         expect(result).to.equal(record.Id);
       }
@@ -209,7 +232,7 @@ describe('Rest Client Tests', () => {
         });
       }
 
-      const results = await sfdxClient.doComposite(RestAction.PATCH, patchObj);
+      const results = (await sfdxClient.doComposite(RestAction.PATCH, patchObj)).getContent();
       for (const result of results) {
         if (result.errors && result.errors.length > 0) {
           expect.fail(JSON.stringify(result.errors));

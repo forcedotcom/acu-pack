@@ -145,7 +145,7 @@ export default class Unmask extends CommandBase {
         this.ux.log('Unmasking Users...');
         const sfdxClient = new SfdxClient(orgAlias);
         const results = await sfdxClient.doComposite(RestAction.PATCH, patchObj);
-        for (const result of results) {
+        for (const result of results.getContent()) {
           for (const user of unmaskUsers) {
             if (user.Id === result.id) {
               if (result.success) {

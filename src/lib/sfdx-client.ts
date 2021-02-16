@@ -22,12 +22,14 @@ class RestResult {
     public code: number;
     public body: any;
     public isError = false;
+    public contentType: string;
+    public isBinary = false;
 
     public throw(): Error {
         throw this.getError();
     }
 
-    public getResult(): any {
+    public getContent(): any {
         return this.getError() || this.body || this.id;
     }
 
@@ -79,7 +81,7 @@ export class SfdxClient {
         }
     }
 
-    public async getMetadataSchema(metaDataType: string, apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async getMetadataSchema(metaDataType: string, apiKind: ApiKind = ApiKind.DEFAULT): Promise<RestResult> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -87,10 +89,10 @@ export class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
 
-    public async getById(metaDataType: string, id: string, apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async getById(metaDataType: string, id: string, apiKind: ApiKind = ApiKind.DEFAULT): Promise<RestResult> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -101,10 +103,10 @@ export class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
 
-    public async* getByIds(metaDataType: string, ids: string[], apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async* getByIds(metaDataType: string, ids: string[], apiKind: ApiKind = ApiKind.DEFAULT): AsyncGenerator<RestResult, void, void> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -115,11 +117,11 @@ export class SfdxClient {
             if (result.isError) {
                 result.throw();
             }
-            yield result.getResult();
+            yield result;
         }
     }
 
-    public async* getByRecords(metaDataType: string, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async* getByRecords(metaDataType: string, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT): AsyncGenerator<RestResult, void, void> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -131,11 +133,11 @@ export class SfdxClient {
             if (result.isError) {
                 result.throw();
             }
-            yield result.getResult();
+            yield result;
         }
     }
 
-    public async updateByRecord(metaDataType: string, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async updateByRecord(metaDataType: string, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT): Promise<RestResult> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -146,10 +148,10 @@ export class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
 
-    public async* updateByRecords(metaDataType: string, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async* updateByRecords(metaDataType: string, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT): AsyncGenerator<RestResult, void, void> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -161,11 +163,11 @@ export class SfdxClient {
             if (result.isError) {
                 result.throw();
             }
-            yield result.getResult();
+            yield result;
         }
     }
 
-    public async* do(action: RestAction, metaDataType: string, records: any[] = null, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
+    public async* do(action: RestAction, metaDataType: string, records: any[] = null, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = [200]): AsyncGenerator<RestResult, void, void> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
@@ -174,7 +176,7 @@ export class SfdxClient {
                 if (result.isError) {
                     result.throw();
                 }
-                yield result.getResult();
+                yield result.getContent();
             }
 
         } else {
@@ -182,7 +184,7 @@ export class SfdxClient {
         }
     }
 
-    public async doComposite(action: RestAction = RestAction.GET, record: any, validStatusCodes = [200]) {
+    public async doComposite(action: RestAction = RestAction.GET, record: any, validStatusCodes = [200]): Promise<RestResult> {
         // https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections.htm
         if (!record) {
             throw new Error('record parameter is required.');
@@ -191,36 +193,35 @@ export class SfdxClient {
         if (result.isError) {
             result.throw();
         }
-        return result.getResult();
+        return result;
     }
 
     private async doInternal(action: RestAction = RestAction.GET, metaDataType: string = null, record: any = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
-        await this.initialize(false);
-        const api = this.getApiMethod(action, metaDataType, apiKind, validStatusCodes || [200]);
-        return await this.handleResponse(apiKind, api, null, record);
+        const uri = await this.getUri(metaDataType, null, apiKind);
+        return await this.handleResponse(action, uri, record, validStatusCodes);
     }
 
-    private async doInternalById(action: RestAction = RestAction.GET, metaDataType: string = null, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = [200]): Promise<RestResult> {
-        await this.initialize(false);
-        const api = this.getApiMethod(action, metaDataType, apiKind, validStatusCodes);
-        return await this.handleResponse(apiKind, api, recordIdField, record);
-    }
-
-    private async* doInternalByIds(action: RestAction = RestAction.GET, metaDataType: string = null, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
-        await this.initialize(false);
-        const api = this.getApiMethod(action, metaDataType, apiKind, validStatusCodes);
+    private async* doInternalByIds(action: RestAction = RestAction.GET, metaDataType: string = null, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         for (const record of records) {
-            yield await this.handleResponse(apiKind, api, recordIdField, record);
+            yield await this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes);
         }
     }
 
-    private getApiMethod(action: RestAction = RestAction.GET, metaDataType: string = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = [200]): any {
-        const uri = this.getUri(apiKind, metaDataType);
-        const api = this.bent(uri, action.toString(), this.headers, validStatusCodes);
-        return api;
+    private async doInternalById(action: RestAction = RestAction.GET, metaDataType: string = null, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
+        let id = null;
+        if (apiKind !== ApiKind.COMPOSITE && record) {
+            id = Utils.getFieldValue(record, recordIdField, true);
+            // Delete the id field as SFDC API restuen BAD_REQUEST if the object has an ID
+            delete record[recordIdField];
+        }
+        const uri = await this.getUri(metaDataType, id, apiKind);
+        const result = await this.handleResponse(action, uri, record, validStatusCodes);
+        result.id = id;
+        return result;
     }
 
-    private getUri(apiKind: ApiKind = ApiKind.DEFAULT, metaDataType: string = null): string {
+    private async getUri(metaDataType: string = null, id: string = null, apiKind: ApiKind = ApiKind.DEFAULT): Promise<string> {
+        await this.initialize(false);
         let uri = `${this.orgInfo.instanceUrl}/services/data/v${this.apiVersion}/`;
         switch (apiKind) {
             case ApiKind.TOOLING:
@@ -234,22 +235,26 @@ export class SfdxClient {
         }
         uri += 'sobjects/';
         if (metaDataType) {
-            uri += metaDataType + '/';
+            const parts = metaDataType.split('.');
+            uri += parts[0] + '/';
+            if (id) {
+                uri += id + '/';
+            }
+            if (parts.length > 1) {
+                uri += parts[1] + '/';
+            }
         }
+
         return uri;
     }
 
-    private async handleResponse(apiKind: ApiKind = ApiKind.DEFAULT, apiPromise: any, recordIdField: string = SfdxClient.defailtIdField, record: any = null): Promise<RestResult> {
+    private async handleResponse(action: RestAction = RestAction.GET, uri: string, record: any = null, validStatusCodes = null): Promise<RestResult> {
         const result = new RestResult();
 
         try {
-            if (apiKind !== ApiKind.COMPOSITE && record) {
-                result.id = Utils.getFieldValue(record, recordIdField, true);
-                // Delete the id field as SFDC API restuen BAD_REQUEST if the object has an ID
-                delete record[recordIdField];
-            }
 
-            const response = await apiPromise(result.id, record);
+            const apiPromise = this.bent(action.toString(), this.headers, validStatusCodes || [200]);
+            const response = await apiPromise(uri, record);
 
             // Do we have content?
             result.code = response.statusCode;
@@ -258,7 +263,14 @@ export class SfdxClient {
                     return result;
                 default:
                     // Read payload
-                    result.body = await response.json();
+                    response.content_type = response.headers['content-type'];
+                    if (response.content_type === 'application/octetstream') {
+                        result.body = Buffer.from(await response.arrayBuffer());
+                        result.isBinary = true;
+                    } else {
+                        result.body = await response.json();
+                    }
+
                     return result;
             }
         } catch (err) {
@@ -268,5 +280,4 @@ export class SfdxClient {
         }
         return result;
     }
-
 }
