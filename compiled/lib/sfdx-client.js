@@ -302,7 +302,7 @@ class SfdxClient {
                     response.content_type = response.headers['content-type'];
                     if (response.content_type === 'application/octetstream') {
                         result.body = Buffer.from(await response.arrayBuffer());
-                        response.isBinary = true;
+                        result.isBinary = true;
                     }
                     else {
                         result.body = await response.json();

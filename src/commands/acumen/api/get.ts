@@ -2,7 +2,6 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
 import { SfdxClient, ApiKind } from '../../../lib/sfdx-client';
 import Utils from '../../../lib/utils';
-import path = require('path');
 
 export default class Unmask extends CommandBase {
   public static description = CommandBase.messages.getMessage('api.get.commandDescription');
@@ -14,7 +13,7 @@ export default class Unmask extends CommandBase {
     Performs the GET REST API action against the Account metadata type with an id of 068r0000003slVtAAI and writes the body to ./output/files/068r0000003slVtAAI.json.`,
     `$ sfdx acumen:api:get -u myOrgAlias -m ContentVersion.VersionData -i 068r0000003slVtAAI -o ./output/files/{Id}.pdf
     Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and writes the VersionData field value body to 068r0000003slVtAAI.pdf.
-    NOTE: Not all metadata types support field data access.`,
+    NOTE: Not all metadata types support field data access.`
   ];
 
   protected static flagsConfig = {
@@ -60,9 +59,9 @@ export default class Unmask extends CommandBase {
         const outFilePath = this.flags.output || '{Id}.json';
         const content = response.getContent();
         if (response.isBinary) {
-          await Utils.writeFile(outFilePath.replace('{Id}',response.id), content);
+          await Utils.writeFile(outFilePath.replace('{Id}', response.id), content);
         } else {
-          await Utils.writeFile(outFilePath.replace('{Id}',response.id), JSON.stringify(content));
+          await Utils.writeFile(outFilePath.replace('{Id}', response.id), JSON.stringify(content));
         }
       }
     } catch (err) {

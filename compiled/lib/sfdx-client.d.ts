@@ -16,7 +16,7 @@ declare class RestResult {
     code: number;
     body: any;
     isError: boolean;
-    content_type: string;
+    contentType: string;
     isBinary: boolean;
     throw(): Error;
     getContent(): any;

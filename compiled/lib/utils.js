@@ -240,8 +240,8 @@ class Utils {
         }
         return currentCwd;
     }
-    static async writeFile(path, contents) {
-        await fs_1.promises.writeFile(path, contents);
+    static async writeFile(filePath, contents) {
+        await fs_1.promises.writeFile(filePath, contents);
     }
 }
 exports.default = Utils;

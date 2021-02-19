@@ -260,15 +260,16 @@ OPTIONS
                                                                                     this command invocation
 
 EXAMPLES
-  $ sfdx acumen:api:get -u myOrgAlias -m ContentVersion -i 068r0000003slVtAAI
+  $ sfdx acumen:api:get -u myOrgAlias -m Account -i 068r0000003slVtAAI
+       Performs the GET REST API action against the Account metadata type with an id of 068r0000003slVtAAI and writes 
+  the body to 068r0000003slVtAAI.json.
+  $ sfdx acumen:api:get -u myOrgAlias -t true -m Account -i 068r0000003slVtAAI -o ./output/files/{Id}.json
+       Performs the GET REST API action against the Account metadata type with an id of 068r0000003slVtAAI and writes 
+  the body to ./output/files/068r0000003slVtAAI.json.
+  $ sfdx acumen:api:get -u myOrgAlias -m ContentVersion.VersionData -i 068r0000003slVtAAI -o ./output/files/{Id}.pdf
        Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
-  writes the body to 068r0000003slVtAAI.json.
-  $ sfdx acumen:api:get -u myOrgAlias -m ContentVersion.VersionData -i 068r0000003slVtAAI
-       Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
-  writes the VersionData field value body to 068r0000003slVtAAI.json.
-  $ sfdx acumen:api:get -u myOrgAlias -t true -m ContentVersion -i 068r0000003slVtAAI -o ./output/files
-       Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
-  writes the body to ./output/files/068r0000003slVtAAI.json.
+  writes the VersionData field value body to 068r0000003slVtAAI.pdf.
+       NOTE: Not all metadata types support field data access.
 ```
 
 ## `sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`

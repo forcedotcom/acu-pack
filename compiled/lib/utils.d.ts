@@ -31,6 +31,6 @@ export default class Utils {
     static writeObjectToXmlFile(filePath: string, metadata: any, xmlOptions?: any): Promise<string>;
     static readObjectFromXmlFile(filePath: string, xmlOptions?: any): Promise<any>;
     static setCwd(newCwdPath: string): string;
-    static writeFile(path: string, contents: any): Promise<void>;
+    static writeFile(filePath: string, contents: any): Promise<void>;
     private static glob;
 }
