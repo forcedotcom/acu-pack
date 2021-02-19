@@ -63,6 +63,30 @@ $ sfdx acumen -h
 ```
 NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_allowlist)
 
+# Issues
+## MAC
+After installing acu-pack you may receive an error when attempting to run an acu-pack command for the first time. 
+The error will likely resemble the following:
+```sh-session
+/usr/local/bin/sfdx: line 33: cd: HOME not set
+```
+
+Edit the file(s) indicated and update the line indicated in the error message from:
+```sh-session
+32	DIR=$(get_script_dir)
+33	CLI_HOME=$(cd && pwd)
+34	XDG_DATA_HOME="${XDG_DATA_HOME:="$CLI_HOME/.local/share"}"
+```
+
+to include a tilda (~) as follows:
+
+```sh-session
+32	DIR=$(get_script_dir)
+33	CLI_HOME=$(cd ~ && pwd)
+34	XDG_DATA_HOME="${XDG_DATA_HOME:="$CLI_HOME/.local/share"}"
+```
+
+
 # Commands
 <!-- commands -->
 * [`sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
