@@ -1,9 +1,12 @@
 import { OptionsBase } from './options';
 
 export default class SchemaOptions extends OptionsBase {
+    
+
     public excludeCustomObjectNames: string[] = [];
     public includeCustomObjectNames: string[] = [];
     public outputDefs = [];
+    public outputDefMap = new Map<string, string[]>();
 
     public excludeFieldIfTrueFilter: string;
 
@@ -13,6 +16,7 @@ export default class SchemaOptions extends OptionsBase {
         if (this.excludeFieldIfTrueFilter) {
             code += `if( ${this.excludeFieldIfTrueFilter} ) { return []; } `;
         }
+        const defs = this.outputDefMap.get()
         if (this.outputDefs && this.outputDefs.length > 0) {
             for (const outputDef of this.outputDefs[0]) {
                 code += `row.push(${outputDef.split('|')[1]});`;
@@ -98,6 +102,49 @@ export default class SchemaOptions extends OptionsBase {
                 ];
 
                 this.outputDefs = [fieldKeys, childObjectKeys, recordTypeDefs];
+
+                this.outputDefMap.set('Sheet1', [
+                    'SObjectName|schema.name',
+                    'Name|field.name',
+                    'Label|field.label',
+                    'Datatype|field.type',
+                    'Length|field.length',
+                    'Precision|field.precision',
+                    'Scale|field.scale',
+                    'Digits|field.digits',
+                    'IsCustom|field.custom',
+                    'IsDeprecatedHidden|field.deprecatedAndHidden',
+                    'IsAutonumber|field.autoNumber',
+                    'DefaultValue|field.defaultValue',
+                    'IsFormula|field.calculated',
+                    'Formula|field.calculatedFormula',
+                    'IsRequired|!field.nillable',
+                    'IsExternalId|field.externalId',
+                    'IsUnique|field.unique',
+                    'IsCaseSensitive|field.caseSensitive',
+                    'IsPicklist|field.picklistValues.length>0',
+                    'IsPicklistDependent|field.dependentPicklist',
+                    "PicklistValues|getPicklistValues(field).join(',')",
+                    'PicklistValueDefault|getPicklistDefaultValue(field)',
+                    'IsLookup|field.referenceTo.length>0',
+                    "LookupTo|field.referenceTo.join(',')",
+                    'IsCreateable|field.createable',
+                    'IsUpdateable|field.updateable',
+                    'IsEncrypted|field.encrypted',
+                    'HelpText|field.inlineHelpText'
+                ]);
+                this.outputDefMap.set('Sheet2', [
+                    'ParentObjectName|schema.name',
+                    'ChildObjectName|childRelationship.childSObject',
+                    'LookUpFieldOnChildObject|childRelationship.field',
+                    'ChildRelationShipName|childRelationship.relationshipName'
+                ]);
+                this.outputDefMap.set('Sheet3', [
+                    'SObjectName|schema.name',
+                    'RecordTypeName|recordTypeInfo.name',
+                    'RecordTypeLabel|recordTypeInfo.developerName',
+                    'IsMaster|recordTypeInfo.master'
+                ]);
                 this.excludeFieldIfTrueFilter = '';
             } catch (err) {
                 reject(err);
