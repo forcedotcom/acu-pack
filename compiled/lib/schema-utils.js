@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vm = require("vm");
 class SchemaUtils {
-    static *getDynamicSchemaData(schema, dynamicCode) {
+    static *getDynamicSchemaData(schema, dynamicCode, collection) {
         if (!schema) {
             throw new Error('The schema argument cannot be null.');
         }
@@ -12,46 +12,13 @@ class SchemaUtils {
         if (!dynamicCode) {
             throw new Error('The dynamicCode argument cannot be null.');
         }
-        const context = SchemaUtils.dynamicContext;
-        context['schema'] = schema;
-        for (const field of schema.fields) {
-            context['field'] = field;
-            const row = vm.runInNewContext(dynamicCode, context);
-            yield row;
-        }
-    }
-    static *getDynamicRecordTypeData(schema, dynamicCode) {
-        if (!schema) {
-            throw new Error('The schema argument cannot be null.');
-        }
-        if (!schema.recordTypeInfos) {
-            throw new Error('The schema argument does not contains a RecordTypeInfos member.');
-        }
-        if (!dynamicCode) {
-            throw new Error('The dynamicCode argument cannot be null.');
+        if (!collection) {
+            throw new Error('The collection argument cannot be null.');
         }
         const context = SchemaUtils.dynamicContext;
         context['schema'] = schema;
-        for (const recordTypeInfo of schema.recordTypeInfos) {
-            context['recordTypeInfo'] = recordTypeInfo;
-            const row = vm.runInNewContext(dynamicCode, context);
-            yield row;
-        }
-    }
-    static *getDynamicChildObjectTypeData(schema, dynamicCode) {
-        if (!schema) {
-            throw new Error('The schema argument cannot be null.');
-        }
-        if (!schema.childRelationships) {
-            throw new Error('The schema argument does not contains a childRelationships member.');
-        }
-        if (!dynamicCode) {
-            throw new Error('The dynamicCode argument cannot be null.');
-        }
-        const context = SchemaUtils.dynamicContext;
-        context['schema'] = schema;
-        for (const childRelationship of schema.childRelationships) {
-            context['childRelationship'] = childRelationship;
+        for (const item of collection) {
+            context['item'] = item;
             const row = vm.runInNewContext(dynamicCode, context);
             yield row;
         }

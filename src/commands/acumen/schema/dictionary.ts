@@ -42,22 +42,14 @@ export default class Dictionary extends CommandBase {
     // Read/Write the options file if it does not exist already
     this.options = await OptionsFactory.get(SchemaOptions, this.flags.options);
 
-    const dynamicCode = this.options.getDynamicCode();
-    const dynamicRecordTypeCode = this.options.getDynamicRecordTypeCode();
-    const dynamicChildObjectTypeCode = this.options.getDynamicChildObjectTypeCode();
-
     try {
       const orgAlias = this.flags.targetusername;
-      const fieldDataSheet = `schema-${orgAlias}.tmp`;
-      const childObjectDataSheet = `childObject-${orgAlias}.tmp`;
-      const recordTypeDataSheet = `recordType-${orgAlias}.tmp`;
+      const schemaTmpFile = `schema-${orgAlias}.tmp`;
 
       const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
 
       // Create for writing - truncates if exists
-      const fieldStream = createWriteStream(fieldDataSheet, { flags: 'w' });
-      const childObjectStream = createWriteStream(childObjectDataSheet, { flags: 'w' });
-      const recordTypeStream = createWriteStream(recordTypeDataSheet, { flags: 'w' });
+      const fileStream = createWriteStream(schemaTmpFile, { flags: 'w' });
 
       let counter = 0;
       const schemas = new Set<string>();
@@ -69,64 +61,43 @@ export default class Dictionary extends CommandBase {
           if (schemas.has(schema.name)) {
             continue;
           }
-          for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode)) {
-            if (row.length > 0) {
-              fieldStream.write(`${JSON.stringify(row)}\r\n`);
+          for (const [name, outputDefs] of this.options.outputDefMap) {
+            fileStream.write(`*${name}\r\n`);
+            const dynamicCode = this.options.getDynamicCode(outputDefs);
+            const collection = schema[name];
+            for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode, collection)) {
+              if (row.length > 0) {
+                fileStream.write(`${JSON.stringify(row)}\r\n`);
+              }
             }
           }
-
-          for await (const row of SchemaUtils.getDynamicChildObjectTypeData(schema, dynamicChildObjectTypeCode)) {
-            if (row.length === 4) {
-              childObjectStream.write(`${JSON.stringify(row)}\r\n`);
-            }
-          }
-          const retrievedRecordTypes = [];
-          for await (const row of SchemaUtils.getDynamicRecordTypeData(schema, dynamicRecordTypeCode)) {
-            if (row.length === 4) {
-              retrievedRecordTypes.push(row);
-            }
-          }
-          if (retrievedRecordTypes.length > 1) {
-            for (const row of retrievedRecordTypes) {
-                recordTypeStream.write(`${JSON.stringify(row)}\r\n`);
-
-            }
-          }
-
           schemas.add(schema.name);
         } catch (err) {
           this.ux.log(`FAILED: ${err.message}.`);
         }
       }
-      fieldStream.end();
-      childObjectStream.end();
-      recordTypeStream.end();
+      fileStream.end();
 
       try {
         const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, orgAlias);
         this.ux.log(`Writing Report: ${reportPath}`);
 
-        const headers = this.getColumnRow();
-        const fieldSheet = [[...headers[0]]];
-        const recordTypeSheet = [[...headers[1]]];
-        const childObjectSheet = [[...headers[2]]];
-        for await (const line of Utils.readFileLines(fieldDataSheet)) {
-          fieldSheet.push(JSON.parse(line));
-        }
-        for await (const line of Utils.readFileLines(childObjectDataSheet)) {
-          childObjectSheet.push(JSON.parse(line));
-        }
-        for await (const line of Utils.readFileLines(recordTypeDataSheet)) {
-          recordTypeSheet.push(JSON.parse(line));
-        }
-
         const workbookMap = new Map<string, string[][]>();
-
-        workbookMap.set('Fields', fieldSheet );
-        workbookMap.set('Record Types', recordTypeSheet);
-        workbookMap.set('Child Objects', childObjectSheet);
-
+        let sheetName: string = null;
+        let sheet: string[][] = null;
+        for await (const line of Utils.readFileLines(schemaTmpFile)) {
+          if (line.startsWith('*')) {
+            sheetName = line.substring(1);
+            const outputDefs = this.options.outputDefMap.get(sheetName);
+            const headers = this.getColumnRow(outputDefs);
+            workbookMap.set(sheetName, [[...headers]]);
+            sheet = workbookMap.get(sheetName);
+            continue;
+          }
+          sheet.push(JSON.parse(line));
+        }
         Office.writeXlxsWorkbook(workbookMap, reportPath);
+
       } catch (err) {
         this.ux.log('Error Writing XLSX Report: ' + err.message);
         throw err;
@@ -135,30 +106,18 @@ export default class Dictionary extends CommandBase {
       this.ux.log('Done.');
 
       // Clean up file at end
-      await Utils.deleteFile(fieldDataSheet);
-      await Utils.deleteFile(childObjectDataSheet);
-      await Utils.deleteFile(recordTypeDataSheet);
+      await Utils.deleteFile(schemaTmpFile);
     } catch (err) {
       throw err;
     }
   }
 
-  private getColumnRow(): string[][] {
-    const fieldHeader = [];
-    const childObjectHeader = [];
-    const recordTypeHeader = [];
-    let row = [];
-    for (const outputDef of this.options.outputDefs[0]) {
-      fieldHeader.push(outputDef.split('|')[0]);
+  private getColumnRow(outputDefs: string[]): string[] {
+    const row = [];
+    for (const outputDef of outputDefs) {
+      row.push(outputDef.split('|')[0]);
     }
-    for (const recordType of this.options.outputDefs[2]) {
-      recordTypeHeader.push(recordType.split('|')[0]);
-    }
-    for (const childObject of this.options.outputDefs[1]) {
-      childObjectHeader.push(childObject.split('|')[0]);
-    }
-    row = [fieldHeader, recordTypeHeader, childObjectHeader];
-    return row ;
+    return row;
   }
 
   private async getSortedTypeNames(orgAlias: string): Promise<string[]> {
