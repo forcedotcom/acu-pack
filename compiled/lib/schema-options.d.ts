@@ -4,8 +4,8 @@ export default class SchemaOptions extends OptionsBase {
     includeCustomObjectNames: string[];
     outputDefMap: Map<string, string[]>;
     excludeFieldIfTrueFilter: string;
-    getDynamicCode(outputDefs: any[]): string;
-    getDynamicChildObjectTypeCode(outputDefs: any[]): string;
+    getDynamicCode(sheetName?: string): string;
+    getDynamicChildObjectTypeCode(sheetName?: string): string;
     deserialize(serializedOptions: string): Promise<void>;
     serialize(): Promise<string>;
     protected loadDefaults(): Promise<void>;

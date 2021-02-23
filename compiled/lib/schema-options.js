@@ -9,30 +9,32 @@ class SchemaOptions extends options_1.OptionsBase {
         this.includeCustomObjectNames = [];
         this.outputDefMap = new Map();
     }
-    getDynamicCode(outputDefs) {
+    getDynamicCode(sheetName = null) {
         let code = 'main(); function main() { const row=[];';
         if (this.excludeFieldIfTrueFilter) {
             code += `if( ${this.excludeFieldIfTrueFilter} ) { return []; } `;
         }
-        if (Array.isArray(outputDefs)) {
-            for (const outputDef of outputDefs) {
-                code += `row.push(${outputDef.split('|')[1]});`;
-            }
+        const outputDefs = sheetName
+            ? this.outputDefMap.get(sheetName)
+            : this.outputDefMap.get(this.outputDefMap.keys[0]);
+        for (const outputDef of outputDefs) {
+            code += `row.push(${outputDef.split('|')[1]});`;
         }
         code += 'return row; }';
         return code;
     }
-    getDynamicChildObjectTypeCode(outputDefs) {
+    getDynamicChildObjectTypeCode(sheetName = null) {
         let code = 'main(); function main() { const row=[];';
         if (this.excludeFieldIfTrueFilter) {
             code += `if( ${this.excludeFieldIfTrueFilter} ) { return []; } `;
         }
-        if (Array.isArray(outputDefs)) {
-            for (const outputDef of outputDefs) {
-                const field = outputDef.split('|')[1];
-                // Push null to not skew column alignment
-                code += `${field} ? row.push(${field}) : row.push(null);`;
-            }
+        const outputDefs = sheetName
+            ? this.outputDefMap.get(sheetName)
+            : this.outputDefMap.get(this.outputDefMap.keys()[0]);
+        for (const outputDef of outputDefs) {
+            const field = outputDef.split('|')[1];
+            // Push null to not skew column alignment
+            code += `${field} ? row.push(${field}) : row.push(null);`;
         }
         code += 'return row; }';
         return code;

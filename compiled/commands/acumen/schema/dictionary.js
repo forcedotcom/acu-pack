@@ -16,10 +16,6 @@ class Dictionary extends command_base_1.CommandBase {
         var e_1, _a, e_2, _b;
         // Read/Write the options file if it does not exist already
         this.options = await options_factory_1.OptionsFactory.get(schema_options_1.default, this.flags.options);
-        //const dynamicMethods = new Map<string,string>();
-        //const dynamicCode = this.options.getDynamicCode(this.options.outputDefMap.get('Fields'));
-        //const dynamicRecordTypeCode = this.options.getDynamicCode(this.options.outputDefMap.get('RecordTypes'));
-        //const dynamicChildObjectTypeCode = this.options.getDynamicChildObjectTypeCode();
         try {
             const orgAlias = this.flags.targetusername;
             const schemaTmpFile = `schema-${orgAlias}.tmp`;
@@ -36,9 +32,9 @@ class Dictionary extends command_base_1.CommandBase {
                     if (schemas.has(schema.name)) {
                         continue;
                     }
-                    for (const [name, outputDefs] of this.options.outputDefMap) {
+                    for (const name of this.options.outputDefMap.keys()) {
                         fileStream.write(`*${name}\r\n`);
-                        const dynamicCode = this.options.getDynamicCode(outputDefs);
+                        const dynamicCode = this.options.getDynamicCode(name);
                         const collection = schema[name];
                         try {
                             for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection)), _d; _d = await _c.next(), !_d.done;) {

@@ -29,32 +29,30 @@ describe('SchemaOptions Tests', function() {
     const testOptions = await OptionsFactory.get(SchemaOptions);
     // It contains default data
     expect(testOptions).is.not.null;
-    expect(testOptions.outputDefs[0]).is.not.null;
-    expect(testOptions.outputDefs[1]).is.not.null;
-    expect(testOptions.outputDefs[2]).is.not.null;
-    expect(testOptions.outputDefs[0].length).to.not.equal(0);
+    expect(testOptions.outputDefMap).is.not.null;
+    for(const [name, outputDefs] of testOptions.outputDefMap){
+      expect(name).is.not.null;
+      expect(outputDefs).is.not.null;  
+      expect(outputDefs.length).to.not.equal(0);
+    }
     expect(testOptions.excludeFieldIfTrueFilter).to.equal('');
   });
   describe('getDynamicCode Tests', function() {
     it('Works without outputDefs', async function() {
       const testOptions = await OptionsFactory.get(SchemaOptions);
-      testOptions.outputDefs = [];
+      testOptions.outputDefMap = new Map<string,string[]>();
       const dynamicCode = testOptions.getDynamicCode();
       const childObjectDynamicCode = testOptions.getDynamicChildObjectTypeCode();
-      const recordTypeDynamicCode = testOptions.getDynamicRecordTypeCode();
       expect(dynamicCode).is.not.null;
       expect(childObjectDynamicCode).is.not.null;
-      expect(recordTypeDynamicCode).is.not.null;
       expect(dynamicCode).to.equal('main(); function main() { const row=[];return row; }');
       expect(childObjectDynamicCode).to.equal('main(); function main() { const row=[];return row; }');
-      expect(recordTypeDynamicCode).to.equal('main(); function main() { const row=[];return row; }');
     });
     it('Works with outputDefs', async function() {
       const testOptions = await OptionsFactory.get(SchemaOptions);
       testOptions.outputDefs = outputDefs;
       const dynamicCode = testOptions.getDynamicCode();
       const childObjectDynamicCode = testOptions.getDynamicChildObjectTypeCode();
-      const recordTypeDynamicCode = testOptions.getDynamicRecordTypeCode();
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.contain('main(); function main() { const row=[];');
       expect(dynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);

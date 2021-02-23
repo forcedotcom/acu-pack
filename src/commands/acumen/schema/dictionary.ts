@@ -61,10 +61,13 @@ export default class Dictionary extends CommandBase {
           if (schemas.has(schema.name)) {
             continue;
           }
-          for (const [name, outputDefs] of this.options.outputDefMap) {
+          for (const name of this.options.outputDefMap.keys()) {
             fileStream.write(`*${name}\r\n`);
-            const dynamicCode = this.options.getDynamicCode(outputDefs);
             const collection = schema[name];
+            if (!collection) {
+              continue;
+            }
+            const dynamicCode = this.options.getDynamicCode(name);
             for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode, collection)) {
               if (row.length > 0) {
                 fileStream.write(`${JSON.stringify(row)}\r\n`);
