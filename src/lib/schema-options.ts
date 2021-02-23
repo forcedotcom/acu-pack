@@ -125,13 +125,13 @@ export default class SchemaOptions extends OptionsBase {
                     `IsEncrypted|${SchemaUtils.CONTEXT_FIELD}.encrypted`,
                     `HelpText|${SchemaUtils.CONTEXT_FIELD}.inlineHelpText`
                 ]);
-                this.outputDefMap.set('recordTypeInfos', [
+                this.outputDefMap.set('childRelationships', [
                     `ParentObjectName|${SchemaUtils.CONTEXT_SCHEMA}.name`,
                     `ChildObjectName|${SchemaUtils.CONTEXT_FIELD}.childSObject`,
                     `LookUpFieldOnChildObject|${SchemaUtils.CONTEXT_FIELD}.field`,
                     `ChildRelationShipName|${SchemaUtils.CONTEXT_FIELD}.relationshipName`
                 ]);
-                this.outputDefMap.set('childRelationships', [
+                this.outputDefMap.set('recordTypeInfos', [
                     `SObjectName|${SchemaUtils.CONTEXT_SCHEMA}.name`,
                     `RecordTypeName|${SchemaUtils.CONTEXT_FIELD}.name`,
                     `RecordTypeLabel|${SchemaUtils.CONTEXT_FIELD}.developerName`,
