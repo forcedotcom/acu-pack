@@ -5,5 +5,7 @@ export default class SchemaOptions extends OptionsBase {
     outputDefs: any[];
     excludeFieldIfTrueFilter: string;
     getDynamicCode(): string;
+    getDynamicRecordTypeCode(): string;
+    getDynamicChildObjectTypeCode(): string;
     protected loadDefaults(): Promise<void>;
 }
