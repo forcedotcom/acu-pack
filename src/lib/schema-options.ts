@@ -86,7 +86,7 @@ export default class SchemaOptions extends OptionsBase {
                 const childObjectKeys = [
                     'ParentObjectName|schema.name',
                     'ChildObjectName|childRelationship.childSObject',
-                    'LookUpFieldonChildObject|childRelationship.field',
+                    'LookUpFieldOnChildObject|childRelationship.field',
                     'ChildRelationShipName|childRelationship.relationshipName'
                 ];
 
