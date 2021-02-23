@@ -29,27 +29,6 @@ export default class SchemaOptions extends OptionsBase {
         return code;
     }
 
-    public getDynamicChildObjectTypeCode(sheetName: string = null): string {
-        let code = 'main(); function main() { const row=[];';
-
-        if (this.excludeFieldIfTrueFilter) {
-            code += `if( ${this.excludeFieldIfTrueFilter} ) { return []; } `;
-        }
-        const outputDefs = sheetName
-            ? this.outputDefMap.get(sheetName)
-            : this.outputDefMap.get(this.outputDefMap.keys()[0]);
-
-        if (outputDefs) {
-            for (const outputDef of outputDefs) {
-                const field = outputDef.split('|')[1];
-                // Push null to not skew column alignment
-                code += `${field} ? row.push(${field}) : row.push(null);`;
-            }
-        }
-        code += 'return row; }';
-        return code;
-    }
-
     public async deserialize(serializedOptions: string): Promise<void> {
         return new Promise((resolve, reject) => {
             try {

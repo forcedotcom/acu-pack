@@ -20,11 +20,8 @@ describe('SchemaOptions Tests', function() {
       const testOptions = await OptionsFactory.get(SchemaOptions);
       testOptions.outputDefMap = new Map<string,string[]>();
       const dynamicCode = testOptions.getDynamicCode();
-      const childObjectDynamicCode = testOptions.getDynamicChildObjectTypeCode();
       expect(dynamicCode).is.not.null;
-      expect(childObjectDynamicCode).is.not.null;
       expect(dynamicCode).to.equal('main(); function main() { const row=[];return row; }');
-      expect(childObjectDynamicCode).to.equal('main(); function main() { const row=[];return row; }');
     });
     it('Works with outputDefs', async function() {
       const testOptions = await OptionsFactory.get(SchemaOptions);
@@ -39,7 +36,7 @@ describe('SchemaOptions Tests', function() {
       expect(recordTypeInfosDynamicCode).to.contain('main(); function main() { const row=[];');
       expect(recordTypeInfosDynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
 
-      const childObjectDynamicCode = testOptions.getDynamicChildObjectTypeCode('childRelationships');
+      const childObjectDynamicCode = testOptions.getDynamicCode('childRelationships');
       expect(childObjectDynamicCode).is.not.null;
       expect(childObjectDynamicCode).to.contain('main(); function main() { const row=[];');
       expect(childObjectDynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
@@ -54,7 +51,7 @@ describe('SchemaOptions Tests', function() {
 
       for (const outputDef of testOptions.outputDefMap.get('childRelationships')) {
         const field = outputDef.split('|')[1];
-        expect(childObjectDynamicCode).to.contain(`${field} ? row.push(${field}) : row.push(null);`);
+        expect(childObjectDynamicCode).to.contain(`row.push(${field});`);
       }
       
     });

@@ -19,7 +19,7 @@ class Dictionary extends command_base_1.CommandBase {
         try {
             const orgAlias = this.flags.targetusername;
             const schemaTmpFile = `schema-${orgAlias}.tmp`;
-            const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
+            const sortedTypeNames = (await this.getSortedTypeNames(orgAlias)).slice(0, 5);
             // Create for writing - truncates if exists
             const fileStream = fs_1.createWriteStream(schemaTmpFile, { flags: 'w' });
             let counter = 0;
@@ -34,8 +34,11 @@ class Dictionary extends command_base_1.CommandBase {
                     }
                     for (const name of this.options.outputDefMap.keys()) {
                         fileStream.write(`*${name}\r\n`);
-                        const dynamicCode = this.options.getDynamicCode(name);
                         const collection = schema[name];
+                        if (!collection) {
+                            continue;
+                        }
+                        const dynamicCode = this.options.getDynamicCode(name);
                         try {
                             for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection)), _d; _d = await _c.next(), !_d.done;) {
                                 const row = _d.value;

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const options_1 = require("./options");
 const sfdx_core_1 = require("./sfdx-core");
+const schema_utils_1 = require("../../src/lib/schema-utils");
 class SchemaOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);
@@ -17,24 +18,10 @@ class SchemaOptions extends options_1.OptionsBase {
         const outputDefs = sheetName
             ? this.outputDefMap.get(sheetName)
             : this.outputDefMap.get(this.outputDefMap.keys[0]);
-        for (const outputDef of outputDefs) {
-            code += `row.push(${outputDef.split('|')[1]});`;
-        }
-        code += 'return row; }';
-        return code;
-    }
-    getDynamicChildObjectTypeCode(sheetName = null) {
-        let code = 'main(); function main() { const row=[];';
-        if (this.excludeFieldIfTrueFilter) {
-            code += `if( ${this.excludeFieldIfTrueFilter} ) { return []; } `;
-        }
-        const outputDefs = sheetName
-            ? this.outputDefMap.get(sheetName)
-            : this.outputDefMap.get(this.outputDefMap.keys()[0]);
-        for (const outputDef of outputDefs) {
-            const field = outputDef.split('|')[1];
-            // Push null to not skew column alignment
-            code += `${field} ? row.push(${field}) : row.push(null);`;
+        if (outputDefs) {
+            for (const outputDef of outputDefs) {
+                code += `row.push(${outputDef.split('|')[1]});`;
+            }
         }
         code += 'return row; }';
         return code;
@@ -84,46 +71,46 @@ class SchemaOptions extends options_1.OptionsBase {
         return new Promise((resolve, reject) => {
             try {
                 this.outputDefMap.set('fields', [
-                    'SObjectName|schema.name',
-                    'Name|item.name',
-                    'Label|item.label',
-                    'Datatype|item.type',
-                    'Length|item.length',
-                    'Precision|item.precision',
-                    'Scale|item.scale',
-                    'Digits|item.digits',
-                    'IsCustom|item.custom',
-                    'IsDeprecatedHidden|item.deprecatedAndHidden',
-                    'IsAutonumber|item.autoNumber',
-                    'DefaultValue|item.defaultValue',
-                    'IsFormula|item.calculated',
-                    'Formula|item.calculatedFormula',
-                    'IsRequired|!item.nillable',
-                    'IsExternalId|item.externalId',
-                    'IsUnique|item.unique',
-                    'IsCaseSensitive|item.caseSensitive',
-                    'IsPicklist|item.picklistValues.length>0',
-                    'IsPicklistDependent|item.dependentPicklist',
-                    "PicklistValues|getPicklistValues(field).join(',')",
-                    'PicklistValueDefault|getPicklistDefaultValue(field)',
-                    'IsLookup|item.referenceTo.length>0',
-                    "LookupTo|item.referenceTo.join(',')",
-                    'IsCreateable|item.createable',
-                    'IsUpdateable|item.updateable',
-                    'IsEncrypted|item.encrypted',
-                    'HelpText|item.inlineHelpText'
-                ]);
-                this.outputDefMap.set('recordTypeInfos', [
-                    'ParentObjectName|schema.name',
-                    'ChildObjectName|item.childSObject',
-                    'LookUpFieldOnChildObject|item.field',
-                    'ChildRelationShipName|item.relationshipName'
+                    `SObjectName|${schema_utils_1.default.CONTEXT_SCHEMA}.name`,
+                    `Name|${schema_utils_1.default.CONTEXT_FIELD}.name`,
+                    `Label|${schema_utils_1.default.CONTEXT_FIELD}.label`,
+                    `Datatype|${schema_utils_1.default.CONTEXT_FIELD}.type`,
+                    `Length|${schema_utils_1.default.CONTEXT_FIELD}.length`,
+                    `Precision|${schema_utils_1.default.CONTEXT_FIELD}.precision`,
+                    `Scale|${schema_utils_1.default.CONTEXT_FIELD}.scale`,
+                    `Digits|${schema_utils_1.default.CONTEXT_FIELD}.digits`,
+                    `IsCustom|${schema_utils_1.default.CONTEXT_FIELD}.custom`,
+                    `IsDeprecatedHidden|${schema_utils_1.default.CONTEXT_FIELD}.deprecatedAndHidden`,
+                    `IsAutonumber|${schema_utils_1.default.CONTEXT_FIELD}.autoNumber`,
+                    `DefaultValue|${schema_utils_1.default.CONTEXT_FIELD}.defaultValue`,
+                    `IsFormula|${schema_utils_1.default.CONTEXT_FIELD}.calculated`,
+                    `Formula|${schema_utils_1.default.CONTEXT_FIELD}.calculatedFormula`,
+                    `IsRequired|!${schema_utils_1.default.CONTEXT_FIELD}.nillable`,
+                    `IsExternalId|${schema_utils_1.default.CONTEXT_FIELD}.externalId`,
+                    `IsUnique|${schema_utils_1.default.CONTEXT_FIELD}.unique`,
+                    `IsCaseSensitive|${schema_utils_1.default.CONTEXT_FIELD}.caseSensitive`,
+                    `IsPicklist|${schema_utils_1.default.CONTEXT_FIELD}.picklistValues.length>0`,
+                    `IsPicklistDependent|${schema_utils_1.default.CONTEXT_FIELD}.dependentPicklist`,
+                    `PicklistValues|getPicklistValues(${schema_utils_1.default.CONTEXT_FIELD}).join(',')`,
+                    `PicklistValueDefault|getPicklistDefaultValue(${schema_utils_1.default.CONTEXT_FIELD})`,
+                    `IsLookup|${schema_utils_1.default.CONTEXT_FIELD}.referenceTo.length>0`,
+                    `LookupTo|${schema_utils_1.default.CONTEXT_FIELD}.referenceTo.join(',')`,
+                    `IsCreateable|${schema_utils_1.default.CONTEXT_FIELD}.createable`,
+                    `IsUpdateable|${schema_utils_1.default.CONTEXT_FIELD}.updateable`,
+                    `IsEncrypted|${schema_utils_1.default.CONTEXT_FIELD}.encrypted`,
+                    `HelpText|${schema_utils_1.default.CONTEXT_FIELD}.inlineHelpText`
                 ]);
                 this.outputDefMap.set('childRelationships', [
-                    'SObjectName|schema.name',
-                    'RecordTypeName|item.name',
-                    'RecordTypeLabel|item.developerName',
-                    'IsMaster|item.master'
+                    `ParentObjectName|${schema_utils_1.default.CONTEXT_SCHEMA}.name`,
+                    `ChildObjectName|${schema_utils_1.default.CONTEXT_FIELD}.childSObject`,
+                    `LookUpFieldOnChildObject|${schema_utils_1.default.CONTEXT_FIELD}.field`,
+                    `ChildRelationShipName|${schema_utils_1.default.CONTEXT_FIELD}.relationshipName`
+                ]);
+                this.outputDefMap.set('recordTypeInfos', [
+                    `SObjectName|${schema_utils_1.default.CONTEXT_SCHEMA}.name`,
+                    `RecordTypeName|${schema_utils_1.default.CONTEXT_FIELD}.name`,
+                    `RecordTypeLabel|${schema_utils_1.default.CONTEXT_FIELD}.developerName`,
+                    `IsMaster|${schema_utils_1.default.CONTEXT_FIELD}.master`
                 ]);
                 this.excludeFieldIfTrueFilter = '';
             }

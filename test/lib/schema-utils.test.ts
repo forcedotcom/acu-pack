@@ -91,18 +91,11 @@ describe('SchemaUtils Tests', function () {
     it('Works with schema', function () {
       testOptions.excludeFieldIfTrueFilter = '';
       for (const [name, outputDefs] of testOptions.outputDefMap) {
-        let collection = schema[name];
-        let code = null;
-        switch (name) {
-          case 'fields':
-          case 'recordTypeInfos':
-            code = testOptions.getDynamicCode(name);
-            break;
-          case 'childRelationships':
-            code = testOptions.getDynamicChildObjectTypeCode(name);
-            break;
-        }
+        
+        const collection = schema[name];
         expect(collection).to.not.be.null;
+
+        const code = testOptions.getDynamicCode(name);
         expect(code).to.not.be.null;
 
         for (const row of SchemaUtils.getDynamicSchemaData(schema, code, collection)) {
