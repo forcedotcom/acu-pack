@@ -8,7 +8,45 @@ const fs_2 = require("fs");
 const readline_1 = require("readline");
 const xpath = require("xpath");
 const xmldom_1 = require("xmldom");
+const core_1 = require("@salesforce/core");
+var LoggerLevel;
+(function (LoggerLevel) {
+    LoggerLevel["trace"] = "trace";
+    LoggerLevel["debug"] = "debug";
+    LoggerLevel["info"] = "info";
+    LoggerLevel["warn"] = "warn";
+    LoggerLevel["error"] = "error";
+    LoggerLevel["fatal"] = "fatal";
+})(LoggerLevel = exports.LoggerLevel || (exports.LoggerLevel = {}));
 class Utils {
+    static async log(logMessage, logLevel, isJsonEnabled) {
+        if (!this.logger) {
+            this.logger = await core_1.Logger.root();
+            this.isJsonEnabled = isJsonEnabled;
+        }
+        if (!this.isJsonEnabled) {
+            switch (logLevel) {
+                case LoggerLevel.trace:
+                    this.logger.trace(logMessage);
+                    break;
+                case LoggerLevel.debug:
+                    this.logger.debug(logMessage);
+                    break;
+                case LoggerLevel.info:
+                    this.logger.info(logMessage);
+                    break;
+                case LoggerLevel.warn:
+                    this.logger.warn(logMessage);
+                    break;
+                case LoggerLevel.error:
+                    this.logger.error(logMessage);
+                    break;
+                case LoggerLevel.fatal:
+                    this.logger.fatal(logMessage);
+                    break;
+            }
+        }
+    }
     static getFiles(folderPath, isRecursive = true) {
         return tslib_1.__asyncGenerator(this, arguments, function* getFiles_1() {
             let fileItems;
@@ -240,11 +278,24 @@ class Utils {
         }
         return currentCwd;
     }
+    static async deleteDirectory(dirPath) {
+        if (Utils.pathExists(dirPath)) {
+            const getFiles = await fs_1.promises.readdir(dirPath);
+            if (getFiles) {
+                for (const file of getFiles) {
+                    await Utils.deleteFile(path.join(dirPath, file));
+                }
+            }
+            await fs_1.promises.rmdir(dirPath);
+        }
+    }
     static async writeFile(filePath, contents) {
         await fs_1.promises.writeFile(filePath, contents);
     }
 }
 exports.default = Utils;
+Utils.isJsonEnabled = false;
+Utils._tempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
 Utils.defaultXmlOptions = {
     renderOpts: { pretty: true, indent: '    ', newline: '\n' },
     xmldec: { version: '1.0', encoding: 'UTF-8' },

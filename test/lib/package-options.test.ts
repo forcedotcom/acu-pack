@@ -2,7 +2,7 @@ import { expect } from '@salesforce/command/lib/test';
 import { PackageOptions } from '../../src/lib/package-options';
 
 describe('PackageOptions Tests', () => {
-  it('Creates New Object', function () {
+  it('Creates New Object', function() {
     const packageOptions = new PackageOptions();
 
     // It contains default data
@@ -14,7 +14,7 @@ describe('PackageOptions Tests', () => {
     expect(packageOptions.sfdxLogLevel).equals('WARN');
     expect(packageOptions.skipFileNamePattern).is.undefined;
   });
-  it('Loads Defaults', function () {
+  it('Loads Defaults', function() {
     const packageOptions = new PackageOptions();
     packageOptions.loadDefaults();
     expect(packageOptions.excludeMetadataTypes.length).does.not.equal(0);

@@ -5,15 +5,60 @@ import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 import xpath = require('xpath');
 import { DOMParser as dom } from 'xmldom';
+import { Logger } from '@salesforce/core';
+
+export enum LoggerLevel {
+    trace = 'trace',
+    debug = 'debug',
+    info = 'info',
+    warn = 'warn',
+    error = 'error',
+    fatal = 'fatal'
+}
 
 export default class Utils {
 
+    public static logger: Logger;
+    public static isJsonEnabled = false;
+
+    public static _tempFilesPath: string = 'Processing_AcuPack_Temp_DoNotUse';
     public static defaultXmlOptions = {
         renderOpts: { pretty: true, indent: '    ', newline: '\n' },
         xmldec: { version: '1.0', encoding: 'UTF-8' },
         eofChar: '\n',
         encoding: 'utf-8'
     };
+    public static async log(logMessage: string, logLevel: string, isJsonEnabled?: boolean) {
+
+        if (!this.logger) {
+            this.logger = await Logger.root();
+            this.isJsonEnabled = isJsonEnabled;
+        }
+        if (!this.isJsonEnabled) {
+            switch (logLevel) {
+                case LoggerLevel.trace:
+                    this.logger.trace(logMessage);
+                    break;
+                case LoggerLevel.debug:
+                    this.logger.debug(logMessage);
+                    break;
+                case LoggerLevel.info:
+                    this.logger.info(logMessage);
+                    break;
+                case LoggerLevel.warn:
+                    this.logger.warn(logMessage);
+                    break;
+                case LoggerLevel.error:
+                    this.logger.error(logMessage);
+                    break;
+                case LoggerLevel.fatal:
+                    this.logger.fatal(logMessage);
+                    break;
+            }
+
+        }
+
+    }
 
     public static async * getFiles(folderPath: string, isRecursive = true) {
         let fileItems;
@@ -253,9 +298,23 @@ export default class Utils {
         return currentCwd;
     }
 
+    public static async deleteDirectory(dirPath: string) {
+        if (Utils.pathExists(dirPath)) {
+            const getFiles = await fs.readdir(dirPath);
+            if (getFiles) {
+                for (const file of getFiles) {
+                    await Utils.deleteFile(path.join(dirPath, file));
+                }
+            }
+
+            await fs.rmdir(dirPath);
+        }
+    }
+
     public static async writeFile(filePath: string, contents: any): Promise<void> {
         await fs.writeFile(filePath, contents);
     }
 
     private static glob = require('util').promisify(require('glob'));
+
 }

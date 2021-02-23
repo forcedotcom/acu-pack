@@ -10,15 +10,9 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 <!-- toc -->
 * [Debugging your plugin](#debugging-your-plugin)
 * [Usage](#usage)
+* [Issues](#issues)
 * [Commands](#commands)
 <!-- tocstop -->
-
-* [Debugging your plugin](#debugging-your-plugin)
-* [Usage](#usage)
-* [Commands](#commands)
-
-<!-- tocstop -->
-
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
@@ -46,6 +40,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.tx
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m Account -i INSTANCE_ID
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u SIT -n CIMT
 ```
 
 2. Set some breakpoints in your command code
@@ -85,8 +80,6 @@ to include a tilda (~) as follows:
 33	CLI_HOME=$(cd ~ && pwd)
 34	XDG_DATA_HOME="${XDG_DATA_HOME:="$CLI_HOME/.local/share"}"
 ```
-
-
 # Commands
 <!-- commands -->
 * [`sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -98,6 +91,7 @@ to include a tilda (~) as follows:
 * [`sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcedeltagit--s-filepath--g-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcedeltamd5--s-filepath--m-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -450,6 +444,38 @@ OPTIONS
 EXAMPLE
   $ sfdx acumen:schema:dictionary -u myOrgAlias
        Generates a DataDictionary-myOrgAlias.xlsx file from an Org's configured Object & Field metadata.
+```
+
+## `sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Retrives Profiles from Org without need to generate package.xml
+
+```
+USAGE
+  $ sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -n, --names=names                                                                 (required) Comma seperated profile
+                                                                                    names with out any extension.Example
+                                                                                    "Admin,Agent". 5 Profiles can be
+                                                                                    retrieved at a time
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLE
+
+       $ sfdx acumen:schema:profile:retrieve -u myOrgAlias -n "Admin,Support"
+       Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile
 ```
 
 ## `sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
