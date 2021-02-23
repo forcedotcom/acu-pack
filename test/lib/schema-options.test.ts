@@ -2,28 +2,6 @@ import { expect } from '@salesforce/command/lib/test';
 import { OptionsFactory } from '../../src/lib/options-factory';
 import SchemaOptions from '../../src/lib/schema-options';
 
-const outputDefs = [[
-  'SchemaName|schema.name',
-  'FieldName|field.name',
-  'Label|field.label',
-  'Datatype|field.type',
-  'Length|field.length',
-  'HelpText|field.inlineHelpText'
-],
-[
-  'ParentObjectName|schema.name',
-  'ChildObjectName|childRelationship.childSObject',
-  'LookUpFieldonChildObject|childRelationship.field',
-  'ChildRelationShipName|childRelationship.relationshipName'
-],
-[
-  'SObjectName|schema.name',
-  'RecordTypeName|recordTypeInfo.name',
-  'RecordTypeLabel|recordTypeInfo.developerName',
-  'IsMaster|recordTypeInfo.master'
-]
-];
-
 describe('SchemaOptions Tests', function() {
   it('Creates New Object', async function() {
     const testOptions = await OptionsFactory.get(SchemaOptions);
@@ -50,35 +28,47 @@ describe('SchemaOptions Tests', function() {
     });
     it('Works with outputDefs', async function() {
       const testOptions = await OptionsFactory.get(SchemaOptions);
-      testOptions.outputDefs = outputDefs;
-      const dynamicCode = testOptions.getDynamicCode();
-      const childObjectDynamicCode = testOptions.getDynamicChildObjectTypeCode();
+      const dynamicCode = testOptions.getDynamicCode('fields');
+      
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.contain('main(); function main() { const row=[];');
       expect(dynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
 
-      for (const outputDef of testOptions.outputDefs[0]) {
+      const recordTypeInfosDynamicCode = testOptions.getDynamicCode('recordTypeInfos');
+      expect(recordTypeInfosDynamicCode).is.not.null;
+      expect(recordTypeInfosDynamicCode).to.contain('main(); function main() { const row=[];');
+      expect(recordTypeInfosDynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
+
+      const childObjectDynamicCode = testOptions.getDynamicChildObjectTypeCode('childRelationships');
+      expect(childObjectDynamicCode).is.not.null;
+      expect(childObjectDynamicCode).to.contain('main(); function main() { const row=[];');
+      expect(childObjectDynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
+
+      for (const outputDef of testOptions.outputDefMap.get('fields')) {
         expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
       }
-      for (const outputDef of testOptions.outputDefs[1]) {
-        expect(childObjectDynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+
+      for (const outputDef of testOptions.outputDefMap.get('recordTypeInfos')) {
+        expect(recordTypeInfosDynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
       }
-      for (const outputDef of testOptions.outputDefs[2]) {
-        expect(recordTypeDynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+
+      for (const outputDef of testOptions.outputDefMap.get('childRelationships')) {
+        const field = outputDef.split('|')[1];
+        expect(childObjectDynamicCode).to.contain(`${field} ? row.push(${field}) : row.push(null);`);
       }
+      
     });
     it('Works with excludeFieldIfTrueFilter', async function() {
       const testOptions = await OptionsFactory.get(SchemaOptions);
-      testOptions.outputDefs = outputDefs[0];
-      testOptions.excludeFieldIfTrueFilter = 'field.name == "mjm"';
-      const dynamicCode = testOptions.getDynamicCode();
+      testOptions.excludeFieldIfTrueFilter = 'item.name == "mjm"';
+      const dynamicCode = testOptions.getDynamicCode('fields');
 
       expect(dynamicCode).is.not.null;
       expect(dynamicCode).to.contain('main(); function main() { const row=[];');
 
       expect(dynamicCode).to.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
 
-      for (const outputDef of testOptions.outputDefs[0]) {
+      for (const outputDef of testOptions.outputDefMap.get('fields')) {
         expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
       }
     });

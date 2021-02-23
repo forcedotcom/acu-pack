@@ -1,5 +1,6 @@
 import { OptionsBase } from './options';
 import { SfdxCore } from './sfdx-core';
+import SchemaUtils from '../../src/lib/schema-utils';
 
 export default class SchemaOptions extends OptionsBase {
     public excludeCustomObjectNames: string[] = [];
@@ -18,10 +19,11 @@ export default class SchemaOptions extends OptionsBase {
             ? this.outputDefMap.get(sheetName)
             : this.outputDefMap.get(this.outputDefMap.keys[0]);
 
-        for (const outputDef of outputDefs) {
-            code += `row.push(${outputDef.split('|')[1]});`;
+        if (outputDefs) {
+            for (const outputDef of outputDefs) {
+                code += `row.push(${outputDef.split('|')[1]});`;
+            }
         }
-
         code += 'return row; }';
 
         return code;
@@ -37,12 +39,13 @@ export default class SchemaOptions extends OptionsBase {
             ? this.outputDefMap.get(sheetName)
             : this.outputDefMap.get(this.outputDefMap.keys()[0]);
 
-        for (const outputDef of outputDefs) {
-            const field = outputDef.split('|')[1];
-            // Push null to not skew column alignment
-            code += `${field} ? row.push(${field}) : row.push(null);`;
+        if (outputDefs) {
+            for (const outputDef of outputDefs) {
+                const field = outputDef.split('|')[1];
+                // Push null to not skew column alignment
+                code += `${field} ? row.push(${field}) : row.push(null);`;
+            }
         }
-
         code += 'return row; }';
         return code;
     }
@@ -93,46 +96,46 @@ export default class SchemaOptions extends OptionsBase {
         return new Promise((resolve, reject) => {
             try {
                 this.outputDefMap.set('fields', [
-                    'SObjectName|schema.name',
-                    'Name|item.name',
-                    'Label|item.label',
-                    'Datatype|item.type',
-                    'Length|item.length',
-                    'Precision|item.precision',
-                    'Scale|item.scale',
-                    'Digits|item.digits',
-                    'IsCustom|item.custom',
-                    'IsDeprecatedHidden|item.deprecatedAndHidden',
-                    'IsAutonumber|item.autoNumber',
-                    'DefaultValue|item.defaultValue',
-                    'IsFormula|item.calculated',
-                    'Formula|item.calculatedFormula',
-                    'IsRequired|!item.nillable',
-                    'IsExternalId|item.externalId',
-                    'IsUnique|item.unique',
-                    'IsCaseSensitive|item.caseSensitive',
-                    'IsPicklist|item.picklistValues.length>0',
-                    'IsPicklistDependent|item.dependentPicklist',
-                    "PicklistValues|getPicklistValues(field).join(',')",
-                    'PicklistValueDefault|getPicklistDefaultValue(field)',
-                    'IsLookup|item.referenceTo.length>0',
-                    "LookupTo|item.referenceTo.join(',')",
-                    'IsCreateable|item.createable',
-                    'IsUpdateable|item.updateable',
-                    'IsEncrypted|item.encrypted',
-                    'HelpText|item.inlineHelpText'
+                    `SObjectName|${SchemaUtils.CONTEXT_SCHEMA}.name`,
+                    `Name|${SchemaUtils.CONTEXT_FIELD}.name`,
+                    `Label|${SchemaUtils.CONTEXT_FIELD}.label`,
+                    `Datatype|${SchemaUtils.CONTEXT_FIELD}.type`,
+                    `Length|${SchemaUtils.CONTEXT_FIELD}.length`,
+                    `Precision|${SchemaUtils.CONTEXT_FIELD}.precision`,
+                    `Scale|${SchemaUtils.CONTEXT_FIELD}.scale`,
+                    `Digits|${SchemaUtils.CONTEXT_FIELD}.digits`,
+                    `IsCustom|${SchemaUtils.CONTEXT_FIELD}.custom`,
+                    `IsDeprecatedHidden|${SchemaUtils.CONTEXT_FIELD}.deprecatedAndHidden`,
+                    `IsAutonumber|${SchemaUtils.CONTEXT_FIELD}.autoNumber`,
+                    `DefaultValue|${SchemaUtils.CONTEXT_FIELD}.defaultValue`,
+                    `IsFormula|${SchemaUtils.CONTEXT_FIELD}.calculated`,
+                    `Formula|${SchemaUtils.CONTEXT_FIELD}.calculatedFormula`,
+                    `IsRequired|!${SchemaUtils.CONTEXT_FIELD}.nillable`,
+                    `IsExternalId|${SchemaUtils.CONTEXT_FIELD}.externalId`,
+                    `IsUnique|${SchemaUtils.CONTEXT_FIELD}.unique`,
+                    `IsCaseSensitive|${SchemaUtils.CONTEXT_FIELD}.caseSensitive`,
+                    `IsPicklist|${SchemaUtils.CONTEXT_FIELD}.picklistValues.length>0`,
+                    `IsPicklistDependent|${SchemaUtils.CONTEXT_FIELD}.dependentPicklist`,
+                    `PicklistValues|getPicklistValues(${SchemaUtils.CONTEXT_FIELD}).join(',')`,
+                    `PicklistValueDefault|getPicklistDefaultValue(${SchemaUtils.CONTEXT_FIELD})`,
+                    `IsLookup|${SchemaUtils.CONTEXT_FIELD}.referenceTo.length>0`,
+                    `LookupTo|${SchemaUtils.CONTEXT_FIELD}.referenceTo.join(',')`,
+                    `IsCreateable|${SchemaUtils.CONTEXT_FIELD}.createable`,
+                    `IsUpdateable|${SchemaUtils.CONTEXT_FIELD}.updateable`,
+                    `IsEncrypted|${SchemaUtils.CONTEXT_FIELD}.encrypted`,
+                    `HelpText|${SchemaUtils.CONTEXT_FIELD}.inlineHelpText`
                 ]);
                 this.outputDefMap.set('recordTypeInfos', [
-                    'ParentObjectName|schema.name',
-                    'ChildObjectName|item.childSObject',
-                    'LookUpFieldOnChildObject|item.field',
-                    'ChildRelationShipName|item.relationshipName'
+                    `ParentObjectName|${SchemaUtils.CONTEXT_SCHEMA}.name`,
+                    `ChildObjectName|${SchemaUtils.CONTEXT_FIELD}.childSObject`,
+                    `LookUpFieldOnChildObject|${SchemaUtils.CONTEXT_FIELD}.field`,
+                    `ChildRelationShipName|${SchemaUtils.CONTEXT_FIELD}.relationshipName`
                 ]);
                 this.outputDefMap.set('childRelationships', [
-                    'SObjectName|schema.name',
-                    'RecordTypeName|item.name',
-                    'RecordTypeLabel|item.developerName',
-                    'IsMaster|item.master'
+                    `SObjectName|${SchemaUtils.CONTEXT_SCHEMA}.name`,
+                    `RecordTypeName|${SchemaUtils.CONTEXT_FIELD}.name`,
+                    `RecordTypeLabel|${SchemaUtils.CONTEXT_FIELD}.developerName`,
+                    `IsMaster|${SchemaUtils.CONTEXT_FIELD}.master`
                 ]);
                 this.excludeFieldIfTrueFilter = '';
             } catch (err) {
