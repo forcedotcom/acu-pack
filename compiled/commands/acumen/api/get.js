@@ -54,7 +54,7 @@ Unmask.examples = [
     Performs the GET REST API action against the Account metadata type with an id of 068r0000003slVtAAI and writes the body to ./output/files/068r0000003slVtAAI.json.`,
     `$ sfdx acumen:api:get -u myOrgAlias -m ContentVersion.VersionData -i 068r0000003slVtAAI -o ./output/files/{Id}.pdf
     Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and writes the VersionData field value body to 068r0000003slVtAAI.pdf.
-    NOTE: Not all metadata types support field data access.`,
+    NOTE: Not all metadata types support field data access.`
 ];
 Unmask.flagsConfig = {
     metadata: command_1.flags.string({
