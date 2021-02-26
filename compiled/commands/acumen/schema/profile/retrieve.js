@@ -31,7 +31,7 @@ class ProfileRetrieve extends command_base_1.CommandBase {
             throw new core_1.SfdxError(`Profiles not found in Org: ${notAvailableProfiles}`);
         }
         this.ux.log('Retrieving Profiles...');
-        const profileDownloader = new profile_download_1.ProfileDownload(orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);
+        const profileDownloader = new profile_download_1.ProfileDownload(this.org.getConnection(), orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);
         // Profile Directory Path
         const profileDirPath = path.join(process.cwd(), packageDir, 'main', 'default', 'profiles');
         const profileByPath = new Map();

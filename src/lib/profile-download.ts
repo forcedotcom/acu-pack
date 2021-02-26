@@ -1,10 +1,8 @@
-// import * as xmlBuilder from 'xml2js';
-// import format = require('xml-formatter');
-// import Profile from './metadata/sfdx-profile-metadata';
 import Utils from './utils';
 import path = require('path');
 import { UX } from '@salesforce/command';
 import { SfdxQuery } from './sfdx-query';
+import { Connection } from 'jsforce';
 
 const xmldec = { version: '1.0', encoding: 'UTF-8' };
 const profileNodeNamespace = 'http://soap.sforce.com/2006/04/metadata';
@@ -107,8 +105,7 @@ export class ProfileDownload {
     return profileMap;
   }
 
-  private static objPermissionStructure(objName: string, allowRead: boolean, allowCreate: boolean, allowEdit: boolean, 
-    allowDelete: boolean, viewAllRecords: boolean, modifyAllRecords: boolean): any {
+  private static objPermissionStructure(objName: string, allowRead: boolean, allowCreate: boolean, allowEdit: boolean, allowDelete: boolean, viewAllRecords: boolean, modifyAllRecords: boolean): any {
     const objStructure = {
       object: objName,
       allowRead,
@@ -132,6 +129,7 @@ export class ProfileDownload {
   public profileFilePath: Map<string, string> = new Map<string, string>();
 
   constructor(
+    public sfdxCon: Connection,
     public orgAlias: string,
     public profileList: string[],
     public profileIDMap: Map<string, string>,
@@ -148,7 +146,7 @@ export class ProfileDownload {
     const resultsArray: Array<Promise<any>> = [];
 
     for (const profileName of this.profileList) {
-      resultsArray.push(this.getProfileMetaData(this.orgAlias, profileName));
+      resultsArray.push(this.getProfileMetaData(profileName));
     }
 
     await Promise.all(resultsArray);
@@ -156,15 +154,29 @@ export class ProfileDownload {
     return this.profileFilePath;
   }
 
-  public async getProfileMetaData(orgAlias: string, profileName: string): Promise<void> {
+  public async retrieveProfileMetaData(profileName: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.sfdxCon.metadata
+        .readSync('Profile', profileName)
+        .then(async data => {
+          resolve(data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public async getProfileMetaData(profileName: string): Promise<void> {
 
     try {
-      const response = await SfdxQuery.doSoqlQuery(orgAlias, `SELECT Metadata FROM Profile WHERE Name='${profileName}'`, null, null, true);
+
+      this.ux.log(`Downloading \"${profileName}\" Profile ...`);
+      const response = await this.retrieveProfileMetaData(profileName);
       if (!response || response.length !== 1) {
         return;
       }
 
-      this.ux.log(`Downloading \"${profileName}\" Profile ...`);
       const filePath = path.join(
         path.join(this.rootDir, Utils._tempFilesPath, profileName + '.json')
       );

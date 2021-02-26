@@ -62,7 +62,8 @@ export default class ProfileRetrieve extends CommandBase {
     }
 
     this.ux.log('Retrieving Profiles...');
-    const profileDownloader = new ProfileDownload(orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);
+    const profileDownloader = new ProfileDownload(this.org.getConnection(), orgAlias, profileList,
+      orgAllProfilesMap, path.join(process.cwd()), this.ux);
 
     // Profile Directory Path
     const profileDirPath = path.join(process.cwd(), packageDir, 'main', 'default', 'profiles');
@@ -89,4 +90,3 @@ export default class ProfileRetrieve extends CommandBase {
     await Utils.deleteDirectory(path.join(process.cwd(), Utils._tempFilesPath));
   }
 }
-

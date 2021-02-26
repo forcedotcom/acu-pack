@@ -84,7 +84,7 @@ describe('Profile Command Tests', () => {
   });
   describe('Download Permissions', () => {
     it(' Download Permission', async () => {
-      const profileDownloader = new ProfileDownload(null, ['Admin', 'Admin1'], null, path.join(process.cwd()), await UX.create());
+      const profileDownloader = new ProfileDownload(null, null, ['Admin', 'Admin1'], null, path.join(process.cwd()), await UX.create());
       const permissions = await profileDownloader.downloadPermissions();
       expect(permissions).is.not.null;
       await Utils.deleteDirectory(path.join(process.cwd(), Utils._tempFilesPath));

@@ -1,8 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// import * as xmlBuilder from 'xml2js';
-// import format = require('xml-formatter');
-// import Profile from './metadata/sfdx-profile-metadata';
 const utils_1 = require("./utils");
 const path = require("path");
 const sfdx_query_1 = require("./sfdx-query");
@@ -23,7 +20,8 @@ const profileAPINameMatch = new Map([
     ['Standard Platform User', 'StandardAul']
 ]);
 class ProfileDownload {
-    constructor(orgAlias, profileList, profileIDMap, rootDir, ux) {
+    constructor(sfdxCon, orgAlias, profileList, profileIDMap, rootDir, ux) {
+        this.sfdxCon = sfdxCon;
         this.orgAlias = orgAlias;
         this.profileList = profileList;
         this.profileIDMap = profileIDMap;
@@ -114,18 +112,30 @@ class ProfileDownload {
         }
         const resultsArray = [];
         for (const profileName of this.profileList) {
-            resultsArray.push(this.getProfileMetaData(this.orgAlias, profileName));
+            resultsArray.push(this.getProfileMetaData(profileName));
         }
         await Promise.all(resultsArray);
         return this.profileFilePath;
     }
-    async getProfileMetaData(orgAlias, profileName) {
+    async retrieveProfileMetaData(profileName) {
+        return new Promise((resolve, reject) => {
+            this.sfdxCon.metadata
+                .readSync('Profile', profileName)
+                .then(async (data) => {
+                resolve(data);
+            })
+                .catch(err => {
+                reject(err);
+            });
+        });
+    }
+    async getProfileMetaData(profileName) {
         try {
-            const response = await sfdx_query_1.SfdxQuery.doSoqlQuery(orgAlias, `SELECT Metadata FROM Profile WHERE Name='${profileName}'`, null, null, true);
+            this.ux.log(`Downloading \"${profileName}\" Profile ...`);
+            const response = await this.retrieveProfileMetaData(profileName);
             if (!response || response.length !== 1) {
                 return;
             }
-            this.ux.log(`Downloading \"${profileName}\" Profile ...`);
             const filePath = path.join(path.join(this.rootDir, utils_1.default._tempFilesPath, profileName + '.json'));
             this.profileFilePath.set(profileName, filePath);
             const profileJson = response[0].Metadata;

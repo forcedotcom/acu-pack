@@ -1,5 +1,7 @@
 import { UX } from '@salesforce/command';
+import { Connection } from 'jsforce';
 export declare class ProfileDownload {
+    sfdxCon: Connection;
     orgAlias: string;
     profileList: string[];
     profileIDMap: Map<string, string>;
@@ -12,7 +14,8 @@ export declare class ProfileDownload {
     private static objPermissionStructure;
     private static fieldPermissionStructure;
     profileFilePath: Map<string, string>;
-    constructor(orgAlias: string, profileList: string[], profileIDMap: Map<string, string>, rootDir: string, ux: UX);
+    constructor(sfdxCon: Connection, orgAlias: string, profileList: string[], profileIDMap: Map<string, string>, rootDir: string, ux: UX);
     downloadPermissions(): Promise<Map<string, string>>;
-    getProfileMetaData(orgAlias: string, profileName: string): Promise<void>;
+    retrieveProfileMetaData(profileName: string): Promise<any>;
+    getProfileMetaData(profileName: string): Promise<void>;
 }

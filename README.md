@@ -34,13 +34,13 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/mer
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:dictionary -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:permissions -p force-app
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u SOQLDEV -m true -o test
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u ORG_ALIAS -m true -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m Account -i INSTANCE_ID
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u SIT -n CIMT
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n CIMT
 ```
 
 2. Set some breakpoints in your command code
