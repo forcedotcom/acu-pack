@@ -107,7 +107,7 @@ export class ProfileDownload {
     return profileMap;
   }
 
-  private static objPermissionStructure(objName: string, allowRead: boolean, allowCreate: boolean, allowEdit: boolean,
+  private static objPermissionStructure(objName: string, allowRead: boolean, allowCreate: boolean, allowEdit: boolean, 
     allowDelete: boolean, viewAllRecords: boolean, modifyAllRecords: boolean): any {
     const objStructure = {
       object: objName,
@@ -239,14 +239,6 @@ export class ProfileDownload {
     } catch (err) {
       this.ux.log(`Error downloading \"${profileName}\" Profile ...`);
       await Utils.log(JSON.stringify(err), 'error');
-    }
-  }
-
-  public async getProfile(orgAlias: string, profileName: string): Promise<void> {
-
-    const response = await SfdxQuery.doSoqlQuery(orgAlias, `SELECT Metadata FROM Profile WHERE Name='${profileName}'`, null, null, true);
-    if (!response || response.length !== 1) {
-      return;
     }
   }
 }
