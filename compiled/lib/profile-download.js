@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProfileDownload = void 0;
 const utils_1 = require("./utils");
 const path = require("path");
 const sfdx_query_1 = require("./sfdx-query");
@@ -132,13 +133,12 @@ class ProfileDownload {
     async getProfileMetaData(profileName) {
         try {
             this.ux.log(`Downloading \"${profileName}\" Profile ...`);
-            const response = await this.retrieveProfileMetaData(profileName);
-            if (!response || response.length !== 1) {
+            const profileJson = await this.retrieveProfileMetaData(profileName);
+            if (!profileJson) {
                 return;
             }
             const filePath = path.join(path.join(this.rootDir, utils_1.default._tempFilesPath, profileName + '.json'));
             this.profileFilePath.set(profileName, filePath);
-            const profileJson = response[0].Metadata;
             const retrievedObjects = [];
             if (profileJson['objectPermissions'] && Array.isArray(profileJson.objectPermissions)) {
                 for (const obj of profileJson.objectPermissions) {
