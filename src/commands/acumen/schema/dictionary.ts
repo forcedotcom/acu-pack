@@ -46,7 +46,7 @@ export default class Dictionary extends CommandBase {
       const orgAlias = this.flags.targetusername;
       const schemaTmpFile = `schema-${orgAlias}.tmp`;
 
-      const sortedTypeNames = (await this.getSortedTypeNames(orgAlias)).slice(0, 20);
+      const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
 
       // Create for writing - truncates if exists
       const fileStream = createWriteStream(schemaTmpFile, { flags: 'w' });
