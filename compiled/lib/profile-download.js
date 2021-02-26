@@ -117,7 +117,7 @@ class ProfileDownload {
         await Promise.all(resultsArray);
         return this.profileFilePath;
     }
-    async retrieveProfileMetaData(profileName) {
+    retrieveProfileMetaData(profileName) {
         return new Promise((resolve, reject) => {
             this.sfdxCon.metadata
                 .readSync('Profile', profileName)
