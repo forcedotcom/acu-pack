@@ -172,8 +172,8 @@ export class ProfileDownload {
     try {
 
       this.ux.log(`Downloading \"${profileName}\" Profile ...`);
-      const response = await this.retrieveProfileMetaData(profileName);
-      if (!response || response.length !== 1) {
+      const profileJson = await this.retrieveProfileMetaData(profileName);
+      if (!profileJson) {
         return;
       }
 
@@ -182,7 +182,6 @@ export class ProfileDownload {
       );
       this.profileFilePath.set(profileName, filePath);
 
-      const profileJson = response[0].Metadata;
       const retrievedObjects: string[] = [];
       if (profileJson['objectPermissions'] && Array.isArray(profileJson.objectPermissions)) {
         for (const obj of profileJson.objectPermissions as []) {
