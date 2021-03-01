@@ -103,6 +103,8 @@ to include a tilda (~) as follows:
 Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.
 
 ```
+Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.
+
 USAGE
   $ sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -140,6 +142,8 @@ EXAMPLES
 Clears the Apex Code Coverage data from the specified Org.
 
 ```
+Clears the Apex Code Coverage data from the specified Org.
+
 USAGE
   $ sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -170,6 +174,8 @@ EXAMPLE
 Executes Apex tests and includes Code Coverage metrics.
 
 ```
+Executes Apex tests and includes Code Coverage metrics.
+
 USAGE
   $ sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -208,6 +214,8 @@ EXAMPLES
 Pull Code Coverage metrics and generates a report.
 
 ```
+Pull Code Coverage metrics and generates a report.
+
 USAGE
   $ sfdx acumen:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -244,6 +252,8 @@ EXAMPLE
 Performs the GET REST action against the specified URL/URI.
 
 ```
+Performs the GET REST action against the specified URL/URI.
+
 USAGE
   $ sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -295,6 +305,8 @@ EXAMPLES
 Builds a standard SFDX source format package file from the specified org's existing metadata.
 
 ```
+Builds a standard SFDX source format package file from the specified org's existing metadata.
+
 USAGE
   $ sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion 
   <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -340,6 +352,8 @@ EXAMPLE
 Merges one SFDX package file into another.
 
 ```
+Merges one SFDX package file into another.
+
 USAGE
   $ sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -369,6 +383,8 @@ EXAMPLE
 Retrieve all metadata related to Profile security/access permissions.
 
 ```
+Retrieve all metadata related to Profile security/access permissions.
+
 USAGE
   $ sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] 
   [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -411,6 +427,8 @@ EXAMPLES
 Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.
 
 ```
+Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.
+
 USAGE
   $ sfdx acumen:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] 
   [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -451,6 +469,8 @@ EXAMPLE
 Retrives Profiles from Org without need to generate package.xml
 
 ```
+Retrives Profiles from Org without need to generate package.xml
+
 USAGE
   $ sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -483,6 +503,8 @@ EXAMPLE
 Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt
 
 ```
+Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt
+
 USAGE
   $ sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r 
   <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -530,6 +552,8 @@ EXAMPLE
 Uses an MD5 hash file to detect deltas.
 
 ```
+Uses an MD5 hash file to detect deltas.
+
 USAGE
   $ sfdx acumen:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r 
   <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -576,6 +600,11 @@ EXAMPLE
 Generate a security report based on configured permissions.
 
 ```
+Generate a security report based on configured permissions.
+The accuracy of this report is dependant on the configuration in the local project.
+It is suggested that a permissions package be created using the acumen:package:permissions
+command and that package is retrieved from the org prior to executing this command.
+
 USAGE
   $ sfdx acumen:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -615,6 +644,8 @@ EXAMPLE
 Determines the compatibility for one or more profiles metadat data files with a specified Org
 
 ```
+Determines the compatibility for one or more profiles metadat data files with a specified Org
+
 USAGE
   $ sfdx acumen:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -657,6 +688,8 @@ EXAMPLES
 Validates XML against xpath selects and known bad values.
 
 ```
+Validates XML against xpath selects and known bad values.
+
 USAGE
   $ sfdx acumen:source:xpath [-o <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
