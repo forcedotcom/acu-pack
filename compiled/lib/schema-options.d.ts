@@ -2,8 +2,10 @@ import { OptionsBase } from './options';
 export default class SchemaOptions extends OptionsBase {
     excludeCustomObjectNames: string[];
     includeCustomObjectNames: string[];
-    outputDefs: any[];
+    outputDefMap: Map<string, string[]>;
     excludeFieldIfTrueFilter: string;
-    getDynamicCode(): string;
+    getDynamicCode(sheetName?: string): string;
+    deserialize(serializedOptions: string): Promise<void>;
+    serialize(): Promise<string>;
     protected loadDefaults(): Promise<void>;
 }

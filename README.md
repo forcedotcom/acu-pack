@@ -10,15 +10,8 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 <!-- toc -->
 * [Debugging your plugin](#debugging-your-plugin)
 * [Usage](#usage)
+* [Issues](#issues)
 * [Commands](#commands)
-<!-- tocstop -->
-
-* [Debugging your plugin](#debugging-your-plugin)
-* [Usage](#usage)
-* [Commands](#commands)
-
-<!-- tocstop -->
-
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
@@ -40,12 +33,13 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/mer
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:dictionary -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:permissions -p force-app
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u SOQLDEV -m true -o test
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u ORG_ALIAS -m true -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m Account -i INSTANCE_ID
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u SIT -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 ```
 
 2. Set some breakpoints in your command code
@@ -85,8 +79,6 @@ to include a tilda (~) as follows:
 33	CLI_HOME=$(cd ~ && pwd)
 34	XDG_DATA_HOME="${XDG_DATA_HOME:="$CLI_HOME/.local/share"}"
 ```
-
-
 # Commands
 <!-- commands -->
 * [`sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -98,6 +90,7 @@ to include a tilda (~) as follows:
 * [`sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcedeltagit--s-filepath--g-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcedeltamd5--s-filepath--m-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumensourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -109,6 +102,8 @@ to include a tilda (~) as follows:
 Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.
 
 ```
+Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.
+
 USAGE
   $ sfdx acumen:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -146,6 +141,8 @@ EXAMPLES
 Clears the Apex Code Coverage data from the specified Org.
 
 ```
+Clears the Apex Code Coverage data from the specified Org.
+
 USAGE
   $ sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -176,6 +173,8 @@ EXAMPLE
 Executes Apex tests and includes Code Coverage metrics.
 
 ```
+Executes Apex tests and includes Code Coverage metrics.
+
 USAGE
   $ sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -214,6 +213,8 @@ EXAMPLES
 Pull Code Coverage metrics and generates a report.
 
 ```
+Pull Code Coverage metrics and generates a report.
+
 USAGE
   $ sfdx acumen:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -250,6 +251,8 @@ EXAMPLE
 Performs the GET REST action against the specified URL/URI.
 
 ```
+Performs the GET REST action against the specified URL/URI.
+
 USAGE
   $ sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -301,6 +304,8 @@ EXAMPLES
 Builds a standard SFDX source format package file from the specified org's existing metadata.
 
 ```
+Builds a standard SFDX source format package file from the specified org's existing metadata.
+
 USAGE
   $ sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion 
   <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -346,6 +351,8 @@ EXAMPLE
 Merges one SFDX package file into another.
 
 ```
+Merges one SFDX package file into another.
+
 USAGE
   $ sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -375,6 +382,8 @@ EXAMPLE
 Retrieve all metadata related to Profile security/access permissions.
 
 ```
+Retrieve all metadata related to Profile security/access permissions.
+
 USAGE
   $ sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] 
   [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -417,6 +426,8 @@ EXAMPLES
 Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.
 
 ```
+Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.
+
 USAGE
   $ sfdx acumen:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] 
   [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -452,11 +463,47 @@ EXAMPLE
        Generates a DataDictionary-myOrgAlias.xlsx file from an Org's configured Object & Field metadata.
 ```
 
+## `sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Retrives Profiles from Org without need to generate package.xml
+
+```
+Retrives Profiles from Org without need to generate package.xml
+
+USAGE
+  $ sfdx acumen:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -n, --names=names                                                                 (required) Comma seperated profile
+                                                                                    names with out any extension.Example
+                                                                                    "Admin,Agent". 5 Profiles can be
+                                                                                    retrieved at a time
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLE
+
+       $ sfdx acumen:schema:profile:retrieve -u myOrgAlias -n "Admin,Support"
+       Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile
+```
+
 ## `sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt
 
 ```
+Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt
+
 USAGE
   $ sfdx acumen:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r 
   <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -504,6 +551,8 @@ EXAMPLE
 Uses an MD5 hash file to detect deltas.
 
 ```
+Uses an MD5 hash file to detect deltas.
+
 USAGE
   $ sfdx acumen:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r 
   <filepath>] [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -550,6 +599,11 @@ EXAMPLE
 Generate a security report based on configured permissions.
 
 ```
+Generate a security report based on configured permissions.
+The accuracy of this report is dependant on the configuration in the local project.
+It is suggested that a permissions package be created using the acumen:package:permissions
+command and that package is retrieved from the org prior to executing this command.
+
 USAGE
   $ sfdx acumen:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -589,6 +643,8 @@ EXAMPLE
 Determines the compatibility for one or more profiles metadat data files with a specified Org
 
 ```
+Determines the compatibility for one or more profiles metadat data files with a specified Org
+
 USAGE
   $ sfdx acumen:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
@@ -631,6 +687,8 @@ EXAMPLES
 Validates XML against xpath selects and known bad values.
 
 ```
+Validates XML against xpath selects and known bad values.
+
 USAGE
   $ sfdx acumen:source:xpath [-o <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]

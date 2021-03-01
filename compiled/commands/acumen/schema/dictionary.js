@@ -16,13 +16,12 @@ class Dictionary extends command_base_1.CommandBase {
         var e_1, _a, e_2, _b;
         // Read/Write the options file if it does not exist already
         this.options = await options_factory_1.OptionsFactory.get(schema_options_1.default, this.flags.options);
-        const dynamicCode = this.options.getDynamicCode();
         try {
             const orgAlias = this.flags.targetusername;
-            const sheetDataFile = `schema-${orgAlias}.tmp`;
+            const schemaTmpFile = `schema-${orgAlias}.tmp`;
             const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
             // Create for writing - truncates if exists
-            const stream = fs_1.createWriteStream(sheetDataFile, { flags: 'w' });
+            const fileStream = fs_1.createWriteStream(schemaTmpFile, { flags: 'w' });
             let counter = 0;
             const schemas = new Set();
             for (const metaDataType of sortedTypeNames) {
@@ -33,20 +32,28 @@ class Dictionary extends command_base_1.CommandBase {
                     if (schemas.has(schema.name)) {
                         continue;
                     }
-                    try {
-                        for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode)), _d; _d = await _c.next(), !_d.done;) {
-                            const row = _d.value;
-                            if (row.length > 0) {
-                                stream.write(`${JSON.stringify(row)}\r\n`);
+                    for (const name of this.options.outputDefMap.keys()) {
+                        fileStream.write(`*${name}\r\n`);
+                        const collection = schema[name];
+                        if (!collection) {
+                            continue;
+                        }
+                        const dynamicCode = this.options.getDynamicCode(name);
+                        try {
+                            for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection)), _d; _d = await _c.next(), !_d.done;) {
+                                const row = _d.value;
+                                if (row.length > 0) {
+                                    fileStream.write(`${JSON.stringify(row)}\r\n`);
+                                }
                             }
                         }
-                    }
-                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                    finally {
-                        try {
-                            if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                        finally {
+                            try {
+                                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+                            }
+                            finally { if (e_1) throw e_1.error; }
                         }
-                        finally { if (e_1) throw e_1.error; }
                     }
                     schemas.add(schema.name);
                 }
@@ -54,15 +61,28 @@ class Dictionary extends command_base_1.CommandBase {
                     this.ux.log(`FAILED: ${err.message}.`);
                 }
             }
-            stream.end();
+            fileStream.end();
             try {
                 const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, orgAlias);
                 this.ux.log(`Writing Report: ${reportPath}`);
-                const sheetData = [this.getColumnRow()];
+                const workbookMap = new Map();
+                let sheetName = null;
+                let sheet = null;
                 try {
-                    for (var _e = tslib_1.__asyncValues(utils_1.default.readFileLines(sheetDataFile)), _f; _f = await _e.next(), !_f.done;) {
+                    for (var _e = tslib_1.__asyncValues(utils_1.default.readFileLines(schemaTmpFile)), _f; _f = await _e.next(), !_f.done;) {
                         const line = _f.value;
-                        sheetData.push(JSON.parse(line));
+                        if (line.startsWith('*')) {
+                            sheetName = line.substring(1);
+                            const outputDefs = this.options.outputDefMap.get(sheetName);
+                            const headers = this.getColumnRow(outputDefs);
+                            sheet = workbookMap.get(sheetName);
+                            if (!sheet) {
+                                sheet = [[...headers]];
+                                workbookMap.set(sheetName, sheet);
+                            }
+                            continue;
+                        }
+                        sheet.push(JSON.parse(line));
                     }
                 }
                 catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -72,8 +92,6 @@ class Dictionary extends command_base_1.CommandBase {
                     }
                     finally { if (e_2) throw e_2.error; }
                 }
-                const workbookMap = new Map();
-                workbookMap.set('Data Dictionary', sheetData);
                 office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
             }
             catch (err) {
@@ -82,15 +100,15 @@ class Dictionary extends command_base_1.CommandBase {
             }
             this.ux.log('Done.');
             // Clean up file at end
-            await utils_1.default.deleteFile(sheetDataFile);
+            await utils_1.default.deleteFile(schemaTmpFile);
         }
         catch (err) {
             throw err;
         }
     }
-    getColumnRow() {
+    getColumnRow(outputDefs) {
         const row = [];
-        for (const outputDef of this.options.outputDefs) {
+        for (const outputDef of outputDefs) {
             row.push(outputDef.split('|')[0]);
         }
         return row;
