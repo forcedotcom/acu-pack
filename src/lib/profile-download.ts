@@ -159,7 +159,7 @@ export class ProfileDownload {
       this.sfdxCon.metadata
         .readSync('Profile', profileName)
         .then(async data => {
-          resolve(data);
+          resolve(Array.isArray(data) ? data[0] : data);
         })
         .catch(err => {
           reject(err);
@@ -177,9 +177,7 @@ export class ProfileDownload {
         return;
       }
 
-      const filePath = path.join(
-        path.join(this.rootDir, Utils._tempFilesPath, profileName + '.json')
-      );
+      const filePath = path.join(path.join(this.rootDir, Utils._tempFilesPath, profileName + '.json'));
       this.profileFilePath.set(profileName, filePath);
 
       const retrievedObjects: string[] = [];
@@ -188,7 +186,7 @@ export class ProfileDownload {
           retrievedObjects.push(obj['object']);
         }
 
-        const objectPermQuery: string = 'select Parent.ProfileId,' +
+        const objectPermQuery: string = 'SELECT Parent.ProfileId,' +
           'PermissionsCreate,' +
           'PermissionsDelete,' +
           'PermissionsEdit,' +
@@ -196,59 +194,44 @@ export class ProfileDownload {
           'PermissionsRead,' +
           'PermissionsViewAllRecords,' +
           'SobjectType ' +
-          'from ' +
-          'ObjectPermissions ' +
-          'where ' +
-          'Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\' ' +
-          'order by SObjectType ASC';
+          'FROM ObjectPermissions ' +
+          'WHERE Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\' ' +
+          'ORDER BY SObjectType ASC';
 
         const objData = await SfdxQuery.doSoqlQuery(this.orgAlias, objectPermQuery);
 
         const processObjData = await ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
-        const objList = [...processObjData.keys()];
-
-        if (objList.length > 0) {
-          let index = 0;
-          let whereClause: string = ' in (';
-          for (const obj of objList) {
-            whereClause = whereClause + "'" + obj + "'";
-            if (!(index === objList.length - 1)) {
-              whereClause = whereClause + ',';
-            }
-            index++;
-          }
-
-          whereClause = whereClause + ') ';
-
-          const fieldPermQuery: string = 'select Field,' +
-            'Parent.ProfileId,' +
-            'SobjectType,' +
-            'PermissionsEdit,' +
-            'PermissionsRead ' +
-            'from ' +
-            'FieldPermissions ' +
-            'where ' +
-            'SobjectType  ' + whereClause +
-            ' AND Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\'';
-
-          const fieldMissingData = await SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
-
-          const processFieldData = await ProfileDownload.processMissingFieldPermissions(fieldMissingData);
-
-          profileJson.objectPermissions.push(...processObjData.values());
-          if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0
-          ) {
-            profileJson.fieldLevelSecurities.push(...processFieldData);
-          } else {
-            profileJson.fieldPermissions.push(...processFieldData);
-          }
-
+        if (processObjData.size == 0) {
+          return;
+        }
+        const sobjects = [];
+        for (const obj of processObjData.keys()) {
+          sobjects.push(`'${obj}'`);
         }
 
+        const fieldPermQuery = 'SELECT Field,' +
+          'Parent.ProfileId,' +
+          'SobjectType,' +
+          'PermissionsEdit,' +
+          'PermissionsRead ' +
+          'FROM FieldPermissions ' +
+          `WHERE SobjectType IN (${sobjects.join(',')})` +
+          ' AND Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\'';
+
+        const fieldMissingData = await SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
+
+        const processFieldData = await ProfileDownload.processMissingFieldPermissions(fieldMissingData);
+
+        profileJson.objectPermissions.push(...processObjData.values());
+        if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0) {
+          profileJson.fieldLevelSecurities.push(...processFieldData);
+        } else {
+          profileJson.fieldPermissions.push(...processFieldData);
+        }
       }
       await Utils.writeFile(filePath, JSON.stringify(profileJson));
     } catch (err) {
-      this.ux.log(`Error downloading \"${profileName}\" Profile ...`);
+      this.ux.log(`Error downloading '${profileName}' Profile ...`);
       await Utils.log(JSON.stringify(err), 'error');
     }
   }

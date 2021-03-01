@@ -40,7 +40,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.tx
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n CIMT
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 ```
 
 2. Set some breakpoints in your command code
