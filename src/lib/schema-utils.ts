@@ -1,7 +1,9 @@
 import * as vm from 'vm';
 
 export default class SchemaUtils {
-    public static * getDynamicSchemaData(schema: any, dynamicCode: string): Generator<any, void, string[]> {
+    public static CONTEXT_FIELD = 'ctx';
+    public static CONTEXT_SCHEMA = 'schema';
+    public static * getDynamicSchemaData(schema: any, dynamicCode: string, collection: any): Generator<any, void, string[]> {
         if (!schema) {
             throw new Error('The schema argument cannot be null.');
         }
@@ -11,10 +13,14 @@ export default class SchemaUtils {
         if (!dynamicCode) {
             throw new Error('The dynamicCode argument cannot be null.');
         }
+
+        if (!collection) {
+            throw new Error('The collection argument cannot be null.');
+        }
         const context = SchemaUtils.dynamicContext;
-        context['schema'] = schema;
-        for (const field of schema.fields) {
-            context['field'] = field;
+        context[SchemaUtils.CONTEXT_SCHEMA] = schema;
+        for (const item of collection) {
+            context[SchemaUtils.CONTEXT_FIELD] = item;
             const row = vm.runInNewContext(dynamicCode, context);
             yield row;
         }

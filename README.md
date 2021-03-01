@@ -12,7 +12,6 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 * [Usage](#usage)
 * [Issues](#issues)
 * [Commands](#commands)
-<!-- tocstop -->
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.

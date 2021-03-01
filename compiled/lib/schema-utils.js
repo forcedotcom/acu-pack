@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vm = require("vm");
 class SchemaUtils {
-    static *getDynamicSchemaData(schema, dynamicCode) {
+    static *getDynamicSchemaData(schema, dynamicCode, collection) {
         if (!schema) {
             throw new Error('The schema argument cannot be null.');
         }
@@ -12,16 +12,21 @@ class SchemaUtils {
         if (!dynamicCode) {
             throw new Error('The dynamicCode argument cannot be null.');
         }
+        if (!collection) {
+            throw new Error('The collection argument cannot be null.');
+        }
         const context = SchemaUtils.dynamicContext;
-        context['schema'] = schema;
-        for (const field of schema.fields) {
-            context['field'] = field;
+        context[SchemaUtils.CONTEXT_SCHEMA] = schema;
+        for (const item of collection) {
+            context[SchemaUtils.CONTEXT_FIELD] = item;
             const row = vm.runInNewContext(dynamicCode, context);
             yield row;
         }
     }
 }
 exports.default = SchemaUtils;
+SchemaUtils.CONTEXT_FIELD = 'ctx';
+SchemaUtils.CONTEXT_SCHEMA = 'schema';
 SchemaUtils.dynamicContext = {
     getPicklistValues(fld) {
         const values = [];

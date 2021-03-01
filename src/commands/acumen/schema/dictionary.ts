@@ -42,16 +42,14 @@ export default class Dictionary extends CommandBase {
     // Read/Write the options file if it does not exist already
     this.options = await OptionsFactory.get(SchemaOptions, this.flags.options);
 
-    const dynamicCode = this.options.getDynamicCode();
-
     try {
       const orgAlias = this.flags.targetusername;
-      const sheetDataFile = `schema-${orgAlias}.tmp`;
+      const schemaTmpFile = `schema-${orgAlias}.tmp`;
 
       const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
 
       // Create for writing - truncates if exists
-      const stream = createWriteStream(sheetDataFile, { flags: 'w' });
+      const fileStream = createWriteStream(schemaTmpFile, { flags: 'w' });
 
       let counter = 0;
       const schemas = new Set<string>();
@@ -63,9 +61,17 @@ export default class Dictionary extends CommandBase {
           if (schemas.has(schema.name)) {
             continue;
           }
-          for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode)) {
-            if (row.length > 0) {
-              stream.write(`${JSON.stringify(row)}\r\n`);
+          for (const name of this.options.outputDefMap.keys()) {
+            fileStream.write(`*${name}\r\n`);
+            const collection = schema[name];
+            if (!collection) {
+              continue;
+            }
+            const dynamicCode = this.options.getDynamicCode(name);
+            for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode, collection)) {
+              if (row.length > 0) {
+                fileStream.write(`${JSON.stringify(row)}\r\n`);
+              }
             }
           }
           schemas.add(schema.name);
@@ -73,21 +79,31 @@ export default class Dictionary extends CommandBase {
           this.ux.log(`FAILED: ${err.message}.`);
         }
       }
-      stream.end();
+      fileStream.end();
 
       try {
         const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, orgAlias);
         this.ux.log(`Writing Report: ${reportPath}`);
 
-        const sheetData = [this.getColumnRow()];
-        for await (const line of Utils.readFileLines(sheetDataFile)) {
-          sheetData.push(JSON.parse(line));
-        }
-
         const workbookMap = new Map<string, string[][]>();
-        workbookMap.set('Data Dictionary', sheetData);
-
+        let sheetName: string = null;
+        let sheet: string[][] = null;
+        for await (const line of Utils.readFileLines(schemaTmpFile)) {
+          if (line.startsWith('*')) {
+            sheetName = line.substring(1);
+            const outputDefs = this.options.outputDefMap.get(sheetName);
+            const headers = this.getColumnRow(outputDefs);
+            sheet = workbookMap.get(sheetName);
+            if (!sheet) {
+              sheet = [[...headers]];
+              workbookMap.set(sheetName, sheet);
+            }
+            continue;
+          }
+          sheet.push(JSON.parse(line));
+        }
         Office.writeXlxsWorkbook(workbookMap, reportPath);
+
       } catch (err) {
         this.ux.log('Error Writing XLSX Report: ' + err.message);
         throw err;
@@ -96,15 +112,15 @@ export default class Dictionary extends CommandBase {
       this.ux.log('Done.');
 
       // Clean up file at end
-      await Utils.deleteFile(sheetDataFile);
+      await Utils.deleteFile(schemaTmpFile);
     } catch (err) {
       throw err;
     }
   }
 
-  private getColumnRow(): string[] {
+  private getColumnRow(outputDefs: string[]): string[] {
     const row = [];
-    for (const outputDef of this.options.outputDefs) {
+    for (const outputDef of outputDefs) {
       row.push(outputDef.split('|')[0]);
     }
     return row;
