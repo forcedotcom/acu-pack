@@ -19,7 +19,7 @@ class Dictionary extends command_base_1.CommandBase {
         try {
             const orgAlias = this.flags.targetusername;
             const schemaTmpFile = `schema-${orgAlias}.tmp`;
-            const sortedTypeNames = (await this.getSortedTypeNames(orgAlias)).slice(0, 5);
+            const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
             // Create for writing - truncates if exists
             const fileStream = fs_1.createWriteStream(schemaTmpFile, { flags: 'w' });
             let counter = 0;
@@ -75,8 +75,11 @@ class Dictionary extends command_base_1.CommandBase {
                             sheetName = line.substring(1);
                             const outputDefs = this.options.outputDefMap.get(sheetName);
                             const headers = this.getColumnRow(outputDefs);
-                            workbookMap.set(sheetName, [[...headers]]);
                             sheet = workbookMap.get(sheetName);
+                            if (!sheet) {
+                                sheet = [[...headers]];
+                                workbookMap.set(sheetName, sheet);
+                            }
                             continue;
                         }
                         sheet.push(JSON.parse(line));
