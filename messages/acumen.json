@@ -23,6 +23,12 @@
       "commandDescription": "Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.",
       "reportFlagDescription": "The path for the data dictionary report XLSX file. This overrides the default: %s.",
       "optionsFlagDescription": "A file containing the Data Dictionary options. Specifying this option will create the file if it doesn't exist already."
+    },
+    "profile": {
+      "retrieve": {
+        "commandDescription": "Retrives Profiles from Org without need to generate package.xml" ,
+        "names": "Comma seperated profile names with out any extension.Example \"Admin,Agent\". 5 Profiles can be retrieved at a time"
+      }
     }
   },
   "source": {
