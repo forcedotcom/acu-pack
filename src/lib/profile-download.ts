@@ -4,24 +4,6 @@ import { UX } from '@salesforce/command';
 import { SfdxQuery } from './sfdx-query';
 import { Connection } from 'jsforce';
 
-const xmldec = { version: '1.0', encoding: 'UTF-8' };
-const profileNodeNamespace = 'http://soap.sforce.com/2006/04/metadata';
-const nonArrayKeys = ['custom', 'description', 'fullName', 'userLicense'];
-
-const profileAPINameMatch: Map<string, string> = new Map<string, string>([
-  ['Contract Manager', 'ContractManager'],
-  ['Marketing User', 'MarketingProfile'],
-  ['Solution Manager', 'SolutionManager'],
-  ['Read Only', 'ReadOnly'],
-  ['Standard User', 'Standard'],
-  ['System Administrator', 'Admin'],
-  ['Contract Manager', 'ContractManager'],
-  ['Marketing User', 'MarketingProfile'],
-  ['Solution Manager', 'SolutionManager'],
-  ['Read Only', 'ReadOnly'],
-  ['Standard Platform User', 'StandardAul']
-]);
-
 export class ProfileDownload {
 
   public static async processMissingObjectPermissions(objectData: any, includedObjects: string[]): Promise<Map<string, any>> {
@@ -40,9 +22,7 @@ export class ProfileDownload {
         );
 
         profileObjectPermissions.set(obj.SobjectType, objPemission);
-
       }
-
     }
 
     return profileObjectPermissions;
@@ -67,9 +47,10 @@ export class ProfileDownload {
 
   public static async writeProfileToXML(profileMetadata: any, filePath: string): Promise<void> {
     profileMetadata['$'] = {
-      xmlns: profileNodeNamespace
+      xmlns: 'http://soap.sforce.com/2006/04/metadata'
     };
 
+    const nonArrayKeys = ['custom', 'description', 'fullName', 'userLicense'];
     // Delete empty arrays
     for (const objKey in profileMetadata) {
       if (Array.isArray(profileMetadata[objKey])) {
@@ -82,7 +63,7 @@ export class ProfileDownload {
     const xmlOptions = {
       renderOpts: { pretty: true, indent: '    ', newline: '\n' },
       rootName: 'Profile',
-      xmldec
+      xmldec: { version: '1.0', encoding: 'UTF-8' }
     };
 
     await Utils.writeObjectToXmlFile(filePath, profileMetadata, xmlOptions);
@@ -91,14 +72,28 @@ export class ProfileDownload {
   // Return all profiles in the Org
   public static async checkOrgProfiles(orgName: string): Promise<Map<string, string>> {
     const profileMap: Map<string, string> = new Map<string, string>();
-    if (!orgName) return profileMap;
+    if (!orgName) {
+      return profileMap;
+    }
+    const profileAPINameMatch: Map<string, string> = new Map<string, string>([
+      ['Contract Manager', 'ContractManager'],
+      ['Marketing User', 'MarketingProfile'],
+      ['Solution Manager', 'SolutionManager'],
+      ['Read Only', 'ReadOnly'],
+      ['Standard User', 'Standard'],
+      ['System Administrator', 'Admin'],
+      ['Contract Manager', 'ContractManager'],
+      ['Marketing User', 'MarketingProfile'],
+      ['Solution Manager', 'SolutionManager'],
+      ['Read Only', 'ReadOnly'],
+      ['Standard Platform User', 'StandardAul']
+    ]);
+
     const getProfiles = await SfdxQuery.doSoqlQuery(orgName, 'Select Id, Name from Profile');
 
     if (getProfiles.length > 0) {
       for (const profile of getProfiles) {
-        const profileName = profileAPINameMatch.has(profile.Name)
-          ? profileAPINameMatch.get(profile.Name)
-          : profile.Name;
+        const profileName = profileAPINameMatch.get(profile.Name) || profile.Name;
         profileMap.set(profileName, profile.Id);
       }
     }
@@ -118,7 +113,7 @@ export class ProfileDownload {
     return objStructure;
   }
 
-  private static fieldPermissionStructure(field: string, editable: boolean, readable: boolean, hidden?: boolean): any {
+  private static fieldPermissionStructure(field: string, editable: boolean, readable: boolean): any {
     const fieldStructure = {
       field,
       editable,
@@ -155,6 +150,9 @@ export class ProfileDownload {
   }
 
   public retrieveProfileMetaData(profileName: string): Promise<any> {
+    if (!profileName) {
+      return null;
+    }
     return new Promise((resolve, reject) => {
       this.sfdxCon.metadata
         .readSync('Profile', profileName)
@@ -168,10 +166,13 @@ export class ProfileDownload {
   }
 
   public async getProfileMetaData(profileName: string): Promise<void> {
+    if (!profileName) {
+      return;
+    }
 
     try {
 
-      this.ux.log(`Downloading \"${profileName}\" Profile ...`);
+      this.ux.log(`Downloading '${profileName}' Profile ...`);
       const profileJson = await this.retrieveProfileMetaData(profileName);
       if (!profileJson) {
         return;
@@ -201,7 +202,7 @@ export class ProfileDownload {
         const objData = await SfdxQuery.doSoqlQuery(this.orgAlias, objectPermQuery);
 
         const processObjData = await ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
-        if (processObjData.size == 0) {
+        if (processObjData.size === 0) {
           return;
         }
         const sobjects = [];
