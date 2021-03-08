@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeltaCommandBase = void 0;
 const command_base_1 = require("./command-base");
 const command_1 = require("@salesforce/command");
 class DeltaCommandBase extends command_base_1.CommandBase {

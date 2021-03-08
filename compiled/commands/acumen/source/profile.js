@@ -25,7 +25,7 @@ class Profile extends command_base_1.CommandBase {
             }
             this.ux.log(`Reading metadata in: ${sourceFolder}`);
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim())), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = (e_1 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim()))), _c; _c = await _b.next(), !_c.done;) {
                     const filePath = _c.value;
                     this.ux.log(`\tProcessing: ${filePath}`);
                     const json = await utils_1.default.readObjectFromXmlFile(filePath);

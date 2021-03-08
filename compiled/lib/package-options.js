@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PackageOptions = void 0;
 const options_1 = require("./options");
 class PackageOptions extends options_1.OptionsBase {
     constructor() {
@@ -69,7 +70,7 @@ class PackageOptions extends options_1.OptionsBase {
                     'SynonymDictionary',
                     'TransactionSecurityPolicy'
                 ];
-                this.skipFileNamePattern = 'topicsForObjects/sma__|topicsForObjects/ltngsharing__|topicsForObjects/SDOC__|topicsForObjects/SSign__';
+                this.skipFileNamePattern = 'topicsForObjects/sma__|topicsForObjects/ltngsharing__';
                 resolve();
             }
             catch (err) {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.XPathOptions = exports.XPathRule = void 0;
 const options_1 = require("./options");
 const sfdx_core_1 = require("./sfdx-core");
 class XPathRule {

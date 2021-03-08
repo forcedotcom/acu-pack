@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Office = void 0;
 const xlsx_1 = require("xlsx");
 class Office {
     static writeXlxsWorkbook(workbookMap, xlxsFilePath) {
