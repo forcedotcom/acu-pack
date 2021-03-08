@@ -28,18 +28,18 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:admin:user:unmask -u ORG_ALIAS -f ./
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:execute -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:report -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -u ORG_ALIAS -o package-options.json 
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:dictionary -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:permissions -p force-app
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u ORG_ALIAS -m true -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 ```
 
 2. Set some breakpoints in your command code
