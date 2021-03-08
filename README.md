@@ -51,8 +51,16 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS
 Congrats, you are debugging!
 
 # Usage
+If you are contributing to this repo - you can just link the plugin to SFDX CLI:
+```
+$ sfdx plugins:link
+```
+Otherwise install the plug-in:
 ```
 $ sfdx plugins:install https://[YOUR_BITBUCKET_USER]@bitbucket.org/acumensolutions/acu-pack.git
+```
+Verify link/install:
+```
 $ sfdx acumen -h
 ```
 NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_allowlist)
