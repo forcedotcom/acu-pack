@@ -1298,8 +1298,8 @@
         "signature": "856f61457d3acc393d2a2f70f8eacefc41f8d289e396d54336d135284ee89c2e"
       },
       "./src/commands/acumen/apex/scaffold.ts": {
-        "version": "f0bc63b0b33fa58e0e650939a0614468722248dd7ecd05a24b26afe813986dbb",
-        "signature": "8b89cf97adf5fb9ef3d2eb9e29d1eeed22357a0e57af135cd74eeaaed75d71e6"
+        "version": "c2bdce1a688b421510c58a8ebd3d407c65443ff4254ba7775e5ff9fdfeb88df4",
+        "signature": "9951df232c14794e18fa8f0825a4f7202352e1dec7e7b727af6dd424a664d1ee"
       },
       "./src/commands/acumen/apex/coverage/clear.ts": {
         "version": "78ed28a88650b59d04b5567bb6c34eb96a4d7ae0bc1c6a97d166333dbe1771a0",
@@ -4175,6 +4175,9 @@
         "./node_modules/@salesforce/command/lib/exported.d.ts",
         "./src/lib/command-base.ts"
       ],
+      "./src/lib/scaffold-options.ts": [
+        "./src/lib/options.ts"
+      ],
       "./src/commands/acumen/apex/scaffold.ts": [
         "./node_modules/@salesforce/command/lib/exported.d.ts",
         "./src/lib/command-base.ts"
@@ -4448,9 +4451,6 @@
       ],
       "./node_modules/@types/sinon/index.d.ts": [
         "./node_modules/@types/sinonjs__fake-timers/index.d.ts"
-      ],
-      "./src/lib/scaffold-options.ts": [
-        "./src/lib/options.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -4777,6 +4777,7 @@
       "./src/lib/sfdx-client.ts",
       "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
+      "./src/lib/scaffold-options.ts",
       "./src/commands/acumen/apex/coverage/clear.ts",
       "./src/commands/acumen/apex/coverage/execute.ts",
       "./node_modules/cfb/types/index.d.ts",
@@ -4786,6 +4787,7 @@
       "./src/commands/acumen/apex/coverage/report.ts",
       "./src/commands/acumen/api/get.ts",
       "./src/lib/package-options.ts",
+      "./src/commands/acumen/package/build.ts",
       "./src/lib/xml-merge.ts",
       "./src/commands/acumen/package/merge.ts",
       "./src/lib/sfdx-permission.ts",
@@ -4824,9 +4826,7 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
-      "./src/lib/scaffold-options.ts",
-      "./src/commands/acumen/apex/scaffold.ts",
-      "./src/commands/acumen/package/build.ts"
+      "./src/commands/acumen/apex/scaffold.ts"
     ]
   },
   "version": "3.7.5"

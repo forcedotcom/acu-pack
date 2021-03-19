@@ -10,8 +10,9 @@ export default class Scaffold extends CommandBase {
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
     private static META_XML;
-    private OrgAlias;
-    private Schemas;
+    private static MAX_CLASS_NAME_LENGTH;
+    private orgAlias;
+    private schemas;
     run(): Promise<void>;
     private getSchema;
     private generateTestSetupCode;

@@ -129,23 +129,21 @@ export default class Scaffold extends CommandBase {
       '',
       '\t@TestSetup',
       '\tstatic void setupTestData() {',
-      `\t\t// Create instance`,
+      '\t\t// Create instance',
       `\t\t${schema.name} ${varName} = new ${schema.name}( `
     ];
 
     const codeLines = new Map<string, string>();
     for (const field of schema.fields) {
-      if (!field.createable) {
-        console.debug('Skipping: ' + field.name);
-        continue;
+      if (field.createable) {
+        codeLines.set(field.name, `${pre}${field.name} = ${this.generateFieldValue(field)}`);
       }
-      codeLines.set(field.name, `${pre}${field.name} = ${this.generateFieldValue(field)}`);
     }
 
     const sortedKeys = Utils.sortArray(Array.from(codeLines.keys()));
     for (const key of sortedKeys) {
       let classLine = codeLines.get(key);
-      if (key != sortedKeys[sortedKeys.length - 1]) {
+      if (key !== sortedKeys[sortedKeys.length - 1]) {
         classLine += ',';
       }
       classLines.push(classLine);
@@ -167,8 +165,6 @@ export default class Scaffold extends CommandBase {
     if (!field) {
       throw new Error('The field argument cannot be null.');
     }
-
-    const now = new Date();
     const simpleName = field.name.split('__')[0];
     let len = 0;
     if (field.length > 0) {
@@ -225,11 +221,25 @@ export default class Scaffold extends CommandBase {
       return getRand(0, 9);
     };
 
+    const getPicklist = (picklistValues: any[], count: number): string[] => {
+      const values = [];
+      const index = getRand(0, picklistValues.length);
+      for (const picklist of picklistValues.slice(index)) {
+        if (!picklist.active) {
+          continue;
+        }
+        values.push(picklist.value);
+        if (values.length === count) {
+          return values;
+        }
+      }
+      return null;
+    };
+
     const getValue = (fld: any): string => {
       if (!fld) {
         throw new Error('The fld argument cannot be null.');
       }
-      //this.ux.log(`Processing: ${fld.name} (${fld.type})`);
       switch (fld.type) {
         case 'anytype':
         case 'string':
@@ -262,7 +272,7 @@ export default class Scaffold extends CommandBase {
           return `'123 ${fld.name} St.'`;
 
         case 'boolean':
-          return `${ Math.random() < 0.5 ? 'true' : 'false'}`;
+          return `${Math.random() < 0.5 ? 'true' : 'false'}`;
 
         case 'date':
           return 'Date.today()';
@@ -279,18 +289,20 @@ export default class Scaffold extends CommandBase {
         case 'phone':
           return `'555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${fld.name}'`;
 
-        case 'picklist':
-          if (fld.picklistValues?.length == 0) {
+        case 'multipicklist':
+          if (fld.picklistValues?.length === 0) {
             this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
           }
-          const index = getRand(0, fld.picklistValues.length);
-          for (const picklist of fld.picklistValues.slice(index)) {
-            if (!picklist.active) {
-              continue;
-            }
-            return `'${picklist.value}'`;
+          const count = Math.floor(fld.picklistValues.length / 3);
+          const values = getPicklist(fld.picklistValues, count);
+          return values ? `'${values.join(';')}'` : null;
+
+        case 'picklist':
+          if (fld.picklistValues?.length === 0) {
+            this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
           }
-          return `null`;
+          const value = getPicklist(fld.picklistValues, 1);
+          return value ? `'${value.join(';')}'` : null;
 
         case 'url':
           return `'https://www.${simpleName}.salesforce.com.${this.orgAlias}/index'`;
@@ -299,7 +311,6 @@ export default class Scaffold extends CommandBase {
         case 'reference':
         case 'combobox':
         case 'dataCategoryGroupReference':
-        case 'multipicklist':
         default:
           this.ux.log(`Skipping: ${fld.name} (${fld.type})`);
           return null;
