@@ -262,7 +262,7 @@ export default class Scaffold extends CommandBase {
           return `'123 ${fld.name} St.'`;
 
         case 'boolean':
-          return `${(now.getTime() % 2) > 0 ? 'true' : 'false'}`;
+          return `${ Math.random() < 0.5 ? 'true' : 'false'}`;
 
         case 'date':
           return 'Date.today()';
