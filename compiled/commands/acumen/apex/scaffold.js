@@ -85,7 +85,7 @@ class Scaffold extends command_base_1.CommandBase {
             '',
             '\t@TestSetup',
             '\tstatic void setupTestData() {',
-            `\t\t// Create instance`,
+            '\t\t// Create instance',
             `\t\t${schema.name} ${varName} = new ${schema.name}( `
         ];
         const codeLines = new Map();
@@ -97,7 +97,7 @@ class Scaffold extends command_base_1.CommandBase {
         const sortedKeys = utils_1.default.sortArray(Array.from(codeLines.keys()));
         for (const key of sortedKeys) {
             let classLine = codeLines.get(key);
-            if (key != sortedKeys[sortedKeys.length - 1]) {
+            if (key !== sortedKeys[sortedKeys.length - 1]) {
                 classLine += ',';
             }
             classLines.push(classLine);
@@ -130,7 +130,7 @@ class Scaffold extends command_base_1.CommandBase {
                 throw new Error('The fld argument cannot be null.');
             }
             let value = fld.name;
-            const strLen = (lgth !== null && lgth !== void 0 ? lgth : len);
+            const strLen = lgth !== null && lgth !== void 0 ? lgth : len;
             // trim if we are too long
             if (strLen && value.length > strLen) {
                 return value.substr(0, len);
@@ -141,16 +141,17 @@ class Scaffold extends command_base_1.CommandBase {
                     value += get1Rand();
                 }
             }
-            return `'${value}'`;
+            return value;
         };
-        const getDec = (fld) => {
+        const getDec = (fld, lgth) => {
             var _a;
             if (!fld) {
                 throw new Error('The fld argument cannot be null.');
             }
             let num = '';
-            const scale = (_a = fld.scale, (_a !== null && _a !== void 0 ? _a : 0));
-            for (let index = 1; index <= (len - scale); index++) {
+            const numLen = lgth !== null && lgth !== void 0 ? lgth : len;
+            const scale = (_a = fld.scale) !== null && _a !== void 0 ? _a : 0;
+            for (let index = 1; index <= (numLen - scale); index++) {
                 num += get1Rand();
             }
             if (fld.scale > 0) {
@@ -175,7 +176,7 @@ class Scaffold extends command_base_1.CommandBase {
                     continue;
                 }
                 values.push(picklist.value);
-                if (values.length == count) {
+                if (values.length === count) {
                     return values;
                 }
             }
@@ -186,15 +187,14 @@ class Scaffold extends command_base_1.CommandBase {
             if (!fld) {
                 throw new Error('The fld argument cannot be null.');
             }
-            //this.ux.log(`Processing: ${fld.name} (${fld.type})`);
             switch (fld.type) {
                 case 'anytype':
                 case 'string':
                 case 'encryptedString':
                 case 'textarea':
-                    return getStr(fld);
+                    return `'${getStr(fld)}'`;
                 case 'base64':
-                    return Buffer.from(getStr(fld)).toString('base64');
+                    return `'${Buffer.from(getStr(fld)).toString('base64')}'`;
                 case 'textarea1':
                     const lineCount = 3;
                     // Calculate length of each line (subract for \n) then divide
@@ -206,10 +206,12 @@ class Scaffold extends command_base_1.CommandBase {
                     return lines.join('+\n');
                 case 'int':
                 case 'integer':
+                    return `${getDec(fld, 10)}`;
                 case 'long':
+                    return `${getDec(fld, 16)}L`;
                 case 'double':
                 case 'percent':
-                    return `${getDec(fld)}`;
+                    return `${getDec(fld, 10)}`;
                 case 'currency':
                     return `${getDec(fld)}`;
                 case 'address':
@@ -227,18 +229,18 @@ class Scaffold extends command_base_1.CommandBase {
                 case 'phone':
                     return `'555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${fld.name}'`;
                 case 'multipicklist':
-                    if (((_a = fld.picklistValues) === null || _a === void 0 ? void 0 : _a.length) == 0) {
+                    if (((_a = fld.picklistValues) === null || _a === void 0 ? void 0 : _a.length) === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
                     }
                     const count = Math.floor(fld.picklistValues.length / 3);
                     const values = getPicklist(fld.picklistValues, count);
-                    return values ? `'${getPicklist(fld.picklistValues, 1)[0]}'` : null;
+                    return values ? `'${values.join(';')}'` : null;
                 case 'picklist':
-                    if (((_b = fld.picklistValues) === null || _b === void 0 ? void 0 : _b.length) == 0) {
+                    if (((_b = fld.picklistValues) === null || _b === void 0 ? void 0 : _b.length) === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
                     }
                     const value = getPicklist(fld.picklistValues, 1);
-                    return value ? `'${getPicklist(fld.picklistValues, 1)[0]}'` : null;
+                    return value ? `'${value.join(';')}'` : null;
                 case 'url':
                     return `'https://www.${simpleName}.salesforce.com.${this.orgAlias}/index'`;
                 case 'id':
