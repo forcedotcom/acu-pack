@@ -191,17 +191,18 @@ export default class Scaffold extends CommandBase {
           value += get1Rand();
         }
       }
-      return `'${value}'`;
+      return value;
     };
 
-    const getDec = (fld: any): string => {
+    const getDec = (fld: any, lgth?:number): string => {
       if (!fld) {
         throw new Error('The fld argument cannot be null.');
       }
 
       let num = '';
+      const numLen = lgth ?? len;
       const scale = fld.scale ?? 0;
-      for (let index = 1; index <= (len - scale); index++) {
+      for (let index = 1; index <= (numLen - scale); index++) {
         num += get1Rand();
       }
       if (fld.scale > 0) {
@@ -245,10 +246,10 @@ export default class Scaffold extends CommandBase {
         case 'string':
         case 'encryptedString':
         case 'textarea':
-          return getStr(fld);
+          return `'${getStr(fld)}'`;
 
         case 'base64':
-          return Buffer.from(getStr(fld)).toString('base64');
+          return `'${Buffer.from(getStr(fld)).toString('base64')}'`;
         case 'textarea1':
           const lineCount = 3;
           // Calculate length of each line (subract for \n) then divide
@@ -260,10 +261,12 @@ export default class Scaffold extends CommandBase {
           return lines.join('+\n');
         case 'int':
         case 'integer':
+          return `${getDec(fld, 10)}`;
         case 'long':
+          return `${getDec(fld, 16)}L`;
         case 'double':
         case 'percent':
-          return `${getDec(fld)}`;
+          return `${getDec(fld, 10)}`;
 
         case 'currency':
           return `${getDec(fld)}`;
