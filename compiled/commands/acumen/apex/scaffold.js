@@ -118,38 +118,31 @@ class Scaffold extends command_base_1.CommandBase {
             throw new Error('The field argument cannot be null.');
         }
         const simpleName = field.name.split('__')[0];
-        let len = 0;
-        if (field.length > 0) {
-            len = field.length;
-        }
-        else if (field.precision > 0) {
-            len = field.precision;
-        }
-        const getStr = (fld, lgth) => {
+        const getStr = (fld, maxLength) => {
             if (!fld) {
                 throw new Error('The fld argument cannot be null.');
             }
             let value = fld.name;
-            const strLen = lgth !== null && lgth !== void 0 ? lgth : len;
+            let strLen = fld.length;
+            if (!strLen || strLen === 0 || strLen > maxLength) {
+                strLen = maxLength;
+            }
             // trim if we are too long
             if (strLen && value.length > strLen) {
-                return value.substr(0, len);
-            }
-            // if we specified a length - make sure we are that long
-            if (lgth) {
-                while (value.length < lgth) {
-                    value += get1Rand();
-                }
+                return value.substr(0, strLen);
             }
             return value;
         };
-        const getDec = (fld, lgth) => {
+        const getDec = (fld, maxLength) => {
             var _a;
             if (!fld) {
                 throw new Error('The fld argument cannot be null.');
             }
             let num = '';
-            const numLen = lgth !== null && lgth !== void 0 ? lgth : len;
+            let numLen = fld.precision;
+            if (!numLen || numLen === 0 || numLen > maxLength) {
+                numLen = maxLength;
+            }
             const scale = (_a = fld.scale) !== null && _a !== void 0 ? _a : 0;
             for (let index = 1; index <= (numLen - scale); index++) {
                 num += get1Rand();
@@ -198,7 +191,7 @@ class Scaffold extends command_base_1.CommandBase {
                 case 'textarea1':
                     const lineCount = 3;
                     // Calculate length of each line (subract for \n) then divide
-                    const lineLength = Math.floor((len - lineCount) / 3);
+                    const lineLength = Math.floor((fld.length - lineCount) / 3);
                     const lines = [];
                     for (let lineIndex = 0; lineIndex < lineCount; lineIndex++) {
                         lines.push(`${getStr(fld, lineLength)}`);
@@ -227,7 +220,8 @@ class Scaffold extends command_base_1.CommandBase {
                 case 'email':
                     return `'user@${simpleName}.com.${this.orgAlias}'`;
                 case 'phone':
-                    return `'555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${fld.name}'`;
+                    const phone = `555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${fld.name}`;
+                    return `'${phone.substr(0, 40)}'`;
                 case 'multipicklist':
                     if (((_a = fld.picklistValues) === null || _a === void 0 ? void 0 : _a.length) === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);

@@ -166,41 +166,36 @@ export default class Scaffold extends CommandBase {
       throw new Error('The field argument cannot be null.');
     }
     const simpleName = field.name.split('__')[0];
-    let len = 0;
-    if (field.length > 0) {
-      len = field.length;
-    } else if (field.precision > 0) {
-      len = field.precision;
-    }
 
-    const getStr = (fld: any, lgth?: number): string => {
+
+    const getStr = (fld: any, maxLength?: number): string => {
       if (!fld) {
         throw new Error('The fld argument cannot be null.');
       }
 
       let value = fld.name;
-      const strLen = lgth ?? len;
+      let strLen = fld.length;
+      if(!strLen || strLen === 0 || strLen > maxLength) {
+        strLen = maxLength;
+      }
 
       // trim if we are too long
       if (strLen && value.length > strLen) {
-        return value.substr(0, len);
-      }
-      // if we specified a length - make sure we are that long
-      if (lgth) {
-        while (value.length < lgth) {
-          value += get1Rand();
-        }
+        return value.substr(0, strLen);
       }
       return value;
     };
 
-    const getDec = (fld: any, lgth?:number): string => {
+    const getDec = (fld: any, maxLength?: number): string => {
       if (!fld) {
         throw new Error('The fld argument cannot be null.');
       }
 
       let num = '';
-      const numLen = lgth ?? len;
+      let numLen = fld.precision;
+      if (!numLen || numLen === 0 || numLen > maxLength) {
+        numLen = maxLength;
+      }
       const scale = fld.scale ?? 0;
       for (let index = 1; index <= (numLen - scale); index++) {
         num += get1Rand();
@@ -253,7 +248,7 @@ export default class Scaffold extends CommandBase {
         case 'textarea1':
           const lineCount = 3;
           // Calculate length of each line (subract for \n) then divide
-          const lineLength = Math.floor((len - lineCount) / 3);
+          const lineLength = Math.floor((fld.length - lineCount) / 3);
           const lines = [];
           for (let lineIndex = 0; lineIndex < lineCount; lineIndex++) {
             lines.push(`${getStr(fld, lineLength)}`);
@@ -290,7 +285,9 @@ export default class Scaffold extends CommandBase {
           return `'user@${simpleName}.com.${this.orgAlias}'`;
 
         case 'phone':
-          return `'555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${fld.name}'`;
+          const phone = `555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${fld.name}`
+          // phone max is 40
+          return `'${phone.substr(0,40)}'`;
 
         case 'multipicklist':
           if (fld.picklistValues?.length === 0) {
