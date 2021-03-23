@@ -7,9 +7,9 @@ export default class Permissions extends CommandBase {
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
-        source: flags.Discriminated<flags.String>;
-        report: flags.Discriminated<flags.String>;
-        folders: flags.Discriminated<flags.String>;
+        source: flags.Discriminated<flags.Option<string>>;
+        report: flags.Discriminated<flags.Option<string>>;
+        folders: flags.Discriminated<flags.Option<string>>;
     };
     protected static requiresProject: boolean;
     protected defaultReportHeaderName: string;

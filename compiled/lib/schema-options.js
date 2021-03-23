@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const options_1 = require("./options");
 const sfdx_core_1 = require("./sfdx-core");
-const schema_utils_1 = require("../../src/lib/schema-utils");
+const schema_utils_1 = require("./schema-utils");
 class SchemaOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);

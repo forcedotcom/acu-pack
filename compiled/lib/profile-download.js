@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProfileDownload = void 0;
 const utils_1 = require("./utils");
 const path = require("path");
 const sfdx_query_1 = require("./sfdx-query");

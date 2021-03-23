@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommandBase = void 0;
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
 // Initialize Messages with the current plugin directory
