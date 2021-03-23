@@ -4,9 +4,9 @@ export default class Unmask extends CommandBase {
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
-        metadata: flags.Discriminated<flags.Option<string>>;
-        ids: flags.Discriminated<flags.Option<string>>;
-        output: flags.Discriminated<flags.Option<string>>;
+        metadata: flags.Discriminated<flags.String>;
+        ids: flags.Discriminated<flags.String>;
+        output: flags.Discriminated<flags.String>;
         tooling: flags.Discriminated<flags.Boolean<boolean>>;
     };
     protected static requiresUsername: boolean;

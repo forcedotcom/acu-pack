@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeltaProvider = exports.DeltaOptions = exports.Delta = void 0;
 const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const utils_1 = require("./utils");
@@ -127,7 +128,7 @@ class DeltaProvider {
                     for (var _g = tslib_1.__asyncValues(utils_1.default.readFileLines(ignoreFile)), _h; _h = await _g.next(), !_h.done;) {
                         const line = _h.value;
                         try {
-                            for (var _j = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _k; _k = await _j.next(), !_k.done;) {
+                            for (var _j = (e_2 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(line))), _k; _k = await _j.next(), !_k.done;) {
                                 const filePath = _k.value;
                                 ignoreSet.add(path.normalize(filePath));
                                 await this.logMessage(`\t${filePath}`);
@@ -177,7 +178,7 @@ class DeltaProvider {
                         for (var _l = tslib_1.__asyncValues(utils_1.default.readFileLines(forceFile)), _m; _m = await _l.next(), !_m.done;) {
                             const line = _m.value;
                             try {
-                                for (var _o = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _p; _p = await _o.next(), !_p.done;) {
+                                for (var _o = (e_4 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(line))), _p; _p = await _o.next(), !_p.done;) {
                                     const filePath = _p.value;
                                     if (this.deltas.delete(filePath)) {
                                         await this.logMessage(`Purged: ${filePath}`, true);
@@ -232,7 +233,7 @@ class DeltaProvider {
                         case DeltaProvider.deltaTypeKind.M:
                             try {
                                 // check the source folder for associated files.
-                                for (var _s = tslib_1.__asyncValues(utils_1.default.getFiles(path.dirname(deltaFile), false)), _t; _t = await _s.next(), !_t.done;) {
+                                for (var _s = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(path.dirname(deltaFile), false))), _t; _t = await _s.next(), !_t.done;) {
                                     const filePath = _t.value;
                                     if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
                                         // are we ignoring this file?

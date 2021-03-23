@@ -31,7 +31,7 @@ class Permissions extends command_base_1.CommandBase {
             for (const folder of folders) {
                 this.ux.log(`Scanning metadata in: ${folder}`);
                 try {
-                    for (var _b = tslib_1.__asyncValues(utils_1.default.getFiles(folder)), _c; _c = await _b.next(), !_c.done;) {
+                    for (var _b = (e_1 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(folder))), _c; _c = await _b.next(), !_c.done;) {
                         const filePath = _c.value;
                         const json = await utils_1.default.readObjectFromXmlFile(filePath);
                         if (json.CustomObject) {
