@@ -1,6 +1,6 @@
 import { OptionsBase } from './options';
 import { SfdxCore } from './sfdx-core';
-import SchemaUtils from '../../src/lib/schema-utils';
+import SchemaUtils from './schema-utils';
 
 export default class SchemaOptions extends OptionsBase {
     public excludeCustomObjectNames: string[] = [];
