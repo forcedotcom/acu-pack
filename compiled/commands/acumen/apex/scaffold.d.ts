@@ -4,8 +4,8 @@ export default class Scaffold extends CommandBase {
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
-        sobjects: flags.Discriminated<flags.String>;
-        options: flags.Discriminated<flags.String>;
+        sobjects: flags.Discriminated<flags.Option<string>>;
+        options: flags.Discriminated<flags.Option<string>>;
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
@@ -13,6 +13,7 @@ export default class Scaffold extends CommandBase {
     private static MAX_CLASS_NAME_LENGTH;
     private orgAlias;
     private schemas;
+    private index;
     run(): Promise<void>;
     private getSchema;
     private generateTestSetupCode;

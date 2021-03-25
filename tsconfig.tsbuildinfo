@@ -1293,6 +1293,14 @@
         "version": "276fb9b4aba2df3ff449b4ffd7da77ee5ab27be7de9f3567309ff26e38d99276",
         "signature": "eda56a91d838bf1d70165a34e3e4a59e7cb877c8640560a2b5c40195ee9ba399"
       },
+      "./src/lib/scaffold-options.ts": {
+        "version": "2f03012b5b6e7f575d4ca22ca0ebd4d3cf18c8765f3bb46d6c7dae1b7022189e",
+        "signature": "856f61457d3acc393d2a2f70f8eacefc41f8d289e396d54336d135284ee89c2e"
+      },
+      "./src/commands/acumen/apex/scaffold.ts": {
+        "version": "f863615fda69e7b17fccc0572f75567a080c6461c8a0e4295239feeef11d25c8",
+        "signature": "ed17b3f3bd989a0d5b6037f60a4722b718eac48ec910fbf1a702960bdc4ee897"
+      },
       "./src/commands/acumen/apex/coverage/clear.ts": {
         "version": "78ed28a88650b59d04b5567bb6c34eb96a4d7ae0bc1c6a97d166333dbe1771a0",
         "signature": "2ef07415900ccf3926700e5985c710430a010673430345c05c51fbb67430446e"
@@ -1326,11 +1334,11 @@
         "signature": "ac65a8e8a55c1a1b63f3f0b4d16955fd444efbe24148740226366ed299aca74d"
       },
       "./src/lib/package-options.ts": {
-        "version": "ea1e45b90b05f0fc0976aa214242366d65ed04d71e3904eedb61cae408b9fde7",
+        "version": "b70499fc3a54429b94d349e027e27e72dbcd94960e3b02cc8a395c849a4a8b69",
         "signature": "21e3966c415096c12b0bc09674209f8eeebd6f3a43046c3bb202a989f9445202"
       },
       "./src/commands/acumen/package/build.ts": {
-        "version": "146ba1d35fe25c3cb9b07b80b1fb5b0a829c8f7a5d47a0ce2599193aa2d56bfa",
+        "version": "dbc281f4f9968bf3efa4ba72800ce8b2d57b8edcfc20b5503f74a67b6ace7acc",
         "signature": "8e36b4612be3b606d65e85969ff0c80afc3784b3091ce9cb7c65bb390dca8d4c"
       },
       "./src/lib/xml-merge.ts": {
@@ -2671,6 +2679,18 @@
         "./src/lib/utils.ts",
         "./src/lib/unmask-options.ts"
       ],
+      "./src/lib/scaffold-options.ts": [
+        "./src/lib/options.ts"
+      ],
+      "./src/commands/acumen/apex/scaffold.ts": [
+        "./node_modules/@salesforce/command/lib/exported.d.ts",
+        "./src/lib/command-base.ts",
+        "./src/lib/options-factory.ts",
+        "./src/lib/utils.ts",
+        "./src/lib/scaffold-options.ts",
+        "./src/lib/sfdx-project.ts",
+        "./src/lib/sfdx-tasks.ts"
+      ],
       "./src/commands/acumen/apex/coverage/clear.ts": [
         "./node_modules/@salesforce/command/lib/exported.d.ts",
         "./src/lib/command-base.ts",
@@ -3064,6 +3084,10 @@
         "./node_modules/@salesforce/command/lib/exported.d.ts",
         "./src/lib/command-base.ts"
       ],
+      "./src/commands/acumen/apex/scaffold.ts": [
+        "./node_modules/@salesforce/command/lib/exported.d.ts",
+        "./src/lib/command-base.ts"
+      ],
       "./src/commands/acumen/api/get.ts": [
         "./node_modules/@salesforce/command/lib/exported.d.ts",
         "./src/lib/command-base.ts"
@@ -3135,6 +3159,9 @@
         "./src/lib/options.ts"
       ],
       "./src/lib/package-options.ts": [
+        "./src/lib/options.ts"
+      ],
+      "./src/lib/scaffold-options.ts": [
         "./src/lib/options.ts"
       ],
       "./src/lib/options-factory.ts": [
@@ -4722,6 +4749,8 @@
       "./src/lib/sfdx-client.ts",
       "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
+      "./src/lib/scaffold-options.ts",
+      "./src/commands/acumen/apex/scaffold.ts",
       "./src/commands/acumen/apex/coverage/clear.ts",
       "./src/commands/acumen/apex/coverage/execute.ts",
       "./node_modules/cfb/types/index.d.ts",
