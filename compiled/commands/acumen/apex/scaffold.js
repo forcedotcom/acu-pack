@@ -47,7 +47,7 @@ class Scaffold extends command_base_1.CommandBase {
             const rootPath = `./${defaultFolder}/main/default/classes/`;
             for (const [schemaName, schema] of this.schemas) {
                 this.ux.log('\t' + schemaName);
-                const fileDetails = this.generateTestSetupCode(schemaName, schema);
+                const fileDetails = this.generateTestSetupCode(schemaName, schema, options);
                 await utils_1.default.writeFile(rootPath + `${fileDetails.name}.cls`, fileDetails.contents);
                 await utils_1.default.writeFile(rootPath + `${fileDetails.name}.cls-meta.xml`, Scaffold.META_XML.replace(/API_VERSION_TOKEN/, project.sourceApiVersion));
             }
@@ -74,7 +74,7 @@ class Scaffold extends command_base_1.CommandBase {
         }
         return schema;
     }
-    generateTestSetupCode(simpleName, schema) {
+    generateTestSetupCode(simpleName, schema, options) {
         // Don't exceed max class name length
         const noUnderscoreName = simpleName.replace(/_/g, '');
         const className = `${noUnderscoreName.substring(0, Scaffold.MAX_CLASS_NAME_LENGTH - 4)}Test`;
@@ -92,8 +92,13 @@ class Scaffold extends command_base_1.CommandBase {
         ];
         const codeLines = new Map();
         for (const field of schema.fields) {
+            // Skip optional fields?
+            if (!options.includeOptionalFields && field.nillable) {
+                continue;
+            }
             if (field.createable) {
-                codeLines.set(field.name, `${pre}${field.name} = ${this.generateFieldValue(field)}`);
+                const value = options.includeRandomValues ? this.generateFieldValue(field) : null;
+                codeLines.set(field.name, `${pre}${field.name} = ${value}`);
             }
         }
         const sortedKeys = utils_1.default.sortArray(Array.from(codeLines.keys()));
@@ -125,7 +130,7 @@ class Scaffold extends command_base_1.CommandBase {
             if (!fld) {
                 throw new Error('The fld argument cannot be null.');
             }
-            let value = fld.name;
+            const value = fld.name;
             let strLen = fld.length;
             if (!strLen || strLen === 0 || strLen > maxLength) {
                 strLen = maxLength;

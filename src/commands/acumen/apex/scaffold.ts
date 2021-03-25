@@ -85,7 +85,7 @@ export default class Scaffold extends CommandBase {
       const rootPath = `./${defaultFolder}/main/default/classes/`;
       for (const [schemaName, schema] of this.schemas) {
         this.ux.log('\t' + schemaName);
-        const fileDetails = this.generateTestSetupCode(schemaName, schema);
+        const fileDetails = this.generateTestSetupCode(schemaName, schema, options);
 
         await Utils.writeFile(
           rootPath + `${fileDetails.name}.cls`,
@@ -118,7 +118,7 @@ export default class Scaffold extends CommandBase {
     return schema;
   }
 
-  private generateTestSetupCode(simpleName: string, schema: any): any {
+  private generateTestSetupCode(simpleName: string, schema: any, options: ScaffoldOptions): any {
     // Don't exceed max class name length
     const noUnderscoreName = simpleName.replace(/_/g, '');
     const className = `${noUnderscoreName.substring(0, Scaffold.MAX_CLASS_NAME_LENGTH - 4)}Test`;
@@ -137,8 +137,13 @@ export default class Scaffold extends CommandBase {
 
     const codeLines = new Map<string, string>();
     for (const field of schema.fields) {
+      // Skip optional fields?
+      if (!options.includeOptionalFields && field.nillable) {
+        continue;
+      }
       if (field.createable) {
-        codeLines.set(field.name, `${pre}${field.name} = ${this.generateFieldValue(field)}`);
+        const value = options.includeRandomValues ? this.generateFieldValue(field) : null;
+        codeLines.set(field.name, `${pre}${field.name} = ${value}`);
       }
     }
 
