@@ -80,6 +80,11 @@
         "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait. The default is %s",
         "reportFlagDescription": "The optional path for the generated report."
       }
+    },
+    "scaffold": {
+      "commandDescription": "Generates Apex test classes (and cls-meta files) for specified CustomObjects.",
+      "optionsFlagDescription": "A file containing the Apex Test scaffold options. Specifying this option will create the file if it doesn't exist already.",
+      "sObjectsFlagDescription": "A comma separated list of SObject types generate Apex Test classes for. This list overrides any SObjects list in the options file."
     }
   },
   "admin": {

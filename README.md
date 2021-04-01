@@ -12,6 +12,7 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 * [Usage](#usage)
 * [Issues](#issues)
 * [Commands](#commands)
+<!-- tocstop -->
 
 # Debugging your plugin
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
@@ -28,18 +29,20 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:admin:user:unmask -u ORG_ALIAS -f ./
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:clear -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:execute -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:coverage:report -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:scaffold -u ORG_ALIAS -s Account
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:scaffold -u ORG_ALIAS -o scaffold-options.json
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -u ORG_ALIAS -o package-options.json 
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:dictionary -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:permissions -p force-app
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u ORG_ALIAS -m true -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 ```
 
 2. Set some breakpoints in your command code
@@ -93,6 +96,7 @@ to include a tilda (~) as follows:
 * [`sfdx acumen:apex:coverage:clear [-m <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageclear--m-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagebuild--x-string--m-string--o-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -252,6 +256,47 @@ OPTIONS
 EXAMPLE
   $ sfdx acumen:apex:coverage:report -u myOrgAlias -r myCodeCoverageReport.xlsx
        Pulls the Code Coverage metrics from myOrgAlias and generates a CodeCoverageReport-myOrgAlias.xlsx report.
+```
+
+## `sfdx acumen:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Generates Apex test classes (and cls-meta files) for specified CustomObjects.
+
+```
+Generates Apex test classes (and cls-meta files) for specified CustomObjects.
+
+USAGE
+  $ sfdx acumen:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -o, --options=options                                                             A file containing the Apex Test
+                                                                                    scaffold options. Specifying this
+                                                                                    option will create the file if it
+                                                                                    doesn't exist already.
+
+  -s, --sobjects=sobjects                                                           A comma separated list of SObject
+                                                                                    types generate Apex Test classes
+                                                                                    for. This list overrides any
+                                                                                    SObjects list in the options file.
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLES
+  $ sfdx acumen:apex:scaffold -u myOrgAlias -s Account,MyObject__c'
+       Generates AccountTest.cls & MyObjectTest.cls Apex test classes (and cls-meta files) for the Account & MyObject__c 
+  SObject types. Random values assigned to required fields by default
+  $ sfdx acumen:apex:scaffold -u myOrgAlias -o scaffold-options.json
+       Generates Apex test classes (and cls-meta files) for specified CustomObjects. The specified options file is used.
 ```
 
 ## `sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`

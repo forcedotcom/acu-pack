@@ -67,7 +67,7 @@ export class PackageOptions extends OptionsBase {
                     'SynonymDictionary',
                     'TransactionSecurityPolicy'
                 ];
-                this.skipFileNamePattern = 'topicsForObjects/sma__|topicsForObjects/ltngsharing__|topicsForObjects/SDOC__|topicsForObjects/SSign__';
+                this.skipFileNamePattern = 'topicsForObjects/sma__|topicsForObjects/ltngsharing__';
                 resolve();
             } catch (err) {
                 reject(err);
