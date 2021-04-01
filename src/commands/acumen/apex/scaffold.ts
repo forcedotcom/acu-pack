@@ -10,9 +10,9 @@ export default class Scaffold extends CommandBase {
   public static description = CommandBase.messages.getMessage('apex.scaffold.commandDescription');
 
   public static examples = [
-    `$ sfdx apex.scaffold -u myOrgAlias -s Account,MyObject__c'
+    `$ sfdx acumen:apex:scaffold -u myOrgAlias -s Account,MyObject__c'
     Generates AccountTest.cls & MyObjectTest.cls Apex test classes (and cls-meta files) for the Account & MyObject__c SObject types. Random values assigned to required fields by default`,
-    `$ sfdx apex.scaffold -u myOrgAlias -o scaffold-options.json
+    `$ sfdx acumen:apex:scaffold -u myOrgAlias -o scaffold-options.json
     Generates Apex test classes (and cls-meta files) for specified CustomObjects. The specified options file is used.`
   ];
 

@@ -1298,7 +1298,7 @@
         "signature": "856f61457d3acc393d2a2f70f8eacefc41f8d289e396d54336d135284ee89c2e"
       },
       "./src/commands/acumen/apex/scaffold.ts": {
-        "version": "3fa34e5890fc695cdcd9d1d5c000f24e369c109780bcdc7e6a9220737e9dfd12",
+        "version": "6d1965089fab43e4041f53307672d8dff5d212e1f609d4aee088cc6ec7bc2dbc",
         "signature": "ed17b3f3bd989a0d5b6037f60a4722b718eac48ec910fbf1a702960bdc4ee897"
       },
       "./src/commands/acumen/apex/coverage/clear.ts": {

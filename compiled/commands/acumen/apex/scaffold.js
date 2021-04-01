@@ -261,9 +261,9 @@ class Scaffold extends command_base_1.CommandBase {
 exports.default = Scaffold;
 Scaffold.description = command_base_1.CommandBase.messages.getMessage('apex.scaffold.commandDescription');
 Scaffold.examples = [
-    `$ sfdx apex.scaffold -u myOrgAlias -s Account,MyObject__c'
+    `$ sfdx acumen:apex:scaffold -u myOrgAlias -s Account,MyObject__c'
     Generates AccountTest.cls & MyObjectTest.cls Apex test classes (and cls-meta files) for the Account & MyObject__c SObject types. Random values assigned to required fields by default`,
-    `$ sfdx apex.scaffold -u myOrgAlias -o scaffold-options.json
+    `$ sfdx acumen:apex:scaffold -u myOrgAlias -o scaffold-options.json
     Generates Apex test classes (and cls-meta files) for specified CustomObjects. The specified options file is used.`
 ];
 Scaffold.flagsConfig = {
