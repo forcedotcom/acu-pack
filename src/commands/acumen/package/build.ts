@@ -55,6 +55,12 @@ export default class Build extends CommandBase {
     // Read/Write the options file if it does not exist already
     if (this.flags.options) {
       options = await OptionsFactory.get(PackageOptions, this.flags.options);
+      if (!options) {
+        this.ux.log(`Unable to read options file: ${this.flags.options}.`);
+        // Set the proper exit code to indicate violation/failure
+        process.exitCode = 1;
+        return;
+      }
     } else {
       options = new PackageOptions();
       await options.loadDefaults();
