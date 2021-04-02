@@ -94,6 +94,12 @@
         "userListFlagDescription": "A comma delimited list of usernames for the User objects to update.",
         "userFileFlagDescription": "A file which contains a list of usernames for the User objects to update."
       }
+    },
+    "workspace": {
+      "delete": {
+        "commandDescription": "Deletes the Developer Console IDEWorkspace object for the specified user(s).",
+        "userListFlagDescription": "A comma delimited list of usernames to reset workspaces for."
+      }
     }
   },
   "api": {
