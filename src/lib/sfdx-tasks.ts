@@ -238,6 +238,89 @@ export class SfdxTasks {
         return new SfdxOrgInfo(result);
     }
 
+    public static async getSourceTrackingStatus(orgAliasOrUsername: string): Promise<any[]> {
+        if (!orgAliasOrUsername) {
+            return null;
+        }
+        const results = await SfdxCore.command(`sfdx force:source:status --json -u ${orgAliasOrUsername}`);
+        // If there are no instances of the metadatatype SFDX just returns {status:0}
+        if (results) {
+            let resultsArray: any[];
+            try {
+                resultsArray = ensureArray(results);
+            } catch {
+                resultsArray = [results];
+            }
+            const statuses = [];
+            for (const status of resultsArray) {
+
+                /*
+                    {
+                    "status": 0,
+                    "result": [
+                        {
+                        "state": "Remote Changed",
+                        "fullName": "Admin",
+                        "type": "Profile",
+                        "filePath": "force-app\\main\\default\\profiles\\Admin.profile-meta.xml"
+                        },
+                        {
+                        "state": "Remote Changed",
+                        "fullName": "Custom%3A Sales Profile",
+                        "type": "Profile",
+                        "filePath": "force-app\\main\\default\\profiles\\Custom%3A Sales Profile.profile-meta.xml"
+                        },
+                        {
+                        "state": "Remote Changed",
+                        "fullName": "Custom%3A Marketing Profile",
+                        "type": "Profile",
+                        "filePath": "force-app\\main\\default\\profiles\\Custom%3A Marketing Profile.profile-meta.xml"
+                        },
+                        {
+                        "state": "Remote Changed",
+                        "fullName": "Custom%3A Support Profile",
+                        "type": "Profile",
+                        "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
+                        },
+                        {
+                        "state": "Remote Changed",
+                        "fullName": "Zip_Code__c-Zip Code Layout",
+                        "type": "Layout",
+                        "filePath": "force-app\\main\\default\\layouts\\Zip_Code__c-Zip Code Layout.layout-meta.xml"
+                        },
+                        {
+                        "state": "Remote Deleted",
+                        "fullName": "Zip_Code__c.End_Date__c",
+                        "type": "CustomField",
+                        "filePath": "force-app\\main\\default\\objects\\Zip_Code__c\\fields\\End_Date__c.field-meta.xml"
+                        },
+                        {
+                        "state": "Remote Add",
+                        "fullName": "Zip_Code__c.State__c",
+                        "type": "CustomField",
+                        "filePath": null
+                        },
+                        {
+                        "state": "Remote Add",
+                        "fullName": "MyClass",
+                        "type": "ApexClass",
+                        "filePath": null
+                        }
+                    ]
+                    }
+
+                */
+                statuses.push({
+                    state: status.state,
+                    fullName: status.fullName,
+                    type: status.type,
+                    filePath: status.filePath
+                });
+            }
+            return statuses;
+        }
+    }
+
     protected static _folderPaths: Map<string, string> = null;
 
     private static async getFolderSOQLData(usernameOrAlias: string): Promise<Map<string, string>> {

@@ -12,7 +12,7 @@ const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 const options_factory_1 = require("../../../lib/options-factory");
 class Build extends command_base_1.CommandBase {
     async run() {
-        var e_1, _a;
+        var e_1, _a, e_2, _b;
         // Validate the package path
         const packageFileName = this.flags.package || Build.defaultPackageFileName;
         const packageDir = path.dirname(packageFileName);
@@ -45,15 +45,73 @@ class Build extends command_base_1.CommandBase {
             const describeMetadatas = new Set();
             this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
             const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
-            let forceMetadataTypes = null;
-            if (this.flags.metadata) {
-                forceMetadataTypes = new Set();
-                for (const metaName of this.flags.metadata.split(',')) {
-                    forceMetadataTypes.add(metaName.trim());
+            const forceMetadataTypes = new Map();
+            if (this.flags.source) {
+                let hasConflicts = false;
+                const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(orgAlias);
+                try {
+                    for (var statuses_1 = tslib_1.__asyncValues(statuses), statuses_1_1; statuses_1_1 = await statuses_1.next(), !statuses_1_1.done;) {
+                        const status = statuses_1_1.value;
+                        /*
+                          Actions: Add, Changed, Deleted
+                          {
+                            "state": "Local Add",
+                            "fullName": "SF86_Template",
+                            "type": "StaticResource",
+                            "filePath": "force-app\\main\\default\\staticresources\\SF86_Template.xml"
+                          },
+                          {
+                            "state": "Remote Add",
+                            "fullName": "Admin",
+                            "type": "Profile",
+                            "filePath": null
+                          },
+                           {
+                            "state": "Remote Changed (Conflict)",
+                            "fullName": "Custom%3A Support Profile",
+                            "type": "Profile",
+                            "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
+                          },
+                        */
+                        const actionParts = status.state.split(' ');
+                        if (actionParts[0] === 'Remote') {
+                            switch (actionParts[1]) {
+                                case 'Add':
+                                case 'Changed':
+                                    const typeName = status.type.trim();
+                                    const fullName = status.fullName.trim();
+                                    if (!forceMetadataTypes.has(typeName)) {
+                                        forceMetadataTypes.set(typeName, [fullName]);
+                                    }
+                                    else {
+                                        forceMetadataTypes.get(typeName).push(fullName);
+                                    }
+                                    break;
+                                case 'Deleted':
+                                    // Not handling deleted yet - but we should create a destructive package
+                                    break;
+                                default:
+                                    throw new Error(`Unknown Action: ${actionParts[1]}`);
+                            }
+                            if (actionParts.length > 2 && actionParts[2] === '(Conflict)') {
+                                hasConflicts = true;
+                            }
+                        }
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (statuses_1_1 && !statuses_1_1.done && (_a = statuses_1.return)) await _a.call(statuses_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+                if (hasConflicts) {
+                    this.ux.log('WARNING: Conflicts detected - please review package carefully.');
                 }
             }
             for (const metadata of describeMetadata) {
-                if ((forceMetadataTypes && !forceMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+                if (!forceMetadataTypes.has(metadata.xmlName) || excluded.has(metadata.xmlName)) {
                     continue;
                 }
                 describeMetadatas.add(metadata);
@@ -62,18 +120,20 @@ class Build extends command_base_1.CommandBase {
             const metadataMap = new Map();
             let counter = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _c; _c = await _b.next(), !_c.done;) {
-                    const entry = _c.value;
-                    metadataMap.set(entry.name, entry.members);
+                for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+                    const entry = _d.value;
+                    const members = forceMetadataTypes.get(entry.name);
+                    // If specific members were defined previously - just use them
+                    metadataMap.set(entry.name, (members !== null && members !== void 0 ? members : entry.members));
                     this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
                 }
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
             finally {
                 try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    if (_d && !_d.done && (_b = _c.return)) await _b.call(_c);
                 }
-                finally { if (e_1) throw e_1.error; }
+                finally { if (e_2) throw e_2.error; }
             }
             // Write the final package
             await sfdx_core_1.SfdxCore.writePackageFile(metadataMap, packageFileName);
@@ -109,6 +169,10 @@ Build.flagsConfig = {
     namespaces: command_1.flags.string({
         char: 'n',
         description: command_base_1.CommandBase.messages.getMessage('namespacesFlagDescription')
+    }),
+    source: command_1.flags.boolean({
+        char: 's',
+        description: command_base_1.CommandBase.messages.getMessage('package.build.sourceFlagDescription')
     })
 };
 // Comment this out if your command does not require an org username

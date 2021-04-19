@@ -1,21 +1,17 @@
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
-export default class Scaffold extends CommandBase {
+export default class Build extends CommandBase {
     static description: string;
+    static defaultPackageFileName: string;
     static examples: string[];
     protected static flagsConfig: {
-        sobjects: flags.Discriminated<flags.Option<string>>;
+        package: flags.Discriminated<flags.Option<string>>;
+        metadata: flags.Discriminated<flags.Option<string>>;
         options: flags.Discriminated<flags.Option<string>>;
+        namespaces: flags.Discriminated<flags.Option<string>>;
+        source: flags.Discriminated<flags.Boolean<boolean>>;
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
-    private static META_XML;
-    private static MAX_CLASS_NAME_LENGTH;
-    private orgAlias;
-    private schemas;
-    private index;
     run(): Promise<void>;
-    private getSchema;
-    private generateTestSetupCode;
-    private generateFieldValue;
 }
