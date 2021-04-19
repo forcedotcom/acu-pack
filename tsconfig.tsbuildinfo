@@ -1342,7 +1342,7 @@
         "signature": "21e3966c415096c12b0bc09674209f8eeebd6f3a43046c3bb202a989f9445202"
       },
       "./src/commands/acumen/package/build.ts": {
-        "version": "442381bbceb21fae7356aacb11f41e8924f54377bef7dba02a5ef345340f1d7b",
+        "version": "ed57cf5ac37cd8aa7114246abcda717185a0103472a86f39ba87a12983d94783",
         "signature": "52c68a1442e1b2bd25440a9d21f22bbed6dfae5a0a3fade86e1e76980a9c0b82"
       },
       "./src/lib/xml-merge.ts": {

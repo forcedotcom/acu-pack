@@ -87,7 +87,7 @@ export default class Build extends CommandBase {
 
       const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
 
-      const forceMetadataTypes: Map<string, string[]> = new Map<string, string[]>();
+      const filterMetadataTypes: Map<string, string[]> = new Map<string, string[]>();
 
       if (this.flags.source) {
         let hasConflicts = false;
@@ -121,10 +121,10 @@ export default class Build extends CommandBase {
               case 'Changed':
                 const typeName = status.type.trim();
                 const fullName = status.fullName.trim();
-                if (!forceMetadataTypes.has(typeName)) {
-                  forceMetadataTypes.set(typeName, [fullName]);
+                if (!filterMetadataTypes.has(typeName)) {
+                  filterMetadataTypes.set(typeName, [fullName]);
                 } else {
-                  forceMetadataTypes.get(typeName).push(fullName);
+                  filterMetadataTypes.get(typeName).push(fullName);
                 }
                 break;
               case 'Deleted':
@@ -141,10 +141,14 @@ export default class Build extends CommandBase {
         if (hasConflicts) {
           this.ux.log('WARNING: Conflicts detected - please review package carefully.');
         }
+      } else if (this.flags.metadata) {
+        for (const metaName of this.flags.metadata.split(',')) {
+          filterMetadataTypes.set(metaName.trim(), null);
+        }
       }
 
       for (const metadata of describeMetadata) {
-        if (!forceMetadataTypes.has(metadata.xmlName) || excluded.has(metadata.xmlName)) {
+        if (!filterMetadataTypes.has(metadata.xmlName) || excluded.has(metadata.xmlName)) {
           continue;
         }
         describeMetadatas.add(metadata);
@@ -153,7 +157,7 @@ export default class Build extends CommandBase {
       const metadataMap = new Map<string, string[]>();
       let counter = 0;
       for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
-        const members = forceMetadataTypes.get(entry.name);
+        const members = filterMetadataTypes.get(entry.name);
         // If specific members were defined previously - just use them
         metadataMap.set(entry.name, members ?? entry.members);
         this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);

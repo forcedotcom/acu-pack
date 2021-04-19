@@ -45,7 +45,7 @@ class Build extends command_base_1.CommandBase {
             const describeMetadatas = new Set();
             this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
             const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
-            const forceMetadataTypes = new Map();
+            const filterMetadataTypes = new Map();
             if (this.flags.source) {
                 let hasConflicts = false;
                 const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(orgAlias);
@@ -80,11 +80,11 @@ class Build extends command_base_1.CommandBase {
                                 case 'Changed':
                                     const typeName = status.type.trim();
                                     const fullName = status.fullName.trim();
-                                    if (!forceMetadataTypes.has(typeName)) {
-                                        forceMetadataTypes.set(typeName, [fullName]);
+                                    if (!filterMetadataTypes.has(typeName)) {
+                                        filterMetadataTypes.set(typeName, [fullName]);
                                     }
                                     else {
-                                        forceMetadataTypes.get(typeName).push(fullName);
+                                        filterMetadataTypes.get(typeName).push(fullName);
                                     }
                                     break;
                                 case 'Deleted':
@@ -110,8 +110,13 @@ class Build extends command_base_1.CommandBase {
                     this.ux.log('WARNING: Conflicts detected - please review package carefully.');
                 }
             }
+            else if (this.flags.metadata) {
+                for (const metaName of this.flags.metadata.split(',')) {
+                    filterMetadataTypes.set(metaName.trim(), null);
+                }
+            }
             for (const metadata of describeMetadata) {
-                if (!forceMetadataTypes.has(metadata.xmlName) || excluded.has(metadata.xmlName)) {
+                if (!filterMetadataTypes.has(metadata.xmlName) || excluded.has(metadata.xmlName)) {
                     continue;
                 }
                 describeMetadatas.add(metadata);
@@ -122,7 +127,7 @@ class Build extends command_base_1.CommandBase {
             try {
                 for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
                     const entry = _d.value;
-                    const members = forceMetadataTypes.get(entry.name);
+                    const members = filterMetadataTypes.get(entry.name);
                     // If specific members were defined previously - just use them
                     metadataMap.set(entry.name, (members !== null && members !== void 0 ? members : entry.members));
                     this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
