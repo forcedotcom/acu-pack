@@ -85,86 +85,61 @@ export default class Build extends CommandBase {
 
       this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
 
-      const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
-
-      const filterMetadataTypes: Map<string, string[]> = new Map<string, string[]>();
-
+      let metadataMap = new Map<string, string[]>();
       if (this.flags.source) {
-        let hasConflicts = false;
         const statuses = await SfdxTasks.getSourceTrackingStatus(orgAlias);
-        for await (const status of statuses) {
-          /*
-            Actions: Add, Changed, Deleted
-            {
-              "state": "Local Add",
-              "fullName": "SF86_Template",
-              "type": "StaticResource",
-              "filePath": "force-app\\main\\default\\staticresources\\SF86_Template.xml"
-            },
-            {
-              "state": "Remote Add",
-              "fullName": "Admin",
-              "type": "Profile",
-              "filePath": null
-            },
-             {
-              "state": "Remote Changed (Conflict)",
-              "fullName": "Custom%3A Support Profile",
-              "type": "Profile",
-              "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
-            },
-          */
-          const actionParts = status.state.split(' ');
-          if (actionParts[0] === 'Remote') {
-            switch (actionParts[1]) {
-              case 'Add':
-              case 'Changed':
-                const typeName = status.type.trim();
-                const fullName = status.fullName.trim();
-                if (!filterMetadataTypes.has(typeName)) {
-                  filterMetadataTypes.set(typeName, [fullName]);
-                } else {
-                  filterMetadataTypes.get(typeName).push(fullName);
-                }
-                break;
-              case 'Deleted':
-                // Not handling deleted yet - but we should create a destructive package
-                break;
-              default:
-                throw new Error(`Unknown Action: ${actionParts[1]}`);
-            }
-            if (actionParts.length > 2 && actionParts[2] === '(Conflict)') {
-              hasConflicts = true;
-            }
+        if (!statuses || statuses.length === 0) {
+          this.ux.log('No Source Tracking changes found.');
+          return;
+        }
+        const results = await SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+        if (results.conflicts.length > 0) {
+          throw new Error(`WARNING: Conflicts detected for the following metadata types: ${results.conflicts.join(', ')}`);
+        }
+        if (results.deletes.length > 0) {
+          this.ux.log('WARNING: The following deleted items need to be handled manually:');
+          for (const deleteType of results.deletes) {
+            this.ux.log(`\t${deleteType}`);
           }
         }
-        if (hasConflicts) {
-          this.ux.log('WARNING: Conflicts detected - please review package carefully.');
+        metadataMap = results.map;
+      } else {
+        const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
+        let forceMetadataTypes: Set<string> = null;
+        if (this.flags.metadata) {
+          forceMetadataTypes = new Set<string>();
+          for (const metaName of this.flags.metadata.split(',')) {
+            forceMetadataTypes.add(metaName.trim());
+          }
         }
-      } else if (this.flags.metadata) {
-        for (const metaName of this.flags.metadata.split(',')) {
-          filterMetadataTypes.set(metaName.trim(), null);
+
+        for (const metadata of describeMetadata) {
+          if ((forceMetadataTypes && !forceMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+            continue;
+          }
+          describeMetadatas.add(metadata);
+        }
+
+        let counter = 0;
+        for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
+          // If specific members were defined previously - just use them
+          metadataMap.set(entry.name, entry.members);
+          this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
+        }
+
+      }
+      const packageMap = new Map<string, string[]>();
+
+      // Filter excluded types
+      for (const [typeName, members] of metadataMap) {
+        if (!excluded.has(typeName)) {
+          packageMap.set(typeName, members);
         }
       }
 
-      for (const metadata of describeMetadata) {
-        if ((filterMetadataTypes.size > 0 && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
-          continue;
-        }
-        describeMetadatas.add(metadata);
-      }
       this.ux.log(`Generating: ${packageFileName}`);
-      const metadataMap = new Map<string, string[]>();
-      let counter = 0;
-      for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
-        const members = filterMetadataTypes.get(entry.name);
-        // If specific members were defined previously - just use them
-        metadataMap.set(entry.name, members ?? entry.members);
-        this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-      }
-
       // Write the final package
-      await SfdxCore.writePackageFile(metadataMap, packageFileName);
+      await SfdxCore.writePackageFile(packageMap, packageFileName);
 
       this.ux.log('Done.');
     } catch (err) {

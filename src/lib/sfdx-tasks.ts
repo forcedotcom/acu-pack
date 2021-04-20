@@ -238,87 +238,115 @@ export class SfdxTasks {
         return new SfdxOrgInfo(result);
     }
 
+    public static async getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): Promise<any> {
+        const metadataMap: Map<string, string[]> = new Map<string, string[]>();
+        const conflictTypes: string[] = [];
+        const deleteTypes: string[] = [];
+        for (const status of sourceTrackingStatues) {
+            if (status.state.includes('(Conflict)')) {
+                conflictTypes.push(status.type);
+                continue;
+            }
+            /*
+              Actions: Add, Changed, Deleted
+              {
+                "state": "Local Add",
+                "fullName": "SF86_Template",
+                "type": "StaticResource",
+                "filePath": "force-app\\main\\default\\staticresources\\SF86_Template.xml"
+              },
+              {
+                "state": "Remote Add",
+                "fullName": "Admin",
+                "type": "Profile",
+                "filePath": null
+              },
+               {
+                "state": "Remote Changed (Conflict)",
+                "fullName": "Custom%3A Support Profile",
+                "type": "Profile",
+                "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
+              },
+            */
+            const actionParts = status.state.split(' ');
+            const typeName = status.type.trim().endsWith('Folder')
+                ? status.type.replace(/Folder/, '').trim()
+                : status.type.trim();
+            const fullName = status.fullName.trim();
+            if (actionParts[0] === 'Remote') {
+                switch (actionParts[1]) {
+                    case 'Add':
+                    case 'Changed':
+                        // Handle Report & Dashboard Folders    
+                        if (!metadataMap.has(typeName)) {
+                            metadataMap.set(typeName, [fullName]);
+                        } else {
+                            metadataMap.get(typeName).push(fullName);
+                        }
+                        break;
+                    case 'Deleted':
+                        // Not handling deletes yet
+                        deleteTypes.push(`Type:${typeName} FullName:${fullName}.`);
+                        break;
+                    default:
+                        throw new Error(`Unknown Action: ${actionParts[1]}`);
+                }
+            }
+        }
+        return {
+            map: metadataMap,
+            conflicts: conflictTypes,
+            deletes: deleteTypes
+        };
+    }
+
     public static async getSourceTrackingStatus(orgAliasOrUsername: string): Promise<any[]> {
         if (!orgAliasOrUsername) {
             return null;
         }
         const results = await SfdxCore.command(`sfdx force:source:status --json -u ${orgAliasOrUsername}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
-        if (results) {
-            let resultsArray: any[];
-            try {
-                resultsArray = ensureArray(results);
-            } catch {
-                resultsArray = [results];
-            }
-            const statuses = [];
-            for (const status of resultsArray) {
-
-                /*
-                    {
-                    "status": 0,
-                    "result": [
-                        {
-                        "state": "Remote Changed",
-                        "fullName": "Admin",
-                        "type": "Profile",
-                        "filePath": "force-app\\main\\default\\profiles\\Admin.profile-meta.xml"
-                        },
-                        {
-                        "state": "Remote Changed",
-                        "fullName": "Custom%3A Sales Profile",
-                        "type": "Profile",
-                        "filePath": "force-app\\main\\default\\profiles\\Custom%3A Sales Profile.profile-meta.xml"
-                        },
-                        {
-                        "state": "Remote Changed",
-                        "fullName": "Custom%3A Marketing Profile",
-                        "type": "Profile",
-                        "filePath": "force-app\\main\\default\\profiles\\Custom%3A Marketing Profile.profile-meta.xml"
-                        },
-                        {
-                        "state": "Remote Changed",
-                        "fullName": "Custom%3A Support Profile",
-                        "type": "Profile",
-                        "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
-                        },
-                        {
-                        "state": "Remote Changed",
-                        "fullName": "Zip_Code__c-Zip Code Layout",
-                        "type": "Layout",
-                        "filePath": "force-app\\main\\default\\layouts\\Zip_Code__c-Zip Code Layout.layout-meta.xml"
-                        },
-                        {
-                        "state": "Remote Deleted",
-                        "fullName": "Zip_Code__c.End_Date__c",
-                        "type": "CustomField",
-                        "filePath": "force-app\\main\\default\\objects\\Zip_Code__c\\fields\\End_Date__c.field-meta.xml"
-                        },
-                        {
-                        "state": "Remote Add",
-                        "fullName": "Zip_Code__c.State__c",
-                        "type": "CustomField",
-                        "filePath": null
-                        },
-                        {
-                        "state": "Remote Add",
-                        "fullName": "MyClass",
-                        "type": "ApexClass",
-                        "filePath": null
-                        }
-                    ]
-                    }
-
-                */
-                statuses.push({
-                    state: status.state,
-                    fullName: status.fullName,
-                    type: status.type,
-                    filePath: status.filePath
-                });
-            }
-            return statuses;
+        if (!results) {
+            return null;
         }
+        let resultsArray: any[];
+        try {
+            resultsArray = ensureArray(results);
+        } catch {
+            resultsArray = [results];
+        }
+        const statuses: any[] = [];
+        for (const result of resultsArray) {
+            statuses.push({
+                state: result.state,
+                fullName: result.fullName,
+                type: result.type,
+                filePath: result.filePath
+            });
+
+            /*
+              Actions: Add, Changed, Deleted
+              {
+                "state": "Local Add",
+                "fullName": "SF86_Template",
+                "type": "StaticResource",
+                "filePath": "force-app\\main\\default\\staticresources\\SF86_Template.xml"
+              },
+              {
+                "state": "Remote Add",
+                "fullName": "Admin",
+                "type": "Profile",
+                "filePath": null
+              },
+               {
+                "state": "Remote Changed (Conflict)",
+                "fullName": "Custom%3A Support Profile",
+                "type": "Profile",
+                "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
+              },
+            */
+        }
+        return statuses;
     }
 
     protected static _folderPaths: Map<string, string> = null;

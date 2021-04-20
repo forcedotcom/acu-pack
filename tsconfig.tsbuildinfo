@@ -1278,8 +1278,8 @@
         "signature": "02565f6cc62585914801ed4694d4d0a002675a14d3f5630265dde1444e0e0061"
       },
       "./src/lib/sfdx-tasks.ts": {
-        "version": "f84590bb8aaac5433dc7968298a2c0cd98bf95b1974ed3388123a6ff4c8fbb58",
-        "signature": "27ad783eddfb4b2804e7a27cee66b2654ce2a102c041bdc476fb77db70e8e085"
+        "version": "2da075ba06df61ad5b417ad5e20435aa07502903d9a003d5cbff99bb1886a192",
+        "signature": "05ed71db157c5b86bda2a778b1c2e35024312b7cb7dad196966782f82a605940"
       },
       "./src/lib/sfdx-client.ts": {
         "version": "e0d020c1e23da40ff53d6d116011e2cb626c6c0b711a722af1a0a9690f05b82c",
@@ -1342,7 +1342,7 @@
         "signature": "21e3966c415096c12b0bc09674209f8eeebd6f3a43046c3bb202a989f9445202"
       },
       "./src/commands/acumen/package/build.ts": {
-        "version": "f5d8f9ac7b83831e40f7ab5ff62bd5569a5d6f6bc3ae721ab17950f4069c662d",
+        "version": "d0526ff9718ef245bf65ccade2a47b0e55d41d2f97a12add3797ace76656f0e3",
         "signature": "52c68a1442e1b2bd25440a9d21f22bbed6dfae5a0a3fade86e1e76980a9c0b82"
       },
       "./src/lib/xml-merge.ts": {
@@ -4790,8 +4790,12 @@
       "./node_modules/xpath/xpath.d.ts",
       "./src/lib/utils.ts",
       "./src/lib/sfdx-project.ts",
+      "./src/lib/sfdx-core.ts",
+      "./src/lib/sfdx-query.ts",
+      "./src/lib/options.ts",
       "./src/lib/options-factory.ts",
       "./src/lib/sfdx-client.ts",
+      "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
       "./src/commands/acumen/admin/workspace/delete.ts",
       "./src/lib/scaffold-options.ts",
@@ -4807,12 +4811,16 @@
       "./src/lib/package-options.ts",
       "./src/lib/xml-merge.ts",
       "./src/commands/acumen/package/merge.ts",
+      "./src/lib/sfdx-permission.ts",
+      "./src/commands/acumen/package/permissions.ts",
       "./src/lib/schema-utils.ts",
+      "./src/lib/schema-options.ts",
       "./src/commands/acumen/schema/dictionary.ts",
       "./src/lib/profile-download.ts",
       "./src/commands/acumen/schema/profile/retrieve.ts",
       "./src/commands/acumen/source/permissions.ts",
       "./src/commands/acumen/source/profile.ts",
+      "./src/lib/xpath-options.ts",
       "./src/commands/acumen/source/xpath.ts",
       "./src/lib/delta-command.ts",
       "./src/lib/delta-provider.ts",
@@ -4839,16 +4847,8 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
-      "./src/lib/sfdx-core.ts",
-      "./src/lib/xpath-options.ts",
-      "./src/lib/schema-options.ts",
-      "./src/commands/acumen/package/permissions.ts",
-      "./src/lib/sfdx-permission.ts",
-      "./src/commands/acumen/package/build.ts",
-      "./src/lib/unmask-options.ts",
       "./src/lib/sfdx-tasks.ts",
-      "./src/lib/options.ts",
-      "./src/lib/sfdx-query.ts"
+      "./src/commands/acumen/package/build.ts"
     ]
   },
   "version": "3.7.5"
