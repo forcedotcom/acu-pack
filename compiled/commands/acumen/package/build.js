@@ -116,7 +116,7 @@ class Build extends command_base_1.CommandBase {
                 }
             }
             for (const metadata of describeMetadata) {
-                if (!filterMetadataTypes.has(metadata.xmlName) || excluded.has(metadata.xmlName)) {
+                if ((filterMetadataTypes.size > 0 && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
                     continue;
                 }
                 describeMetadatas.add(metadata);
