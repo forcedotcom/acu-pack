@@ -42,20 +42,20 @@ export class SfdxCore {
         });
     }
 
-    public static getPackageBase(version = null) {
+    public static async getPackageBase(version = null): Promise<any> {
         return {
             Package: {
                 $: {
                     xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 types: [],
-                version: version || SfdxProject.DEFAULT_PACKAGE_VERSION
+                version: version || (await SfdxProject.default()).sourceApiVersion
             }
         };
     }
 
-    public static createPackage(packageTypes: Map<string, string[]>, version: string = null): any {
-        const packageObj = SfdxCore.getPackageBase(version);
+    public static async createPackage(packageTypes: Map<string, string[]>, version: string = null): Promise<any> {
+        const packageObj = await SfdxCore.getPackageBase(version);
 
         const names = Utils.sortArray(Array.from(packageTypes.keys()));
         for (const name of names) {
@@ -70,7 +70,7 @@ export class SfdxCore {
 
     public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, eofChar = null): Promise<void> {
         // Convert into Package format
-        const sfdxPackage = SfdxCore.createPackage(metadataMap);
+        const sfdxPackage = await SfdxCore.createPackage(metadataMap);
         await Utils.writeObjectToXmlFile(packageFilePath, sfdxPackage, eofChar);
     }
 }

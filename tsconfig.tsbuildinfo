@@ -1262,8 +1262,8 @@
         "signature": "6f9c79b7f04aa3418bb83ccd005e93cad6a126fd0074709f9a16a9d7d318a0e6"
       },
       "./src/lib/sfdx-core.ts": {
-        "version": "adf760350d56e5ad739b74c85f521f01057b2043d6a015c9739378603362aa60",
-        "signature": "23aeaf2af3f7c3d4d6f3d671386e78e7729db0ec12c35845dba8872f841f7e20"
+        "version": "74ecdba304a312a29f9efd77debd07c388b2a92a5052d0093056fda74ad19c10",
+        "signature": "5a2e87366df99425b8a25a43ca65d3352eeee3589dc0b37ec9e2e2dd2362a750"
       },
       "./src/lib/sfdx-query.ts": {
         "version": "93146eb4a7ee573f3fe3eb5da8dc64856a545ef403cad40e098fa5aa7b5ef3df",
@@ -4790,13 +4790,8 @@
       "./node_modules/xpath/xpath.d.ts",
       "./src/lib/utils.ts",
       "./src/lib/sfdx-project.ts",
-      "./src/lib/sfdx-core.ts",
-      "./src/lib/sfdx-query.ts",
-      "./src/lib/options.ts",
       "./src/lib/options-factory.ts",
-      "./src/lib/sfdx-tasks.ts",
       "./src/lib/sfdx-client.ts",
-      "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
       "./src/commands/acumen/admin/workspace/delete.ts",
       "./src/lib/scaffold-options.ts",
@@ -4812,16 +4807,12 @@
       "./src/lib/package-options.ts",
       "./src/lib/xml-merge.ts",
       "./src/commands/acumen/package/merge.ts",
-      "./src/lib/sfdx-permission.ts",
-      "./src/commands/acumen/package/permissions.ts",
       "./src/lib/schema-utils.ts",
-      "./src/lib/schema-options.ts",
       "./src/commands/acumen/schema/dictionary.ts",
       "./src/lib/profile-download.ts",
       "./src/commands/acumen/schema/profile/retrieve.ts",
       "./src/commands/acumen/source/permissions.ts",
       "./src/commands/acumen/source/profile.ts",
-      "./src/lib/xpath-options.ts",
       "./src/commands/acumen/source/xpath.ts",
       "./src/lib/delta-command.ts",
       "./src/lib/delta-provider.ts",
@@ -4848,7 +4839,16 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
-      "./src/commands/acumen/package/build.ts"
+      "./src/lib/sfdx-core.ts",
+      "./src/lib/xpath-options.ts",
+      "./src/lib/schema-options.ts",
+      "./src/commands/acumen/package/permissions.ts",
+      "./src/lib/sfdx-permission.ts",
+      "./src/commands/acumen/package/build.ts",
+      "./src/lib/unmask-options.ts",
+      "./src/lib/sfdx-tasks.ts",
+      "./src/lib/options.ts",
+      "./src/lib/sfdx-query.ts"
     ]
   },
   "version": "3.7.5"
