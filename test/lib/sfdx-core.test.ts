@@ -5,7 +5,7 @@ describe('Sfdx Core Tests', () => {
   describe('getPackageBase Tests', function () {
     it('Is Not Null', async function () {
       const testPackage = await SfdxCore.getPackageBase();
-      expect(testPackage.is.not.null);
+      expect(testPackage).is.not.null;
     });
     it('Has Package', async function () {
       const testPackage = await SfdxCore.getPackageBase();
