@@ -286,7 +286,7 @@ export class SfdxTasks {
                         break;
                     case 'Deleted':
                         // Not handling deletes yet
-                        deleteTypes.push(`Type:${typeName} FullName:${fullName}.`);
+                        deleteTypes.push(`Type: ${typeName} FullName: ${fullName}.`);
                         break;
                     default:
                         throw new Error(`Unknown Action: ${actionParts[1]}`);

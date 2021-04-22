@@ -13,6 +13,7 @@ const options_factory_1 = require("../../../lib/options-factory");
 class Build extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
+        var _b;
         // Validate the package path
         const packageFileName = this.flags.package || Build.defaultPackageFileName;
         const packageDir = path.dirname(packageFileName);
@@ -33,6 +34,9 @@ class Build extends command_base_1.CommandBase {
         else {
             options = new package_options_1.PackageOptions();
             await options.loadDefaults();
+        }
+        if (this.flags.source && this.flags.metadata) {
+            this.ux.log('Both source (-s) and metadata (-m) flags cannot be specified, please use one or the other.');
         }
         const excluded = new Set(options.excludeMetadataTypes);
         // Are we including namespaces?
@@ -61,6 +65,10 @@ class Build extends command_base_1.CommandBase {
                         this.ux.log(`\t${deleteType}`);
                     }
                 }
+                if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
+                    this.ux.log('No Deployable Source Tracking changes found.');
+                    return;
+                }
                 metadataMap = results.map;
             }
             else {
@@ -80,8 +88,8 @@ class Build extends command_base_1.CommandBase {
                 }
                 let counter = 0;
                 try {
-                    for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _c; _c = await _b.next(), !_c.done;) {
-                        const entry = _c.value;
+                    for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+                        const entry = _d.value;
                         // If specific members were defined previously - just use them
                         metadataMap.set(entry.name, entry.members);
                         this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
@@ -90,7 +98,7 @@ class Build extends command_base_1.CommandBase {
                 catch (e_1_1) { e_1 = { error: e_1_1 }; }
                 finally {
                     try {
-                        if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                        if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
                     }
                     finally { if (e_1) throw e_1.error; }
                 }

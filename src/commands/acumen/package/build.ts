@@ -70,6 +70,11 @@ export default class Build extends CommandBase {
       await options.loadDefaults();
     }
 
+    if (this.flags.source && this.flags.metadata) {
+      this.ux.log('Both source (-s) and metadata (-m) flags cannot be specified, please use one or the other.');
+      return;
+    }
+
     const excluded = new Set<string>(options.excludeMetadataTypes);
 
     // Are we including namespaces?
@@ -101,6 +106,10 @@ export default class Build extends CommandBase {
           for (const deleteType of results.deletes) {
             this.ux.log(`\t${deleteType}`);
           }
+        }
+        if (!results.map?.size) {
+          this.ux.log('No Deployable Source Tracking changes found.');
+          return;
         }
         metadataMap = results.map;
       } else {
