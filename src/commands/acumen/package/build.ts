@@ -70,11 +70,6 @@ export default class Build extends CommandBase {
       await options.loadDefaults();
     }
 
-    if (this.flags.source && this.flags.metadata) {
-      this.ux.log('Both source (-s) and metadata (-m) flags cannot be specified, please use one or the other.');
-      return;
-    }
-
     const excluded = new Set<string>(options.excludeMetadataTypes);
 
     // Are we including namespaces?
@@ -89,6 +84,14 @@ export default class Build extends CommandBase {
       const describeMetadatas = new Set<object>();
 
       this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+
+      let filterMetadataTypes: Set<string> = null;
+      if (this.flags.metadata) {
+        filterMetadataTypes = new Set<string>();
+        for (const metaName of this.flags.metadata.split(',')) {
+          filterMetadataTypes.add(metaName.trim());
+        }
+      }
 
       let metadataMap = new Map<string, string[]>();
       if (this.flags.source) {
@@ -111,19 +114,17 @@ export default class Build extends CommandBase {
           this.ux.log('No Deployable Source Tracking changes found.');
           return;
         }
-        metadataMap = results.map;
+        for (const [typeName, members] of results.map) {
+          if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+            continue;
+          }
+          metadataMap.set(typeName, members);
+        }
       } else {
         const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
-        let forceMetadataTypes: Set<string> = null;
-        if (this.flags.metadata) {
-          forceMetadataTypes = new Set<string>();
-          for (const metaName of this.flags.metadata.split(',')) {
-            forceMetadataTypes.add(metaName.trim());
-          }
-        }
 
         for (const metadata of describeMetadata) {
-          if ((forceMetadataTypes && !forceMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+          if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
             continue;
           }
           describeMetadatas.add(metadata);

@@ -35,9 +35,6 @@ class Build extends command_base_1.CommandBase {
             options = new package_options_1.PackageOptions();
             await options.loadDefaults();
         }
-        if (this.flags.source && this.flags.metadata) {
-            this.ux.log('Both source (-s) and metadata (-m) flags cannot be specified, please use one or the other.');
-        }
         const excluded = new Set(options.excludeMetadataTypes);
         // Are we including namespaces?
         const namespaces = this.flags.namespaces
@@ -48,6 +45,13 @@ class Build extends command_base_1.CommandBase {
         try {
             const describeMetadatas = new Set();
             this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+            let forceMetadataTypes = null;
+            if (this.flags.metadata) {
+                forceMetadataTypes = new Set();
+                for (const metaName of this.flags.metadata.split(',')) {
+                    forceMetadataTypes.add(metaName.trim());
+                }
+            }
             let metadataMap = new Map();
             if (this.flags.source) {
                 const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(orgAlias);
@@ -69,17 +73,15 @@ class Build extends command_base_1.CommandBase {
                     this.ux.log('No Deployable Source Tracking changes found.');
                     return;
                 }
-                metadataMap = results.map;
+                for (const [typeName, members] of results.map) {
+                    if ((forceMetadataTypes && !forceMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+                        continue;
+                    }
+                    metadataMap.set(typeName, members);
+                }
             }
             else {
                 const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
-                let forceMetadataTypes = null;
-                if (this.flags.metadata) {
-                    forceMetadataTypes = new Set();
-                    for (const metaName of this.flags.metadata.split(',')) {
-                        forceMetadataTypes.add(metaName.trim());
-                    }
-                }
                 for (const metadata of describeMetadata) {
                     if ((forceMetadataTypes && !forceMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
                         continue;
