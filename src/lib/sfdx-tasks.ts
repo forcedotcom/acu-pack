@@ -238,15 +238,15 @@ export class SfdxTasks {
         return new SfdxOrgInfo(result);
     }
 
-    public static async getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): Promise<any> {
+    public static getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): any {
+        if (!sourceTrackingStatues) {
+            return null;
+        }
         const metadataMap: Map<string, string[]> = new Map<string, string[]>();
-        const conflictTypes: string[] = [];
-        const deleteTypes: string[] = [];
+        const conflictTypes: Map<string, string[]> = new Map<string, string[]>();
+        const deleteTypes: Map<string, string[]> = new Map<string, string[]>();
+
         for (const status of sourceTrackingStatues) {
-            if (status.state.includes('(Conflict)')) {
-                conflictTypes.push(status.type);
-                continue;
-            }
             /*
               Actions: Add, Changed, Deleted
               {
@@ -273,25 +273,31 @@ export class SfdxTasks {
                 ? status.type.replace(/Folder/, '').trim()
                 : status.type.trim();
             const fullName = status.fullName.trim();
-            if (actionParts[0] === 'Remote') {
+            
+            let collection = null;
+            if (status.state.includes('(Conflict)')) {
+                collection = conflictTypes;
+            } else if (actionParts[0] === 'Remote') {
                 switch (actionParts[1]) {
                     case 'Add':
                     case 'Changed':
-                        // Handle Report & Dashboard Folders    
-                        if (!metadataMap.has(typeName)) {
-                            metadataMap.set(typeName, [fullName]);
-                        } else {
-                            metadataMap.get(typeName).push(fullName);
-                        }
+                        collection = metadataMap;
                         break;
                     case 'Deleted':
-                        // Not handling deletes yet
-                        deleteTypes.push(`Type: ${typeName} FullName: ${fullName}.`);
+                        collection = deleteTypes;
                         break;
                     default:
                         throw new Error(`Unknown Action: ${actionParts[1]}`);
                 }
             }
+            if (collection != null) {
+                if (!collection.has(typeName)) {
+                    collection.set(typeName, [fullName]);
+                } else {
+                    collection.get(typeName).push(fullName);
+                }
+            }
+
         }
         return {
             map: metadataMap,

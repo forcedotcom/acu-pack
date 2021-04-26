@@ -1278,8 +1278,8 @@
         "signature": "02565f6cc62585914801ed4694d4d0a002675a14d3f5630265dde1444e0e0061"
       },
       "./src/lib/sfdx-tasks.ts": {
-        "version": "07cf71bb6038e095f149f97b2cc05d5a2d0ecc125bcca855b3c821421cb1e711",
-        "signature": "05ed71db157c5b86bda2a778b1c2e35024312b7cb7dad196966782f82a605940"
+        "version": "6be6dd233622ea0bca3bc843a4ca0f4dd7c009da17769a358ee2e535f0e0c9db",
+        "signature": "c16b036cbf2999082d90daebe8e6753317ca9a3e498b4b4892af81b5339d72df"
       },
       "./src/lib/sfdx-client.ts": {
         "version": "e0d020c1e23da40ff53d6d116011e2cb626c6c0b711a722af1a0a9690f05b82c",
@@ -1342,7 +1342,7 @@
         "signature": "21e3966c415096c12b0bc09674209f8eeebd6f3a43046c3bb202a989f9445202"
       },
       "./src/commands/acumen/package/build.ts": {
-        "version": "d3eba8e0a4fac4ebef67944271526474bf93440cc6a43275e26fca65a85bb11c",
+        "version": "bd2de2d09d767dd349e2b485032be692a882363c3639cdcbcbf2b7e44e36133a",
         "signature": "52c68a1442e1b2bd25440a9d21f22bbed6dfae5a0a3fade86e1e76980a9c0b82"
       },
       "./src/lib/xml-merge.ts": {
@@ -4794,7 +4794,6 @@
       "./src/lib/sfdx-query.ts",
       "./src/lib/options.ts",
       "./src/lib/options-factory.ts",
-      "./src/lib/sfdx-tasks.ts",
       "./src/lib/sfdx-client.ts",
       "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
@@ -4848,6 +4847,7 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
+      "./src/lib/sfdx-tasks.ts",
       "./src/commands/acumen/package/build.ts"
     ]
   },

@@ -100,14 +100,24 @@ export default class Build extends CommandBase {
           this.ux.log('No Source Tracking changes found.');
           return;
         }
-        const results = await SfdxTasks.getMapFromSourceTrackingStatus(statuses);
-        if (results.conflicts.length > 0) {
-          throw new Error(`WARNING: Conflicts detected for the following metadata types: ${results.conflicts.join(', ')}`);
+        const results = SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+        if (results.conflicts.size() > 0) {
+          this.ux.log('WARNING: The following conflicts were found:');
+          for (const [conflictType, members] of results.conflicts) {
+            this.ux.log(`\t${conflictType}`);
+            for(const member of members) {
+              this.ux.log(`\t\t${member}`);
+            }
+          }
+          throw new Error('All Conflicts must be resolved.');
         }
-        if (results.deletes.length > 0) {
+        if (results.deletes.size() > 0) {
           this.ux.log('WARNING: The following deleted items need to be handled manually:');
-          for (const deleteType of results.deletes) {
+          for (const [deleteType, members] of results.deletes) {
             this.ux.log(`\t${deleteType}`);
+            for(const member of members) {
+              this.ux.log(`\t\t${member}`);
+            }
           }
         }
         if (!results.map?.size) {
