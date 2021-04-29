@@ -101,7 +101,7 @@ export default class Build extends CommandBase {
           return;
         }
         const results = SfdxTasks.getMapFromSourceTrackingStatus(statuses);
-        if (results.conflicts.size() > 0) {
+        if (results.conflicts.size > 0) {
           this.ux.log('WARNING: The following conflicts were found:');
           for (const [conflictType, members] of results.conflicts) {
             this.ux.log(`\t${conflictType}`);
@@ -111,7 +111,7 @@ export default class Build extends CommandBase {
           }
           throw new Error('All Conflicts must be resolved.');
         }
-        if (results.deletes.size() > 0) {
+        if (results.deletes.size > 0) {
           this.ux.log('WARNING: The following deleted items need to be handled manually:');
           for (const [deleteType, members] of results.deletes) {
             this.ux.log(`\t${deleteType}`);
