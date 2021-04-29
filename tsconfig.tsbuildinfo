@@ -1261,9 +1261,13 @@
         "version": "510e93b503afd60c6e990ec9b672e466de329a2ee7fefec9d89b2105a312d35a",
         "signature": "6f9c79b7f04aa3418bb83ccd005e93cad6a126fd0074709f9a16a9d7d318a0e6"
       },
+      "./src/lib/xml-merge.ts": {
+        "version": "c43de6095304cf7f86312411d30caaba519435499f8c048b1790b62bdc67e424",
+        "signature": "36bdf0f4b46862a375176c5f3463fdcfd2fab2632654f34ddc0325d7d563325a"
+      },
       "./src/lib/sfdx-core.ts": {
-        "version": "74ecdba304a312a29f9efd77debd07c388b2a92a5052d0093056fda74ad19c10",
-        "signature": "5a2e87366df99425b8a25a43ca65d3352eeee3589dc0b37ec9e2e2dd2362a750"
+        "version": "4867262c5968de705394f018cf7c3d324d5860e0209e350d4f4d154a7c4a486e",
+        "signature": "20dd383c69d2b681b5793f7636bd75f3fb95f5cc2c4cab080433b7309da6d63d"
       },
       "./src/lib/sfdx-query.ts": {
         "version": "93146eb4a7ee573f3fe3eb5da8dc64856a545ef403cad40e098fa5aa7b5ef3df",
@@ -1342,15 +1346,11 @@
         "signature": "21e3966c415096c12b0bc09674209f8eeebd6f3a43046c3bb202a989f9445202"
       },
       "./src/commands/acumen/package/build.ts": {
-        "version": "bd2de2d09d767dd349e2b485032be692a882363c3639cdcbcbf2b7e44e36133a",
-        "signature": "52c68a1442e1b2bd25440a9d21f22bbed6dfae5a0a3fade86e1e76980a9c0b82"
-      },
-      "./src/lib/xml-merge.ts": {
-        "version": "1874f0abe00487a7aee6c3f3f7c40fb3e93c7284396f3ef2a81d0d767627c0ea",
-        "signature": "7358c9a5206b285125ddbbde7911a8607b4fe3e163ce28357b5a0afe712bb29f"
+        "version": "8c82713c0a83e72f86a77a6bda1695983140114c7e882c80e74508aca55d36bd",
+        "signature": "6d61ce966208e5abf559646ce22064b87477d7215f5ff535131a02409fc6962d"
       },
       "./src/commands/acumen/package/merge.ts": {
-        "version": "01e5afdb70505576e3bab4cd5cc65e53fc212fbe4539c08a13ebb3ba7b7fdd70",
+        "version": "10be54e102fe98861832d66a69ac33d784afb1dc40f1e41b5687111672744728",
         "signature": "787e3659b1a80e8cb45eca87ecdf42717b2d4eb1d1648c909f92a349e6cac5b1"
       },
       "./src/lib/sfdx-permission.ts": {
@@ -2643,10 +2643,16 @@
       "./src/lib/sfdx-project.ts": [
         "./node_modules/@salesforce/core/lib/exported.d.ts"
       ],
+      "./src/lib/xml-merge.ts": [
+        "./src/lib/utils.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/path.d.ts"
+      ],
       "./src/lib/sfdx-core.ts": [
         "./node_modules/@types/node/child_process.d.ts",
         "./src/lib/utils.ts",
-        "./src/lib/sfdx-project.ts"
+        "./src/lib/sfdx-project.ts",
+        "./src/lib/xml-merge.ts"
       ],
       "./src/lib/sfdx-query.ts": [
         "./src/lib/sfdx-core.ts",
@@ -2749,11 +2755,6 @@
         "./node_modules/@types/node/path.d.ts",
         "./src/lib/sfdx-tasks.ts",
         "./src/lib/options-factory.ts"
-      ],
-      "./src/lib/xml-merge.ts": [
-        "./src/lib/utils.ts",
-        "./node_modules/@types/node/fs.d.ts",
-        "./node_modules/@types/node/path.d.ts"
       ],
       "./src/commands/acumen/package/merge.ts": [
         "./node_modules/@salesforce/command/lib/exported.d.ts",
@@ -4790,10 +4791,10 @@
       "./node_modules/xpath/xpath.d.ts",
       "./src/lib/utils.ts",
       "./src/lib/sfdx-project.ts",
-      "./src/lib/sfdx-core.ts",
       "./src/lib/sfdx-query.ts",
       "./src/lib/options.ts",
       "./src/lib/options-factory.ts",
+      "./src/lib/sfdx-tasks.ts",
       "./src/lib/sfdx-client.ts",
       "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
@@ -4809,7 +4810,7 @@
       "./src/commands/acumen/apex/coverage/report.ts",
       "./src/commands/acumen/api/get.ts",
       "./src/lib/package-options.ts",
-      "./src/lib/xml-merge.ts",
+      "./src/commands/acumen/package/build.ts",
       "./src/commands/acumen/package/merge.ts",
       "./src/lib/sfdx-permission.ts",
       "./src/commands/acumen/package/permissions.ts",
@@ -4847,8 +4848,8 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
-      "./src/lib/sfdx-tasks.ts",
-      "./src/commands/acumen/package/build.ts"
+      "./src/lib/xml-merge.ts",
+      "./src/lib/sfdx-core.ts"
     ]
   },
   "version": "3.7.5"

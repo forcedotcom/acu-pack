@@ -16,7 +16,8 @@
       "packageFlagDescription": "The path to the package file to be generated. By default the path is '%s'",
       "optionsFlagDescription": "A file containing the package build options. Specifying this option will create the file if it doesn't exist already.",
       "metadataFlagDescription": "A comma separated list of metadata to include. This list overrides any exclude list in the options file.",
-      "sourceFlagDescription": "Set this flag to 'true' to use Salesforce's Source Tracking data as the contents for the package file."
+      "sourceFlagDescription": "Set this flag to 'true' to use Salesforce's Source Tracking data as the contents for the package file.",
+      "appendFlagDescription": "Set this flag to 'true' if you wish to append to the existing package.xml file. The default (false) overwrites the existing file."
     }
   },
   "schema": {

@@ -273,7 +273,7 @@ export class SfdxTasks {
                 ? status.type.replace(/Folder/, '').trim()
                 : status.type.trim();
             const fullName = status.fullName.trim();
-            
+
             let collection = null;
             if (status.state.includes('(Conflict)')) {
                 collection = conflictTypes;

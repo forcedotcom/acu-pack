@@ -37,6 +37,10 @@ export default class Build extends CommandBase {
     source: flags.boolean({
       char: 's',
       description: CommandBase.messages.getMessage('package.build.sourceFlagDescription')
+    }),
+    append: flags.boolean({
+      char: 'a',
+      description: CommandBase.messages.getMessage('package.build.appendFlagDescription')
     })
   };
 
@@ -93,7 +97,7 @@ export default class Build extends CommandBase {
         }
       }
 
-      let metadataMap = new Map<string, string[]>();
+      const metadataMap = new Map<string, string[]>();
       if (this.flags.source) {
         const statuses = await SfdxTasks.getSourceTrackingStatus(orgAlias);
         if (!statuses || statuses.length === 0) {
@@ -105,7 +109,7 @@ export default class Build extends CommandBase {
           this.ux.log('WARNING: The following conflicts were found:');
           for (const [conflictType, members] of results.conflicts) {
             this.ux.log(`\t${conflictType}`);
-            for(const member of members) {
+            for (const member of members) {
               this.ux.log(`\t\t${member}`);
             }
           }
@@ -115,7 +119,7 @@ export default class Build extends CommandBase {
           this.ux.log('WARNING: The following deleted items need to be handled manually:');
           for (const [deleteType, members] of results.deletes) {
             this.ux.log(`\t${deleteType}`);
-            for(const member of members) {
+            for (const member of members) {
               this.ux.log(`\t\t${member}`);
             }
           }
@@ -159,7 +163,7 @@ export default class Build extends CommandBase {
 
       this.ux.log(`Generating: ${packageFileName}`);
       // Write the final package
-      await SfdxCore.writePackageFile(packageMap, packageFileName);
+      await SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
 
       this.ux.log('Done.');
     } catch (err) {
