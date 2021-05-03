@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import Utils from '../lib/utils';
 import SfdxProject from '../lib/sfdx-project';
+import XmlMerge from './xml-merge';
 
 export class SfdxCore {
     public static DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
@@ -42,35 +43,39 @@ export class SfdxCore {
         });
     }
 
-    public static getPackageBase(version = null) {
+    public static async getPackageBase(version = null): Promise<any> {
         return {
             Package: {
                 $: {
                     xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 types: [],
-                version: version || SfdxProject.DEFAULT_PACKAGE_VERSION
+                version: version || (await SfdxProject.default()).sourceApiVersion
             }
         };
     }
 
-    public static createPackage(packageTypes: Map<string, string[]>, version: string = null): any {
-        const packageObj = SfdxCore.getPackageBase(version);
+    public static async createPackage(packageTypes: Map<string, string[]>, version: string = null): Promise<any> {
+        const packageObj = await SfdxCore.getPackageBase(version);
 
-        const names = Utils.sortArray(Array.from(packageTypes.keys()));
-        for (const name of names) {
-            const members = Utils.sortArray(packageTypes.get(name));
+        const typeNames = Utils.sortArray(Array.from(packageTypes.keys()));
+        for (const typeName of typeNames) {
+            const members = Utils.sortArray(packageTypes.get(typeName));
             packageObj.Package.types.push({
-                name,
+                name: [typeName],
                 members
             });
         }
         return packageObj;
     }
 
-    public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, eofChar = null): Promise<void> {
+    public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, append?: boolean, xmlOptions?: object): Promise<void> {
         // Convert into Package format
-        const sfdxPackage = SfdxCore.createPackage(metadataMap);
-        await Utils.writeObjectToXmlFile(packageFilePath, sfdxPackage, eofChar);
+        const sfdxPackage = await SfdxCore.createPackage(metadataMap);
+        if (append) {
+            await XmlMerge.mergeXmlToFile(sfdxPackage, packageFilePath);
+        } else {
+            await Utils.writeObjectToXmlFile(packageFilePath, sfdxPackage, xmlOptions);
+        }
     }
 }

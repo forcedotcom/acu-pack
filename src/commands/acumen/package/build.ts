@@ -33,6 +33,14 @@ export default class Build extends CommandBase {
     namespaces: flags.string({
       char: 'n',
       description: CommandBase.messages.getMessage('namespacesFlagDescription')
+    }),
+    source: flags.boolean({
+      char: 's',
+      description: CommandBase.messages.getMessage('package.build.sourceFlagDescription')
+    }),
+    append: flags.boolean({
+      char: 'a',
+      description: CommandBase.messages.getMessage('package.build.appendFlagDescription')
     })
   };
 
@@ -80,33 +88,82 @@ export default class Build extends CommandBase {
       const describeMetadatas = new Set<object>();
 
       this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
-      const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
 
-      let forceMetadataTypes: Set<string> = null;
+      let filterMetadataTypes: Set<string> = null;
       if (this.flags.metadata) {
-        forceMetadataTypes = new Set<string>();
+        filterMetadataTypes = new Set<string>();
         for (const metaName of this.flags.metadata.split(',')) {
-          forceMetadataTypes.add(metaName.trim());
+          filterMetadataTypes.add(metaName.trim());
         }
       }
-
-      for (const metadata of describeMetadata) {
-        if ((forceMetadataTypes && !forceMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
-          continue;
-        }
-        describeMetadatas.add(metadata);
-      }
-      this.ux.log(`Generating: ${packageFileName}`);
 
       const metadataMap = new Map<string, string[]>();
-      let counter = 0;
-      for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
-        metadataMap.set(entry.name, entry.members);
-        this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
+      if (this.flags.source) {
+        const statuses = await SfdxTasks.getSourceTrackingStatus(orgAlias);
+        if (!statuses || statuses.length === 0) {
+          this.ux.log('No Source Tracking changes found.');
+          return;
+        }
+        const results = SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+        if (results.conflicts.size > 0) {
+          this.ux.log('WARNING: The following conflicts were found:');
+          for (const [conflictType, members] of results.conflicts) {
+            this.ux.log(`\t${conflictType}`);
+            for (const member of members) {
+              this.ux.log(`\t\t${member}`);
+            }
+          }
+          throw new Error('All Conflicts must be resolved.');
+        }
+        if (results.deletes.size > 0) {
+          this.ux.log('WARNING: The following deleted items need to be handled manually:');
+          for (const [deleteType, members] of results.deletes) {
+            this.ux.log(`\t${deleteType}`);
+            for (const member of members) {
+              this.ux.log(`\t\t${member}`);
+            }
+          }
+        }
+        if (!results.map?.size) {
+          this.ux.log('No Deployable Source Tracking changes found.');
+          return;
+        }
+        for (const [typeName, members] of results.map) {
+          if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+            continue;
+          }
+          metadataMap.set(typeName, members);
+        }
+      } else {
+        const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
+
+        for (const metadata of describeMetadata) {
+          if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+            continue;
+          }
+          describeMetadatas.add(metadata);
+        }
+
+        let counter = 0;
+        for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
+          // If specific members were defined previously - just use them
+          metadataMap.set(entry.name, entry.members);
+          this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
+        }
+
+      }
+      const packageMap = new Map<string, string[]>();
+
+      // Filter excluded types
+      for (const [typeName, members] of metadataMap) {
+        if (!excluded.has(typeName)) {
+          packageMap.set(typeName, members);
+        }
       }
 
+      this.ux.log(`Generating: ${packageFileName}`);
       // Write the final package
-      await SfdxCore.writePackageFile(metadataMap, packageFileName);
+      await SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
 
       this.ux.log('Done.');
     } catch (err) {

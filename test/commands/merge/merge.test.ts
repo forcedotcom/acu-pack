@@ -45,7 +45,7 @@ describe("Xml-Merge Tests", function () {
       expect(merged.Package.types.length).equals(parsed.Package.types.length);
     });
     it(`runs ${command}  -s ${source} -d ${destination}`, async () => {
-      await xmlMerge.mergeXml(source, destination);
+      await xmlMerge.mergeXmlFiles(source, destination);
 
       expect(await Utils.pathExists(destination));
 
