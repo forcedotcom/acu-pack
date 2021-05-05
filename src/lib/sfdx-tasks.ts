@@ -238,6 +238,123 @@ export class SfdxTasks {
         return new SfdxOrgInfo(result);
     }
 
+    public static getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): any {
+        if (!sourceTrackingStatues) {
+            return null;
+        }
+        const metadataMap: Map<string, string[]> = new Map<string, string[]>();
+        const conflictTypes: Map<string, string[]> = new Map<string, string[]>();
+        const deleteTypes: Map<string, string[]> = new Map<string, string[]>();
+
+        for (const status of sourceTrackingStatues) {
+            /*
+              Actions: Add, Changed, Deleted
+              {
+                "state": "Local Add",
+                "fullName": "SF86_Template",
+                "type": "StaticResource",
+                "filePath": "force-app\\main\\default\\staticresources\\SF86_Template.xml"
+              },
+              {
+                "state": "Remote Add",
+                "fullName": "Admin",
+                "type": "Profile",
+                "filePath": null
+              },
+               {
+                "state": "Remote Changed (Conflict)",
+                "fullName": "Custom%3A Support Profile",
+                "type": "Profile",
+                "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
+              },
+            */
+            const actionParts = status.state.split(' ');
+            const typeName = status.type.trim().endsWith('Folder')
+                ? status.type.replace(/Folder/, '').trim()
+                : status.type.trim();
+            const fullName = status.fullName.trim();
+
+            let collection = null;
+            if (status.state.includes('(Conflict)')) {
+                collection = conflictTypes;
+            } else if (actionParts[0] === 'Remote') {
+                switch (actionParts[1]) {
+                    case 'Add':
+                    case 'Changed':
+                        collection = metadataMap;
+                        break;
+                    case 'Deleted':
+                        collection = deleteTypes;
+                        break;
+                    default:
+                        throw new Error(`Unknown Action: ${actionParts[1]}`);
+                }
+            }
+            if (collection != null) {
+                if (!collection.has(typeName)) {
+                    collection.set(typeName, [fullName]);
+                } else {
+                    collection.get(typeName).push(fullName);
+                }
+            }
+
+        }
+        return {
+            map: metadataMap,
+            conflicts: conflictTypes,
+            deletes: deleteTypes
+        };
+    }
+
+    public static async getSourceTrackingStatus(orgAliasOrUsername: string): Promise<any[]> {
+        if (!orgAliasOrUsername) {
+            return null;
+        }
+        const results = await SfdxCore.command(`sfdx force:source:status --json -u ${orgAliasOrUsername}`);
+        // If there are no instances of the metadatatype SFDX just returns {status:0}
+        if (!results) {
+            return null;
+        }
+        let resultsArray: any[];
+        try {
+            resultsArray = ensureArray(results);
+        } catch {
+            resultsArray = [results];
+        }
+        const statuses: any[] = [];
+        for (const result of resultsArray) {
+            statuses.push({
+                state: result.state,
+                fullName: result.fullName,
+                type: result.type,
+                filePath: result.filePath
+            });
+
+            /*
+              Actions: Add, Changed, Deleted
+              {
+                "state": "Local Add",
+                "fullName": "SF86_Template",
+                "type": "StaticResource",
+                "filePath": "force-app\\main\\default\\staticresources\\SF86_Template.xml"
+              },
+              {
+                "state": "Remote Add",
+                "fullName": "Admin",
+                "type": "Profile",
+                "filePath": null
+              },
+               {
+                "state": "Remote Changed (Conflict)",
+                "fullName": "Custom%3A Support Profile",
+                "type": "Profile",
+                "filePath": "force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml"
+              },
+            */
+        }
+        return statuses;
+    }
+
     protected static _folderPaths: Map<string, string> = null;
 
     private static async getFolderSOQLData(usernameOrAlias: string): Promise<Map<string, string>> {

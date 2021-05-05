@@ -23,7 +23,7 @@ export default class Merge extends CommandBase {
   };
 
   public async run(): Promise<void> {
-    await xmlMerge.mergeXml(
+    await xmlMerge.mergeXmlFiles(
       this.flags.source,
       this.flags.destination,
       this.ux);

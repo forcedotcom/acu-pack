@@ -36,12 +36,13 @@ $ NODE_OPTIONS=--inspect-brk bin/run acumen:apex:scaffold -u ORG_ALIAS -o scaffo
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -u ORG_ALIAS -o package-options.json 
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:package:build -u ORG_ALIAS -s -a
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:dictionary -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:schema:profile:retrieve -u ORG_ALIAS -n Admin
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:permissions -p force-app
-$ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u ORG_ALIAS -m true -o test
+$ NODE_OPTIONS=--inspect-brk bin/run acumen:source:profile -u ORG_ALIAS -m -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acumen:source:xpath -o xpath-options.json
@@ -101,7 +102,7 @@ to include a tilda (~) as follows:
 * [`sfdx acumen:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagebuild--x-string--m-string--o-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acumen:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acumenschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -388,7 +389,7 @@ EXAMPLES
        NOTE: Not all metadata types support field data access.
 ```
 
-## `sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Builds a standard SFDX source format package file from the specified org's existing metadata.
 
@@ -396,10 +397,16 @@ Builds a standard SFDX source format package file from the specified org's exist
 Builds a standard SFDX source format package file from the specified org's existing metadata.
 
 USAGE
-  $ sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-u <string>] [--apiversion 
-  <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx acumen:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] 
+  [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
+  -a, --append                                                                      Set this flag to 'true' if you wish
+                                                                                    to append to the existing
+                                                                                    package.xml file. The default
+                                                                                    (false) overwrites the existing
+                                                                                    file.
+
   -m, --metadata=metadata                                                           A comma separated list of metadata
                                                                                     to include. This list overrides any
                                                                                     exclude list in the options file.
@@ -413,6 +420,10 @@ OPTIONS
                                                                                     options. Specifying this option will
                                                                                     create the file if it doesn't exist
                                                                                     already.
+
+  -s, --source                                                                      Set this flag to 'true' to use
+                                                                                    Salesforce's Source Tracking data as
+                                                                                    the contents for the package file.
 
   -u, --targetusername=targetusername                                               username or alias for the target
                                                                                     org; overrides default target org
