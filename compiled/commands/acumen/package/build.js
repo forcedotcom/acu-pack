@@ -13,6 +13,7 @@ const options_factory_1 = require("../../../lib/options-factory");
 class Build extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
+        var _b;
         // Validate the package path
         const packageFileName = this.flags.package || Build.defaultPackageFileName;
         const packageDir = path.dirname(packageFileName);
@@ -44,39 +45,86 @@ class Build extends command_base_1.CommandBase {
         try {
             const describeMetadatas = new Set();
             this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
-            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
-            let forceMetadataTypes = null;
+            let filterMetadataTypes = null;
             if (this.flags.metadata) {
-                forceMetadataTypes = new Set();
+                filterMetadataTypes = new Set();
                 for (const metaName of this.flags.metadata.split(',')) {
-                    forceMetadataTypes.add(metaName.trim());
+                    filterMetadataTypes.add(metaName.trim());
                 }
             }
-            for (const metadata of describeMetadata) {
-                if ((forceMetadataTypes && !forceMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
-                    continue;
+            const metadataMap = new Map();
+            if (this.flags.source) {
+                const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(orgAlias);
+                if (!statuses || statuses.length === 0) {
+                    this.ux.log('No Source Tracking changes found.');
+                    return;
                 }
-                describeMetadatas.add(metadata);
+                const results = sfdx_tasks_1.SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+                if (results.conflicts.size > 0) {
+                    this.ux.log('WARNING: The following conflicts were found:');
+                    for (const [conflictType, members] of results.conflicts) {
+                        this.ux.log(`\t${conflictType}`);
+                        for (const member of members) {
+                            this.ux.log(`\t\t${member}`);
+                        }
+                    }
+                    throw new Error('All Conflicts must be resolved.');
+                }
+                if (results.deletes.size > 0) {
+                    this.ux.log('WARNING: The following deleted items need to be handled manually:');
+                    for (const [deleteType, members] of results.deletes) {
+                        this.ux.log(`\t${deleteType}`);
+                        for (const member of members) {
+                            this.ux.log(`\t\t${member}`);
+                        }
+                    }
+                }
+                if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
+                    this.ux.log('No Deployable Source Tracking changes found.');
+                    return;
+                }
+                for (const [typeName, members] of results.map) {
+                    if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+                        continue;
+                    }
+                    metadataMap.set(typeName, members);
+                }
+            }
+            else {
+                const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
+                for (const metadata of describeMetadata) {
+                    if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+                        continue;
+                    }
+                    describeMetadatas.add(metadata);
+                }
+                let counter = 0;
+                try {
+                    for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+                        const entry = _d.value;
+                        // If specific members were defined previously - just use them
+                        metadataMap.set(entry.name, entry.members);
+                        this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+            }
+            const packageMap = new Map();
+            // Filter excluded types
+            for (const [typeName, members] of metadataMap) {
+                if (!excluded.has(typeName)) {
+                    packageMap.set(typeName, members);
+                }
             }
             this.ux.log(`Generating: ${packageFileName}`);
-            const metadataMap = new Map();
-            let counter = 0;
-            try {
-                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _c; _c = await _b.next(), !_c.done;) {
-                    const entry = _c.value;
-                    metadataMap.set(entry.name, entry.members);
-                    this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
             // Write the final package
-            await sfdx_core_1.SfdxCore.writePackageFile(metadataMap, packageFileName);
+            await sfdx_core_1.SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
             this.ux.log('Done.');
         }
         catch (err) {
@@ -109,6 +157,14 @@ Build.flagsConfig = {
     namespaces: command_1.flags.string({
         char: 'n',
         description: command_base_1.CommandBase.messages.getMessage('namespacesFlagDescription')
+    }),
+    source: command_1.flags.boolean({
+        char: 's',
+        description: command_base_1.CommandBase.messages.getMessage('package.build.sourceFlagDescription')
+    }),
+    append: command_1.flags.boolean({
+        char: 'a',
+        description: command_base_1.CommandBase.messages.getMessage('package.build.appendFlagDescription')
     })
 };
 // Comment this out if your command does not require an org username
