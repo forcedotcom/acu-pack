@@ -81,13 +81,11 @@ export default class Build extends CommandBase {
       ? new Set<string>(this.flags.namespaces.split())
       : new Set<string>();
 
-    const orgAlias = this.flags.targetusername;
-    const orgId = this.org.getOrgId();
     try {
 
       const describeMetadatas = new Set<object>();
 
-      this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+      this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
 
       let filterMetadataTypes: Set<string> = null;
       if (this.flags.metadata) {
@@ -99,7 +97,7 @@ export default class Build extends CommandBase {
 
       const metadataMap = new Map<string, string[]>();
       if (this.flags.source) {
-        const statuses = await SfdxTasks.getSourceTrackingStatus(orgAlias);
+        const statuses = await SfdxTasks.getSourceTrackingStatus(this.orgAlias);
         if (!statuses || statuses.length === 0) {
           this.ux.log('No Source Tracking changes found.');
           return;
@@ -135,7 +133,7 @@ export default class Build extends CommandBase {
           metadataMap.set(typeName, members);
         }
       } else {
-        const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
+        const describeMetadata = await SfdxTasks.describeMetadata(this.orgAlias);
 
         for (const metadata of describeMetadata) {
           if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
@@ -145,7 +143,7 @@ export default class Build extends CommandBase {
         }
 
         let counter = 0;
-        for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
+        for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)) {
           // If specific members were defined previously - just use them
           metadataMap.set(entry.name, entry.members);
           this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);

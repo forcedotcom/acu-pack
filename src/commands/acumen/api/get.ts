@@ -44,15 +44,12 @@ export default class Unmask extends CommandBase {
   protected static requiresProject = false;
 
   public async run(): Promise<void> {
-    const orgAlias = this.flags.targetusername;
-    const orgId = this.org.getOrgId();
-
     try {
-      this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
+      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
 
       const apiKind = this.flags.tooling ? ApiKind.TOOLING : ApiKind.DEFAULT;
 
-      const sfdxClient = new SfdxClient(orgAlias);
+      const sfdxClient = new SfdxClient(this.orgAlias);
 
       const ids = this.flags.ids.split(',');
       for await (const response of sfdxClient.getByIds(this.flags.metadata, ids, apiKind)) {

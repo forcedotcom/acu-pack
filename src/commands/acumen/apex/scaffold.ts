@@ -40,7 +40,6 @@ export default class Scaffold extends CommandBase {
     '</ApexClass>';
 
   private static MAX_CLASS_NAME_LENGTH = 40;
-  private orgAlias: string;
   private schemas = new Map<string, any>();
   private index = 0;
 
@@ -65,11 +64,8 @@ export default class Scaffold extends CommandBase {
       options.sObjectTypes.push(...this.flags.sobjects.split('.'));
     }
 
-    this.orgAlias = this.flags.targetusername;
-    const orgId = this.org.getOrgId();
-
     try {
-      this.ux.log(`Connecting to Org: ${this.orgAlias}(${orgId})`);
+      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
 
       this.ux.log('Retrieving Schemas...');
       for (const sObjectType of options.sObjectTypes) {

@@ -28,12 +28,9 @@ export default class Delete extends CommandBase {
   protected static requiresProject = false;
 
   public async run(): Promise<void> {
-    const orgAlias = this.flags.targetusername;
-    const orgId = this.org.getOrgId();
-
     let hasErrors = false;
     try {
-      this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
+      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
 
       const usernames: string[] = [];
       if (this.flags.userlist) {
@@ -42,7 +39,7 @@ export default class Delete extends CommandBase {
         }
 
       } else {
-        const orgInfo = await SfdxTasks.getOrgInfo(orgAlias);
+        const orgInfo = await SfdxTasks.getOrgInfo(this.orgAlias);
         usernames.push(orgInfo.username);
       }
 
@@ -57,10 +54,10 @@ export default class Delete extends CommandBase {
       this.ux.log(`\t${usernames.join(',')}`);
 
       // https://help.salesforce.com/articleView?id=000332898&type=1&mode=1
-      const sfdxClient = new SfdxClient(orgAlias);
+      const sfdxClient = new SfdxClient(this.orgAlias);
       for (const username of usernames) {
         const query = `SELECT Id FROM IDEWorkspace WHERE CreatedById IN (SELECT Id FROM User WHERE Username = '${username}')`;
-        const workspaceIds = await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, true);
+        const workspaceIds = await SfdxQuery.doSoqlQuery(this.orgAlias, query, null, null, true);
         if (!workspaceIds || workspaceIds.length === 0) {
           this.ux.log(`No workspaces found for user: '${username}'.`);
           continue;
