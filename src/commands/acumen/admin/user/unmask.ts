@@ -34,9 +34,12 @@ export default class Unmask extends CommandBase {
   protected static requiresProject = false;
 
   public async run(): Promise<void> {
+    const orgAlias = this.flags.targetusername;
+    const orgId = this.org.getOrgId();
+
     let hasErrors = false;
     try {
-      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
+      this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
       this.ux.log('Unmasking users...');
 
       let usernames: string[] = null;
@@ -53,7 +56,7 @@ export default class Unmask extends CommandBase {
           return;
         }
         for (const [org, orgUsers] of options.sandboxes) {
-          if (this.orgAlias.toUpperCase() === org.toUpperCase()) {
+          if (orgAlias.toUpperCase() === org.toUpperCase()) {
             usernames = orgUsers;
             break;
           }
@@ -95,7 +98,7 @@ export default class Unmask extends CommandBase {
       foundMap.set(false, []);
       const unmaskUsers = [];
 
-      const users = await SfdxQuery.doSoqlQuery(this.orgAlias, query);
+      const users = await SfdxQuery.doSoqlQuery(orgAlias, query);
 
       this.ux.log('User Query Results:');
       for (const username of usernames) {
@@ -140,7 +143,7 @@ export default class Unmask extends CommandBase {
 
       if (patchObj.records.length !== 0) {
         this.ux.log('Unmasking Users...');
-        const sfdxClient = new SfdxClient(this.orgAlias);
+        const sfdxClient = new SfdxClient(orgAlias);
         const results = await sfdxClient.doComposite(RestAction.PATCH, patchObj);
         for (const result of results.getContent()) {
           for (const user of unmaskUsers) {

@@ -42,9 +42,13 @@ export default class Permissions extends CommandBase {
 
   protected metaNames: Set<string>;
   protected namespaces: Set<string>;
+  protected orgId: string;
   protected packageFileName: string;
 
   public async run(): Promise<AnyJson> {
+    const orgAlias = this.flags.targetusername;
+    const orgId = this.org.getOrgId();
+
     // Gather metadata names to include
     const metaNames = Utils.sortArray(this.flags.metadata
       ? this.flags.metadata.split()
@@ -64,8 +68,8 @@ export default class Permissions extends CommandBase {
     }
 
     try {
-      this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
-      const describeMetadata = await SfdxTasks.describeMetadata(this.orgAlias);
+      this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+      const describeMetadata = await SfdxTasks.describeMetadata(orgAlias);
 
       const describeMetadatas = new Set<string>();
       for (const metadata of describeMetadata) {
@@ -89,7 +93,7 @@ export default class Permissions extends CommandBase {
 
       const metadataMap = new Map<string, string[]>();
       let counter = 0;
-      for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)) {
+      for await (const entry of SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, this.namespaces)) {
         metadataMap.set(entry.name, entry.members);
         this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name}`);
       }

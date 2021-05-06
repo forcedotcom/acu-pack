@@ -47,9 +47,11 @@ export default class Profile extends CommandBase {
       ? Profile.defaultPermissionsGlobs
       : this.flags.source.split(',');
 
+    const orgAlias = this.flags.targetusername;
+
     this.ux.log('Gathering securable metadata information from Org:');
     this.ux.log(`${SfdxPermission.defaultPermissionMetaTypes}`);
-    const metaDataMap = await SfdxTasks.listMetadatas(this.orgAlias, SfdxPermission.defaultPermissionMetaTypes);
+    const metaDataMap = await SfdxTasks.listMetadatas(orgAlias, SfdxPermission.defaultPermissionMetaTypes);
 
     this.permissions = new Map<string, PermissionSet>();
 
@@ -133,7 +135,7 @@ export default class Profile extends CommandBase {
     if (gotStandardTabs) {
       this.ux.log('(*) WARNING: Standard Tab permissions detected.');
       this.ux.log('Salesforce does not expose Standard Tabs via the Metadata API.');
-      this.ux.log(`Compatibility with '${this.orgAlias}' can only be ensured if these permissions are removed.`);
+      this.ux.log(`Compatibility with '${orgAlias}' can only be ensured if these permissions are removed.`);
     }
 
     this.ux.log('Done.');
