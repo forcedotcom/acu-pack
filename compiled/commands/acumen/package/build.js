@@ -42,7 +42,11 @@ class Build extends command_base_1.CommandBase {
             : new Set();
         try {
             const describeMetadatas = new Set();
+<<<<<<< HEAD
             this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
+=======
+            this.ux.log(`Gathering metadata from Org: ${orgAlias}(${orgId})`);
+>>>>>>> main
             let filterMetadataTypes = null;
             if (this.flags.metadata) {
                 filterMetadataTypes = new Set();
@@ -52,7 +56,11 @@ class Build extends command_base_1.CommandBase {
             }
             const metadataMap = new Map();
             if (this.flags.source) {
+<<<<<<< HEAD
                 const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(this.orgAlias);
+=======
+                const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(orgAlias);
+>>>>>>> main
                 if (!statuses || statuses.length === 0) {
                     this.ux.log('No Source Tracking changes found.');
                     return;
@@ -89,7 +97,11 @@ class Build extends command_base_1.CommandBase {
                 }
             }
             else {
+<<<<<<< HEAD
                 const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);
+=======
+                const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
+>>>>>>> main
                 for (const metadata of describeMetadata) {
                     if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
                         continue;
@@ -98,7 +110,11 @@ class Build extends command_base_1.CommandBase {
                 }
                 let counter = 0;
                 try {
+<<<<<<< HEAD
                     for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+=======
+                    for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+>>>>>>> main
                         const entry = _d.value;
                         // If specific members were defined previously - just use them
                         metadataMap.set(entry.name, entry.members);
