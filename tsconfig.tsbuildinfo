@@ -205,119 +205,43 @@
         "version": "4fe82d9d6de25718c2c98e7f50df6951408456ccdb3e821afc098f708176e8b2",
         "signature": "4fe82d9d6de25718c2c98e7f50df6951408456ccdb3e821afc098f708176e8b2"
       },
-      "./node_modules/@salesforce/kit/lib/creatable.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/creatable.d.ts": {
         "version": "89f4d4626e5507d9fad2e11e4ac8c8d091c88312027f00769e1f314aa843a3e6",
         "signature": "89f4d4626e5507d9fad2e11e4ac8c8d091c88312027f00769e1f314aa843a3e6"
       },
-      "./node_modules/@salesforce/kit/lib/duration.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/duration.d.ts": {
         "version": "602105795be6bb73ad63a1b6a6df48351f9af2251a48fadf8e393ea1e9ac5bd0",
         "signature": "602105795be6bb73ad63a1b6a6df48351f9af2251a48fadf8e393ea1e9ac5bd0"
       },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/alias.d.ts": {
-        "version": "3337d36148d3f78d2858d5d633a146b70449bc7c6cdc8b7df41976c2e901b222",
-        "signature": "3337d36148d3f78d2858d5d633a146b70449bc7c6cdc8b7df41976c2e901b222"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/union.d.ts": {
-        "version": "eaa8ff058baaacc2ebc04b0d8b288a8f76d8b85684abf72dd9564615d9b0ed05",
-        "signature": "eaa8ff058baaacc2ebc04b0d8b288a8f76d8b85684abf72dd9564615d9b0ed05"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts": {
-        "version": "b968d31a8a0ce85e5440430c742d10c377149a28c65f405d6be62b23f24663ab",
-        "signature": "b968d31a8a0ce85e5440430c742d10c377149a28c65f405d6be62b23f24663ab"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/conditional.d.ts": {
-        "version": "29b983d409ecbb93ad63ff863fc3f698425982f643e4e16ffa6c08df4102e9be",
-        "signature": "29b983d409ecbb93ad63ff863fc3f698425982f643e4e16ffa6c08df4102e9be"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/function.d.ts": {
-        "version": "5bd4ecf6b40d53c2c4554fb6c1e5551879bef27458d5318286af63416db931af",
-        "signature": "5bd4ecf6b40d53c2c4554fb6c1e5551879bef27458d5318286af63416db931af"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/json.d.ts": {
-        "version": "50e3699a97325d00f9d92901730ccbbd6ed086f61db88d678ddf74f2680ade21",
-        "signature": "50e3699a97325d00f9d92901730ccbbd6ed086f61db88d678ddf74f2680ade21"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/mapped.d.ts": {
-        "version": "1962155a17a02cf0f576fc32bb5ad921c98cfd82445ffd3e913d96c2cd02fee6",
-        "signature": "1962155a17a02cf0f576fc32bb5ad921c98cfd82445ffd3e913d96c2cd02fee6"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts": {
-        "version": "4c7b553de6eae585957ef571abd51d7610a8ad7600756caa36efb3122dff49ed",
-        "signature": "4c7b553de6eae585957ef571abd51d7610a8ad7600756caa36efb3122dff49ed"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/as.d.ts": {
-        "version": "0217ba988a04462d2a5517f98c8ac479e1af6e1d02218661d06e0e8d5a333be5",
-        "signature": "0217ba988a04462d2a5517f98c8ac479e1af6e1d02218661d06e0e8d5a333be5"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/assert.d.ts": {
-        "version": "cbffacd9e64363cb8f1de18957549c1cb27a5464da675b2608f8ba7d3f971fa3",
-        "signature": "cbffacd9e64363cb8f1de18957549c1cb27a5464da675b2608f8ba7d3f971fa3"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/coerce.d.ts": {
-        "version": "f07b10c3bde19d3a407242d5759fe1d35dad52bcdb36928513764105bc2d52fc",
-        "signature": "f07b10c3bde19d3a407242d5759fe1d35dad52bcdb36928513764105bc2d52fc"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/ensure.d.ts": {
-        "version": "e82e33ba8a9f1ec13469f01f74362fb7881ef3e60437e4c83c3941410ccd38cf",
-        "signature": "e82e33ba8a9f1ec13469f01f74362fb7881ef3e60437e4c83c3941410ccd38cf"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/get.d.ts": {
-        "version": "a8fab068bed3bd31662e97d06ecc061dd3d7bfbdbc53535eab14042794619619",
-        "signature": "a8fab068bed3bd31662e97d06ecc061dd3d7bfbdbc53535eab14042794619619"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/has.d.ts": {
-        "version": "bd673517094004a7305ebe812a8190a5593053e21e9da761645261c2497bc69a",
-        "signature": "bd673517094004a7305ebe812a8190a5593053e21e9da761645261c2497bc69a"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/is.d.ts": {
-        "version": "f00d1d1f971f3cffa2ca11c83aa36573dfe75e476feef448f3a92f06a83f1818",
-        "signature": "f00d1d1f971f3cffa2ca11c83aa36573dfe75e476feef448f3a92f06a83f1818"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/object.d.ts": {
-        "version": "54948c8729407e29a665faa14df4cbc49dfa44b4d357bbe624d9b990d02da565",
-        "signature": "54948c8729407e29a665faa14df4cbc49dfa44b4d357bbe624d9b990d02da565"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/to.d.ts": {
-        "version": "2759a1bcd0baf4a624ab90f7fc1638314874ea3f3240d4add2feb5ac04f4c6cc",
-        "signature": "2759a1bcd0baf4a624ab90f7fc1638314874ea3f3240d4add2feb5ac04f4c6cc"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/index.d.ts": {
-        "version": "d81c1f92aee0c60763ee255775273dfae82ab8028eabf5c0dd161e33c4a42cde",
-        "signature": "d81c1f92aee0c60763ee255775273dfae82ab8028eabf5c0dd161e33c4a42cde"
-      },
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts": {
-        "version": "6924cbe04fedb41e02cedbfcc17736f3def49899707d26e4050195215791f9a6",
-        "signature": "6924cbe04fedb41e02cedbfcc17736f3def49899707d26e4050195215791f9a6"
-      },
-      "./node_modules/@salesforce/kit/lib/env.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/env.d.ts": {
         "version": "fa5a6698f72de96afd173cb97e9fac87b91a7425149fcb43957284758ebfe36b",
         "signature": "fa5a6698f72de96afd173cb97e9fac87b91a7425149fcb43957284758ebfe36b"
       },
-      "./node_modules/@salesforce/kit/lib/errors.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/errors.d.ts": {
         "version": "251865d75e89d60e8dd70ac5d1a88335af0dbf0fb3a927f92ea17fbb3e2af805",
         "signature": "251865d75e89d60e8dd70ac5d1a88335af0dbf0fb3a927f92ea17fbb3e2af805"
       },
-      "./node_modules/@salesforce/kit/lib/json.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/json.d.ts": {
         "version": "aa6d58b397868dc7270ad12201a428c74bf3049ec41508c4abb1dc13b188a7a9",
         "signature": "aa6d58b397868dc7270ad12201a428c74bf3049ec41508c4abb1dc13b188a7a9"
       },
-      "./node_modules/@salesforce/kit/lib/nodash/support.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/support.d.ts": {
         "version": "492ff78b60235d1e7aa0db6a32edda5b5c2edd3cfd92f18bd2174c9442775499",
         "signature": "492ff78b60235d1e7aa0db6a32edda5b5c2edd3cfd92f18bd2174c9442775499"
       },
-      "./node_modules/@salesforce/kit/lib/nodash/external.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/external.d.ts": {
         "version": "2731f0eaa49f971f36e45f45a2c59733a75ffcf6abf5b7894c4e7d244b229241",
         "signature": "2731f0eaa49f971f36e45f45a2c59733a75ffcf6abf5b7894c4e7d244b229241"
       },
-      "./node_modules/@salesforce/kit/lib/nodash/internal.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/internal.d.ts": {
         "version": "5852392aa2954a848d648a4695ea5fd29adc8a845772d6038aefcd88f2438eab",
         "signature": "5852392aa2954a848d648a4695ea5fd29adc8a845772d6038aefcd88f2438eab"
       },
-      "./node_modules/@salesforce/kit/lib/nodash/index.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/index.d.ts": {
         "version": "02c983835f888941efbad56f51c2759f69c7d259ce138e09de52793444bd72ab",
         "signature": "02c983835f888941efbad56f51c2759f69c7d259ce138e09de52793444bd72ab"
       },
-      "./node_modules/@salesforce/kit/lib/index.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts": {
         "version": "5c2677291f1ede4d943d3cb1016d1f490ebc038fd524631bc846451de99ef3dd",
         "signature": "5c2677291f1ede4d943d3cb1016d1f490ebc038fd524631bc846451de99ef3dd"
       },
@@ -353,111 +277,111 @@
         "version": "de0563db3ebd8b07cb23948091b5d83d09fe42056507ccd5302efb76cd1e7c57",
         "signature": "de0563db3ebd8b07cb23948091b5d83d09fe42056507ccd5302efb76cd1e7c57"
       },
-      "./node_modules/@types/jsforce/describe-result.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts": {
         "version": "c104b4e19590a4f453981d4e24794d0c557f9c6210106d9f3b8587b78d480c7c",
         "signature": "c104b4e19590a4f453981d4e24794d0c557f9c6210106d9f3b8587b78d480c7c"
       },
-      "./node_modules/@types/jsforce/salesforce-id.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts": {
         "version": "4295a5a312a05f59ee74a2774a8e5ff2ae5e8f5d6b44c632dff5570d02aacd4a",
         "signature": "4295a5a312a05f59ee74a2774a8e5ff2ae5e8f5d6b44c632dff5570d02aacd4a"
       },
-      "./node_modules/@types/jsforce/record-result.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts": {
         "version": "c2c4f294bbdc45defee171559af6ea10b49778e7b1e04f74e089efd7019fd071",
         "signature": "c2c4f294bbdc45defee171559af6ea10b49778e7b1e04f74e089efd7019fd071"
       },
-      "./node_modules/@types/jsforce/query.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts": {
         "version": "9eea9572ff319fc74288bf83654ac61e5a060859c57b3b2c6854bdd0b260227a",
         "signature": "9eea9572ff319fc74288bf83654ac61e5a060859c57b3b2c6854bdd0b260227a"
       },
-      "./node_modules/@types/jsforce/record.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts": {
         "version": "ffd7e949148510a4cb403dc63e4a0642d63b0210d9f18d6fe4c2e2064174e94c",
         "signature": "ffd7e949148510a4cb403dc63e4a0642d63b0210d9f18d6fe4c2e2064174e94c"
       },
-      "./node_modules/@types/jsforce/salesforce-object-options.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object-options.d.ts": {
         "version": "e21f2c5930665c998bb05fbaa177e6ba5dd6229991e669289bac71a59efca95d",
         "signature": "e21f2c5930665c998bb05fbaa177e6ba5dd6229991e669289bac71a59efca95d"
       },
-      "./node_modules/@types/jsforce/create-options.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/create-options.d.ts": {
         "version": "687d1228038281c214caf9351026ae1e7897654ff4055d3869573567f40c0648",
         "signature": "687d1228038281c214caf9351026ae1e7897654ff4055d3869573567f40c0648"
       },
-      "./node_modules/@types/jsforce/batch.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts": {
         "version": "879defc2ea2a0f476810b9388dea3172d7f46459df8a2df38e40c74ce6a593ab",
         "signature": "879defc2ea2a0f476810b9388dea3172d7f46459df8a2df38e40c74ce6a593ab"
       },
-      "./node_modules/@types/jsforce/quick-action.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/quick-action.d.ts": {
         "version": "86f9fbee70e361ce11309ec40232a2a2bf575fea347ed63d38f7cb1af22b9026",
         "signature": "86f9fbee70e361ce11309ec40232a2a2bf575fea347ed63d38f7cb1af22b9026"
       },
-      "./node_modules/@types/jsforce/salesforce-object.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts": {
         "version": "3f2834bf514291cb034934a70af0ae15e4c9265665e464c4d6b6da4793f61194",
         "signature": "3f2834bf514291cb034934a70af0ae15e4c9265665e464c4d6b6da4793f61194"
       },
-      "./node_modules/@types/jsforce/api/chatter.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts": {
         "version": "4e1a6042596c01bea5fb3187502f8ea1ce78ef9ca705c7b7e0912635a3cbe370",
         "signature": "4e1a6042596c01bea5fb3187502f8ea1ce78ef9ca705c7b7e0912635a3cbe370"
       },
-      "./node_modules/@types/jsforce/api/metadata.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts": {
         "version": "a333d40348930006e1c86f531807489a8e4797c6e1dbb87aed2532b9ae16c792",
         "signature": "a333d40348930006e1c86f531807489a8e4797c6e1dbb87aed2532b9ae16c792"
       },
-      "./node_modules/@types/jsforce/api/apex.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts": {
         "version": "384cc35df9c0639c1a30a689e5261bffdecc0f6e1796cdd81f485ccbef9f1142",
         "signature": "384cc35df9c0639c1a30a689e5261bffdecc0f6e1796cdd81f485ccbef9f1142"
       },
-      "./node_modules/@types/jsforce/job.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts": {
         "version": "16063b35927d9b1efbf94cb3f831728c1bcb62eb4f80d17dd8151c247566fa87",
         "signature": "16063b35927d9b1efbf94cb3f831728c1bcb62eb4f80d17dd8151c247566fa87"
       },
-      "./node_modules/@types/jsforce/bulk.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts": {
         "version": "2d570378b492392ec582e99c70b5f9a87c95166e28490fb5b768c20a6c3a5c5e",
         "signature": "2d570378b492392ec582e99c70b5f9a87c95166e28490fb5b768c20a6c3a5c5e"
       },
-      "./node_modules/@types/jsforce/cache.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts": {
         "version": "a97927b6c4a09b84fb9fc81003ccb9d9da59f98f181710493e65eda5679186da",
         "signature": "a97927b6c4a09b84fb9fc81003ccb9d9da59f98f181710493e65eda5679186da"
       },
-      "./node_modules/@types/jsforce/http-api.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/http-api.d.ts": {
         "version": "56c948eb116a0a3bd9085aa067a1e012031a1bd4bf5bc5ef19df389c8257d0b7",
         "signature": "56c948eb116a0a3bd9085aa067a1e012031a1bd4bf5bc5ef19df389c8257d0b7"
       },
-      "./node_modules/@types/jsforce/limits-info.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/limits-info.d.ts": {
         "version": "5e1e656e8d08174b6a1fc743965e34b24694f5bc52580e462fac94ba6e2df274",
         "signature": "5e1e656e8d08174b6a1fc743965e34b24694f5bc52580e462fac94ba6e2df274"
       },
-      "./node_modules/@types/jsforce/connection.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts": {
         "version": "590ffffc49d3b554127c9103a7471ee359557daae05b754753df14d44e13c25d",
         "signature": "590ffffc49d3b554127c9103a7471ee359557daae05b754753df14d44e13c25d"
       },
-      "./node_modules/@types/jsforce/api/analytics.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts": {
         "version": "60469513568d434ae4973616c63faf4595e6f86a564d9b9263c4d767f2445681",
         "signature": "60469513568d434ae4973616c63faf4595e6f86a564d9b9263c4d767f2445681"
       },
-      "./node_modules/@types/jsforce/topic.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts": {
         "version": "149cd423c03fbf662c33ffb8f6d2926fd69c0591d8772d2fb17ce9afbc62982a",
         "signature": "149cd423c03fbf662c33ffb8f6d2926fd69c0591d8772d2fb17ce9afbc62982a"
       },
-      "./node_modules/@types/jsforce/streaming.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts": {
         "version": "8f779c31f70e83f625d2596d2501dd28b82bee5006329124baa92afcfd7d8f0e",
         "signature": "8f779c31f70e83f625d2596d2501dd28b82bee5006329124baa92afcfd7d8f0e"
       },
-      "./node_modules/@types/jsforce/channel.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts": {
         "version": "557e49fb7714b0fc0a4c518062338973bde7548e514e27d6ad6ddebf2a1d836a",
         "signature": "557e49fb7714b0fc0a4c518062338973bde7548e514e27d6ad6ddebf2a1d836a"
       },
-      "./node_modules/@types/jsforce/date-enum.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/date-enum.d.ts": {
         "version": "a8e8ecfe9d2bee746a0d4b4e24996d7a1cdefc1472c8957c14ccf44fa4e5766e",
         "signature": "a8e8ecfe9d2bee746a0d4b4e24996d7a1cdefc1472c8957c14ccf44fa4e5766e"
       },
-      "./node_modules/@types/jsforce/oauth2.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/oauth2.d.ts": {
         "version": "cb187cc474ce58a1357e1e1d982813351df2d2b25da8bdfbab6a5f8860a21895",
         "signature": "cb187cc474ce58a1357e1e1d982813351df2d2b25da8bdfbab6a5f8860a21895"
       },
-      "./node_modules/@types/jsforce/promise.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/promise.d.ts": {
         "version": "3f6cf478c283467790eb1acb472bb4f2fe1eaa8fd4804a7f109a71f38c58051d",
         "signature": "3f6cf478c283467790eb1acb472bb4f2fe1eaa8fd4804a7f109a71f38c58051d"
       },
-      "./node_modules/@types/jsforce/index.d.ts": {
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts": {
         "version": "68e5a0a6208ca3902ecdae4435c5bf5a0bf8bdc3db3b34826135365ff8ca99bf",
         "signature": "68e5a0a6208ca3902ecdae4435c5bf5a0bf8bdc3db3b34826135365ff8ca99bf"
       },
@@ -877,125 +801,125 @@
         "version": "98d2e4470d454a6e6294f6a9eef5b76504262965a0093d0d7b095625fbc190f4",
         "signature": "98d2e4470d454a6e6294f6a9eef5b76504262965a0093d0d7b095625fbc190f4"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts": {
+      "./node_modules/@types/jsforce/describe-result.d.ts": {
         "version": "980ea05e3fab9416c9bf64883229e86889644791e982e8597c509c8e7ed660d4",
         "signature": "980ea05e3fab9416c9bf64883229e86889644791e982e8597c509c8e7ed660d4"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts": {
+      "./node_modules/@types/jsforce/salesforce-id.d.ts": {
         "version": "4295a5a312a05f59ee74a2774a8e5ff2ae5e8f5d6b44c632dff5570d02aacd4a",
         "signature": "4295a5a312a05f59ee74a2774a8e5ff2ae5e8f5d6b44c632dff5570d02aacd4a"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts": {
+      "./node_modules/@types/jsforce/record-result.d.ts": {
         "version": "c2c4f294bbdc45defee171559af6ea10b49778e7b1e04f74e089efd7019fd071",
         "signature": "c2c4f294bbdc45defee171559af6ea10b49778e7b1e04f74e089efd7019fd071"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts": {
+      "./node_modules/@types/jsforce/query.d.ts": {
         "version": "0d6e5a66f3d3bb6a925bed1ced636484b758a379922c318b9ac24e423de55856",
         "signature": "0d6e5a66f3d3bb6a925bed1ced636484b758a379922c318b9ac24e423de55856"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts": {
+      "./node_modules/@types/jsforce/record.d.ts": {
         "version": "ffd7e949148510a4cb403dc63e4a0642d63b0210d9f18d6fe4c2e2064174e94c",
         "signature": "ffd7e949148510a4cb403dc63e4a0642d63b0210d9f18d6fe4c2e2064174e94c"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object-options.d.ts": {
+      "./node_modules/@types/jsforce/salesforce-object-options.d.ts": {
         "version": "e21f2c5930665c998bb05fbaa177e6ba5dd6229991e669289bac71a59efca95d",
         "signature": "e21f2c5930665c998bb05fbaa177e6ba5dd6229991e669289bac71a59efca95d"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/create-options.d.ts": {
+      "./node_modules/@types/jsforce/create-options.d.ts": {
         "version": "687d1228038281c214caf9351026ae1e7897654ff4055d3869573567f40c0648",
         "signature": "687d1228038281c214caf9351026ae1e7897654ff4055d3869573567f40c0648"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts": {
+      "./node_modules/@types/jsforce/batch.d.ts": {
         "version": "c9416453af059947c690d43a3ea6553669804acabae7c8faa440136ca1f90582",
         "signature": "c9416453af059947c690d43a3ea6553669804acabae7c8faa440136ca1f90582"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/quick-action.d.ts": {
+      "./node_modules/@types/jsforce/quick-action.d.ts": {
         "version": "86f9fbee70e361ce11309ec40232a2a2bf575fea347ed63d38f7cb1af22b9026",
         "signature": "86f9fbee70e361ce11309ec40232a2a2bf575fea347ed63d38f7cb1af22b9026"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts": {
+      "./node_modules/@types/jsforce/salesforce-object.d.ts": {
         "version": "1e1098e62a1669cae7312924e3447b4a1f6957f0cb0c48ef8537e9a8c0103e66",
         "signature": "1e1098e62a1669cae7312924e3447b4a1f6957f0cb0c48ef8537e9a8c0103e66"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts": {
+      "./node_modules/@types/jsforce/api/chatter.d.ts": {
         "version": "0cfdc1e5882685c6fc1c9fc1ed411109eae90e8fea9c814587f8ae564216f988",
         "signature": "0cfdc1e5882685c6fc1c9fc1ed411109eae90e8fea9c814587f8ae564216f988"
       },
       "./node_modules/buffer/index.d.ts": {
-        "version": "8e9c23ba78aabc2e0a27033f18737a6df754067731e69dc5f52823957d60a4b6",
-        "signature": "8e9c23ba78aabc2e0a27033f18737a6df754067731e69dc5f52823957d60a4b6"
+        "version": "ef18cbf1d8374576e3db03ff33c2c7499845972eb0c4adf87392949709c5e160",
+        "signature": "ef18cbf1d8374576e3db03ff33c2c7499845972eb0c4adf87392949709c5e160"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts": {
+      "./node_modules/@types/jsforce/api/metadata.d.ts": {
         "version": "6df8dd8de598f11ed97713bcea0080c1ea572860f0f72abe223cb73d99d23e83",
         "signature": "6df8dd8de598f11ed97713bcea0080c1ea572860f0f72abe223cb73d99d23e83"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts": {
+      "./node_modules/@types/jsforce/api/apex.d.ts": {
         "version": "384cc35df9c0639c1a30a689e5261bffdecc0f6e1796cdd81f485ccbef9f1142",
         "signature": "384cc35df9c0639c1a30a689e5261bffdecc0f6e1796cdd81f485ccbef9f1142"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts": {
+      "./node_modules/@types/jsforce/job.d.ts": {
         "version": "16063b35927d9b1efbf94cb3f831728c1bcb62eb4f80d17dd8151c247566fa87",
         "signature": "16063b35927d9b1efbf94cb3f831728c1bcb62eb4f80d17dd8151c247566fa87"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts": {
+      "./node_modules/@types/jsforce/bulk.d.ts": {
         "version": "2d570378b492392ec582e99c70b5f9a87c95166e28490fb5b768c20a6c3a5c5e",
         "signature": "2d570378b492392ec582e99c70b5f9a87c95166e28490fb5b768c20a6c3a5c5e"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts": {
+      "./node_modules/@types/jsforce/cache.d.ts": {
         "version": "c339482a73bbf8976ba0e1e5c1ff48b50de204df02a9900b99b0f1656f20ab68",
         "signature": "c339482a73bbf8976ba0e1e5c1ff48b50de204df02a9900b99b0f1656f20ab68"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/http-api.d.ts": {
+      "./node_modules/@types/jsforce/http-api.d.ts": {
         "version": "56c948eb116a0a3bd9085aa067a1e012031a1bd4bf5bc5ef19df389c8257d0b7",
         "signature": "56c948eb116a0a3bd9085aa067a1e012031a1bd4bf5bc5ef19df389c8257d0b7"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/limits-info.d.ts": {
+      "./node_modules/@types/jsforce/limits-info.d.ts": {
         "version": "5e1e656e8d08174b6a1fc743965e34b24694f5bc52580e462fac94ba6e2df274",
         "signature": "5e1e656e8d08174b6a1fc743965e34b24694f5bc52580e462fac94ba6e2df274"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts": {
+      "./node_modules/@types/jsforce/connection.d.ts": {
         "version": "6e338014cd2ecfa085747c79ecc2d35f5294a43bfd10c5a49be317136540dd32",
         "signature": "6e338014cd2ecfa085747c79ecc2d35f5294a43bfd10c5a49be317136540dd32"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts": {
+      "./node_modules/@types/jsforce/api/analytics.d.ts": {
         "version": "60469513568d434ae4973616c63faf4595e6f86a564d9b9263c4d767f2445681",
         "signature": "60469513568d434ae4973616c63faf4595e6f86a564d9b9263c4d767f2445681"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts": {
+      "./node_modules/@types/jsforce/topic.d.ts": {
         "version": "149cd423c03fbf662c33ffb8f6d2926fd69c0591d8772d2fb17ce9afbc62982a",
         "signature": "149cd423c03fbf662c33ffb8f6d2926fd69c0591d8772d2fb17ce9afbc62982a"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts": {
+      "./node_modules/@types/jsforce/streaming.d.ts": {
         "version": "5eb82ba07ee4a112e4fed544bd2501bbb8fd0163e2a505d99133bc9df748a327",
         "signature": "5eb82ba07ee4a112e4fed544bd2501bbb8fd0163e2a505d99133bc9df748a327"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts": {
+      "./node_modules/@types/jsforce/channel.d.ts": {
         "version": "557e49fb7714b0fc0a4c518062338973bde7548e514e27d6ad6ddebf2a1d836a",
         "signature": "557e49fb7714b0fc0a4c518062338973bde7548e514e27d6ad6ddebf2a1d836a"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/date-enum.d.ts": {
+      "./node_modules/@types/jsforce/date-enum.d.ts": {
         "version": "a8e8ecfe9d2bee746a0d4b4e24996d7a1cdefc1472c8957c14ccf44fa4e5766e",
         "signature": "a8e8ecfe9d2bee746a0d4b4e24996d7a1cdefc1472c8957c14ccf44fa4e5766e"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/oauth2.d.ts": {
+      "./node_modules/@types/jsforce/oauth2.d.ts": {
         "version": "cb187cc474ce58a1357e1e1d982813351df2d2b25da8bdfbab6a5f8860a21895",
         "signature": "cb187cc474ce58a1357e1e1d982813351df2d2b25da8bdfbab6a5f8860a21895"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/promise.d.ts": {
+      "./node_modules/@types/jsforce/promise.d.ts": {
         "version": "3f6cf478c283467790eb1acb472bb4f2fe1eaa8fd4804a7f109a71f38c58051d",
         "signature": "3f6cf478c283467790eb1acb472bb4f2fe1eaa8fd4804a7f109a71f38c58051d"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/date.d.ts": {
+      "./node_modules/@types/jsforce/date.d.ts": {
         "version": "78226a116c2dcf64885c8fa72570d0d9301d0c6e8228b1cc02df7aa53dcf07ce",
         "signature": "78226a116c2dcf64885c8fa72570d0d9301d0c6e8228b1cc02df7aa53dcf07ce"
       },
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts": {
+      "./node_modules/@types/jsforce/index.d.ts": {
         "version": "efeb49d998e12dd2144f42ce63b7c842459ff39d3d37de402b3358e14c9db25e",
         "signature": "efeb49d998e12dd2144f42ce63b7c842459ff39d3d37de402b3358e14c9db25e"
       },
       "./node_modules/@salesforce/core/lib/logger.d.ts": {
-        "version": "d21068c7819531b4857d902d42d426797b88aa3d0669d8f0267967ff01e5f5be",
-        "signature": "d21068c7819531b4857d902d42d426797b88aa3d0669d8f0267967ff01e5f5be"
+        "version": "1ee141964efff0fee42978d618a364edceb12197d0bb446ca061878de739156b",
+        "signature": "1ee141964efff0fee42978d618a364edceb12197d0bb446ca061878de739156b"
       },
       "./node_modules/@salesforce/core/lib/messages.d.ts": {
         "version": "a4fbfcd2dcbf663d3237476e2da5618a9b5722deb5ae91d8ae915a4e947f477f",
@@ -1106,8 +1030,8 @@
         "signature": "2731f0eaa49f971f36e45f45a2c59733a75ffcf6abf5b7894c4e7d244b229241"
       },
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/nodash/internal.d.ts": {
-        "version": "1fece6792819a18e15fbf51f513bd4f1b803df2a8f5116d247ed9a31fe022fb9",
-        "signature": "1fece6792819a18e15fbf51f513bd4f1b803df2a8f5116d247ed9a31fe022fb9"
+        "version": "5852392aa2954a848d648a4695ea5fd29adc8a845772d6038aefcd88f2438eab",
+        "signature": "5852392aa2954a848d648a4695ea5fd29adc8a845772d6038aefcd88f2438eab"
       },
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/nodash/index.d.ts": {
         "version": "02c983835f888941efbad56f51c2759f69c7d259ce138e09de52793444bd72ab",
@@ -1146,8 +1070,8 @@
         "signature": "82ffb29b7da6c9ffcc9b8264c9b2f51b1bb4bffb6c750db0adb69c34e6b9a3e1"
       },
       "./node_modules/@salesforce/core/lib/connection.d.ts": {
-        "version": "c1824e1a210e2bb608633fd9e87c4e2a6c118c13b5374fbfef69d05a17100f0b",
-        "signature": "c1824e1a210e2bb608633fd9e87c4e2a6c118c13b5374fbfef69d05a17100f0b"
+        "version": "cb53e115182ec9b276ec1be1dfccbaeccd9eb72e32af783e3e1fb184b9396339",
+        "signature": "cb53e115182ec9b276ec1be1dfccbaeccd9eb72e32af783e3e1fb184b9396339"
       },
       "./node_modules/@salesforce/core/lib/authinfo.d.ts": {
         "version": "261960c74d5bc1182c3d59bf788d86bf7e8cc0012bb433fa474b1ea2696aa085",
@@ -1214,8 +1138,8 @@
         "signature": "0d70cbdfb3834907264fe8e54073d3d925a4ae7c079064c827090a79117c8a71"
       },
       "./node_modules/@salesforce/core/lib/status/mydomainresolver.d.ts": {
-        "version": "e1cd1ab822e7e4a09c4f515f79413c36a89c4f04024c753361b0c169b051a704",
-        "signature": "e1cd1ab822e7e4a09c4f515f79413c36a89c4f04024c753361b0c169b051a704"
+        "version": "9ce4137521ba9aa27e7bd3e5278e4f8e9cd06b455c2ef400ec102f4cc36b6ee4",
+        "signature": "9ce4137521ba9aa27e7bd3e5278e4f8e9cd06b455c2ef400ec102f4cc36b6ee4"
       },
       "./node_modules/@salesforce/core/lib/securebuffer.d.ts": {
         "version": "1394881eb63d2833644c52f9239dcef6159e2e0de88b4fe7f3bf55ccbac10acb",
@@ -1246,8 +1170,8 @@
         "signature": "5798136a11f36d147abcc13bbb069562d859b77752b71b33833e525348ebbb97"
       },
       "./src/lib/command-base.ts": {
-        "version": "00ce25a9922506c1935d7f659357e2d1057987460edf7fe60f149183c488ff9c",
-        "signature": "1a371c86b9ce9c75ed1d779826d3e001d24330fbbee78645b9bd2e332d127b48"
+        "version": "33e96f388ef71a426cebd91cbba0ff4ec138592b8265c190e7d117ff5967e208",
+        "signature": "1e62c46d4aefb9cfcd454fdd2971759751fec8fbb313d993fb4f4ffef350cd7a"
       },
       "./node_modules/xpath/xpath.d.ts": {
         "version": "4d4ac28f9ed5846ca7fe3625f380439cc4f69ef5f859c1b4006774736ad92963",
@@ -1294,11 +1218,11 @@
         "signature": "1c221a1061267d3a86f9dff5aa3f1a747c13c24c8cf1e18bc9923bcacae65935"
       },
       "./src/commands/acumen/admin/user/unmask.ts": {
-        "version": "276fb9b4aba2df3ff449b4ffd7da77ee5ab27be7de9f3567309ff26e38d99276",
+        "version": "9daf4bb93aeb7839ac30829bfcd8edf71f327e50c9a7f62aae3c0ed6f3f11c9c",
         "signature": "eda56a91d838bf1d70165a34e3e4a59e7cb877c8640560a2b5c40195ee9ba399"
       },
       "./src/commands/acumen/admin/workspace/delete.ts": {
-        "version": "83d79015c1a57934f87cb37b1d0c7367e9665c3aa6f9c4d2fc873a1875f10f7b",
+        "version": "0179503fef9ded45f965656e5c545880e7ddd0059db22335e870a48db131ddea",
         "signature": "dfb54e026a8bc5a1f9847d3745516d1eb8d3d29b358ead20ecad0b41a8dba8fa"
       },
       "./src/lib/scaffold-options.ts": {
@@ -1306,15 +1230,15 @@
         "signature": "856f61457d3acc393d2a2f70f8eacefc41f8d289e396d54336d135284ee89c2e"
       },
       "./src/commands/acumen/apex/scaffold.ts": {
-        "version": "6d1965089fab43e4041f53307672d8dff5d212e1f609d4aee088cc6ec7bc2dbc",
-        "signature": "ed17b3f3bd989a0d5b6037f60a4722b718eac48ec910fbf1a702960bdc4ee897"
+        "version": "e9dca713b359355c86e2f5d434c4b018e7564bbcc83f828ee197d24005267991",
+        "signature": "315de55a6d5774136443d1f3c31a62fc46f70916e3c8fbcbaeb478d86955ef21"
       },
       "./src/commands/acumen/apex/coverage/clear.ts": {
-        "version": "78ed28a88650b59d04b5567bb6c34eb96a4d7ae0bc1c6a97d166333dbe1771a0",
+        "version": "d1e11e36eedd07e6d72601976e1fd89a5b4d5b202540c3f774a071967a137175",
         "signature": "2ef07415900ccf3926700e5985c710430a010673430345c05c51fbb67430446e"
       },
       "./src/commands/acumen/apex/coverage/execute.ts": {
-        "version": "3a24bbf49a5c5828649cc6c8f6e10d7ea95cd9bca6097b88f44417fb967e75c1",
+        "version": "23b6bc2a5e2e13446159db4122605e4494d2e0ab383abe444afff6372de88a26",
         "signature": "6fbd3935c2af5999c3fe862a053b0aa6033c29b7b39d3d92810e90876e10db85"
       },
       "./node_modules/cfb/types/index.d.ts": {
@@ -1334,11 +1258,11 @@
         "signature": "b84979c6006623ca4e6d2d80b0203ee3e1bce8ec604bb7d893428bf5a4065ce3"
       },
       "./src/commands/acumen/apex/coverage/report.ts": {
-        "version": "3f132b7a4eb38b8aed74c0ee5583f41a2d5cd00bd14494eb0cb63dae7567ecbd",
+        "version": "2204aa9fe03dcbef28b86a2451f29dd11119e0e401679ab9be0b868dc2a029ac",
         "signature": "587cb9e95d1a081bd07a9aacfa20cbf020633430e1d0d7047028dabd919e9ad3"
       },
       "./src/commands/acumen/api/get.ts": {
-        "version": "f8864be727eb4e14282f126aae061d810c35b63cf21c806530bb97eff6d0939d",
+        "version": "4d49d90cb4dff8d988fd827875a6bc76f757c007021ab4e4c3fb6a407dc1efb9",
         "signature": "ac65a8e8a55c1a1b63f3f0b4d16955fd444efbe24148740226366ed299aca74d"
       },
       "./src/lib/package-options.ts": {
@@ -1346,7 +1270,7 @@
         "signature": "21e3966c415096c12b0bc09674209f8eeebd6f3a43046c3bb202a989f9445202"
       },
       "./src/commands/acumen/package/build.ts": {
-        "version": "62e248fcaea3fa3452ea4c1ce023e5e1dd1e9036f91ef6a65c5000419dd86ab9",
+        "version": "868aa93de9b6134069f0af9a5aac9ba18d85b1a7f29951f232b0f3956efbf36a",
         "signature": "6d61ce966208e5abf559646ce22064b87477d7215f5ff535131a02409fc6962d"
       },
       "./src/commands/acumen/package/merge.ts": {
@@ -1358,8 +1282,8 @@
         "signature": "5f5f3b56369e1bce0f4d3c0bc663612e0fa2ea02421496058e8d18502cbb07ff"
       },
       "./src/commands/acumen/package/permissions.ts": {
-        "version": "e29a054672881b085ddb9901fd6f9312c2c82472e4afdaa8a27ed1b1750a5a4a",
-        "signature": "aaddf2b84293e38c74c37b11ab1a2da56e1e1705628a71abb3b135ee96121997"
+        "version": "ab6dfb761aed34f4033d973e6c3fe809007286df698c8f5c849310417d6dd6e8",
+        "signature": "151ce7bce133ec24627531ca850c6c1c9c34b1a7436c64b0f4a02f2db63aed7b"
       },
       "./src/lib/schema-utils.ts": {
         "version": "efeb00628ddcf3b7c3a65b6cd24eda4a5b4a6959355ea0ca1f519504f5db0a6e",
@@ -1370,7 +1294,7 @@
         "signature": "7a60678cfc4e86a8e00b94a9180dfcadb4b1cc37d28ebf82a8548bef199b68df"
       },
       "./src/commands/acumen/schema/dictionary.ts": {
-        "version": "dccd978270dd5069eede1c6a608da1d90ba36f396b79394fb801361db3c2ac71",
+        "version": "9a122a3517a43feb418707d68615e6ff0b614ee4f5198fa45d18d11cc4c3f31c",
         "signature": "f87e0183cdd9c3fb913f8827e9f2b631b9c85044f6ad110f97e5b250d84cdb22"
       },
       "./src/lib/profile-download.ts": {
@@ -1378,7 +1302,7 @@
         "signature": "682acf2393397d2b63caa50174d7282c7bc29a5a07b369b28f1f19f6534324ff"
       },
       "./src/commands/acumen/schema/profile/retrieve.ts": {
-        "version": "60fc0decda7f8aa43043ad88b6f01ff5a0d78972575ca8175764b1f2e2e425d0",
+        "version": "c2733042368625df2444a950861a1e46a49736df1b87d52355813d55422bcdb8",
         "signature": "5df8df7fe493c14581797cfa2d2503ce1a64865b22c72c94c6e6e79f382ec688"
       },
       "./src/commands/acumen/source/permissions.ts": {
@@ -1386,7 +1310,7 @@
         "signature": "3ac1d45101be44d16ef991e549998d48b10e8f8d1ad8fa82a2c821cfbdb1999b"
       },
       "./src/commands/acumen/source/profile.ts": {
-        "version": "69f849a357635ddd43e830456527e5ae98f9a7dfed622f5e6d7c37c588026c06",
+        "version": "6b838cb684ded6cb073ee0d5cca6bd47cb25400c00e69d01a06da1cfa859547c",
         "signature": "0232a6993c5db166a0eebb4d9965d35a281d385dd65d116d98de26edad3cf142"
       },
       "./src/lib/xpath-options.ts": {
@@ -1426,64 +1350,64 @@
         "signature": "f0cb4b3ab88193e3e51e9e2622e4c375955003f1f81239d72c5b7a95415dad3e"
       },
       "./node_modules/@types/minimatch/index.d.ts": {
-        "version": "95c22bc19835e28e2e524a4bb8898eb5f2107b640d7279a6d3aade261916bbf2",
-        "signature": "95c22bc19835e28e2e524a4bb8898eb5f2107b640d7279a6d3aade261916bbf2"
+        "version": "1d1e6bd176eee5970968423d7e215bfd66828b6db8d54d17afec05a831322633",
+        "signature": "1d1e6bd176eee5970968423d7e215bfd66828b6db8d54d17afec05a831322633"
       },
       "./node_modules/@types/glob/index.d.ts": {
         "version": "393137c76bd922ba70a2f8bf1ade4f59a16171a02fb25918c168d48875b0cfb0",
         "signature": "393137c76bd922ba70a2f8bf1ade4f59a16171a02fb25918c168d48875b0cfb0"
       },
-      "./node_modules/@types/lodash/common/common.d.ts": {
-        "version": "29304d38d619bac17128f20c21af1a03256f9edf8f0b82e6674565e09e956dff",
-        "signature": "29304d38d619bac17128f20c21af1a03256f9edf8f0b82e6674565e09e956dff"
+      "./node_modules/@types/lodash/ts3.1/common/common.d.ts": {
+        "version": "4025cf62742c5bb3d383c8a62342481622c87e3397ea5e7b7baab18b9efd5798",
+        "signature": "4025cf62742c5bb3d383c8a62342481622c87e3397ea5e7b7baab18b9efd5798"
       },
-      "./node_modules/@types/lodash/common/array.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/array.d.ts": {
         "version": "d03a1ae3d39f757c9f22e4e775b940a98d86bb50ec85529b59e32a17b65c2b90",
         "signature": "d03a1ae3d39f757c9f22e4e775b940a98d86bb50ec85529b59e32a17b65c2b90"
       },
-      "./node_modules/@types/lodash/common/collection.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/collection.d.ts": {
         "version": "0c75b204aed9cf6ff1c7b4bed87a3ece0d9d6fc857a6350c0c95ed0c38c814e8",
         "signature": "0c75b204aed9cf6ff1c7b4bed87a3ece0d9d6fc857a6350c0c95ed0c38c814e8"
       },
-      "./node_modules/@types/lodash/common/date.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/date.d.ts": {
         "version": "187119ff4f9553676a884e296089e131e8cc01691c546273b1d0089c3533ce42",
         "signature": "187119ff4f9553676a884e296089e131e8cc01691c546273b1d0089c3533ce42"
       },
-      "./node_modules/@types/lodash/common/function.d.ts": {
-        "version": "c9f396e71966bd3a890d8a36a6a497dbf260e9b868158ea7824d4b5421210afe",
-        "signature": "c9f396e71966bd3a890d8a36a6a497dbf260e9b868158ea7824d4b5421210afe"
+      "./node_modules/@types/lodash/ts3.1/common/function.d.ts": {
+        "version": "035b95793288bf4457a2b80bfe9b7500a29324ad62adcf9991277198e8833096",
+        "signature": "035b95793288bf4457a2b80bfe9b7500a29324ad62adcf9991277198e8833096"
       },
-      "./node_modules/@types/lodash/common/lang.d.ts": {
-        "version": "509235563ea2b939e1bbe92aae17e71e6a82ceab8f568b45fb4fce7d72523a32",
-        "signature": "509235563ea2b939e1bbe92aae17e71e6a82ceab8f568b45fb4fce7d72523a32"
+      "./node_modules/@types/lodash/ts3.1/common/lang.d.ts": {
+        "version": "d7fac90d8d76afeccb236132472c6c2c26f1783af0e46575d3b2f5a59501f4ca",
+        "signature": "d7fac90d8d76afeccb236132472c6c2c26f1783af0e46575d3b2f5a59501f4ca"
       },
-      "./node_modules/@types/lodash/common/math.d.ts": {
-        "version": "9364c7566b0be2f7b70ff5285eb34686f83ccb01bda529b82d23b2a844653bfb",
-        "signature": "9364c7566b0be2f7b70ff5285eb34686f83ccb01bda529b82d23b2a844653bfb"
+      "./node_modules/@types/lodash/ts3.1/common/math.d.ts": {
+        "version": "65648639567d214f62c1b21d200c852807e68bdb08311f95ab6f526ef5b98995",
+        "signature": "65648639567d214f62c1b21d200c852807e68bdb08311f95ab6f526ef5b98995"
       },
-      "./node_modules/@types/lodash/common/number.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/number.d.ts": {
         "version": "00baffbe8a2f2e4875367479489b5d43b5fc1429ecb4a4cc98cfc3009095f52a",
         "signature": "00baffbe8a2f2e4875367479489b5d43b5fc1429ecb4a4cc98cfc3009095f52a"
       },
-      "./node_modules/@types/lodash/common/object.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/object.d.ts": {
         "version": "7fc5a3d7cff296cea5c225911726a56283b663328709088fcc912d61f73682fc",
         "signature": "7fc5a3d7cff296cea5c225911726a56283b663328709088fcc912d61f73682fc"
       },
-      "./node_modules/@types/lodash/common/seq.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/seq.d.ts": {
         "version": "3c92b6dfd43cc1c2485d9eba5ff0b74a19bb8725b692773ef1d66dac48cda4bd",
         "signature": "3c92b6dfd43cc1c2485d9eba5ff0b74a19bb8725b692773ef1d66dac48cda4bd"
       },
-      "./node_modules/@types/lodash/common/string.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/string.d.ts": {
         "version": "4908e4c00832b26ce77a629de8501b0e23a903c094f9e79a7fec313a15da796a",
         "signature": "4908e4c00832b26ce77a629de8501b0e23a903c094f9e79a7fec313a15da796a"
       },
-      "./node_modules/@types/lodash/common/util.d.ts": {
+      "./node_modules/@types/lodash/ts3.1/common/util.d.ts": {
         "version": "2630a7cbb597e85d713b7ef47f2946d4280d3d4c02733282770741d40672b1a5",
         "signature": "2630a7cbb597e85d713b7ef47f2946d4280d3d4c02733282770741d40672b1a5"
       },
-      "./node_modules/@types/lodash/index.d.ts": {
-        "version": "0714e2046df66c0e93c3330d30dbc0565b3e8cd3ee302cf99e4ede6220e5fec8",
-        "signature": "0714e2046df66c0e93c3330d30dbc0565b3e8cd3ee302cf99e4ede6220e5fec8"
+      "./node_modules/@types/lodash/ts3.1/index.d.ts": {
+        "version": "bbf144d4354e2aaa6439f32761f3ee798cc68d1600adab6e2a596f25269f106d",
+        "signature": "bbf144d4354e2aaa6439f32761f3ee798cc68d1600adab6e2a596f25269f106d"
       },
       "./node_modules/@types/mocha/index.d.ts": {
         "version": "c4c03cf65951d980ba618ae9601d10438730803fc9c8a1f7b34af8739981e205",
@@ -1493,9 +1417,9 @@
         "version": "558a9770503071d5a6fc6c596f7230bb79f2d034ced4a205bd1ebcad3b5879ec",
         "signature": "558a9770503071d5a6fc6c596f7230bb79f2d034ced4a205bd1ebcad3b5879ec"
       },
-      "./node_modules/@types/sinon/index.d.ts": {
-        "version": "c9e127737d6a632738e2dcaffac6e67ef526bca02e5e971e8de5b1d6b3ec6650",
-        "signature": "c9e127737d6a632738e2dcaffac6e67ef526bca02e5e971e8de5b1d6b3ec6650"
+      "./node_modules/@types/sinon/ts3.1/index.d.ts": {
+        "version": "5fea7154f7cc1d8b1e56b2c8917cf57b529799201f75871b3d8df13de45123b8",
+        "signature": "5fea7154f7cc1d8b1e56b2c8917cf57b529799201f75871b3d8df13de45123b8"
       }
     },
     "options": {
@@ -1582,93 +1506,33 @@
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/messages.d.ts": [
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/union.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/env.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/json.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/json.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/mapped.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/conditional.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/external.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/support.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/alias.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/conditional.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/function.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/json.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/mapped.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/union.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/internal.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/as.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/index.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/external.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/internal.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/assert.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/coerce.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/ensure.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/get.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/has.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/is.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/object.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/to.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/index.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/as.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/assert.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/coerce.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/ensure.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/get.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/has.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/is.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/object.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/to.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/index.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/env.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/json.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/nodash/external.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@salesforce/kit/lib/nodash/support.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/nodash/internal.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/nodash/index.d.ts": [
-        "./node_modules/@salesforce/kit/lib/nodash/external.d.ts",
-        "./node_modules/@salesforce/kit/lib/nodash/internal.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/index.d.ts": [
-        "./node_modules/@salesforce/kit/lib/creatable.d.ts",
-        "./node_modules/@salesforce/kit/lib/duration.d.ts",
-        "./node_modules/@salesforce/kit/lib/env.d.ts",
-        "./node_modules/@salesforce/kit/lib/errors.d.ts",
-        "./node_modules/@salesforce/kit/lib/json.d.ts",
-        "./node_modules/@salesforce/kit/lib/nodash/index.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/creatable.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/duration.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/env.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/errors.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/json.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/index.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configstore.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configfile.d.ts": [
@@ -1698,148 +1562,148 @@
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configstore.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configaggregator.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/config.d.ts"
       ],
-      "./node_modules/@types/jsforce/record-result.d.ts": [
-        "./node_modules/@types/jsforce/salesforce-id.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@types/jsforce/query.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts"
       ],
-      "./node_modules/@types/jsforce/record.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/salesforce-id.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@types/jsforce/salesforce-object-options.d.ts": [
-        "./node_modules/@types/jsforce/salesforce-id.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object-options.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@types/jsforce/create-options.d.ts": [
-        "./node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@types/jsforce/salesforce-object-options.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/create-options.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object-options.d.ts"
       ],
-      "./node_modules/@types/jsforce/batch.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts"
       ],
-      "./node_modules/@types/jsforce/quick-action.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/quick-action.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts"
       ],
-      "./node_modules/@types/jsforce/salesforce-object.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/create-options.d.ts",
-        "./node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@types/jsforce/quick-action.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/create-options.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/quick-action.d.ts"
       ],
-      "./node_modules/@types/jsforce/api/chatter.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
         "./node_modules/@types/node/stream.d.ts"
       ],
-      "./node_modules/@types/jsforce/api/metadata.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
         "./node_modules/@types/node/events.d.ts",
         "./node_modules/@types/node/stream.d.ts"
       ],
-      "./node_modules/@types/jsforce/api/apex.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts"
       ],
-      "./node_modules/@types/jsforce/job.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@types/jsforce/bulk.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@types/jsforce/cache.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts": [
         "./node_modules/@types/node/events.d.ts"
       ],
-      "./node_modules/@types/jsforce/connection.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@types/jsforce/index.d.ts",
-        "./node_modules/@types/jsforce/http-api.d.ts",
-        "./node_modules/@types/jsforce/limits-info.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/http-api.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/limits-info.d.ts"
       ],
-      "./node_modules/@types/jsforce/api/analytics.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts"
       ],
-      "./node_modules/@types/jsforce/topic.d.ts": [
-        "./node_modules/@types/jsforce/streaming.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@types/jsforce/streaming.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@types/jsforce/topic.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts"
       ],
-      "./node_modules/@types/jsforce/channel.d.ts": [
-        "./node_modules/@types/jsforce/streaming.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@types/jsforce/index.d.ts": [
-        "./node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/date-enum.d.ts",
-        "./node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@types/jsforce/oauth2.d.ts",
-        "./node_modules/@types/jsforce/promise.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@types/jsforce/streaming.d.ts",
-        "./node_modules/@types/jsforce/topic.d.ts",
-        "./node_modules/@types/jsforce/limits-info.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/date-enum.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/oauth2.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/promise.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/limits-info.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/connection.d.ts": [
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/authinfo.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configaggregator.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/authinfo.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/connection.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/lifecycleevents.d.ts": [
@@ -1849,7 +1713,7 @@
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configfile.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/org.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/authinfo.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configaggregator.d.ts",
@@ -1871,7 +1735,7 @@
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/logger.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/sfdxerror.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/messages.d.ts"
       ],
@@ -1879,13 +1743,13 @@
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/pollingclient.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/logger.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/client.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/streamingclient.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@types/node/events.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/org.d.ts",
@@ -1893,13 +1757,13 @@
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/mydomainresolver.d.ts": [
         "./node_modules/@types/node/url.d.ts",
-        "./node_modules/@salesforce/kit/lib/index.d.ts"
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/securebuffer.d.ts": [
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/user.d.ts": [
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/authinfo.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/org.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/securebuffer.d.ts"
@@ -2205,7 +2069,7 @@
         "./node_modules/@salesforce/command/node_modules/@oclif/command/lib/index.d.ts",
         "./node_modules/@oclif/parser/lib/index.d.ts",
         "./node_modules/@oclif/parser/lib/flags.d.ts",
-        "./node_modules/@salesforce/kit/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@types/node/url.d.ts",
         "./node_modules/@salesforce/command/lib/ux.d.ts"
@@ -2224,135 +2088,135 @@
         "./node_modules/@salesforce/command/lib/sfdxflags.d.ts",
         "./node_modules/@salesforce/command/lib/ux.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts"
+      "./node_modules/@types/jsforce/record-result.d.ts": [
+        "./node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts": [
+      "./node_modules/@types/jsforce/query.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts"
+        "./node_modules/@types/jsforce/record-result.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts": [
+      "./node_modules/@types/jsforce/record.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts"
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object-options.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts"
+      "./node_modules/@types/jsforce/salesforce-object-options.d.ts": [
+        "./node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/create-options.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object-options.d.ts"
+      "./node_modules/@types/jsforce/create-options.d.ts": [
+        "./node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@types/jsforce/salesforce-object-options.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts": [
+      "./node_modules/@types/jsforce/batch.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts"
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/quick-action.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts"
+      "./node_modules/@types/jsforce/quick-action.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts": [
+      "./node_modules/@types/jsforce/salesforce-object.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/create-options.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/quick-action.d.ts"
+        "./node_modules/@types/jsforce/create-options.d.ts",
+        "./node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@types/jsforce/quick-action.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
+      "./node_modules/@types/jsforce/api/chatter.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
         "./node_modules/@types/node/stream.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
+      "./node_modules/@types/jsforce/api/metadata.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
         "./node_modules/@types/node/events.d.ts",
         "./node_modules/@types/node/stream.d.ts",
         "./node_modules/@types/node/buffer.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts"
+      "./node_modules/@types/jsforce/api/apex.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts": [
+      "./node_modules/@types/jsforce/job.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts"
+        "./node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts": [
+      "./node_modules/@types/jsforce/bulk.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts"
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts": [
+      "./node_modules/@types/jsforce/cache.d.ts": [
         "./node_modules/@types/node/events.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts": [
+      "./node_modules/@types/jsforce/connection.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/http-api.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/limits-info.d.ts"
+        "./node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/http-api.d.ts",
+        "./node_modules/@types/jsforce/limits-info.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts"
+      "./node_modules/@types/jsforce/api/analytics.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts"
+      "./node_modules/@types/jsforce/topic.d.ts": [
+        "./node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts": [
+      "./node_modules/@types/jsforce/streaming.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts"
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@types/jsforce/topic.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts"
+      "./node_modules/@types/jsforce/channel.d.ts": [
+        "./node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/date-enum.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/limits-info.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/oauth2.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/promise.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/date.d.ts",
+      "./node_modules/@types/jsforce/index.d.ts": [
+        "./node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/date-enum.d.ts",
+        "./node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@types/jsforce/limits-info.d.ts",
+        "./node_modules/@types/jsforce/oauth2.d.ts",
+        "./node_modules/@types/jsforce/promise.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@types/jsforce/streaming.d.ts",
+        "./node_modules/@types/jsforce/topic.d.ts",
+        "./node_modules/@types/jsforce/date.d.ts",
         "./node_modules/@types/node/index.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/logger.d.ts": [
@@ -2481,23 +2345,20 @@
         "./node_modules/@salesforce/core/lib/config/config.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/connection.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/core/lib/authinfo.d.ts",
-        "./node_modules/@salesforce/core/lib/config/configaggregator.d.ts",
-        "./node_modules/@types/node/index.d.ts"
+        "./node_modules/@salesforce/core/lib/config/configaggregator.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/authinfo.d.ts": [
         "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/core/lib/connection.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/deviceoauthservice.d.ts": [
         "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@salesforce/core/lib/authinfo.d.ts"
       ],
@@ -2514,7 +2375,7 @@
       "./node_modules/@salesforce/core/lib/weboauthserver.d.ts": [
         "./node_modules/@types/node/http.d.ts",
         "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/core/lib/authinfo.d.ts",
         "./node_modules/@types/node/index.d.ts"
       ],
@@ -2597,7 +2458,7 @@
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/exported.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/core/lib/config/aliases.d.ts",
         "./node_modules/@salesforce/core/lib/config/authinfoconfig.d.ts",
         "./node_modules/@salesforce/core/lib/config/configfile.d.ts",
@@ -2873,189 +2734,189 @@
         "./node_modules/@types/minimatch/index.d.ts",
         "./node_modules/@types/node/index.d.ts"
       ],
-      "./node_modules/@types/lodash/common/common.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/common.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/array.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/array.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/collection.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/collection.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/date.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/date.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/function.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/function.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/lang.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/lang.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/math.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/math.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/number.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/number.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/object.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/object.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/seq.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/seq.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/string.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/string.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/lodash/common/util.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts"
+      "./node_modules/@types/lodash/ts3.1/common/util.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts"
       ],
-      "./node_modules/@types/lodash/index.d.ts": [
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@types/lodash/ts3.1/index.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
       ],
-      "./node_modules/@types/sinon/index.d.ts": [
+      "./node_modules/@types/sinon/ts3.1/index.d.ts": [
         "./node_modules/@types/sinonjs__fake-timers/index.d.ts"
       ]
     },
@@ -3126,91 +2987,6 @@
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/messages.d.ts": [
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/union.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/json.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/mapped.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/conditional.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/alias.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/conditional.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/function.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/json.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/mapped.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/union.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/as.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/assert.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/coerce.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/ensure.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/get.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/has.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/is.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/object.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/to.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/index.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/as.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/assert.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/coerce.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/ensure.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/get.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/has.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/is.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/object.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/to.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/index.d.ts",
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/env.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/json.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/nodash/external.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@salesforce/kit/lib/nodash/support.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/nodash/internal.d.ts": [
-        "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/nodash/index.d.ts": [
-        "./node_modules/@salesforce/kit/lib/nodash/external.d.ts",
-        "./node_modules/@salesforce/kit/lib/nodash/internal.d.ts"
-      ],
-      "./node_modules/@salesforce/kit/lib/index.d.ts": [
-        "./node_modules/@salesforce/kit/lib/creatable.d.ts",
-        "./node_modules/@salesforce/kit/lib/duration.d.ts",
-        "./node_modules/@salesforce/kit/lib/env.d.ts",
-        "./node_modules/@salesforce/kit/lib/errors.d.ts",
-        "./node_modules/@salesforce/kit/lib/json.d.ts",
-        "./node_modules/@salesforce/kit/lib/nodash/index.d.ts"
-      ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configstore.d.ts": [
         "./node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts"
@@ -3245,134 +3021,6 @@
         "./node_modules/@salesforce/kit/lib/index.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
         "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/config.d.ts"
-      ],
-      "./node_modules/@types/jsforce/record-result.d.ts": [
-        "./node_modules/@types/jsforce/salesforce-id.d.ts"
-      ],
-      "./node_modules/@types/jsforce/query.d.ts": [
-        "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts"
-      ],
-      "./node_modules/@types/jsforce/record.d.ts": [
-        "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/salesforce-id.d.ts"
-      ],
-      "./node_modules/@types/jsforce/salesforce-object-options.d.ts": [
-        "./node_modules/@types/jsforce/salesforce-id.d.ts"
-      ],
-      "./node_modules/@types/jsforce/create-options.d.ts": [
-        "./node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@types/jsforce/salesforce-object-options.d.ts"
-      ],
-      "./node_modules/@types/jsforce/batch.d.ts": [
-        "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts"
-      ],
-      "./node_modules/@types/jsforce/quick-action.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts"
-      ],
-      "./node_modules/@types/jsforce/salesforce-object.d.ts": [
-        "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/create-options.d.ts",
-        "./node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@types/jsforce/quick-action.d.ts"
-      ],
-      "./node_modules/@types/jsforce/api/chatter.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/node/stream.d.ts"
-      ],
-      "./node_modules/@types/jsforce/api/metadata.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/node/stream.d.ts"
-      ],
-      "./node_modules/@types/jsforce/api/apex.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts"
-      ],
-      "./node_modules/@types/jsforce/job.d.ts": [
-        "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts"
-      ],
-      "./node_modules/@types/jsforce/bulk.d.ts": [
-        "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts"
-      ],
-      "./node_modules/@types/jsforce/cache.d.ts": [
-        "./node_modules/@types/node/events.d.ts"
-      ],
-      "./node_modules/@types/jsforce/connection.d.ts": [
-        "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@types/jsforce/index.d.ts",
-        "./node_modules/@types/jsforce/http-api.d.ts",
-        "./node_modules/@types/jsforce/limits-info.d.ts"
-      ],
-      "./node_modules/@types/jsforce/api/analytics.d.ts": [
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts"
-      ],
-      "./node_modules/@types/jsforce/topic.d.ts": [
-        "./node_modules/@types/jsforce/streaming.d.ts"
-      ],
-      "./node_modules/@types/jsforce/streaming.d.ts": [
-        "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@types/jsforce/topic.d.ts"
-      ],
-      "./node_modules/@types/jsforce/channel.d.ts": [
-        "./node_modules/@types/jsforce/streaming.d.ts"
-      ],
-      "./node_modules/@types/jsforce/index.d.ts": [
-        "./node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@types/jsforce/date-enum.d.ts",
-        "./node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@types/jsforce/oauth2.d.ts",
-        "./node_modules/@types/jsforce/promise.d.ts",
-        "./node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@types/jsforce/streaming.d.ts",
-        "./node_modules/@types/jsforce/topic.d.ts",
-        "./node_modules/@types/jsforce/limits-info.d.ts"
       ],
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/connection.d.ts": [
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
@@ -3768,135 +3416,135 @@
         "./node_modules/@salesforce/command/lib/sfdxflags.d.ts",
         "./node_modules/@salesforce/command/lib/ux.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts"
+      "./node_modules/@types/jsforce/record-result.d.ts": [
+        "./node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts": [
+      "./node_modules/@types/jsforce/query.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts"
+        "./node_modules/@types/jsforce/record-result.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts": [
+      "./node_modules/@types/jsforce/record.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts"
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object-options.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts"
+      "./node_modules/@types/jsforce/salesforce-object-options.d.ts": [
+        "./node_modules/@types/jsforce/salesforce-id.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/create-options.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object-options.d.ts"
+      "./node_modules/@types/jsforce/create-options.d.ts": [
+        "./node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@types/jsforce/salesforce-object-options.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts": [
+      "./node_modules/@types/jsforce/batch.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts"
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/quick-action.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts"
+      "./node_modules/@types/jsforce/quick-action.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts": [
+      "./node_modules/@types/jsforce/salesforce-object.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/create-options.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/quick-action.d.ts"
+        "./node_modules/@types/jsforce/create-options.d.ts",
+        "./node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@types/jsforce/quick-action.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
+      "./node_modules/@types/jsforce/api/chatter.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
         "./node_modules/@types/node/stream.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
+      "./node_modules/@types/jsforce/api/metadata.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
         "./node_modules/@types/node/events.d.ts",
         "./node_modules/@types/node/stream.d.ts",
         "./node_modules/@types/node/buffer.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts"
+      "./node_modules/@types/jsforce/api/apex.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts": [
+      "./node_modules/@types/jsforce/job.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts"
+        "./node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts": [
+      "./node_modules/@types/jsforce/bulk.d.ts": [
         "./node_modules/@types/node/stream.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts"
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts": [
+      "./node_modules/@types/jsforce/cache.d.ts": [
         "./node_modules/@types/node/events.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts": [
+      "./node_modules/@types/jsforce/connection.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/http-api.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/limits-info.d.ts"
+        "./node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/http-api.d.ts",
+        "./node_modules/@types/jsforce/limits-info.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts"
+      "./node_modules/@types/jsforce/api/analytics.d.ts": [
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts"
+      "./node_modules/@types/jsforce/topic.d.ts": [
+        "./node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts": [
+      "./node_modules/@types/jsforce/streaming.d.ts": [
         "./node_modules/@types/node/events.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts"
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@types/jsforce/topic.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts"
+      "./node_modules/@types/jsforce/channel.d.ts": [
+        "./node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/date-enum.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/limits-info.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/oauth2.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/promise.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/date.d.ts",
+      "./node_modules/@types/jsforce/index.d.ts": [
+        "./node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/jsforce/date-enum.d.ts",
+        "./node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@types/jsforce/limits-info.d.ts",
+        "./node_modules/@types/jsforce/oauth2.d.ts",
+        "./node_modules/@types/jsforce/promise.d.ts",
+        "./node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@types/jsforce/streaming.d.ts",
+        "./node_modules/@types/jsforce/topic.d.ts",
+        "./node_modules/@types/jsforce/date.d.ts",
         "./node_modules/@types/node/index.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/logger.d.ts": [
@@ -4025,13 +3673,10 @@
         "./node_modules/@salesforce/core/lib/config/config.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/connection.d.ts": [
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
         "./node_modules/@salesforce/ts-types/lib/index.d.ts",
-        "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@types/jsforce/index.d.ts",
         "./node_modules/@salesforce/core/lib/authinfo.d.ts",
-        "./node_modules/@salesforce/core/lib/config/configaggregator.d.ts",
-        "./node_modules/@types/node/index.d.ts"
+        "./node_modules/@salesforce/core/lib/config/configaggregator.d.ts"
       ],
       "./node_modules/@salesforce/core/lib/authinfo.d.ts": [
         "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/index.d.ts",
@@ -4289,189 +3934,342 @@
         "./node_modules/@types/minimatch/index.d.ts",
         "./node_modules/@types/node/index.d.ts"
       ],
-      "./node_modules/@types/lodash/common/common.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/creatable.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/duration.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/env.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/errors.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/json.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/index.d.ts"
       ],
-      "./node_modules/@types/lodash/common/array.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/env.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@types/lodash/common/collection.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/json.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@types/lodash/common/date.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/external.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/support.d.ts"
       ],
-      "./node_modules/@types/lodash/common/function.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/index.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/external.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/internal.d.ts"
       ],
-      "./node_modules/@types/lodash/common/lang.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/internal.d.ts": [
+        "./node_modules/@salesforce/ts-types/lib/index.d.ts"
       ],
-      "./node_modules/@types/lodash/common/math.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/date-enum.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/oauth2.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/promise.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/limits-info.d.ts"
       ],
-      "./node_modules/@types/lodash/common/number.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/http-api.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/limits-info.d.ts"
       ],
-      "./node_modules/@types/lodash/common/object.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts"
       ],
-      "./node_modules/@types/lodash/common/seq.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@types/lodash/common/string.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts"
       ],
-      "./node_modules/@types/lodash/common/util.d.ts": [
-        "./node_modules/@types/lodash/index.d.ts",
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts"
       ],
-      "./node_modules/@types/lodash/index.d.ts": [
-        "./node_modules/@types/lodash/common/common.d.ts",
-        "./node_modules/@types/lodash/common/array.d.ts",
-        "./node_modules/@types/lodash/common/collection.d.ts",
-        "./node_modules/@types/lodash/common/date.d.ts",
-        "./node_modules/@types/lodash/common/function.d.ts",
-        "./node_modules/@types/lodash/common/lang.d.ts",
-        "./node_modules/@types/lodash/common/math.d.ts",
-        "./node_modules/@types/lodash/common/number.d.ts",
-        "./node_modules/@types/lodash/common/object.d.ts",
-        "./node_modules/@types/lodash/common/seq.d.ts",
-        "./node_modules/@types/lodash/common/string.d.ts",
-        "./node_modules/@types/lodash/common/util.d.ts"
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts": [
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts"
       ],
-      "./node_modules/@types/sinon/index.d.ts": [
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts": [
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/create-options.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/quick-action.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/quick-action.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts": [
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts": [
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/create-options.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object-options.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object-options.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts": [
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts": [
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts"
+      ],
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/common.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/index.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/util.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/string.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/seq.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/object.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/number.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/math.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/lang.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/function.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/date.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/collection.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/lodash/ts3.1/common/array.d.ts": [
+        "./node_modules/@types/lodash/ts3.1/index.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+        "./node_modules/@types/lodash/ts3.1/common/util.d.ts"
+      ],
+      "./node_modules/@types/sinon/ts3.1/index.d.ts": [
         "./node_modules/@types/sinonjs__fake-timers/index.d.ts"
       ]
     },
@@ -4527,86 +4325,12 @@
       "./node_modules/@salesforce/ts-types/lib/index.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/logger.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/messages.d.ts",
-      "./node_modules/@salesforce/kit/lib/creatable.d.ts",
-      "./node_modules/@salesforce/kit/lib/duration.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/alias.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/union.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/collection.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/conditional.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/function.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/json.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/mapped.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/types/index.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/as.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/assert.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/coerce.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/ensure.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/get.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/has.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/is.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/object.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/to.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/narrowing/index.d.ts",
-      "./node_modules/@salesforce/kit/node_modules/@salesforce/ts-types/lib/index.d.ts",
-      "./node_modules/@salesforce/kit/lib/env.d.ts",
-      "./node_modules/@salesforce/kit/lib/errors.d.ts",
-      "./node_modules/@salesforce/kit/lib/json.d.ts",
-      "./node_modules/@salesforce/kit/lib/nodash/support.d.ts",
-      "./node_modules/@salesforce/kit/lib/nodash/external.d.ts",
-      "./node_modules/@salesforce/kit/lib/nodash/internal.d.ts",
-      "./node_modules/@salesforce/kit/lib/nodash/index.d.ts",
-      "./node_modules/@salesforce/kit/lib/index.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configstore.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configfile.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configgroup.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/aliases.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/authinfoconfig.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/orgusersconfig.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/config.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configaggregator.d.ts",
-      "./node_modules/@types/jsforce/describe-result.d.ts",
-      "./node_modules/@types/jsforce/salesforce-id.d.ts",
-      "./node_modules/@types/jsforce/record-result.d.ts",
-      "./node_modules/@types/jsforce/query.d.ts",
-      "./node_modules/@types/jsforce/record.d.ts",
-      "./node_modules/@types/jsforce/salesforce-object-options.d.ts",
-      "./node_modules/@types/jsforce/create-options.d.ts",
-      "./node_modules/@types/jsforce/batch.d.ts",
-      "./node_modules/@types/jsforce/quick-action.d.ts",
-      "./node_modules/@types/jsforce/salesforce-object.d.ts",
-      "./node_modules/@types/jsforce/api/chatter.d.ts",
-      "./node_modules/@types/jsforce/api/metadata.d.ts",
-      "./node_modules/@types/jsforce/api/apex.d.ts",
-      "./node_modules/@types/jsforce/job.d.ts",
-      "./node_modules/@types/jsforce/bulk.d.ts",
-      "./node_modules/@types/jsforce/cache.d.ts",
-      "./node_modules/@types/jsforce/http-api.d.ts",
-      "./node_modules/@types/jsforce/limits-info.d.ts",
-      "./node_modules/@types/jsforce/connection.d.ts",
-      "./node_modules/@types/jsforce/api/analytics.d.ts",
-      "./node_modules/@types/jsforce/topic.d.ts",
-      "./node_modules/@types/jsforce/streaming.d.ts",
-      "./node_modules/@types/jsforce/channel.d.ts",
-      "./node_modules/@types/jsforce/date-enum.d.ts",
-      "./node_modules/@types/jsforce/oauth2.d.ts",
-      "./node_modules/@types/jsforce/promise.d.ts",
-      "./node_modules/@types/jsforce/index.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/connection.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/authinfo.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/global.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/lifecycleevents.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/sandboxorgconfig.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/org.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/sfdxproject.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/schema/printer.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/schema/validator.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/sfdxerror.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/client.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/pollingclient.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/streamingclient.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/mydomainresolver.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/securebuffer.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/user.d.ts",
       "./node_modules/@types/node/globals.d.ts",
       "./node_modules/@types/node/async_hooks.d.ts",
       "./node_modules/@types/node/buffer.d.ts",
@@ -4653,7 +4377,6 @@
       "./node_modules/@types/graceful-fs/index.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/util/fs.d.ts",
       "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/util/sfdc.d.ts",
-      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/exported.d.ts",
       "./node_modules/@oclif/parser/lib/args.d.ts",
       "./node_modules/@oclif/parser/lib/alphabet.d.ts",
       "./node_modules/@oclif/parser/lib/flags.d.ts",
@@ -4691,40 +4414,15 @@
       "./node_modules/cli-ux/lib/styled/tree.d.ts",
       "./node_modules/cli-ux/lib/open.d.ts",
       "./node_modules/cli-ux/lib/index.d.ts",
-      "./node_modules/@salesforce/command/lib/ux.d.ts",
-      "./node_modules/@salesforce/command/lib/sfdxflags.d.ts",
-      "./node_modules/@salesforce/command/lib/sfdxcommand.d.ts",
-      "./node_modules/@salesforce/command/lib/exported.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/describe-result.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-id.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record-result.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/query.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/record.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object-options.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/create-options.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/batch.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/quick-action.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/salesforce-object.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/chatter.d.ts",
-      "./node_modules/buffer/index.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/metadata.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/apex.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/job.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/bulk.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/cache.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/http-api.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/limits-info.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/connection.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/api/analytics.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/topic.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/streaming.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/channel.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/date-enum.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/oauth2.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/promise.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/date.d.ts",
-      "./node_modules/@salesforce/core/node_modules/@types/jsforce/index.d.ts",
-      "./node_modules/@salesforce/core/lib/logger.d.ts",
+      "./node_modules/@types/jsforce/salesforce-id.d.ts",
+      "./node_modules/@types/jsforce/record-result.d.ts",
+      "./node_modules/@types/jsforce/salesforce-object-options.d.ts",
+      "./node_modules/@types/jsforce/create-options.d.ts",
+      "./node_modules/@types/jsforce/http-api.d.ts",
+      "./node_modules/@types/jsforce/limits-info.d.ts",
+      "./node_modules/@types/jsforce/date-enum.d.ts",
+      "./node_modules/@types/jsforce/oauth2.d.ts",
+      "./node_modules/@types/jsforce/promise.d.ts",
       "./node_modules/@salesforce/core/lib/messages.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/creatable.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/duration.d.ts",
@@ -4752,8 +4450,144 @@
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/json.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/nodash/support.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/nodash/external.d.ts",
+      "./node_modules/@salesforce/core/lib/global.d.ts",
+      "./node_modules/@salesforce/core/lib/lifecycleevents.d.ts",
+      "./node_modules/@salesforce/core/lib/status/client.d.ts",
+      "./node_modules/@salesforce/core/lib/securebuffer.d.ts",
+      "./node_modules/@types/mkdirp/index.d.ts",
+      "./node_modules/@salesforce/core/lib/util/fs.d.ts",
+      "./node_modules/@salesforce/core/lib/util/sfdc.d.ts",
+      "./node_modules/xpath/xpath.d.ts",
+      "./src/lib/options-factory.ts",
+      "./src/lib/scaffold-options.ts",
+      "./node_modules/cfb/types/index.d.ts",
+      "./node_modules/ssf/types/index.d.ts",
+      "./node_modules/xlsx/types/index.d.ts",
+      "./src/lib/office.ts",
+      "./src/lib/package-options.ts",
+      "./src/lib/schema-utils.ts",
+      "./node_modules/md5-file/index.d.ts",
+      "./node_modules/@types/chai/index.d.ts",
+      "./node_modules/@types/color-name/index.d.ts",
+      "./node_modules/@types/mocha/index.d.ts",
+      "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/creatable.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/duration.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/env.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/errors.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/json.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/support.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/external.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/index.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/nodash/internal.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/describe-result.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-id.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/create-options.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object-options.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record-result.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/query.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/cache.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/http-api.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/limits-info.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/date-enum.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/oauth2.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/promise.d.ts",
+      "./node_modules/@types/jsforce/describe-result.d.ts",
+      "./node_modules/@types/jsforce/query.d.ts",
+      "./node_modules/buffer/index.d.ts",
+      "./node_modules/@types/jsforce/cache.d.ts",
+      "./node_modules/@types/jsforce/date.d.ts",
+      "./node_modules/@salesforce/core/lib/logger.d.ts",
+      "./node_modules/@salesforce/core/lib/schema/validator.d.ts",
+      "./node_modules/@salesforce/core/lib/schema/printer.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/nodash/internal.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/nodash/index.d.ts",
+      "./node_modules/@salesforce/core/lib/status/mydomainresolver.d.ts",
+      "./src/lib/command-base.ts",
+      "./src/commands/acumen/source/delta/md5.ts",
+      "./src/commands/acumen/source/delta/git.ts",
+      "./src/lib/delta-command.ts",
+      "./src/commands/acumen/source/xpath.ts",
+      "./src/commands/acumen/source/profile.ts",
+      "./src/commands/acumen/source/permissions.ts",
+      "./src/commands/acumen/schema/profile/retrieve.ts",
+      "./src/commands/acumen/schema/dictionary.ts",
+      "./src/commands/acumen/package/permissions.ts",
+      "./src/commands/acumen/package/merge.ts",
+      "./src/commands/acumen/package/build.ts",
+      "./src/commands/acumen/api/get.ts",
+      "./src/commands/acumen/apex/coverage/report.ts",
+      "./src/commands/acumen/apex/coverage/execute.ts",
+      "./src/commands/acumen/apex/coverage/clear.ts",
+      "./src/commands/acumen/apex/scaffold.ts",
+      "./src/commands/acumen/admin/workspace/delete.ts",
+      "./src/commands/acumen/admin/user/unmask.ts",
+      "./src/lib/sfdx-core.ts",
+      "./src/lib/xpath-options.ts",
+      "./src/lib/schema-options.ts",
+      "./src/lib/sfdx-permission.ts",
+      "./src/lib/unmask-options.ts",
+      "./src/lib/sfdx-tasks.ts",
+      "./src/lib/options.ts",
+      "./src/lib/sfdx-query.ts",
+      "./node_modules/@types/minimatch/index.d.ts",
+      "./node_modules/@types/glob/index.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/array.d.ts",
+      "./node_modules/@types/sinon/ts3.1/index.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/kit/lib/index.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configstore.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configfile.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configgroup.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/aliases.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/authinfoconfig.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/orgusersconfig.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/config.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/configaggregator.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/record.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/batch.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/quick-action.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/salesforce-object.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/chatter.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/metadata.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/apex.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/job.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/bulk.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/connection.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/api/analytics.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/topic.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/streaming.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/channel.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@types/jsforce/index.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/connection.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/authinfo.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/config/sandboxorgconfig.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/org.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/sfdxproject.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/sfdxerror.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/pollingclient.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/streamingclient.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/status/mydomainresolver.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/user.d.ts",
+      "./node_modules/@salesforce/command/node_modules/@salesforce/core/lib/exported.d.ts",
+      "./node_modules/@salesforce/command/lib/ux.d.ts",
+      "./node_modules/@salesforce/command/lib/sfdxflags.d.ts",
+      "./node_modules/@salesforce/command/lib/sfdxcommand.d.ts",
+      "./node_modules/@salesforce/command/lib/exported.d.ts",
+      "./node_modules/@types/jsforce/record.d.ts",
+      "./node_modules/@types/jsforce/batch.d.ts",
+      "./node_modules/@types/jsforce/quick-action.d.ts",
+      "./node_modules/@types/jsforce/salesforce-object.d.ts",
+      "./node_modules/@types/jsforce/api/chatter.d.ts",
+      "./node_modules/@types/jsforce/api/metadata.d.ts",
+      "./node_modules/@types/jsforce/api/apex.d.ts",
+      "./node_modules/@types/jsforce/job.d.ts",
+      "./node_modules/@types/jsforce/bulk.d.ts",
+      "./node_modules/@types/jsforce/connection.d.ts",
+      "./node_modules/@types/jsforce/api/analytics.d.ts",
+      "./node_modules/@types/jsforce/topic.d.ts",
+      "./node_modules/@types/jsforce/streaming.d.ts",
+      "./node_modules/@types/jsforce/channel.d.ts",
+      "./node_modules/@types/jsforce/index.d.ts",
       "./node_modules/@salesforce/core/node_modules/@salesforce/kit/lib/index.d.ts",
       "./node_modules/@salesforce/core/lib/config/configstore.d.ts",
       "./node_modules/@salesforce/core/lib/config/configfile.d.ts",
@@ -4767,89 +4601,34 @@
       "./node_modules/@salesforce/core/lib/deviceoauthservice.d.ts",
       "./node_modules/@salesforce/core/lib/config/orgusersconfig.d.ts",
       "./node_modules/@salesforce/core/lib/authremover.d.ts",
-      "./node_modules/@salesforce/core/lib/global.d.ts",
-      "./node_modules/@salesforce/core/lib/lifecycleevents.d.ts",
       "./node_modules/@salesforce/core/lib/weboauthserver.d.ts",
       "./node_modules/@salesforce/core/lib/config/sandboxorgconfig.d.ts",
       "./node_modules/@salesforce/core/lib/org.d.ts",
       "./node_modules/@salesforce/core/lib/sfdxproject.d.ts",
-      "./node_modules/@salesforce/core/lib/schema/printer.d.ts",
-      "./node_modules/@salesforce/core/lib/schema/validator.d.ts",
       "./node_modules/@salesforce/core/lib/sfdxerror.d.ts",
-      "./node_modules/@salesforce/core/lib/status/client.d.ts",
       "./node_modules/@salesforce/core/lib/status/pollingclient.d.ts",
       "./node_modules/@salesforce/core/lib/status/streamingclient.d.ts",
-      "./node_modules/@salesforce/core/lib/status/mydomainresolver.d.ts",
-      "./node_modules/@salesforce/core/lib/securebuffer.d.ts",
       "./node_modules/@salesforce/core/lib/user.d.ts",
       "./node_modules/@salesforce/core/lib/permissionsetassignment.d.ts",
-      "./node_modules/@types/mkdirp/index.d.ts",
-      "./node_modules/@salesforce/core/lib/util/fs.d.ts",
-      "./node_modules/@salesforce/core/lib/util/sfdc.d.ts",
       "./node_modules/@salesforce/core/lib/exported.d.ts",
-      "./src/lib/command-base.ts",
-      "./node_modules/xpath/xpath.d.ts",
       "./src/lib/utils.ts",
       "./src/lib/sfdx-project.ts",
       "./src/lib/xml-merge.ts",
-      "./src/lib/options-factory.ts",
       "./src/lib/sfdx-client.ts",
-      "./src/commands/acumen/admin/user/unmask.ts",
-      "./src/commands/acumen/admin/workspace/delete.ts",
-      "./src/lib/scaffold-options.ts",
-      "./src/commands/acumen/apex/scaffold.ts",
-      "./src/commands/acumen/apex/coverage/clear.ts",
-      "./src/commands/acumen/apex/coverage/execute.ts",
-      "./node_modules/cfb/types/index.d.ts",
-      "./node_modules/ssf/types/index.d.ts",
-      "./node_modules/xlsx/types/index.d.ts",
-      "./src/lib/office.ts",
-      "./src/commands/acumen/apex/coverage/report.ts",
-      "./src/commands/acumen/api/get.ts",
-      "./src/lib/package-options.ts",
-      "./src/commands/acumen/package/merge.ts",
-      "./src/lib/schema-utils.ts",
-      "./src/commands/acumen/schema/dictionary.ts",
       "./src/lib/profile-download.ts",
-      "./src/commands/acumen/schema/profile/retrieve.ts",
-      "./src/commands/acumen/source/permissions.ts",
-      "./src/commands/acumen/source/profile.ts",
-      "./src/commands/acumen/source/xpath.ts",
-      "./src/lib/delta-command.ts",
       "./src/lib/delta-provider.ts",
-      "./src/commands/acumen/source/delta/git.ts",
-      "./node_modules/md5-file/index.d.ts",
-      "./src/commands/acumen/source/delta/md5.ts",
-      "./node_modules/@types/chai/index.d.ts",
-      "./node_modules/@types/color-name/index.d.ts",
-      "./node_modules/@types/minimatch/index.d.ts",
-      "./node_modules/@types/glob/index.d.ts",
-      "./node_modules/@types/lodash/common/common.d.ts",
-      "./node_modules/@types/lodash/common/array.d.ts",
-      "./node_modules/@types/lodash/common/collection.d.ts",
-      "./node_modules/@types/lodash/common/date.d.ts",
-      "./node_modules/@types/lodash/common/function.d.ts",
-      "./node_modules/@types/lodash/common/lang.d.ts",
-      "./node_modules/@types/lodash/common/math.d.ts",
-      "./node_modules/@types/lodash/common/number.d.ts",
-      "./node_modules/@types/lodash/common/object.d.ts",
-      "./node_modules/@types/lodash/common/seq.d.ts",
-      "./node_modules/@types/lodash/common/string.d.ts",
-      "./node_modules/@types/lodash/common/util.d.ts",
-      "./node_modules/@types/lodash/index.d.ts",
-      "./node_modules/@types/mocha/index.d.ts",
-      "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
-      "./node_modules/@types/sinon/index.d.ts",
-      "./src/lib/sfdx-core.ts",
-      "./src/lib/xpath-options.ts",
-      "./src/lib/schema-options.ts",
-      "./src/commands/acumen/package/permissions.ts",
-      "./src/lib/sfdx-permission.ts",
-      "./src/commands/acumen/package/build.ts",
-      "./src/lib/unmask-options.ts",
-      "./src/lib/sfdx-tasks.ts",
-      "./src/lib/options.ts",
-      "./src/lib/sfdx-query.ts"
+      "./node_modules/@types/lodash/ts3.1/common/common.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/collection.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/date.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/function.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/lang.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/math.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/number.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/object.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/seq.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/string.d.ts",
+      "./node_modules/@types/lodash/ts3.1/common/util.d.ts",
+      "./node_modules/@types/lodash/ts3.1/index.d.ts"
     ]
   },
   "version": "3.7.5"

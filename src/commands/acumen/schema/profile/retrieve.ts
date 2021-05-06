@@ -62,7 +62,7 @@ export default class ProfileRetrieve extends CommandBase {
     }
 
     this.ux.log('Retrieving Profiles...');
-    const profileDownloader = new ProfileDownload(this.org.getConnection(), orgAlias, profileList,
+    const profileDownloader = new ProfileDownload(this.connection, orgAlias, profileList,
       orgAllProfilesMap, path.join(process.cwd()), this.ux);
 
     // Profile Directory Path

@@ -14,7 +14,6 @@ export default class Permissions extends CommandBase {
     protected static requiresProject: boolean;
     protected metaNames: Set<string>;
     protected namespaces: Set<string>;
-    protected orgId: string;
     protected packageFileName: string;
     run(): Promise<AnyJson>;
 }
