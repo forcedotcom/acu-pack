@@ -29,14 +29,12 @@ export default class Execute extends CommandBase {
   protected static requiresProject = false;
 
   public async run(): Promise<void> {
-    const orgAlias = this.flags.targetusername;
-    const orgId = this.org.getOrgId();
     try {
-      this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
+      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
       this.ux.log('Checking for pending tests...');
 
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(this.orgAlias)) {
         if (recordCount === 0) {
           break;
         }
@@ -50,14 +48,14 @@ export default class Execute extends CommandBase {
 
       // Execute tests (with CodeCoverage) ?
       this.ux.log('Gathering Test ApexClasses...');
-      const testClasses = await SfdxQuery.getApexTestClasses(orgAlias);
-      if (testClasses.length === 0) {
-        this.ux.log(`No Test ApexClasses exist for ${orgAlias}`);
+      const testClasses = await SfdxQuery.getApexTestClasses(this.orgAlias);
+      if (!testClasses || testClasses.length === 0) {
+        this.ux.log(`No Test ApexClasses exist for ${this.orgAlias}`);
         return;
       }
 
       // Enqueue the Apex tests
-      let jobInfo = await SfdxTasks.enqueueApexTests(orgAlias, testClasses);
+      let jobInfo = await SfdxTasks.enqueueApexTests(this.orgAlias, testClasses);
       if (!jobInfo) {
         this.ux.log('An unknown error occurred enqueuing Apex Tests');
         process.exitCode = 1;
@@ -82,7 +80,7 @@ export default class Execute extends CommandBase {
           this.ux.log('Waiting for tests to complete...');
         }
 
-        for await (jobInfo of SfdxTasks.waitForJob(orgAlias, jobInfo, waitCountMaxSeconds)) {
+        for await (jobInfo of SfdxTasks.waitForJob(this.orgAlias, jobInfo, waitCountMaxSeconds)) {
           this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
         }
 
@@ -95,7 +93,7 @@ export default class Execute extends CommandBase {
       }
       this.ux.log('All Apex Tests Started');
       const createdDate = jobInfo.createdDate || new Date().toJSON();
-      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias, waitCountMaxSeconds, createdDate)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds, createdDate)) {
         if (recordCount === 0) {
           break;
         }
