@@ -9,11 +9,9 @@ const sfdx_client_1 = require("../../../../lib/sfdx-client");
 class Delete extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
-        const orgAlias = this.flags.targetusername;
-        const orgId = this.org.getOrgId();
         let hasErrors = false;
         try {
-            this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
+            this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
             const usernames = [];
             if (this.flags.userlist) {
                 for (const username of this.flags.userlist.split(',')) {
@@ -21,7 +19,7 @@ class Delete extends command_base_1.CommandBase {
                 }
             }
             else {
-                const orgInfo = await sfdx_tasks_1.SfdxTasks.getOrgInfo(orgAlias);
+                const orgInfo = await sfdx_tasks_1.SfdxTasks.getOrgInfo(this.orgAlias);
                 usernames.push(orgInfo.username);
             }
             if (!usernames || usernames.length === 0) {
@@ -33,10 +31,10 @@ class Delete extends command_base_1.CommandBase {
             this.ux.log('Deleteing Workspaces for users:');
             this.ux.log(`\t${usernames.join(',')}`);
             // https://help.salesforce.com/articleView?id=000332898&type=1&mode=1
-            const sfdxClient = new sfdx_client_1.SfdxClient(orgAlias);
+            const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
             for (const username of usernames) {
                 const query = `SELECT Id FROM IDEWorkspace WHERE CreatedById IN (SELECT Id FROM User WHERE Username = '${username}')`;
-                const workspaceIds = await sfdx_query_1.SfdxQuery.doSoqlQuery(orgAlias, query, null, null, true);
+                const workspaceIds = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query, null, null, true);
                 if (!workspaceIds || workspaceIds.length === 0) {
                     this.ux.log(`No workspaces found for user: '${username}'.`);
                     continue;

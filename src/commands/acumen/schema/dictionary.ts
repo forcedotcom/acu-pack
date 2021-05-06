@@ -43,10 +43,9 @@ export default class Dictionary extends CommandBase {
     this.options = await OptionsFactory.get(SchemaOptions, this.flags.options);
 
     try {
-      const orgAlias = this.flags.targetusername;
-      const schemaTmpFile = `schema-${orgAlias}.tmp`;
+      const schemaTmpFile = `schema-${this.orgAlias}.tmp`;
 
-      const sortedTypeNames = await this.getSortedTypeNames(orgAlias);
+      const sortedTypeNames = await this.getSortedTypeNames(this.orgAlias);
 
       // Create for writing - truncates if exists
       const fileStream = createWriteStream(schemaTmpFile, { flags: 'w' });
@@ -56,7 +55,7 @@ export default class Dictionary extends CommandBase {
       for (const metaDataType of sortedTypeNames) {
         this.ux.log(`Gathering (${++counter}/${sortedTypeNames.length}) ${metaDataType} schema...`);
         try {
-          const schema = await SfdxTasks.describeObject(orgAlias, metaDataType);
+          const schema = await SfdxTasks.describeObject(this.orgAlias, metaDataType);
           // Avoid duplicates (Account)
           if (schemas.has(schema.name)) {
             continue;
@@ -82,7 +81,7 @@ export default class Dictionary extends CommandBase {
       fileStream.end();
 
       try {
-        const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, orgAlias);
+        const reportPath = (path.resolve(this.flags.report || Dictionary.defaultReportPath)).replace(/\{ORG\}/, this.orgAlias);
         this.ux.log(`Writing Report: ${reportPath}`);
 
         const workbookMap = new Map<string, string[][]>();
