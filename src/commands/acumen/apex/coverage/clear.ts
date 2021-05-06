@@ -27,12 +27,14 @@ export default class Clear extends CommandBase {
   protected static requiresProject = false;
 
   public async run(): Promise<void> {
+    const orgAlias = this.flags.targetusername;
+    const orgId = this.org.getOrgId();
     try {
-      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
+      this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
       this.ux.log('Checking for pending tests...');
 
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTests(this.orgAlias)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias)) {
         if (recordCount === 0) {
           break;
         }
@@ -53,11 +55,11 @@ export default class Clear extends CommandBase {
       try {
         for (const metaDataType of metaDataTypes) {
           const query = `SELECT Id FROM ${metaDataType}`;
-          const records = await SfdxQuery.doSoqlQuery(this.orgAlias, query, null, null, true);
+          const records = await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, true);
           if (records && records.length > 0) {
             this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
             let counter = 0;
-            const sfdxClient = new SfdxClient(this.orgAlias);
+            const sfdxClient = new SfdxClient(orgAlias);
             for await (const result of sfdxClient.do(RestAction.DELETE, metaDataType, records, 'Id', ApiKind.TOOLING, [NO_CONTENT_CODE])) {
               this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result}`);
             }

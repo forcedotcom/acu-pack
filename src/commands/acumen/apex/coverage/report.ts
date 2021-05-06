@@ -31,13 +31,15 @@ export default class Report extends CommandBase {
   protected static requiresProject = false;
 
   public async run(): Promise<void> {
+    const orgAlias = this.flags.targetusername;
+    const orgId = this.org.getOrgId();
     try {
-      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
+      this.ux.log(`Connecting to Org: ${orgAlias}(${orgId})`);
       this.ux.log('Checking for pending tests...');
 
       const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
       let recordCount = 0;
-      for await (recordCount of SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)) {
+      for await (recordCount of SfdxQuery.waitForApexTests(orgAlias, waitCountMaxSeconds)) {
         if (recordCount === 0) {
           break;
         }
@@ -52,12 +54,12 @@ export default class Report extends CommandBase {
       // Get Code Coverage Report
       this.ux.log('Getting Code Coverage Report Data.');
 
-      const codeCoverage = await SfdxQuery.getCodeCoverage(this.orgAlias);
+      const codeCoverage = await SfdxQuery.getCodeCoverage(orgAlias);
       codeCoverage.calculateCodeCoverage();
       const workbookMap = new Map<string, string[][]>();
 
       // Code Coverage
-      workbookMap.set(`${this.orgAlias} Code Coverage`, [
+      workbookMap.set(`${orgAlias} Code Coverage`, [
         ['Total Classes',
           'Total Lines',
           'Total Covered',
@@ -86,7 +88,7 @@ export default class Report extends CommandBase {
       // Check Apex Test Failures
       const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
       const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
-      const records = await SfdxQuery.doSoqlQuery(this.orgAlias, query);
+      const records = await SfdxQuery.doSoqlQuery(orgAlias, query);
 
       sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
       for (const record of records) {
@@ -102,7 +104,7 @@ export default class Report extends CommandBase {
       }
       workbookMap.set('Apex Test Failures', sheetData);
 
-      const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, this.orgAlias);
+      const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, orgAlias);
       Office.writeXlxsWorkbook(workbookMap, reportPath);
       this.ux.log(`${reportPath} written.`);
 
