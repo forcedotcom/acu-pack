@@ -91,7 +91,7 @@ export default class Report extends CommandBase {
       sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
       for (const record of records) {
         sheetData.push([
-          record.ApexClass.Name,
+          record.ApexClass?.Name,
           record.MethodName,
           record.Message,
           record.StackTrace,
