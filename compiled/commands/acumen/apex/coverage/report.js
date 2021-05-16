@@ -8,14 +8,15 @@ const office_1 = require("../../../../lib/office");
 class Report extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
+        var _b;
         try {
             this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
             this.ux.log('Checking for pending tests...');
             const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
             let recordCount = 0;
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)), _c; _c = await _b.next(), !_c.done;) {
-                    recordCount = _c.value;
+                for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)), _d; _d = await _c.next(), !_d.done;) {
+                    recordCount = _d.value;
                     if (recordCount === 0) {
                         break;
                     }
@@ -24,7 +25,7 @@ class Report extends command_base_1.CommandBase {
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
@@ -72,7 +73,7 @@ class Report extends command_base_1.CommandBase {
             sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
             for (const record of records) {
                 sheetData.push([
-                    record.ApexClass.Name,
+                    (_b = record.ApexClass) === null || _b === void 0 ? void 0 : _b.Name,
                     record.MethodName,
                     record.Message,
                     record.StackTrace,
