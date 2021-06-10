@@ -6,7 +6,7 @@
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
-    "alwaysStrict": true,
+    "alwaysStrict": false,
     "noUnusedLocals": true,
     "outDir": "./compiled",
     "importHelpers": true,
