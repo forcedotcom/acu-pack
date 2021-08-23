@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OptionsBase = void 0;
 const path = require("path");
 const utils_1 = require("./utils");
 const fs_1 = require("fs");
@@ -36,7 +35,7 @@ class OptionsBase {
             try {
                 const options = JSON.parse(serializedOptionBase);
                 for (const field of Object.keys(options)) {
-                    if (this[field]) {
+                    if (this.hasOwnProperty(field)) {
                         this[field] = options[field];
                     }
                 }

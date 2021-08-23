@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SfdxPermission = exports.PermissionSet = exports.ObjectPermission = exports.TabPermission = exports.ApplicationPermission = exports.RecordTypePermission = exports.DefaultablePermission = exports.PagePermission = exports.UserPermission = exports.ClassPermission = exports.FieldPermission = exports.MetaDataPermission = exports.FieldDetail = exports.ObjectDetail = exports.MetadataDetail = exports.Named = void 0;
 const path = require("path");
 const sfdx_core_1 = require("./sfdx-core");
 class Named {
