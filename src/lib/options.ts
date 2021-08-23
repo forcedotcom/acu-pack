@@ -37,7 +37,7 @@ export abstract class OptionsBase {
             try {
                 const options = JSON.parse(serializedOptionBase);
                 for (const field of Object.keys(options)) {
-                    if (this[field]) {
+                    if (this.hasOwnProperty(field)) {
                         this[field] = options[field];
                     }
                 }

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommandBase = void 0;
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
 // Initialize Messages with the current plugin directory
@@ -8,7 +7,7 @@ core_1.Messages.importMessagesDirectory(__dirname);
 class CommandBase extends command_1.SfdxCommand {
     get orgAlias() {
         var _a;
-        return (_a = this.flags.targetusername) !== null && _a !== void 0 ? _a : this.org.getUsername();
+        return _a = this.flags.targetusername, (_a !== null && _a !== void 0 ? _a : this.org.getUsername());
     }
     get orgId() {
         return this.org.getOrgId();
