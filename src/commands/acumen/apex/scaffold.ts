@@ -69,7 +69,7 @@ export default class Scaffold extends CommandBase {
 
       this.ux.log('Retrieving Schemas...');
       for (const sObjectType of options.sObjectTypes) {
-        await this.getSchema(sObjectType.replace(' ',''));
+        await this.getSchema(sObjectType.replace(' ', ''));
       }
 
       this.ux.log('Reading ./sfdx-project.json file...');
