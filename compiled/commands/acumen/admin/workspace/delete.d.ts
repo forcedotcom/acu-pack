@@ -4,7 +4,7 @@ export default class Delete extends CommandBase {
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
-        userlist: flags.Discriminated<flags.String>;
+        userlist: flags.Discriminated<flags.Option<string>>;
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;

@@ -6,7 +6,7 @@ export default class Report extends CommandBase {
     static defaultReportPath: string;
     static examples: string[];
     protected static flagsConfig: {
-        report: flags.Discriminated<flags.String>;
+        report: flags.Discriminated<flags.Option<string>>;
         wait: flags.Discriminated<flags.Number>;
     };
     protected static requiresUsername: boolean;

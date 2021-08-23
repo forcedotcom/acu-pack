@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScaffoldOptions = void 0;
 const options_1 = require("./options");
 class ScaffoldOptions extends options_1.OptionsBase {
     constructor() {

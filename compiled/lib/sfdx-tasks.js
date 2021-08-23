@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SfdxTasks = exports.SfdxOrgInfo = exports.SfdxJobInfo = void 0;
 const tslib_1 = require("tslib");
 const ts_types_1 = require("@salesforce/ts-types");
 const sfdx_core_1 = require("./sfdx-core");
@@ -56,7 +55,7 @@ class SfdxTasks {
                 const members = [];
                 if (!describeMetadata.inFolder) {
                     try {
-                        for (var _d = (e_1 = void 0, tslib_1.__asyncValues(this.listMetadata(usernameOrAlias, describeMetadata.xmlName, namespaces))), _e; _e = yield tslib_1.__await(_d.next()), !_e.done;) {
+                        for (var _d = tslib_1.__asyncValues(this.listMetadata(usernameOrAlias, describeMetadata.xmlName, namespaces)), _e; _e = yield tslib_1.__await(_d.next()), !_e.done;) {
                             const result = _e.value;
                             members.push(result.fullName);
                         }
@@ -79,7 +78,7 @@ class SfdxTasks {
                     }
                     try {
                         // Iterate all the folder metas
-                        for (var _f = (e_2 = void 0, tslib_1.__asyncValues(this.listMetadata(usernameOrAlias, folderMetaName, namespaces))), _g; _g = yield tslib_1.__await(_f.next()), !_g.done;) {
+                        for (var _f = tslib_1.__asyncValues(this.listMetadata(usernameOrAlias, folderMetaName, namespaces)), _g; _g = yield tslib_1.__await(_f.next()), !_g.done;) {
                             const folderMeta = _g.value;
                             // Set the parent Id (used for nested folders)
                             // Salesforce does not return the full path in the metadada
@@ -90,7 +89,7 @@ class SfdxTasks {
                             // Add the meta for just the folder
                             members.push(folderPath);
                             try {
-                                for (var _h = (e_3 = void 0, tslib_1.__asyncValues(this.listMetadataInFolder(usernameOrAlias, describeMetadata.xmlName, folderMeta.fullName))), _j; _j = yield tslib_1.__await(_h.next()), !_j.done;) {
+                                for (var _h = tslib_1.__asyncValues(this.listMetadataInFolder(usernameOrAlias, describeMetadata.xmlName, folderMeta.fullName)), _j; _j = yield tslib_1.__await(_h.next()), !_j.done;) {
                                     const inFolderMetadata = _j.value;
                                     // Add the meta for the item in the folder
                                     members.push([folderPath, path.basename(inFolderMetadata.fullName)].join('/'));
