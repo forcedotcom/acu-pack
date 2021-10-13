@@ -17,7 +17,11 @@ export default class Clear extends CommandBase {
     metadatas: flags.string({
       char: 'm',
       description: CommandBase.messages.getMessage('apex.coverage.clear.metadataFlagDescription', [Clear.defaultMetadataTypes.join(',')])
-    })
+    }),
+    classortriggernames: flags.string({
+      char: 'n',
+      description: CommandBase.messages.getMessage('apex.coverage.clear.classortriggernamesFlagDescription')
+      })
   };
 
   // Comment this out if your command does not require an org username
@@ -49,10 +53,16 @@ export default class Clear extends CommandBase {
         ? this.flags.metadatas.split(',')
         : Clear.defaultMetadataTypes;
 
+      let whereClause = '';
+      if (this.flags.classortriggernames) {
+          const names = [...this.flags.classortriggernames.split(',')].map(record => `'${record}'`).join(',');
+          whereClause = ` where ApexClassorTrigger.Name in (${names})`;
+        }
+
       this.ux.log('Clearing Code Coverage Data.');
       try {
         for (const metaDataType of metaDataTypes) {
-          const query = `SELECT Id FROM ${metaDataType}`;
+          const query = `SELECT Id FROM ${metaDataType} ${whereClause}`;
           const records = await SfdxQuery.doSoqlQuery(this.orgAlias, query, null, null, true);
           if (records && records.length > 0) {
             this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
