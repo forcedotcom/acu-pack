@@ -22,6 +22,7 @@ export declare class SfdxOrgInfo {
 export declare class SfdxTasks {
     static defaultMetaTypes: string[];
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
+    static executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel?: string): Promise<any>;
     static retrievePackage(usernameOrAlias: string, packageFilePath?: string): Promise<any>;
     static initializeProject(projectName: string): Promise<string>;
     static getTypesForPackage(usernameOrAlias: string, describeMetadatas: Set<any>, namespaces?: Set<string>): AsyncGenerator<{

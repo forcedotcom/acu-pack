@@ -281,5 +281,11 @@ describe("Utils Tests", function () {
             exists = await Utils.pathExists(path.dirname(fullPath));
             expect(exists).to.be.true;
         });
+    }); 
+
+    describe("Chunk Array test", function () {
+        it("Chunk Array based on chunksize", function () {
+            expect(Utils.chunkRecords(['1','2','3','4'],2)).to.eql([['1','2'],['3','4']]);
+        });
     });
 });

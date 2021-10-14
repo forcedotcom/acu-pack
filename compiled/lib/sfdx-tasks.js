@@ -40,6 +40,10 @@ class SfdxTasks {
             ? []
             : ts_types_1.ensureArray(response.metadataObjects);
     }
+    static async executeAnonymousBlock(usernameOrAlias, apexFilePath, logLevel = 'debug') {
+        const response = await sfdx_core_1.SfdxCore.command(`sfdx force:apex:execute --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+        return response.result;
+    }
     static async retrievePackage(usernameOrAlias, packageFilePath = 'manifest/package.xml') {
         // get custom objects
         return await sfdx_core_1.SfdxCore.command(`sfdx force:source:retrieve --json -x ${packageFilePath} -u ${usernameOrAlias}`);

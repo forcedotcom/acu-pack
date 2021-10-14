@@ -315,6 +315,14 @@ export default class Utils {
         await fs.writeFile(filePath, contents);
     }
 
+    public static  chunkRecords(recordsToChunk: any[], chunkSize: number): any[] {
+        const chunk = (arr, size) =>
+          Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+            arr.slice(i * size, i * size + size)
+          );
+        return chunk(recordsToChunk, chunkSize);
+    }
+
     private static glob = require('util').promisify(require('glob'));
 
 }
