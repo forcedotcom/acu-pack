@@ -71,7 +71,8 @@
     "coverage": {
       "clear": {
         "commandDescription": "Clears the Apex Code Coverage data from the specified Org.",
-        "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)"
+        "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)",
+        "classortriggernamesFlagDescription": "An optional comma seperated list of class or trigger names to include"
       },
       "execute": {
         "commandDescription": "Executes Apex tests and includes Code Coverage metrics.",

@@ -58,6 +58,11 @@ export class SfdxTasks {
             : ensureArray(response.metadataObjects);
     }
 
+    public static async executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel: string = 'debug' ): Promise<any> {
+        const response = await SfdxCore.command(`sfdx force:apex:execute --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+        return response.result;
+    }
+
     public static async retrievePackage(usernameOrAlias: string, packageFilePath: string = 'manifest/package.xml'): Promise<any> {
         // get custom objects
         return await SfdxCore.command(`sfdx force:source:retrieve --json -x ${packageFilePath} -u ${usernameOrAlias}`);
