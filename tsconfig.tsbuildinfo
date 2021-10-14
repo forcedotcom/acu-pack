@@ -1050,7 +1050,7 @@
         "signature": "6b72e9c0605824f8fcad07c73fa07161fb15c975cba0575cd552c703434b1d59"
       },
       "./src/lib/sfdx-tasks.ts": {
-        "version": "3ac0263e4d9931269cd6ff89883ebcfca0ab9e10596b394fb30686806db33bbd",
+        "version": "e934d7e6562ead8e41d07db7051b8909a4f0685f6931082a7a47344a5d62b9d4",
         "signature": "e37ef4dd7a91bca9d14b2eb38030a550a562301c0a12341f6950e46228094a2b"
       },
       "./src/lib/sfdx-client.ts": {
@@ -4079,10 +4079,14 @@
       "./src/lib/sfdx-query.ts",
       "./src/lib/options.ts",
       "./src/lib/options-factory.ts",
+      "./src/lib/sfdx-client.ts",
       "./src/lib/unmask-options.ts",
       "./src/commands/acumen/admin/user/unmask.ts",
+      "./src/commands/acumen/admin/workspace/delete.ts",
       "./src/lib/scaffold-options.ts",
+      "./src/commands/acumen/apex/scaffold.ts",
       "./src/commands/acumen/apex/coverage/clear.ts",
+      "./src/commands/acumen/apex/coverage/execute.ts",
       "./node_modules/cfb/types/index.d.ts",
       "./node_modules/ssf/types/index.d.ts",
       "./node_modules/xlsx/types/index.d.ts",
@@ -4090,13 +4094,17 @@
       "./src/commands/acumen/apex/coverage/report.ts",
       "./src/commands/acumen/api/get.ts",
       "./src/lib/package-options.ts",
+      "./src/commands/acumen/package/build.ts",
       "./src/commands/acumen/package/merge.ts",
       "./src/lib/sfdx-permission.ts",
+      "./src/commands/acumen/package/permissions.ts",
       "./src/lib/schema-utils.ts",
       "./src/lib/schema-options.ts",
+      "./src/commands/acumen/schema/dictionary.ts",
       "./src/lib/profile-download.ts",
       "./src/commands/acumen/schema/profile/retrieve.ts",
       "./src/commands/acumen/source/permissions.ts",
+      "./src/commands/acumen/source/profile.ts",
       "./src/lib/xpath-options.ts",
       "./src/commands/acumen/source/xpath.ts",
       "./src/lib/delta-command.ts",
@@ -4124,15 +4132,7 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@sinonjs/fake-timers/types/fake-timers-src.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
-      "./src/lib/sfdx-tasks.ts",
-      "./src/commands/acumen/source/profile.ts",
-      "./src/commands/acumen/schema/dictionary.ts",
-      "./src/commands/acumen/package/permissions.ts",
-      "./src/commands/acumen/package/build.ts",
-      "./src/commands/acumen/apex/coverage/execute.ts",
-      "./src/commands/acumen/apex/scaffold.ts",
-      "./src/commands/acumen/admin/workspace/delete.ts",
-      "./src/lib/sfdx-client.ts"
+      "./src/lib/sfdx-tasks.ts"
     ]
   },
   "version": "3.7.5"
