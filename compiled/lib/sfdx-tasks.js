@@ -40,9 +40,8 @@ class SfdxTasks {
             ? []
             : ts_types_1.ensureArray(response.metadataObjects);
     }
-    static async executeAnonymousBlock(usernameOrAlias, apexFilePath, logLevel) {
-        const logFlag = logLevel ? `--loglevel ${logLevel}` : '';
-        const response = await sfdx_core_1.SfdxCore.command(`sfdx force:apex:execute --json ${logFlag} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+    static async executeAnonymousBlock(usernameOrAlias, apexFilePath, logLevel = 'debug') {
+        const response = await sfdx_core_1.SfdxCore.command(`sfdx force:apex:execute --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
         return response.result;
     }
     static async retrievePackage(usernameOrAlias, packageFilePath = 'manifest/package.xml') {

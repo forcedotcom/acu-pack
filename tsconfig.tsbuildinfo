@@ -1050,8 +1050,8 @@
         "signature": "6b72e9c0605824f8fcad07c73fa07161fb15c975cba0575cd552c703434b1d59"
       },
       "./src/lib/sfdx-tasks.ts": {
-        "version": "8beaa8878b848c268a9b3b58b36d325b3c7999d5c945d5ae4f5b774d6598e7e5",
-        "signature": "de9cfe820bc18fda293bf127c5a6c51a04a94f6af32e3f2b18f085599976e848"
+        "version": "3ac0263e4d9931269cd6ff89883ebcfca0ab9e10596b394fb30686806db33bbd",
+        "signature": "e37ef4dd7a91bca9d14b2eb38030a550a562301c0a12341f6950e46228094a2b"
       },
       "./src/lib/sfdx-client.ts": {
         "version": "20738d19b9c4e100645d046fbea3b07f7e706f23797b5506e2036a009294ca73",
