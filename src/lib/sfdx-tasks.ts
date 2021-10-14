@@ -58,8 +58,9 @@ export class SfdxTasks {
             : ensureArray(response.metadataObjects);
     }
 
-    public static async executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string ): Promise<any> {
-        const response = await SfdxCore.command(`sfdx force:apex:execute --json --loglevel debug -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+    public static async executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel: string ): Promise<any> {
+        const logFlag = logLevel ? `--loglevel ${logLevel}` : '';
+        const response = await SfdxCore.command(`sfdx force:apex:execute --json ${logFlag} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
         return response.result;
     }
 
