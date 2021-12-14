@@ -63,7 +63,7 @@ $ sfdx plugins:link
 ```
 Otherwise install the plug-in:
 ```
-$ sfdx plugins:install https://[YOUR_BITBUCKET_USER]@bitbucket.org/acumensolutions/acu-pack.git
+$ sfdx plugins:install https://GITHUB_USERNAME:PERSONAL_ACCESS_TOKEN@github.com/CSGAMERSServices/acu-pack.git
 ```
 Verify link/install:
 ```
