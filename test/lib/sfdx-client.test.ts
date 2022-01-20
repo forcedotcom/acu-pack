@@ -5,7 +5,7 @@ import Utils from '../../src/lib/utils';
 const unknownId = '00000000001';
 
 // NOTE: These tests might fail without an authorized Org alias
-const orgAlias = 'SOQLDEV';
+const orgAlias = null;//'SOQLDEV';
 let sfdxClient: SfdxClient;
 enum ApiTestKind {
   DEFAULT = 'Account',
