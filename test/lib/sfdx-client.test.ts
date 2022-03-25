@@ -2,10 +2,10 @@ import { expect } from '@salesforce/command/lib/test';
 import { SfdxQuery } from '../../src/lib/sfdx-query';
 import { SfdxClient, RestAction, ApiKind } from '../../src/lib/sfdx-client';
 import Utils from '../../src/lib/utils';
+import Setup from '../lib/setup';
 const unknownId = '00000000001';
 
-// NOTE: These tests might fail without an authorized Org alias
-const orgAlias = null;//'SOQLDEV';
+const orgAlias = Setup.orgAlias;
 let sfdxClient: SfdxClient;
 enum ApiTestKind {
   DEFAULT = 'Account',

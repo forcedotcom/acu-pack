@@ -7,12 +7,14 @@ import { DeltaOptions } from '../../../src/lib/delta-provider'
 
 const bogusGitFilePath = 'bogus_' + Setup.gitFilePath;
 const gitProvider = new Git.gitDeltaProvider();
+let testFilesCreated = 0;
 
 beforeEach(async () => {
+    testFilesCreated = 0;
     for await (const testFile of Setup.createTestFiles(Setup.sourceRoot)) {
         expect(testFile).is.not.null;
+        testFilesCreated++;
     }
-
     if (await Utils.pathExists(bogusGitFilePath)) {
         await fs.unlink(bogusGitFilePath);
     }
@@ -68,10 +70,18 @@ describe("GitDeltaProvider Tests", function () {
             for await (const diff of gitProvider.diff(Setup.sourceRoot)) {
                 diffSet.add(diff);
             }
-            // since there was no hash file - there were no deltas returned as they are all new
             expect(diffSet.size).not.equals(0);
-            // we should have hash entries though
             expect(diffSet.size).equals(gitProvider.deltas.size);
+        });
+        it("Can run", async function () {
+            const deltaOptions = new DeltaOptions();
+            deltaOptions.deltaFilePath = Setup.gitFilePath;
+            deltaOptions.source = Setup.sourceRoot;
+            deltaOptions.destination = Setup.destinationRoot;
+
+            const metrics = await gitProvider.run(deltaOptions);
+
+            expect(metrics.Copy).equals(testFilesCreated);
         });
     });
     describe("validateDeltaOptions Tests", function () {

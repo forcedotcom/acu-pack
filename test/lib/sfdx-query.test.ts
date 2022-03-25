@@ -1,8 +1,8 @@
 import { expect } from '@salesforce/command/lib/test';
 import { SfdxQuery, SfdxCodeCoverage } from '../../src/lib/sfdx-query';
+import Setup from '../lib/setup';
 
-// NOTE: These tests might fail without an authorized Org alias
-const orgAlias = null; //'ACUDEV';
+const orgAlias = Setup.orgAlias;
 describe('Sfdx Query Tests', () => {
   describe('getApexTestClasses Tests', function () {
     this.timeout(15000); // Times out due to query
