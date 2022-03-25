@@ -29,7 +29,7 @@ export declare abstract class DeltaProvider {
     abstract getMessage(name: string): string;
     abstract diff(source: string): AsyncGenerator<Delta, any, any>;
     getFlagsConfig(flagsConfig: any): any;
-    run(deltaOptions: DeltaOptions): Promise<void>;
+    run(deltaOptions: DeltaOptions): Promise<any>;
     loadDeltaFile(deltaFilePath?: string): Promise<void>;
     logMessage(message: string, includeConsole?: boolean): Promise<void>;
     validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string>;

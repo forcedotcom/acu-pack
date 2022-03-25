@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LoggerLevel = void 0;
 const tslib_1 = require("tslib");
 const path = require("path");
 const xml2js = require("xml2js");
@@ -243,7 +244,7 @@ class Utils {
         if (!metadata) {
             return null;
         }
-        const options = (xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions);
+        const options = xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions;
         let xml = new xml2js.Builder(options).buildObject(metadata);
         if (options.eofChar) {
             xml += options.eofChar;
@@ -263,7 +264,7 @@ class Utils {
         if (!filePath) {
             return null;
         }
-        const options = (xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions);
+        const options = xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions;
         const xmlString = await fs_1.promises.readFile(filePath, options.encoding);
         return await (new xml2js.Parser(options).parseStringPromise((xmlString)));
     }

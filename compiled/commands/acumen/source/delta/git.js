@@ -21,7 +21,7 @@ class Git extends command_base_1.CommandBase {
         deltaOptions.forceFile = this.flags.force;
         deltaOptions.ignoreFile = this.flags.ignore;
         const gitProvider = new Git.gitDeltaProvider();
-        await gitProvider.run(deltaOptions);
+        return await gitProvider.run(deltaOptions);
     }
 }
 exports.default = Git;
