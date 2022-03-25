@@ -7,6 +7,7 @@ export default class Setup {
     public static destinationRoot = "test/destination_folder";
     public static md5FilePath = "test/md5.test.txt";
     public static gitFilePath = "test/git.test.txt";
+    public static orgAlias = null; //'TRAIL';
 
     public static async* createTestFiles(folder = Setup.sourceRoot, count = 5) {
 
@@ -23,13 +24,17 @@ export default class Setup {
         await Utils.mkDirPath(myPath);
         for (let x = 0; x < count; x++) {
             for (let y = 0; y < count; y++) {
-                var filePath = path.join(myPath, `myfile${y}.txt`);
+                var filePath = path.join(myPath, `myfile.${y}.txt`);
                 await fs.appendFile(filePath, y + '\r\n');
                 await fs.appendFile(Setup.md5FilePath, `${filePath}=${y}\r\n`);
                 await fs.appendFile(Setup.gitFilePath, `${deltaKind}\t${filePath}\r\n`);
                 deltaKind = deltaKind == 'A' ? 'M' : 'A';
                 yield filePath;
             }
+            var filePath = path.join(myPath, `myfileController.txt`);
+            await fs.appendFile(filePath, 'Controller\r\n');
+            yield filePath;
+
             myPath = path.join(myPath, 'sub_' + x);
             await Utils.mkDirPath(myPath);
         }

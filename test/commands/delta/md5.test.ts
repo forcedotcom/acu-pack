@@ -7,10 +7,13 @@ import { DeltaOptions } from '../../../src/lib/delta-provider'
 
 const bogusMd5FilePath = 'bogus_' + Setup.md5FilePath;
 const md5Provider = new Md5.md5DeltaProvider();
+let testFilesCreated = 0;
 
 beforeEach(async () => {
+    testFilesCreated = 0;
     for await (const testFile of Setup.createTestFiles(Setup.sourceRoot)) {
         expect(testFile).is.not.null;
+        testFilesCreated++;
     }
 
     if (await Utils.pathExists(bogusMd5FilePath)) {
@@ -70,6 +73,16 @@ describe("Md5DeltaProvider Tests", function () {
             expect(diffSet.size).not.equals(0);
             // we should have hash entries though
             expect(diffSet.size).equals(md5Provider.deltas.size);
+        });
+        it("Can run", async function () {
+            const deltaOptions = new DeltaOptions();
+            deltaOptions.deltaFilePath = Setup.md5FilePath;
+            deltaOptions.source = Setup.sourceRoot;
+            deltaOptions.destination = Setup.destinationRoot;
+
+            const metrics = await md5Provider.run(deltaOptions);
+
+            expect(metrics.Copy).equals(testFilesCreated);
         });
     });
     describe("validateDeltaOptions Tests", function () {

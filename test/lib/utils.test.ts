@@ -4,12 +4,14 @@ import { expect } from '@salesforce/command/lib/test';
 import Utils from '../../src/lib/utils'
 import path = require('path');
 
-const testItemCount = 5
+var testItemCount = 0;
 var testFilePath = undefined;
 const testObject = { test: true };
 beforeEach(async () => {
-    for await (const testFile of Setup.createTestFiles(Setup.sourceRoot, testItemCount)) {
+    testItemCount = 0;
+    for await (const testFile of Setup.createTestFiles(Setup.sourceRoot)) {
         // Do test specific stuff here?
+        testItemCount++;
         if (!testFilePath) {
             testFilePath = testFile;
         }
@@ -23,7 +25,7 @@ describe("Utils Tests", function () {
             for await (const file of Utils.getFiles(Setup.sourceRoot)) {
                 files.push(file);
             }
-            expect(files.length).equal(testItemCount * testItemCount);
+            expect(files.length).equal(testItemCount);
         });
         it("Can Handle Missing Folders", async function () {
             var files = [];

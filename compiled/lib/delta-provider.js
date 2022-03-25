@@ -95,6 +95,12 @@ class DeltaProvider {
         }
         // Reset log file
         await utils_1.default.deleteFile(this.logFile);
+        const metrics = {
+            Copy: 0,
+            Del: 0,
+            None: 0,
+            Ign: 0
+        };
         try {
             // Validate flags/options
             const result = await this.validateDeltaOptions(deltaOptions);
@@ -109,6 +115,7 @@ class DeltaProvider {
             const ignoreFile = deltaOptions.ignoreFile;
             const isDryRun = deltaOptions.isDryRun;
             const ignoreSet = new Set();
+            const copiedSet = new Set();
             // Create Deleted Report File
             if (deleteReportFile && destination) {
                 try {
@@ -155,12 +162,6 @@ class DeltaProvider {
                 await this.logMessage('Unable to find a diff method.', true);
                 return;
             }
-            const metrics = {
-                Copy: 0,
-                Del: 0,
-                None: 0,
-                Ign: 0
-            };
             if (isDryRun) {
                 await this.logMessage(`Begin DRY-RUN Diff (${this.name})`);
             }
@@ -235,7 +236,11 @@ class DeltaProvider {
                                 // check the source folder for associated files.
                                 for (var _s = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(path.dirname(deltaFile), false))), _t; _t = await _s.next(), !_t.done;) {
                                     const filePath = _t.value;
-                                    if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
+                                    // have we already processed this file?
+                                    if (copiedSet.has(filePath)) {
+                                        continue;
+                                    }
+                                    if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}`)) {
                                         // are we ignoring this file?
                                         if (ignoreSet.has(filePath)) {
                                             await this.logMessage(`Delta (${deltaKind}) ignored: ${filePath}`, true);
@@ -248,6 +253,7 @@ class DeltaProvider {
                                             }
                                             await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
                                             metrics.Copy++;
+                                            copiedSet.add(filePath);
                                         }
                                     }
                                 }
@@ -282,6 +288,7 @@ class DeltaProvider {
         finally {
             await this.logMessage('Done', true);
         }
+        return metrics;
     }
     async loadDeltaFile(deltaFilePath) {
         var e_7, _a;
