@@ -14,7 +14,6 @@ export default class Git extends CommandBase {
             validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string>;
             logFile: string;
             deltaOptions: DeltaOptions;
-            getFlagsConfig(flagsConfig: any): any;
             run(deltaOptions: DeltaOptions): Promise<any>;
             loadDeltaFile(deltaFilePath?: string): Promise<void>;
             logMessage(message: string, includeConsole?: boolean): Promise<void>;

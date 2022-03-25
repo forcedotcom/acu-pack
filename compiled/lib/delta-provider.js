@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeltaProvider = exports.DeltaOptions = exports.Delta = void 0;
 const tslib_1 = require("tslib");
-const command_1 = require("@salesforce/command");
 const utils_1 = require("./utils");
 const fs_1 = require("fs");
 const path = require("path");
@@ -40,49 +39,6 @@ class DeltaProvider {
     constructor() {
         this.logFile = 'delta.log';
         this.deltaOptions = new DeltaOptions();
-    }
-    getFlagsConfig(flagsConfig) {
-        if (!flagsConfig) {
-            flagsConfig = {};
-        }
-        if (!flagsConfig.source) {
-            flagsConfig.source = command_1.flags.filepath({
-                char: 's',
-                required: true,
-                description: this.getMessage('source.delta.sourceFlagDescription')
-            });
-        }
-        if (!flagsConfig.destination) {
-            flagsConfig.destination = command_1.flags.filepath({
-                char: 'd',
-                description: this.getMessage('source.delta.destinationFlagDescription')
-            });
-        }
-        if (!flagsConfig.force) {
-            flagsConfig.force = command_1.flags.filepath({
-                char: 'f',
-                description: this.getMessage('source.delta.forceFlagDescription')
-            });
-        }
-        if (!flagsConfig.ignore) {
-            flagsConfig.ignore = command_1.flags.filepath({
-                char: 'i',
-                description: this.getMessage('source.delta.ignoreFlagDescription')
-            });
-        }
-        if (!flagsConfig.deletereport) {
-            flagsConfig.deletereport = command_1.flags.filepath({
-                char: 'r',
-                description: this.getMessage('source.delta.deleteReportFlagDescription')
-            });
-        }
-        if (!flagsConfig.check) {
-            flagsConfig.check = command_1.flags.boolean({
-                char: 'c',
-                description: this.getMessage('source.delta.checkFlagDescription')
-            });
-        }
-        return flagsConfig;
     }
     async run(deltaOptions) {
         var e_1, _a, e_2, _b, e_3, _c, e_4, _d, e_5, _e, e_6, _f;

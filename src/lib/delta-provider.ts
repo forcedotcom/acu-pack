@@ -1,4 +1,3 @@
-import { flags } from '@salesforce/command';
 import Utils from './utils';
 import { promises as fs } from 'fs';
 import path = require('path');
@@ -62,50 +61,6 @@ export abstract class DeltaProvider {
     public abstract processDeltaLine(deltaLine: string): void;
     public abstract getMessage(name: string): string;
     public abstract diff(source: string): AsyncGenerator<Delta, any, any>;
-
-    public getFlagsConfig(flagsConfig: any): any {
-        if (!flagsConfig) {
-            flagsConfig = {};
-        }
-        if (!flagsConfig.source) {
-            flagsConfig.source = flags.filepath({
-                char: 's',
-                required: true,
-                description: this.getMessage('source.delta.sourceFlagDescription')
-            });
-        }
-        if (!flagsConfig.destination) {
-            flagsConfig.destination = flags.filepath({
-                char: 'd',
-                description: this.getMessage('source.delta.destinationFlagDescription')
-            });
-        }
-        if (!flagsConfig.force) {
-            flagsConfig.force = flags.filepath({
-                char: 'f',
-                description: this.getMessage('source.delta.forceFlagDescription')
-            });
-        }
-        if (!flagsConfig.ignore) {
-            flagsConfig.ignore = flags.filepath({
-                char: 'i',
-                description: this.getMessage('source.delta.ignoreFlagDescription')
-            });
-        }
-        if (!flagsConfig.deletereport) {
-            flagsConfig.deletereport = flags.filepath({
-                char: 'r',
-                description: this.getMessage('source.delta.deleteReportFlagDescription')
-            });
-        }
-        if (!flagsConfig.check) {
-            flagsConfig.check = flags.boolean({
-                char: 'c',
-                description: this.getMessage('source.delta.checkFlagDescription')
-            });
-        }
-        return flagsConfig;
-    }
 
     public async run(deltaOptions: DeltaOptions): Promise<any> {
         if (!deltaOptions) {

@@ -13,7 +13,6 @@ export default class Md5 extends CommandBase {
             diff(source: string): AsyncGenerator<Delta, any, any>;
             logFile: string;
             deltaOptions: DeltaOptions;
-            getFlagsConfig(flagsConfig: any): any;
             run(deltaOptions: DeltaOptions): Promise<any>;
             loadDeltaFile(deltaFilePath?: string): Promise<void>;
             logMessage(message: string, includeConsole?: boolean): Promise<void>;
