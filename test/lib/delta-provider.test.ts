@@ -1,47 +1,28 @@
 import { flags } from '@salesforce/command';
+import path = require('path');
 import { expect } from '@salesforce/command/lib/test';
-import { DeltaProvider } from '../../src/lib/delta-provider'
+import { DeltaCommandBase } from '../../src/lib/delta-command'
+import { DeltaProvider } from '../../src/lib/delta-provider';
 
-class TestProvider extends DeltaProvider {
-  public name = 'test';
-  public deltaLineToken = '\t';
-  public deltas = new Map<string, any>();
+const config = {
+  deltaFilePath: 'md5',
+  source: 'source',
+  destination: 'destination',
+  force: 'force',
+  ignore: 'ignore',
+  copyfulldir: DeltaCommandBase.defaultCopyDirList.join()
+};
 
-  public processDeltaLine(deltaLine: string): void {
-    const parts = deltaLine.split(this.deltaLineToken);
-    this.deltas.set(parts[1], parts[0]);
-  }
-
-  public getMessage(name: string): string {
-    if (name) {
-      return 'test';
-    }
-  }
-
-  public async * diff(source: string) {
-    if (source)
-      return null;
-  }
-
-  public async logMessage(message: string, includeConsole = false): Promise<void> {
-    console.log(message);
-    if (includeConsole) {
-      console.log(message);
-    }
-  }
-
-}
-describe("DeltaCommand Tests", function () {
+describe("DeltaProvider Tests", function () {
   describe("getFlagsConfig Tests", function () {
-    const testProvider = new TestProvider();
     it("Can Handle Nulls", async function () {
-      const testFlags = testProvider.getFlagsConfig(null);
+      const testFlags = DeltaCommandBase.getFlagsConfig(null);
       expect(testFlags).is.not.null;
       expect(validateFlags(testFlags));
     });
 
     it("Can Add a Flag", async function () {
-      const testFlagsConfig = testProvider.getFlagsConfig({
+      const testFlagsConfig = DeltaCommandBase.getFlagsConfig({
         test: flags.filepath({
           char: 't',
           required: true,
@@ -56,6 +37,54 @@ describe("DeltaCommand Tests", function () {
       expect(testFlagsConfig.test.description).is.not.null;
 
       expect(validateFlags(testFlagsConfig));
+    });
+  });
+
+  describe("getDeltaOptions Tests", function () {
+    it("Can Handle Nulls", async function () {
+      const deltaOptions = DeltaCommandBase.getDeltaOptions(null);
+      expect(deltaOptions).is.not.null;
+      expect(deltaOptions.deltaFilePath).is.undefined;
+      expect(deltaOptions.source).is.undefined;
+      expect(deltaOptions.destination).is.undefined;
+      expect(deltaOptions.forceFile).is.undefined;
+      expect(deltaOptions.ignoreFile).is.undefined;
+      expect(deltaOptions.fullCopyDirNames).is.not.null;
+    });
+
+    it("Can Parse Config", async function () {
+      const deltaOptions = DeltaCommandBase.getDeltaOptions(config);
+      expect(deltaOptions.deltaFilePath).equals(config.deltaFilePath);
+      expect(deltaOptions.source).equals(config.source);
+      expect(deltaOptions.destination).equals(config.destination);
+      expect(deltaOptions.forceFile).equals(config.force);
+      expect(deltaOptions.ignoreFile).equals(config.ignore);
+      expect(deltaOptions.fullCopyDirNames[0]).equals(DeltaCommandBase.defaultCopyDirList[0]);
+      expect(deltaOptions.fullCopyDirNames[1]).equals(DeltaCommandBase.defaultCopyDirList[1]);
+      expect(deltaOptions.fullCopyDirNames[2]).equals(DeltaCommandBase.defaultCopyDirList[2]);
+    });
+  });
+
+  describe("fullCopyDirNames Tests", function () {
+    it("Can Handle Nulls", async function () {
+      const deltaOptions = DeltaCommandBase.getDeltaOptions(config);
+      deltaOptions.fullCopyDirNames = null;
+      expect(DeltaProvider.isFullCopyPath(null, null)).is.false;
+      expect(DeltaProvider.isFullCopyPath('', null)).is.false;
+      expect(DeltaProvider.isFullCopyPath(null, deltaOptions)).is.false;
+    });
+
+    it("Can Identify Full Copy Dir Names", async function () {
+      const deltaOptions = DeltaCommandBase.getDeltaOptions(config);
+      
+      let parts = ['anything', deltaOptions.fullCopyDirNames[0],'something.txt'];
+      expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.true;
+      
+      parts = ['anything', 'foldername','something.txt'];
+      expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.false;
+      
+      deltaOptions.fullCopyDirNames = ['foldername'];
+      expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.true;
     });
   });
 

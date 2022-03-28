@@ -6,8 +6,8 @@ export default class Clear extends CommandBase {
     static defaultMetadataTypes: string[];
     static examples: string[];
     protected static flagsConfig: {
-        metadatas: flags.Discriminated<flags.String>;
-        classortriggernames: flags.Discriminated<flags.String>;
+        metadatas: flags.Discriminated<flags.Option<string>>;
+        classortriggernames: flags.Discriminated<flags.Option<string>>;
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;

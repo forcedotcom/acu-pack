@@ -5,7 +5,7 @@ export default class XPath extends CommandBase {
     static defaultOptionsFileName: string;
     static examples: string[];
     protected static flagsConfig: {
-        options: flags.Discriminated<flags.String>;
+        options: flags.Discriminated<flags.Option<string>>;
     };
     run(): Promise<void>;
 }

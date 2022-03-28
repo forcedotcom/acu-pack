@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SfdxQuery = exports.SfdxCodeCoverageItem = exports.SfdxCodeCoverage = exports.SfdxObjectPermission = exports.SfdxFieldPermission = exports.SfdxPermission = exports.SfdxPermissionSet = exports.SfdxFolder = exports.SfdxSeupEntityAccess = exports.SfdxEntity = void 0;
 const tslib_1 = require("tslib");
 const sfdx_core_1 = require("./sfdx-core");
 const utils_1 = require("./utils");

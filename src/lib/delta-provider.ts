@@ -1,7 +1,7 @@
-import { flags } from '@salesforce/command';
 import Utils from './utils';
 import { promises as fs } from 'fs';
 import path = require('path');
+import { DeltaCommandBase } from './delta-command';
 
 export class Delta {
     public deltaKind: string;
@@ -21,6 +21,7 @@ export class DeltaOptions {
     public forceFile: string;
     public ignoreFile: string;
     public isDryRun: boolean;
+    public fullCopyDirNames: string[] = DeltaCommandBase.defaultCopyDirList;
 
     public normalize() {
         if (this.deltaFilePath) {
@@ -52,6 +53,17 @@ export abstract class DeltaProvider {
         D: 'D'
     };
 
+    public static isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean {
+        if (filePath && deltaOptions) {
+            for (const dirName of deltaOptions.fullCopyDirNames) {
+                if (filePath.includes(`${path.sep}${dirName}${path.sep}`)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public logFile = 'delta.log';
     public deltaOptions = new DeltaOptions();
 
@@ -62,50 +74,6 @@ export abstract class DeltaProvider {
     public abstract processDeltaLine(deltaLine: string): void;
     public abstract getMessage(name: string): string;
     public abstract diff(source: string): AsyncGenerator<Delta, any, any>;
-
-    public getFlagsConfig(flagsConfig: any): any {
-        if (!flagsConfig) {
-            flagsConfig = {};
-        }
-        if (!flagsConfig.source) {
-            flagsConfig.source = flags.filepath({
-                char: 's',
-                required: true,
-                description: this.getMessage('source.delta.sourceFlagDescription')
-            });
-        }
-        if (!flagsConfig.destination) {
-            flagsConfig.destination = flags.filepath({
-                char: 'd',
-                description: this.getMessage('source.delta.destinationFlagDescription')
-            });
-        }
-        if (!flagsConfig.force) {
-            flagsConfig.force = flags.filepath({
-                char: 'f',
-                description: this.getMessage('source.delta.forceFlagDescription')
-            });
-        }
-        if (!flagsConfig.ignore) {
-            flagsConfig.ignore = flags.filepath({
-                char: 'i',
-                description: this.getMessage('source.delta.ignoreFlagDescription')
-            });
-        }
-        if (!flagsConfig.deletereport) {
-            flagsConfig.deletereport = flags.filepath({
-                char: 'r',
-                description: this.getMessage('source.delta.deleteReportFlagDescription')
-            });
-        }
-        if (!flagsConfig.check) {
-            flagsConfig.check = flags.boolean({
-                char: 'c',
-                description: this.getMessage('source.delta.checkFlagDescription')
-            });
-        }
-        return flagsConfig;
-    }
 
     public async run(deltaOptions: DeltaOptions): Promise<any> {
         if (!deltaOptions) {
@@ -221,12 +189,13 @@ export abstract class DeltaProvider {
                     case DeltaProvider.deltaTypeKind.A:
                     case DeltaProvider.deltaTypeKind.M:
                         // check the source folder for associated files.
-                        for await (const filePath of Utils.getFiles(path.dirname(deltaFile), false)) {
+                        const dirName = path.dirname(deltaFile);
+                        for await (const filePath of Utils.getFiles(dirName, false)) {
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
                                 continue;
                             }
-                            if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}`)) {
+                            if (DeltaProvider.isFullCopyPath(dirName, deltaOptions) || path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
                                 // are we ignoring this file?
                                 if (ignoreSet.has(filePath)) {
                                     await this.logMessage(`Delta (${deltaKind}) ignored: ${filePath}`, true);

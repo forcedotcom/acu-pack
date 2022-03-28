@@ -47,6 +47,7 @@
       "ignoreFlagDescription": "Path to a file containing folders & files to ignore. Will override md5/git file contents.",
       "deleteReportFlagDescription": "Path to a file to write deleted files.",
       "checkFlagDescription": "Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination option is provided.",
+      "copyFullDirFlagDescription": "Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The default list is: %s",
       "git": {
         "commandDescription": "Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt",
         "gitFlagDescription": "The output of a git-diff command (https://git-scm.com/docs/git-diff)"

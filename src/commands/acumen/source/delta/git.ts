@@ -58,12 +58,8 @@ export default class Git extends CommandBase {
     protected deltas = new Map<string, string>();
 
     public async run(): Promise<any> {
-        const deltaOptions = new DeltaOptions();
+        const deltaOptions = DeltaCommandBase.getDeltaOptions(this.flags);
         deltaOptions.deltaFilePath = this.flags.git;
-        deltaOptions.source = this.flags.source;
-        deltaOptions.destination = this.flags.destination;
-        deltaOptions.forceFile = this.flags.force;
-        deltaOptions.ignoreFile = this.flags.ignore;
 
         const gitProvider = new Git.gitDeltaProvider();
         await gitProvider.run(deltaOptions);

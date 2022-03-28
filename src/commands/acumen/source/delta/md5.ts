@@ -2,7 +2,7 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { DeltaCommandBase } from '../../../../lib/delta-command';
 import Utils from '../../../../lib/utils';
-import { DeltaProvider, DeltaOptions, Delta } from '../../../../lib/delta-provider';
+import { DeltaProvider, Delta } from '../../../../lib/delta-provider';
 import md5File = require('md5-file');
 import { promises as fs } from 'fs';
 import path = require('path');
@@ -106,14 +106,10 @@ export default class Md5 extends CommandBase {
     protected deltas = new Map<string, any>();
 
     public async run(): Promise<any> {
-        const gitOptions = new DeltaOptions();
-        gitOptions.deltaFilePath = this.flags.md5;
-        gitOptions.source = this.flags.source;
-        gitOptions.destination = this.flags.destination;
-        gitOptions.forceFile = this.flags.force;
-        gitOptions.ignoreFile = this.flags.ignore;
+        const deltaOptions = DeltaCommandBase.getDeltaOptions(this.flags);
+        deltaOptions.deltaFilePath = this.flags.md5;
 
         const gitProvider = new Md5.md5DeltaProvider();
-        await gitProvider.run(gitOptions);
+        await gitProvider.run(deltaOptions);
     }
 }

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PackageDirectory = void 0;
 const core_1 = require("@salesforce/core");
 class PackageDirectory {
     constructor() {

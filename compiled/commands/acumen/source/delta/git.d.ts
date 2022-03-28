@@ -14,7 +14,6 @@ export default class Git extends CommandBase {
             validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string>;
             logFile: string;
             deltaOptions: DeltaOptions;
-            getFlagsConfig(flagsConfig: any): any;
             run(deltaOptions: DeltaOptions): Promise<any>;
             loadDeltaFile(deltaFilePath?: string): Promise<void>;
             logMessage(message: string, includeConsole?: boolean): Promise<void>;
@@ -25,6 +24,7 @@ export default class Git extends CommandBase {
             M: string;
             D: string;
         };
+        isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean;
     };
     protected static flagsConfig: any;
     protected name: string;

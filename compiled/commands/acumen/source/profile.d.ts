@@ -7,9 +7,9 @@ export default class Profile extends CommandBase {
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
-        source: flags.Discriminated<flags.String>;
+        source: flags.Discriminated<flags.Option<string>>;
         modify: flags.Discriminated<flags.Boolean<boolean>>;
-        output: flags.Discriminated<flags.String>;
+        output: flags.Discriminated<flags.Option<string>>;
     };
     protected static requiresProject: boolean;
     protected static requiresUsername: boolean;

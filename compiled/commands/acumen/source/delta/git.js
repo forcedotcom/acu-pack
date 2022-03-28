@@ -14,14 +14,10 @@ class Git extends command_base_1.CommandBase {
         this.deltas = new Map();
     }
     async run() {
-        const deltaOptions = new delta_provider_1.DeltaOptions();
+        const deltaOptions = delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
         deltaOptions.deltaFilePath = this.flags.git;
-        deltaOptions.source = this.flags.source;
-        deltaOptions.destination = this.flags.destination;
-        deltaOptions.forceFile = this.flags.force;
-        deltaOptions.ignoreFile = this.flags.ignore;
         const gitProvider = new Git.gitDeltaProvider();
-        return await gitProvider.run(deltaOptions);
+        await gitProvider.run(deltaOptions);
     }
 }
 exports.default = Git;
