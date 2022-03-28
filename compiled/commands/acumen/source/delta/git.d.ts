@@ -24,6 +24,7 @@ export default class Git extends CommandBase {
             M: string;
             D: string;
         };
+        isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean;
     };
     protected static flagsConfig: any;
     protected name: string;

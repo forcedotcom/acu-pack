@@ -31,9 +31,9 @@ export default class Setup {
                 deltaKind = deltaKind == 'A' ? 'M' : 'A';
                 yield filePath;
             }
-            var filePath = path.join(myPath, `myfileController.txt`);
-            await fs.appendFile(filePath, 'Controller\r\n');
-            yield filePath;
+            //var filePath = path.join(myPath, `myfileController.txt`);
+            //await fs.appendFile(filePath, 'Controller\r\n');
+            //yield filePath;
 
             myPath = path.join(myPath, 'sub_' + x);
             await Utils.mkDirPath(myPath);

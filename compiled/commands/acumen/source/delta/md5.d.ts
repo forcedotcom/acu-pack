@@ -1,5 +1,5 @@
 import { CommandBase } from '../../../../lib/command-base';
-import { DeltaOptions, Delta } from '../../../../lib/delta-provider';
+import { Delta } from '../../../../lib/delta-provider';
 export default class Md5 extends CommandBase {
     static description: string;
     static examples: string[];
@@ -12,11 +12,11 @@ export default class Md5 extends CommandBase {
             getMessage(name: string): string;
             diff(source: string): AsyncGenerator<Delta, any, any>;
             logFile: string;
-            deltaOptions: DeltaOptions;
-            run(deltaOptions: DeltaOptions): Promise<any>;
+            deltaOptions: import("../../../../lib/delta-provider").DeltaOptions;
+            run(deltaOptions: import("../../../../lib/delta-provider").DeltaOptions): Promise<any>;
             loadDeltaFile(deltaFilePath?: string): Promise<void>;
             logMessage(message: string, includeConsole?: boolean): Promise<void>;
-            validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string>;
+            validateDeltaOptions(deltaOptions: import("../../../../lib/delta-provider").DeltaOptions): Promise<string>;
         };
         deltaTypeKind: {
             NONE: string;
@@ -24,6 +24,7 @@ export default class Md5 extends CommandBase {
             M: string;
             D: string;
         };
+        isFullCopyPath(filePath: string, deltaOptions: import("../../../../lib/delta-provider").DeltaOptions): boolean;
     };
     protected static flagsConfig: any;
     protected name: string;

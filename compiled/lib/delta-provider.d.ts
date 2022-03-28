@@ -11,6 +11,7 @@ export declare class DeltaOptions {
     forceFile: string;
     ignoreFile: string;
     isDryRun: boolean;
+    fullCopyDirNames: string[];
     normalize(): void;
 }
 export declare abstract class DeltaProvider {
@@ -20,6 +21,7 @@ export declare abstract class DeltaProvider {
         M: string;
         D: string;
     };
+    static isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean;
     logFile: string;
     deltaOptions: DeltaOptions;
     abstract name: string;

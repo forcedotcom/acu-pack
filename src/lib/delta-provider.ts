@@ -1,6 +1,7 @@
 import Utils from './utils';
 import { promises as fs } from 'fs';
 import path = require('path');
+import { DeltaCommandBase } from './delta-command';
 
 export class Delta {
     public deltaKind: string;
@@ -20,6 +21,7 @@ export class DeltaOptions {
     public forceFile: string;
     public ignoreFile: string;
     public isDryRun: boolean;
+    public fullCopyDirNames: string[] = DeltaCommandBase.defaultCopyDirList;
 
     public normalize() {
         if (this.deltaFilePath) {
@@ -50,6 +52,17 @@ export abstract class DeltaProvider {
         M: 'M',
         D: 'D'
     };
+
+    public static isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean {
+        if (filePath && deltaOptions) {
+            for (const dirName of deltaOptions.fullCopyDirNames) {
+                if (filePath.includes(`${path.sep}${dirName}${path.sep}`)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public logFile = 'delta.log';
     public deltaOptions = new DeltaOptions();
@@ -176,12 +189,13 @@ export abstract class DeltaProvider {
                     case DeltaProvider.deltaTypeKind.A:
                     case DeltaProvider.deltaTypeKind.M:
                         // check the source folder for associated files.
-                        for await (const filePath of Utils.getFiles(path.dirname(deltaFile), false)) {
+                        const dirName = path.dirname(deltaFile);
+                        for await (const filePath of Utils.getFiles(dirName, false)) {
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
                                 continue;
                             }
-                            if (path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}`)) {
+                            if (DeltaProvider.isFullCopyPath(dirName, deltaOptions) || path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
                                 // are we ignoring this file?
                                 if (ignoreSet.has(filePath)) {
                                     await this.logMessage(`Delta (${deltaKind}) ignored: ${filePath}`, true);
