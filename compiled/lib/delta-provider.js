@@ -54,7 +54,7 @@ class DeltaProvider {
         return false;
     }
     async run(deltaOptions) {
-        var e_1, _a, e_2, _b, e_3, _c, e_4, _d, e_5, _e, e_6, _f;
+        var e_1, _a, e_2, _b, e_3, _c, e_4, _d, e_5, _e, e_6, _f, e_7, _g;
         if (!deltaOptions) {
             throw new Error('No DeltaOptions specified.');
         }
@@ -85,6 +85,7 @@ class DeltaProvider {
             const isDryRun = deltaOptions.isDryRun;
             const ignoreSet = new Set();
             const copiedSet = new Set();
+            const metaFileEndsWith = '-meta.xml';
             // Create Deleted Report File
             if (deleteReportFile && destination) {
                 try {
@@ -101,11 +102,11 @@ class DeltaProvider {
             if (ignoreFile) {
                 await this.logMessage('Ignore Set:');
                 try {
-                    for (var _g = tslib_1.__asyncValues(utils_1.default.readFileLines(ignoreFile)), _h; _h = await _g.next(), !_h.done;) {
-                        const line = _h.value;
+                    for (var _h = tslib_1.__asyncValues(utils_1.default.readFileLines(ignoreFile)), _j; _j = await _h.next(), !_j.done;) {
+                        const line = _j.value;
                         try {
-                            for (var _j = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _k; _k = await _j.next(), !_k.done;) {
-                                const filePath = _k.value;
+                            for (var _k = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _l; _l = await _k.next(), !_l.done;) {
+                                const filePath = _l.value;
                                 ignoreSet.add(path.normalize(filePath));
                                 await this.logMessage(`\t${filePath}`);
                             }
@@ -113,7 +114,7 @@ class DeltaProvider {
                         catch (e_2_1) { e_2 = { error: e_2_1 }; }
                         finally {
                             try {
-                                if (_k && !_k.done && (_b = _j.return)) await _b.call(_j);
+                                if (_l && !_l.done && (_b = _k.return)) await _b.call(_k);
                             }
                             finally { if (e_2) throw e_2.error; }
                         }
@@ -122,7 +123,7 @@ class DeltaProvider {
                 catch (e_1_1) { e_1 = { error: e_1_1 }; }
                 finally {
                     try {
-                        if (_h && !_h.done && (_a = _g.return)) await _a.call(_g);
+                        if (_j && !_j.done && (_a = _h.return)) await _a.call(_h);
                     }
                     finally { if (e_1) throw e_1.error; }
                 }
@@ -145,11 +146,11 @@ class DeltaProvider {
                     // 'act' like new files and are copiied to the destination.
                     await this.logMessage('Puring force file entries from deltas.', true);
                     try {
-                        for (var _l = tslib_1.__asyncValues(utils_1.default.readFileLines(forceFile)), _m; _m = await _l.next(), !_m.done;) {
-                            const line = _m.value;
+                        for (var _m = tslib_1.__asyncValues(utils_1.default.readFileLines(forceFile)), _o; _o = await _m.next(), !_o.done;) {
+                            const line = _o.value;
                             try {
-                                for (var _o = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _p; _p = await _o.next(), !_p.done;) {
-                                    const filePath = _p.value;
+                                for (var _p = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _q; _q = await _p.next(), !_q.done;) {
+                                    const filePath = _q.value;
                                     if (this.deltas.delete(filePath)) {
                                         await this.logMessage(`Purged: ${filePath}`, true);
                                     }
@@ -158,7 +159,7 @@ class DeltaProvider {
                             catch (e_4_1) { e_4 = { error: e_4_1 }; }
                             finally {
                                 try {
-                                    if (_p && !_p.done && (_d = _o.return)) await _d.call(_o);
+                                    if (_q && !_q.done && (_d = _p.return)) await _d.call(_p);
                                 }
                                 finally { if (e_4) throw e_4.error; }
                             }
@@ -167,7 +168,7 @@ class DeltaProvider {
                     catch (e_3_1) { e_3 = { error: e_3_1 }; }
                     finally {
                         try {
-                            if (_m && !_m.done && (_c = _l.return)) await _c.call(_l);
+                            if (_o && !_o.done && (_c = _m.return)) await _c.call(_m);
                         }
                         finally { if (e_3) throw e_3.error; }
                     }
@@ -175,8 +176,8 @@ class DeltaProvider {
             }
             await this.logMessage(`Scanning folder: ${source}.`, true);
             try {
-                for (var _q = tslib_1.__asyncValues(this.diff(source)), _r; _r = await _q.next(), !_r.done;) {
-                    const delta = _r.value;
+                for (var _r = tslib_1.__asyncValues(this.diff(source)), _s; _s = await _r.next(), !_s.done;) {
+                    const delta = _s.value;
                     const deltaKind = delta.deltaKind;
                     const deltaFile = delta.deltaFile;
                     // No destination? no need to continue
@@ -203,14 +204,16 @@ class DeltaProvider {
                         case DeltaProvider.deltaTypeKind.M:
                             // check the source folder for associated files.
                             const dirName = path.dirname(deltaFile);
+                            const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
+                            let foundMetadataFile = false;
                             try {
-                                for (var _s = tslib_1.__asyncValues(utils_1.default.getFiles(dirName, false)), _t; _t = await _s.next(), !_t.done;) {
-                                    const filePath = _t.value;
+                                for (var _t = tslib_1.__asyncValues(utils_1.default.getFiles(dirName, false)), _u; _u = await _t.next(), !_u.done;) {
+                                    const filePath = _u.value;
                                     // have we already processed this file?
                                     if (copiedSet.has(filePath)) {
                                         continue;
                                     }
-                                    if (DeltaProvider.isFullCopyPath(dirName, deltaOptions) || path.basename(filePath).startsWith(`${path.basename(deltaFile).split('.')[0]}.`)) {
+                                    if (DeltaProvider.isFullCopyPath(dirName, deltaOptions) || path.basename(filePath).startsWith(deltaFileBaseName)) {
                                         // are we ignoring this file?
                                         if (ignoreSet.has(filePath)) {
                                             await this.logMessage(`Delta (${deltaKind}) ignored: ${filePath}`, true);
@@ -225,15 +228,56 @@ class DeltaProvider {
                                             metrics.Copy++;
                                             copiedSet.add(filePath);
                                         }
+                                        if (filePath.endsWith(metaFileEndsWith)) {
+                                            foundMetadataFile = true;
+                                        }
                                     }
                                 }
                             }
                             catch (e_6_1) { e_6 = { error: e_6_1 }; }
                             finally {
                                 try {
-                                    if (_t && !_t.done && (_f = _s.return)) await _f.call(_s);
+                                    if (_u && !_u.done && (_f = _t.return)) await _f.call(_t);
                                 }
                                 finally { if (e_6) throw e_6.error; }
+                            }
+                            if (!foundMetadataFile) {
+                                // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
+                                // so let's check there
+                                const parentDirName = path.dirname(dirName);
+                                const deltaParentBaseName = `${path.basename(dirName)}.`;
+                                try {
+                                    for (var _v = tslib_1.__asyncValues(utils_1.default.getFiles(parentDirName, false)), _w; _w = await _v.next(), !_w.done;) {
+                                        const parentFilePath = _w.value;
+                                        // have we already processed this file?
+                                        if (copiedSet.has(parentFilePath)) {
+                                            continue;
+                                        }
+                                        // are we ignoring this file?
+                                        if (ignoreSet.has(parentFilePath)) {
+                                            await this.logMessage(`Delta (${deltaKind}) ignored: ${parentFilePath}`, true);
+                                            metrics.Ign++;
+                                            continue;
+                                        }
+                                        if (path.basename(parentFilePath).startsWith(deltaParentBaseName)) {
+                                            const destinationPath = parentFilePath.replace(source, destination);
+                                            if (!isDryRun) {
+                                                await utils_1.default.copyFile(parentFilePath, destinationPath);
+                                            }
+                                            await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
+                                            metrics.Copy++;
+                                            copiedSet.add(parentFilePath);
+                                            foundMetadataFile = true;
+                                        }
+                                    }
+                                }
+                                catch (e_7_1) { e_7 = { error: e_7_1 }; }
+                                finally {
+                                    try {
+                                        if (_w && !_w.done && (_g = _v.return)) await _g.call(_v);
+                                    }
+                                    finally { if (e_7) throw e_7.error; }
+                                }
                             }
                             break;
                         case DeltaProvider.deltaTypeKind.NONE:
@@ -246,7 +290,7 @@ class DeltaProvider {
             catch (e_5_1) { e_5 = { error: e_5_1 }; }
             finally {
                 try {
-                    if (_r && !_r.done && (_e = _q.return)) await _e.call(_q);
+                    if (_s && !_s.done && (_e = _r.return)) await _e.call(_r);
                 }
                 finally { if (e_5) throw e_5.error; }
             }
@@ -261,7 +305,7 @@ class DeltaProvider {
         return metrics;
     }
     async loadDeltaFile(deltaFilePath) {
-        var e_7, _a;
+        var e_8, _a;
         // only load the hash once
         deltaFilePath = deltaFilePath ? path.normalize(deltaFilePath) : this.deltaOptions.deltaFilePath;
         if (deltaFilePath && this.deltas.size === 0) {
@@ -279,12 +323,12 @@ class DeltaProvider {
                     this.processDeltaLine(line);
                 }
             }
-            catch (e_7_1) { e_7 = { error: e_7_1 }; }
+            catch (e_8_1) { e_8 = { error: e_8_1 }; }
             finally {
                 try {
                     if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
                 }
-                finally { if (e_7) throw e_7.error; }
+                finally { if (e_8) throw e_8.error; }
             }
             await this.logMessage(`Loaded delta file: ${deltaFilePath} with ${this.deltas.size} entries.`);
         }

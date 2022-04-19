@@ -1394,7 +1394,7 @@
         "signature": "aa533c241f0ab8f7856f2d460833237b79c0f899cb030fec726487ac1e1764d8"
       },
       "./src/lib/delta-provider.ts": {
-        "version": "f89f09745ae1922977494bc1ab1a0b0489137d75aea62901a81efe7463a7f8b7",
+        "version": "fd6513f153ba08a70c93a9ee0e72332152376bd48540d0010d334b9a02feb7b3",
         "signature": "395dfb73ed4145ba89fd726ba451106ca6d24fa78c24a5dffdd9140fcae2048a"
       },
       "./src/lib/delta-command.ts": {
