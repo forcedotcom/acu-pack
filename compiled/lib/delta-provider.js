@@ -85,6 +85,7 @@ class DeltaProvider {
             const isDryRun = deltaOptions.isDryRun;
             const ignoreSet = new Set();
             const copiedSet = new Set();
+            const metaFileEndsWith = '-meta.xml';
             // Create Deleted Report File
             if (deleteReportFile && destination) {
                 try {
@@ -204,7 +205,7 @@ class DeltaProvider {
                             // check the source folder for associated files.
                             const dirName = path.dirname(deltaFile);
                             const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
-                            let foundCount = 0;
+                            let foundMetadataFile = false;
                             try {
                                 for (var _t = tslib_1.__asyncValues(utils_1.default.getFiles(dirName, false)), _u; _u = await _t.next(), !_u.done;) {
                                     const filePath = _u.value;
@@ -227,7 +228,9 @@ class DeltaProvider {
                                             metrics.Copy++;
                                             copiedSet.add(filePath);
                                         }
-                                        foundCount++;
+                                        if (filePath.endsWith(metaFileEndsWith)) {
+                                            foundMetadataFile = true;
+                                        }
                                     }
                                 }
                             }
@@ -238,7 +241,7 @@ class DeltaProvider {
                                 }
                                 finally { if (e_6) throw e_6.error; }
                             }
-                            if (foundCount === 1) {
+                            if (!foundMetadataFile) {
                                 // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
                                 // so let's check there
                                 const parentDirName = path.dirname(dirName);
@@ -264,7 +267,7 @@ class DeltaProvider {
                                             await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
                                             metrics.Copy++;
                                             copiedSet.add(parentFilePath);
-                                            foundCount++;
+                                            foundMetadataFile = true;
                                         }
                                     }
                                 }
