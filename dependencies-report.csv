@@ -2,10 +2,10 @@ Name,Version,License
 "@oclif/command","^1.8.16",MIT
 "@oclif/config","^1.17.0",MIT
 "@oclif/errors","^1.3.4",MIT
-"@salesforce/command","^2",Salesforce
-"@salesforce/core","^2.24.0",Salesforce
-"@salesforce/kit","^1.5.13",Salesforce
-"@salesforce/ts-sinon","^1.3.18",Salesforce
+"@salesforce/command","^2",BSD-3-Clause
+"@salesforce/core","^2.24.0",BSD-3-Clause
+"@salesforce/kit","^1.5.13",BSD-3-Clause
+"@salesforce/ts-sinon","^1.3.18",BSD-3-Clause
 "await-spawn","^3.0.0",MIT
 "bent","^7.3.12",Apache-2.0
 "glob","^7.1.7",ISC
