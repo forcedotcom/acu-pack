@@ -5,7 +5,7 @@ SFDX CLI Extensions by Acumen Solutions Inc.
 
 [![Version](https://img.shields.io/npm/v/acu-pack.svg)](https://www.npmjs.com/package/@acumensolutions/acu-pack)
 [![Downloads/week](https://img.shields.io/npm/dw/acu-pack.svg)](https://www.npmjs.com/package/@acumensolutions/acu-pack)
-[![License](https://img.shields.io/npm/l/acu-pack.svg)](https://github.com/CSGAMERSServices/acu-pack/src/main/package.json)
+[![License](https://img.shields.io/npm/l/acu-pack.svg)](https://github.com/CSGAMERSServices/acu-pack/src/blob/main/package.json)
 
 <!-- toc -->
 * [Debugging your plugin](#debugging-your-plugin)
