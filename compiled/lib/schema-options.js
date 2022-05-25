@@ -20,11 +20,34 @@ class SchemaOptions extends options_1.OptionsBase {
             : this.outputDefMap.get(this.outputDefMap.keys[0]);
         if (outputDefs) {
             for (const outputDef of outputDefs) {
-                code += `row.push(${outputDef.split('|')[1]});`;
+                const parts = outputDef.split('|');
+                // skip entitydefinition metadata - need to query for these
+                if (parts[1].includes(`${schema_utils_1.default.ENTITY_DEFINITION}.`)) {
+                    code += "row.push('');";
+                }
+                else {
+                    code += `row.push(${parts[1]});`;
+                }
             }
         }
         code += 'return row; }';
         return code;
+    }
+    getEntityDefinitionFields(sheetName = null) {
+        const fields = [];
+        const outputDefs = sheetName
+            ? this.outputDefMap.get(sheetName)
+            : this.outputDefMap.get(this.outputDefMap.keys[0]);
+        const entDefSearch = `${schema_utils_1.default.ENTITY_DEFINITION}.`;
+        if (outputDefs) {
+            for (const outputDef of outputDefs) {
+                const parts = outputDef.split('|');
+                if (parts[1].includes(entDefSearch)) {
+                    fields.push(parts[1].replace(entDefSearch, ''));
+                }
+            }
+        }
+        return fields;
     }
     async deserialize(serializedOptions) {
         return new Promise((resolve, reject) => {
@@ -33,9 +56,7 @@ class SchemaOptions extends options_1.OptionsBase {
                     return null;
                 }
                 const options = JSON.parse(serializedOptions);
-                if (options.excludeFieldIfTrueFilter) {
-                    this.excludeFieldIfTrueFilter = options.excludeFieldIfTrueFilter;
-                }
+                this.excludeFieldIfTrueFilter = options.excludeFieldIfTrueFilter;
                 if (options.excludeCustomObjectNames) {
                     this.excludeCustomObjectNames = options.excludeCustomObjectNames;
                 }
@@ -56,9 +77,9 @@ class SchemaOptions extends options_1.OptionsBase {
         return new Promise((resolve, reject) => {
             try {
                 resolve(JSON.stringify({
-                    excludeCustomObjectNames: this.excludeCustomObjectNames,
-                    includeCustomObjectNames: this.includeCustomObjectNames,
-                    excludeFieldIfTrueFilter: this.excludeFieldIfTrueFilter,
+                    excludeCustomObjectNames: this.excludeCustomObjectNames ? this.excludeCustomObjectNames : [],
+                    includeCustomObjectNames: this.includeCustomObjectNames ? this.includeCustomObjectNames : [],
+                    excludeFieldIfTrueFilter: this.excludeFieldIfTrueFilter ? this.excludeFieldIfTrueFilter : '',
                     outputDefMap: Array.from(this.outputDefMap.entries())
                 }, null, sfdx_core_1.SfdxCore.jsonSpaces));
             }
@@ -72,7 +93,8 @@ class SchemaOptions extends options_1.OptionsBase {
             try {
                 this.outputDefMap.set('fields', [
                     `SObjectName|${schema_utils_1.default.CONTEXT_SCHEMA}.name`,
-                    `Name|${schema_utils_1.default.CONTEXT_FIELD}.name`,
+                    `Name|${schema_utils_1.default.CONTEXT_FIELD_NAME}`,
+                    `Description|${schema_utils_1.default.ENTITY_DEFINITION}.Description`,
                     `Label|${schema_utils_1.default.CONTEXT_FIELD}.label`,
                     `Datatype|${schema_utils_1.default.CONTEXT_FIELD}.type`,
                     `Length|${schema_utils_1.default.CONTEXT_FIELD}.length`,

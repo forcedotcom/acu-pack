@@ -1,6 +1,7 @@
 import { expect } from '@salesforce/command/lib/test';
 import { OptionsFactory } from '../../src/lib/options-factory';
 import SchemaOptions from '../../src/lib/schema-options';
+import SchemaUtils from '../../src/lib/schema-utils';
 
 describe('SchemaOptions Tests', function() {
   it('Creates New Object', async function() {
@@ -42,7 +43,9 @@ describe('SchemaOptions Tests', function() {
       expect(childObjectDynamicCode).to.not.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
 
       for (const outputDef of testOptions.outputDefMap.get('fields')) {
-        expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+        if( !outputDef.includes(SchemaUtils.ENTITY_DEFINITION)) {
+          expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+        }
       }
 
       for (const outputDef of testOptions.outputDefMap.get('recordTypeInfos')) {
@@ -66,7 +69,9 @@ describe('SchemaOptions Tests', function() {
       expect(dynamicCode).to.contain(`if( ${testOptions.excludeFieldIfTrueFilter} ) { return []; } `);
 
       for (const outputDef of testOptions.outputDefMap.get('fields')) {
-        expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+        if( !outputDef.includes(SchemaUtils.ENTITY_DEFINITION)) {
+          expect(dynamicCode).to.contain(`row.push(${outputDef.split('|')[1]});`);
+        }
       }
     });
   });

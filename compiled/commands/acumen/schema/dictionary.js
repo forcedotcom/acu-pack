@@ -11,6 +11,7 @@ const utils_1 = require("../../../lib/utils");
 const schema_utils_1 = require("../../../lib/schema-utils");
 const schema_options_1 = require("../../../lib/schema-options");
 const path = require("path");
+const sfdx_query_1 = require("../../../lib/sfdx-query");
 class Dictionary extends command_base_1.CommandBase {
     async run() {
         var e_1, _a, e_2, _b;
@@ -19,6 +20,7 @@ class Dictionary extends command_base_1.CommandBase {
         try {
             const schemaTmpFile = `schema-${this.orgAlias}.tmp`;
             const sortedTypeNames = await this.getSortedTypeNames(this.orgAlias);
+            // sortedTypeNames = ['Account', 'Case', 'Lead'];
             // Create for writing - truncates if exists
             const fileStream = fs_1.createWriteStream(schemaTmpFile, { flags: 'w' });
             let counter = 0;
@@ -37,13 +39,43 @@ class Dictionary extends command_base_1.CommandBase {
                         if (!collection) {
                             continue;
                         }
+                        let nameFieldIndex = -1;
+                        // Query for Entity & Field Definition
+                        const entityDefinitionFields = this.options.getEntityDefinitionFields(name);
+                        const outputDefs = this.options.outputDefMap.get(name);
+                        if (entityDefinitionFields.length > 0) {
+                            for (let index = 0; index < outputDefs.length; index++) {
+                                const outputDef = outputDefs[index];
+                                if (outputDef.includes(`|${schema_utils_1.default.CONTEXT_FIELD_NAME}`)) {
+                                    nameFieldIndex = index;
+                                    break;
+                                }
+                            }
+                            if (nameFieldIndex === -1) {
+                                throw new Error('No Name field found');
+                            }
+                        }
+                        const fieldDefinitionMap = await this.entityDefinitionValues(metaDataType, entityDefinitionFields);
                         const dynamicCode = this.options.getDynamicCode(name);
                         try {
                             for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection)), _d; _d = await _c.next(), !_d.done;) {
                                 const row = _d.value;
-                                if (row.length > 0) {
-                                    fileStream.write(`${JSON.stringify(row)}\r\n`);
+                                if (row.length === 0) {
+                                    continue;
                                 }
+                                const nameFieldValue = row[nameFieldIndex];
+                                const fieldDefinitionRecord = fieldDefinitionMap.get(nameFieldValue);
+                                if (fieldDefinitionRecord != null) {
+                                    for (let index = 0; index < outputDefs.length; index++) {
+                                        const outputDef = outputDefs[index];
+                                        for (const entityDefinitionField of entityDefinitionFields) {
+                                            if (outputDef.includes(`|${schema_utils_1.default.ENTITY_DEFINITION}.${entityDefinitionField}`)) {
+                                                row[index] = fieldDefinitionRecord[entityDefinitionField];
+                                            }
+                                        }
+                                    }
+                                }
+                                fileStream.write(`${JSON.stringify(row)}\r\n`);
                             }
                         }
                         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -104,6 +136,10 @@ class Dictionary extends command_base_1.CommandBase {
         catch (err) {
             throw err;
         }
+        // Write options JSON incase there have been structure changes since it was last saved.
+        if (this.flags.options) {
+            await this.options.save(this.flags.options);
+        }
     }
     getColumnRow(outputDefs) {
         const row = [];
@@ -131,6 +167,21 @@ class Dictionary extends command_base_1.CommandBase {
             this.options.excludeCustomObjectNames.forEach(item => typeNames.delete(item));
         }
         return utils_1.default.sortArray(Array.from(typeNames));
+    }
+    async entityDefinitionValues(sObjectName, fieldNames) {
+        const valueMap = new Map();
+        if (!sObjectName || !fieldNames || fieldNames.length === 0) {
+            return valueMap;
+        }
+        let query = `SELECT QualifiedApiName,DurableID FROM EntityDefinition WHERE QualifiedApiName='${sObjectName}'`;
+        let records = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query);
+        const durableId = records[0].DurableId;
+        query = `SELECT QualifiedApiName,${fieldNames.join(',')} FROM FieldDefinition where EntityDefinition.DurableID in ('${durableId}')`;
+        records = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query);
+        for (const record of records) {
+            valueMap.set(record.QualifiedApiName, record);
+        }
+        return valueMap;
     }
 }
 exports.default = Dictionary;

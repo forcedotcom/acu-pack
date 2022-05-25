@@ -25,7 +25,9 @@ class SchemaUtils {
     }
 }
 exports.default = SchemaUtils;
+SchemaUtils.ENTITY_DEFINITION = 'EntityDefinition';
 SchemaUtils.CONTEXT_FIELD = 'ctx';
+SchemaUtils.CONTEXT_FIELD_NAME = SchemaUtils.CONTEXT_FIELD + '.name';
 SchemaUtils.CONTEXT_SCHEMA = 'schema';
 SchemaUtils.dynamicContext = {
     getPicklistValues(fld) {

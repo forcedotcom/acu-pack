@@ -1358,16 +1358,16 @@
         "signature": "151ce7bce133ec24627531ca850c6c1c9c34b1a7436c64b0f4a02f2db63aed7b"
       },
       "./src/lib/schema-utils.ts": {
-        "version": "efeb00628ddcf3b7c3a65b6cd24eda4a5b4a6959355ea0ca1f519504f5db0a6e",
-        "signature": "f70e1d84ba65353af6fbb1b2339883682acb49f78a67e74f120382e1fa5281d1"
+        "version": "138a322dc91f73ca53c787a5da95c1d730359f8f2749a10671a46953c5d72fde",
+        "signature": "745edda4918673e67e1e8a56c2b51a327c06d4245f48c5047e1e9ba56f296989"
       },
       "./src/lib/schema-options.ts": {
-        "version": "52841b32a84f193998ad59a845b17a3f61f1c1338269791825ad17bcbb1be184",
-        "signature": "7a60678cfc4e86a8e00b94a9180dfcadb4b1cc37d28ebf82a8548bef199b68df"
+        "version": "6bb84b2603f13bdf4c89d35e455b01d4f342b7d9c5e0d247cffa33f40268d1f2",
+        "signature": "e01918e9c1da1c3a99e4405dc60051aa4daf0004102c1ef85db457c0786b0bba"
       },
       "./src/commands/acumen/schema/dictionary.ts": {
-        "version": "9a122a3517a43feb418707d68615e6ff0b614ee4f5198fa45d18d11cc4c3f31c",
-        "signature": "f87e0183cdd9c3fb913f8827e9f2b631b9c85044f6ad110f97e5b250d84cdb22"
+        "version": "b722f181cb9a16617732b91bc06710d6a7ea3694a86a067ebdc64c2fe9df4d1b",
+        "signature": "9ce112cfb5aa61977a285f9528ab6a7c882b4c56435adf3428b478ef3b6af4c7"
       },
       "./src/lib/profile-download.ts": {
         "version": "40d613a418d69e2d49e01afe51f931afe612bcc83283e80eb9eb693024d0cbc9",
@@ -2790,7 +2790,8 @@
         "./src/lib/utils.ts",
         "./src/lib/schema-utils.ts",
         "./src/lib/schema-options.ts",
-        "./node_modules/@types/node/path.d.ts"
+        "./node_modules/@types/node/path.d.ts",
+        "./src/lib/sfdx-query.ts"
       ],
       "./src/lib/profile-download.ts": [
         "./src/lib/utils.ts",

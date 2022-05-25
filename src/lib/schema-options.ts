@@ -21,12 +21,36 @@ export default class SchemaOptions extends OptionsBase {
 
         if (outputDefs) {
             for (const outputDef of outputDefs) {
-                code += `row.push(${outputDef.split('|')[1]});`;
+                const parts = outputDef.split('|');
+                // skip entitydefinition metadata - need to query for these
+                if (parts[1].includes(`${SchemaUtils.ENTITY_DEFINITION}.`)) {
+                    code += "row.push('');";
+                } else {
+                    code += `row.push(${parts[1]});`;
+                }
             }
         }
         code += 'return row; }';
 
         return code;
+    }
+
+    public getEntityDefinitionFields(sheetName: string = null): string[] {
+        const fields = [];
+        const outputDefs = sheetName
+            ? this.outputDefMap.get(sheetName)
+            : this.outputDefMap.get(this.outputDefMap.keys[0]);
+
+        const entDefSearch = `${SchemaUtils.ENTITY_DEFINITION}.`;
+        if (outputDefs) {
+            for (const outputDef of outputDefs) {
+                const parts = outputDef.split('|');
+                if (parts[1].includes(entDefSearch)) {
+                    fields.push(parts[1].replace(entDefSearch, ''));
+                }
+            }
+        }
+        return fields;
     }
 
     public async deserialize(serializedOptions: string): Promise<void> {
@@ -36,9 +60,8 @@ export default class SchemaOptions extends OptionsBase {
                     return null;
                 }
                 const options = JSON.parse(serializedOptions);
-                if (options.excludeFieldIfTrueFilter) {
-                    this.excludeFieldIfTrueFilter = options.excludeFieldIfTrueFilter;
-                }
+                this.excludeFieldIfTrueFilter = options.excludeFieldIfTrueFilter;
+
                 if (options.excludeCustomObjectNames) {
                     this.excludeCustomObjectNames = options.excludeCustomObjectNames;
                 }
@@ -59,9 +82,9 @@ export default class SchemaOptions extends OptionsBase {
         return new Promise((resolve, reject) => {
             try {
                 resolve(JSON.stringify({
-                    excludeCustomObjectNames: this.excludeCustomObjectNames,
-                    includeCustomObjectNames: this.includeCustomObjectNames,
-                    excludeFieldIfTrueFilter: this.excludeFieldIfTrueFilter,
+                    excludeCustomObjectNames: this.excludeCustomObjectNames ? this.excludeCustomObjectNames : [],
+                    includeCustomObjectNames: this.includeCustomObjectNames ? this.includeCustomObjectNames : [],
+                    excludeFieldIfTrueFilter: this.excludeFieldIfTrueFilter ? this.excludeFieldIfTrueFilter : '',
                     outputDefMap: Array.from(this.outputDefMap.entries())
                 }, null, SfdxCore.jsonSpaces));
 
@@ -76,7 +99,8 @@ export default class SchemaOptions extends OptionsBase {
             try {
                 this.outputDefMap.set('fields', [
                     `SObjectName|${SchemaUtils.CONTEXT_SCHEMA}.name`,
-                    `Name|${SchemaUtils.CONTEXT_FIELD}.name`,
+                    `Name|${SchemaUtils.CONTEXT_FIELD_NAME}`,
+                    `Description|${SchemaUtils.ENTITY_DEFINITION}.Description`,
                     `Label|${SchemaUtils.CONTEXT_FIELD}.label`,
                     `Datatype|${SchemaUtils.CONTEXT_FIELD}.type`,
                     `Length|${SchemaUtils.CONTEXT_FIELD}.length`,

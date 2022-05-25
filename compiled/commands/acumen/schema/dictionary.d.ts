@@ -15,4 +15,5 @@ export default class Dictionary extends CommandBase {
     run(): Promise<void>;
     private getColumnRow;
     private getSortedTypeNames;
+    private entityDefinitionValues;
 }

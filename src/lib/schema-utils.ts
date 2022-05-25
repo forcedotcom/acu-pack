@@ -1,7 +1,9 @@
 import * as vm from 'vm';
 
 export default class SchemaUtils {
+    public static ENTITY_DEFINITION = 'EntityDefinition';
     public static CONTEXT_FIELD = 'ctx';
+    public static CONTEXT_FIELD_NAME = SchemaUtils.CONTEXT_FIELD  + '.name';
     public static CONTEXT_SCHEMA = 'schema';
     public static * getDynamicSchemaData(schema: any, dynamicCode: string, collection: any): Generator<any, void, string[]> {
         if (!schema) {
