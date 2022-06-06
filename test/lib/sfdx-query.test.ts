@@ -2,8 +2,11 @@ import { expect } from '@salesforce/command/lib/test';
 import { SfdxQuery, SfdxCodeCoverage } from '../../src/lib/sfdx-query';
 import Setup from '../lib/setup';
 
-const orgAlias = Setup.orgAlias;
+let orgAlias = null;
 describe('Sfdx Query Tests', () => {
+  before('Init', async function () {
+    orgAlias = await Setup.orgAlias;
+  });
   describe('getApexTestClasses Tests', function () {
     this.timeout(15000); // Times out due to query
     it('Can Handle Null', async function () {

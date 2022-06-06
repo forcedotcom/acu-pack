@@ -5,7 +5,7 @@ import Utils from '../../src/lib/utils';
 import Setup from '../lib/setup';
 const unknownId = '00000000001';
 
-const orgAlias = Setup.orgAlias;
+let orgAlias = null;
 let sfdxClient: SfdxClient;
 enum ApiTestKind {
   DEFAULT = 'Account',
@@ -18,9 +18,7 @@ enum ApiTestKind {
 const testData = new Map<ApiTestKind, any[]>();
 before('Init', async function () {
   this.timeout(0);
-  if (!orgAlias) {
-    return;
-  }
+  orgAlias = await Setup.orgAlias;
   console.log('Getting Test Data....');
   sfdxClient = new SfdxClient(orgAlias);
   let dataErr: Error = null;

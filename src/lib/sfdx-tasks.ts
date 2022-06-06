@@ -360,6 +360,13 @@ export class SfdxTasks {
         return statuses;
     }
 
+    public static async getDefaultOrgAlias(): Promise<string> {
+        const result = await SfdxCore.command('sfdx config:get defaultusername --json');
+        return result[0] != null
+            ? result[0].value
+            : null;
+    }
+
     protected static _folderPaths: Map<string, string> = null;
 
     private static async getFolderSOQLData(usernameOrAlias: string): Promise<Map<string, string>> {
