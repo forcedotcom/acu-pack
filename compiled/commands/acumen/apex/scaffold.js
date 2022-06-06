@@ -149,7 +149,7 @@ class Scaffold extends command_base_1.CommandBase {
             if (!numLen || numLen === 0 || numLen > maxLength) {
                 numLen = maxLength;
             }
-            const scale = (_a = fld.scale, (_a !== null && _a !== void 0 ? _a : 0));
+            const scale = (_a = fld.scale) !== null && _a !== void 0 ? _a : 0;
             for (let index = 1; index <= (numLen - scale); index++) {
                 num += get1Rand();
             }

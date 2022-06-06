@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PackageOptions = void 0;
 const options_1 = require("./options");
 class PackageOptions extends options_1.OptionsBase {
     constructor() {

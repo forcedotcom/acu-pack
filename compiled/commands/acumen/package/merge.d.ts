@@ -4,8 +4,8 @@ export default class Merge extends CommandBase {
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
-        source: flags.Discriminated<flags.Option<string>>;
-        destination: flags.Discriminated<flags.Option<string>>;
+        source: flags.Discriminated<flags.String>;
+        destination: flags.Discriminated<flags.String>;
     };
     run(): Promise<void>;
 }

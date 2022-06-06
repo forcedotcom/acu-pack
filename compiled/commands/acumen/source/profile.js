@@ -24,7 +24,7 @@ class Profile extends command_base_1.CommandBase {
             }
             this.ux.log(`Reading metadata in: ${sourceFolder}`);
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim())), _c; _c = await _b.next(), !_c.done;) {
+                for (var _b = (e_1 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim()))), _c; _c = await _b.next(), !_c.done;) {
                     const filePath = _c.value;
                     this.ux.log(`\tProcessing: ${filePath}`);
                     const json = await utils_1.default.readObjectFromXmlFile(filePath);
@@ -117,7 +117,7 @@ Profile.examples = [
     `$ sfdx acumen:source:profile -u myOrgAlias
     Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to detemrine deployment compatibility.`,
     `$ sfdx acumen:source:profile -m true -u myOrgAlias
-    Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to detemrine deployment compatibility.`
+    Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to and updates the metadat files to ensuredeployment compatibility.`
 ];
 Profile.flagsConfig = {
     source: command_1.flags.string({

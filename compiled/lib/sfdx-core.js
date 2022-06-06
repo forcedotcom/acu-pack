@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SfdxCore = void 0;
 const child_process_1 = require("child_process");
 const utils_1 = require("../lib/utils");
 const sfdx_project_1 = require("../lib/sfdx-project");

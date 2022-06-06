@@ -52,7 +52,7 @@ class Clear extends command_base_1.CommandBase {
                         let counter = 0;
                         const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
                         try {
-                            for (var _e = tslib_1.__asyncValues(sfdxClient.do(sfdx_client_1.RestAction.DELETE, metaDataType, records, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE])), _f; _f = await _e.next(), !_f.done;) {
+                            for (var _e = (e_2 = void 0, tslib_1.__asyncValues(sfdxClient.do(sfdx_client_1.RestAction.DELETE, metaDataType, records, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE]))), _f; _f = await _e.next(), !_f.done;) {
                                 const result = _f.value;
                                 this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result}`);
                             }

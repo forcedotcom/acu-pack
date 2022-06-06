@@ -5,10 +5,10 @@ export default class Build extends CommandBase {
     static defaultPackageFileName: string;
     static examples: string[];
     protected static flagsConfig: {
-        package: flags.Discriminated<flags.Option<string>>;
-        metadata: flags.Discriminated<flags.Option<string>>;
-        options: flags.Discriminated<flags.Option<string>>;
-        namespaces: flags.Discriminated<flags.Option<string>>;
+        package: flags.Discriminated<flags.String>;
+        metadata: flags.Discriminated<flags.String>;
+        options: flags.Discriminated<flags.String>;
+        namespaces: flags.Discriminated<flags.String>;
         source: flags.Discriminated<flags.Boolean<boolean>>;
         append: flags.Discriminated<flags.Boolean<boolean>>;
     };

@@ -58,7 +58,7 @@ class Dictionary extends command_base_1.CommandBase {
                         const fieldDefinitionMap = await this.entityDefinitionValues(metaDataType, entityDefinitionFields);
                         const dynamicCode = this.options.getDynamicCode(name);
                         try {
-                            for (var _c = tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection)), _d; _d = await _c.next(), !_d.done;) {
+                            for (var _c = (e_1 = void 0, tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection))), _d; _d = await _c.next(), !_d.done;) {
                                 const row = _d.value;
                                 if (row.length === 0) {
                                     continue;

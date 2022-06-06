@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeltaCommandBase = void 0;
 const command_base_1 = require("./command-base");
 const command_1 = require("@salesforce/command");
 const delta_provider_1 = require("./delta-provider");
@@ -54,17 +55,17 @@ class DeltaCommandBase extends command_base_1.CommandBase {
         return flagsConfig;
     }
     static getDeltaOptions(commandFlags) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g;
         const deltaOptions = new delta_provider_1.DeltaOptions();
         if (!commandFlags) {
             return deltaOptions;
         }
-        deltaOptions.deltaFilePath = (_b = (_a = commandFlags) === null || _a === void 0 ? void 0 : _a.deltaFilePath, (_b !== null && _b !== void 0 ? _b : null));
-        deltaOptions.source = (_d = (_c = commandFlags) === null || _c === void 0 ? void 0 : _c.source, (_d !== null && _d !== void 0 ? _d : null));
-        deltaOptions.destination = (_f = (_e = commandFlags) === null || _e === void 0 ? void 0 : _e.destination, (_f !== null && _f !== void 0 ? _f : null));
-        deltaOptions.forceFile = (_h = (_g = commandFlags) === null || _g === void 0 ? void 0 : _g.force, (_h !== null && _h !== void 0 ? _h : null));
-        deltaOptions.ignoreFile = (_k = (_j = commandFlags) === null || _j === void 0 ? void 0 : _j.ignore, (_k !== null && _k !== void 0 ? _k : null));
-        deltaOptions.fullCopyDirNames = (_m = (_l = commandFlags.copyfulldir) === null || _l === void 0 ? void 0 : _l.split(','), (_m !== null && _m !== void 0 ? _m : DeltaCommandBase.defaultCopyDirList));
+        deltaOptions.deltaFilePath = (_a = commandFlags === null || commandFlags === void 0 ? void 0 : commandFlags.deltaFilePath) !== null && _a !== void 0 ? _a : null;
+        deltaOptions.source = (_b = commandFlags === null || commandFlags === void 0 ? void 0 : commandFlags.source) !== null && _b !== void 0 ? _b : null;
+        deltaOptions.destination = (_c = commandFlags === null || commandFlags === void 0 ? void 0 : commandFlags.destination) !== null && _c !== void 0 ? _c : null;
+        deltaOptions.forceFile = (_d = commandFlags === null || commandFlags === void 0 ? void 0 : commandFlags.force) !== null && _d !== void 0 ? _d : null;
+        deltaOptions.ignoreFile = (_e = commandFlags === null || commandFlags === void 0 ? void 0 : commandFlags.ignore) !== null && _e !== void 0 ? _e : null;
+        deltaOptions.fullCopyDirNames = (_g = (_f = commandFlags.copyfulldir) === null || _f === void 0 ? void 0 : _f.split(',')) !== null && _g !== void 0 ? _g : DeltaCommandBase.defaultCopyDirList;
         return deltaOptions;
     }
 }
