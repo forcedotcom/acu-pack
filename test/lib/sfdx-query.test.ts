@@ -5,7 +5,10 @@ import Setup from '../lib/setup';
 let orgAlias = null;
 describe('Sfdx Query Tests', () => {
   before('Init', async function () {
-    orgAlias = await Setup.orgAlias;
+    orgAlias = Setup.orgAlias;
+    if(!orgAlias) {
+      return;
+    }
   });
   describe('getApexTestClasses Tests', function () {
     this.timeout(15000); // Times out due to query

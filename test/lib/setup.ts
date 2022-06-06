@@ -1,5 +1,4 @@
 import Utils from '../../src/lib/utils';
-import { SfdxTasks } from '../../src/lib/sfdx-tasks';
 import { promises as fs } from 'fs';
 import path = require('path');
 
@@ -8,30 +7,22 @@ export default class Setup {
     public static destinationRoot = "test/destination_folder";
     public static md5FilePath = "test/md5.test.txt";
     public static gitFilePath = "test/git.test.txt";
-    public static get orgAlias2() {
-        const orgPromise = SfdxTasks.getDefaultOrgAlias();
-        let orgAlias = null;
-        orgPromise.then((alias) => {
-            orgAlias = alias;
-        }).catch((err) => {
-            throw err;
-        });
-        return orgAlias;
-    }
-
+    public static orgAlias = null;
+    /*
     public static get orgAlias(): Promise<String> {
         return (async () => {
            try {
-             const alias = await SfdxTasks.getDefaultOrgAlias();
-             if(!alias) {
-                 throw new Error('No orgAlias defined - skipping tests.');
-             }
-             return alias;
-           } catch(e) {
-             return JSON.stringify(e);  // fallback value
-           }
+                const alias = await SfdxTasks.getDefaultOrgAlias();
+                if(!alias) {
+                    throw new Error('No orgAlias defined - skipping tests.');
+                }
+                return alias;
+            } catch(e) {
+                return JSON.stringify(e);  // fallback value
+            }
         })();
     }
+    */
 
     public static async* createTestFiles(folder = Setup.sourceRoot, count = 5) {
 

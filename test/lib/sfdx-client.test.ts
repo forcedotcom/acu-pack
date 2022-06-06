@@ -18,7 +18,10 @@ enum ApiTestKind {
 const testData = new Map<ApiTestKind, any[]>();
 before('Init', async function () {
   this.timeout(0);
-  orgAlias = await Setup.orgAlias;
+  orgAlias = Setup.orgAlias;
+  if(!orgAlias) {
+    return;
+  }
   console.log('Getting Test Data....');
   sfdxClient = new SfdxClient(orgAlias);
   let dataErr: Error = null;

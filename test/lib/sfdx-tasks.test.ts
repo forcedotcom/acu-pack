@@ -1,6 +1,5 @@
 import { expect } from '@salesforce/command/lib/test';
 import { SfdxTasks } from '../../src/lib/sfdx-tasks';
-import Setup from './setup';
 
 describe('Sfdx Tasks Tests', () => {
   describe('getSourceTrackingStatus Tests', function () {
@@ -56,7 +55,7 @@ describe('Sfdx Tasks Tests', () => {
   describe('getDefaultOrgAlias Tests', function () {
     it('Can Get Default Org Alias',async function () {
       this.timeout(0);
-      const orgAlias = await Setup.orgAlias;
+      const orgAlias = await SfdxTasks.getDefaultOrgAlias();
       expect(orgAlias).to.not.be.null;
       expect(orgAlias.length).to.be.greaterThan(0);
     });
