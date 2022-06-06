@@ -174,7 +174,7 @@ export default class Dictionary extends CommandBase {
       // Are we including namespaces?
       const namespaces = this.flags.namespaces
         ? new Set<string>(this.flags.namespaces.split())
-        : new Set<string>();
+        : null;
 
       this.ux.log(`Gathering CustomObject names from Org: ${orgAlias}(${this.org.getOrgId()})`);
       const objectMap = await SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);

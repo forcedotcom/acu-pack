@@ -17,7 +17,7 @@ export default class Profile extends CommandBase {
     `$ sfdx acumen:source:profile -u myOrgAlias
     Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to detemrine deployment compatibility.`,
     `$ sfdx acumen:source:profile -m true -u myOrgAlias
-    Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to detemrine deployment compatibility.`];
+    Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to and updates the metadat files to ensuredeployment compatibility.`];
 
   protected static flagsConfig = {
     source: flags.string({
