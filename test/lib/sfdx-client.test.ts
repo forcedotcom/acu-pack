@@ -2,10 +2,9 @@ import { expect } from '@salesforce/command/lib/test';
 import { SfdxQuery } from '../../src/lib/sfdx-query';
 import { SfdxClient, RestAction, ApiKind } from '../../src/lib/sfdx-client';
 import Utils from '../../src/lib/utils';
-import Setup from '../lib/setup';
 const unknownId = '00000000001';
 
-let orgAlias = null;
+const orgAlias = 'mmalling@resilient-koala-5j8tt5.com';//Setup.orgAlias;
 let sfdxClient: SfdxClient;
 enum ApiTestKind {
   DEFAULT = 'Account',
@@ -18,7 +17,6 @@ enum ApiTestKind {
 const testData = new Map<ApiTestKind, any[]>();
 before('Init', async function () {
   this.timeout(0);
-  orgAlias = Setup.orgAlias;
   if(!orgAlias) {
     return;
   }
@@ -60,6 +58,7 @@ before('Init', async function () {
   }
   console.log('Got Test Data.');
 });
+
 describe('Rest Client Tests', () => {
   describe('do Tests', function () {
     this.timeout(0); // Times out due to blocking API init
@@ -71,6 +70,13 @@ describe('Rest Client Tests', () => {
         expect(result).to.not.be.undefined;
         expect(result.name).to.not.be.undefined;
       }
+    });
+    it('Can GET Max API', async function () {
+      if (!sfdxClient) {
+        this.skip();
+      }
+      const result = await sfdxClient.getMaxApiVersion();
+      expect(result).to.not.be.undefined;
     });
     it('Can GET Default Scehma', async function () {
       if (!sfdxClient) {

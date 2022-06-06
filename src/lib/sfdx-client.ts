@@ -47,7 +47,7 @@ export class SfdxClient {
     private headers = {};
     private orgAliasOrUsername: string;
     private orgInfo: SfdxOrgInfo;
-    private apiVersion: string = '50.0';
+    private apiVersion: string = null;
 
     constructor(orgAliasOrUsername: string) {
         if (!orgAliasOrUsername || orgAliasOrUsername.length === 0) {
@@ -196,6 +196,15 @@ export class SfdxClient {
         return result;
     }
 
+    public async getMaxApiVersion(): Promise<string> {
+        await this.initialize(false);
+        const result = await this.handleResponse(
+            RestAction.GET,
+            `${this.orgInfo.instanceUrl}/services/data`);
+
+        return result.body[result.body.length-1].version;
+    }
+
     private async doInternal(action: RestAction = RestAction.GET, metaDataType: string = null, record: any = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
         const uri = await this.getUri(metaDataType, null, apiKind);
         return await this.handleResponse(action, uri, record, validStatusCodes);
@@ -222,6 +231,9 @@ export class SfdxClient {
 
     private async getUri(metaDataType: string = null, id: string = null, apiKind: ApiKind = ApiKind.DEFAULT): Promise<string> {
         await this.initialize(false);
+        if(!this.apiVersion) {
+            this.apiVersion = await this.getMaxApiVersion();
+        }
         let uri = `${this.orgInfo.instanceUrl}/services/data/v${this.apiVersion}/`;
         switch (apiKind) {
             case ApiKind.TOOLING:
