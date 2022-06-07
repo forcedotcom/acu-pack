@@ -495,9 +495,12 @@ export class SfdxPermission {
         SfdxPermission.apexPage,
         SfdxPermission.customApplication,
         SfdxPermission.customObject,
+        SfdxPermission.customField,
         SfdxPermission.customTab,
         SfdxPermission.permissionSet,
-        SfdxPermission.profile
+        SfdxPermission.profile,
+        SfdxPermission.recordType
+
     ];
 
     public static getPermisionString(permissionSet: Named) {
