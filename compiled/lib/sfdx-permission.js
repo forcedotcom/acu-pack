@@ -452,8 +452,10 @@ SfdxPermission.defaultPermissionMetaTypes = [
     SfdxPermission.apexPage,
     SfdxPermission.customApplication,
     SfdxPermission.customObject,
+    SfdxPermission.customField,
     SfdxPermission.customTab,
     SfdxPermission.permissionSet,
-    SfdxPermission.profile
+    SfdxPermission.profile,
+    SfdxPermission.recordType
 ];
 //# sourceMappingURL=sfdx-permission.js.map

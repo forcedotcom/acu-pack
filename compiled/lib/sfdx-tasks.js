@@ -133,7 +133,7 @@ class SfdxTasks {
                     //  We are excluding namespaces OR
                     //  The list of allowed namespaces does not include the metdata namespace
                     // Continue.
-                    if (result.namespacePrefix && (!namespaces || !namespaces.has(result.namespacePrefix))) {
+                    if (result.namespacePrefix && namespaces && !namespaces.has(result.namespacePrefix)) {
                         continue;
                     }
                     members.push(result.fullName);

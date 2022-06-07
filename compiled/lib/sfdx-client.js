@@ -40,7 +40,7 @@ class SfdxClient {
     constructor(orgAliasOrUsername) {
         this.bent = require('bent');
         this.headers = {};
-        this.apiVersion = '50.0';
+        this.apiVersion = null;
         if (!orgAliasOrUsername || orgAliasOrUsername.length === 0) {
             throw new Error('orgAliasOrUsername is required');
         }
@@ -239,6 +239,11 @@ class SfdxClient {
         }
         return result;
     }
+    async getMaxApiVersion() {
+        await this.initialize(false);
+        const result = await this.handleResponse(RestAction.GET, `${this.orgInfo.instanceUrl}/services/data`);
+        return result.body[result.body.length - 1].version;
+    }
     async doInternal(action = RestAction.GET, metaDataType = null, record = null, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         const uri = await this.getUri(metaDataType, null, apiKind);
         return await this.handleResponse(action, uri, record, validStatusCodes);
@@ -264,6 +269,9 @@ class SfdxClient {
     }
     async getUri(metaDataType = null, id = null, apiKind = ApiKind.DEFAULT) {
         await this.initialize(false);
+        if (!this.apiVersion) {
+            this.apiVersion = await this.getMaxApiVersion();
+        }
         let uri = `${this.orgInfo.instanceUrl}/services/data/v${this.apiVersion}/`;
         switch (apiKind) {
             case ApiKind.TOOLING:

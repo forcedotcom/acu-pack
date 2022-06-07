@@ -158,7 +158,7 @@ class Dictionary extends command_base_1.CommandBase {
             // Are we including namespaces?
             const namespaces = this.flags.namespaces
                 ? new Set(this.flags.namespaces.split())
-                : new Set();
+                : null;
             this.ux.log(`Gathering CustomObject names from Org: ${orgAlias}(${this.org.getOrgId()})`);
             const objectMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);
             typeNames = new Set(objectMap.get('CustomObject'));
