@@ -202,7 +202,7 @@ export class SfdxClient {
             RestAction.GET,
             `${this.orgInfo.instanceUrl}/services/data`);
 
-        return result.body[result.body.length-1].version;
+        return result.body[result.body.length - 1].version;
     }
 
     private async doInternal(action: RestAction = RestAction.GET, metaDataType: string = null, record: any = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
@@ -231,7 +231,7 @@ export class SfdxClient {
 
     private async getUri(metaDataType: string = null, id: string = null, apiKind: ApiKind = ApiKind.DEFAULT): Promise<string> {
         await this.initialize(false);
-        if(!this.apiVersion) {
+        if (!this.apiVersion) {
             this.apiVersion = await this.getMaxApiVersion();
         }
         let uri = `${this.orgInfo.instanceUrl}/services/data/v${this.apiVersion}/`;
