@@ -1,5 +1,5 @@
 import { expect } from '@salesforce/command/lib/test';
-import { SfdxTasks} from '../../src/lib/sfdx-tasks';
+import { SfdxTasks } from '../../src/lib/sfdx-tasks';
 
 describe('Sfdx Tasks Tests', () => {
   describe('getSourceTrackingStatus Tests', function () {
@@ -50,6 +50,14 @@ describe('Sfdx Tasks Tests', () => {
       expect(deletes.get('CustomField')[0]).to.equal('Zip_Code__c.My_Date__c');
 
       expect(map.get('Bogus')).to.be.undefined;
+    });
+  });
+  describe('getDefaultOrgAlias Tests', function () {
+    it('Can Get Default Org Alias',async function () {
+      this.timeout(0);
+      const orgAlias = await SfdxTasks.getDefaultOrgAlias();
+      expect(orgAlias).to.not.be.null;
+      expect(orgAlias.length).to.be.greaterThan(0);
     });
   });
 });

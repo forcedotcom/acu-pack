@@ -1,7 +1,7 @@
 import path = require('path');
 import { SfdxCore } from './sfdx-core';
 
-export abstract class Named {
+export abstract class XmlPermission {
     protected static getValue(json: any): any {
         const value = json && json instanceof Array
             ? json[0]
@@ -10,12 +10,15 @@ export abstract class Named {
             ? value === 'true'
             : value;
     }
+    public abstract toXmlObj(): any;
+}
+
+export abstract class Named extends XmlPermission {
     public name: string;
 }
 
 export abstract class MetadataDetail extends Named {
     public label: string;
-    public abstract toXmlObj(): any;
 }
 
 export class ObjectDetail extends MetadataDetail {
@@ -183,6 +186,27 @@ export class PagePermission extends MetaDataPermission {
         return {
             apexPage: this.name,
             enabled: this.r
+        };
+    }
+}
+
+export class LayoutAssignment extends MetaDataPermission {
+    public static fromXml(json: any): MetaDataPermission {
+        if (!json) {
+            return null;
+        }
+
+        const permission = new LayoutAssignment();
+        permission.name = this.getValue(json.layout);
+        permission.recordType = this.getValue(json.recordType);
+        return permission;
+    }
+    public recordType: string;
+
+    public toXmlObj(): any {
+        return {
+            layout: this.name,
+            recordType: this.recordType
         };
     }
 }
@@ -405,6 +429,10 @@ export class PermissionSet extends Named {
             const userPermission = UserPermission.fromXml(usrPerm);
             permSet.userPermissions.set(userPermission.name, userPermission);
         }
+        for (const layoutAss of root.layoutAssignments || []) {
+            const layoutAssignment = LayoutAssignment.fromXml(layoutAss);
+            permSet.layoutAssignments.set(layoutAssignment.name, layoutAss);
+        }
         return permSet;
     }
 
@@ -417,6 +445,7 @@ export class PermissionSet extends Named {
     public tabVisibilities: Map<string, TabPermission>;
     public applicationVisibilities: Map<string, ApplicationPermission>;
     public objectPermissions: Map<string, ObjectPermission>;
+    public layoutAssignments: Map<string, LayoutAssignment>;
 
     constructor() {
         super();
@@ -428,6 +457,7 @@ export class PermissionSet extends Named {
         this.tabVisibilities = new Map<string, TabPermission>();
         this.applicationVisibilities = new Map<string, ApplicationPermission>();
         this.objectPermissions = new Map<string, ObjectPermission>();
+        this.layoutAssignments = new Map<string, LayoutAssignment>();
     }
 
     public toXmlObj(): any {
@@ -443,7 +473,8 @@ export class PermissionSet extends Named {
                 pageAccesses: [],
                 recordTypeVisibilities: [],
                 tabVisibilities: [],
-                userPermissions: []
+                userPermissions: [],
+                layoutAssignments: []
             }
         };
         for (const propertyName of Object.keys(xmlObj.Profile)) {
@@ -473,6 +504,8 @@ export class PermissionSet extends Named {
                 return this.recordTypeVisibilities;
             case SfdxPermission.customTab:
                 return this.tabVisibilities;
+             case SfdxPermission.layout:
+                 return this.layoutAssignments;
             default:
                 return null;
         }
@@ -489,15 +522,19 @@ export class SfdxPermission {
     public static permissionSet = 'PermissionSet';
     public static profile = 'Profile';
     public static recordType = 'RecordType';
+    public static layout = 'Layout';
 
     public static defaultPermissionMetaTypes = [
         SfdxPermission.apexClass,
         SfdxPermission.apexPage,
         SfdxPermission.customApplication,
         SfdxPermission.customObject,
+        SfdxPermission.customField,
         SfdxPermission.customTab,
         SfdxPermission.permissionSet,
-        SfdxPermission.profile
+        SfdxPermission.profile,
+        SfdxPermission.recordType,
+        SfdxPermission.layout
     ];
 
     public static getPermisionString(permissionSet: Named) {
@@ -513,6 +550,7 @@ export class SfdxPermission {
             result += (permissionSet as DefaultablePermission).toString();
         } else if (permissionSet instanceof UserPermission ||
             permissionSet instanceof ClassPermission ||
+            permissionSet instanceof LayoutAssignment ||
             permissionSet instanceof PagePermission) {
             result += (permissionSet as MetaDataPermission).toString();
         }

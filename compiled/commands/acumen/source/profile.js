@@ -4,97 +4,179 @@ const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
-const path = require("path");
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 class Profile extends command_base_1.CommandBase {
     async run() {
-        var e_1, _a;
+        var e_1, _a, e_2, _b;
         const sourceFolders = !this.flags.source
             ? Profile.defaultPermissionsGlobs
             : this.flags.source.split(',');
-        this.ux.log('Gathering securable metadata information from Org:');
-        this.ux.log(`${sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes}`);
-        const metaDataMap = await sfdx_tasks_1.SfdxTasks.listMetadatas(this.orgAlias, sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes);
         this.permissions = new Map();
         let gotStandardTabs = false;
+        const sourceFilePaths = new Set();
+        const custObjs = [];
         for (const sourceFolder of sourceFolders) {
             if (!sourceFolder) {
                 continue;
             }
             this.ux.log(`Reading metadata in: ${sourceFolder}`);
             try {
-                for (var _b = tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim())), _c; _c = await _b.next(), !_c.done;) {
-                    const filePath = _c.value;
+                for (var _c = (e_1 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim()))), _d; _d = await _c.next(), !_d.done;) {
+                    const filePath = _d.value;
                     this.ux.log(`\tProcessing: ${filePath}`);
                     const json = await utils_1.default.readObjectFromXmlFile(filePath);
                     if (!json.PermissionSet && !json.Profile) {
                         this.ux.log(`\tUnable to process file: ${filePath}`);
                         continue;
                     }
+                    // Read all the CustomObject typenames PermissionSet from and add to the customObjects Set
                     const permSet = sfdx_permission_1.PermissionSet.fromXml(filePath, json);
-                    const newPermSet = new sfdx_permission_1.PermissionSet();
-                    for (const [metadataName, members] of metaDataMap) {
-                        const permSetErrors = [];
-                        const existingNames = [];
-                        const standardTabs = [];
-                        const permCollection = permSet.getPermissionCollection(metadataName);
-                        const newPermCollection = newPermSet.getPermissionCollection(metadataName);
-                        switch (metadataName) {
-                            case sfdx_permission_1.SfdxPermission.customTab:
-                                if (permSet.tabVisibilities) {
-                                    for (const [tabName, tabPerm] of permCollection) {
-                                        if (tabPerm['isStandard']) {
-                                            // Standard Tabs are not exposed via the Metadata API
-                                            standardTabs.push(tabName);
-                                            gotStandardTabs = true;
-                                            continue;
-                                        }
-                                        existingNames.push(tabName);
-                                    }
-                                }
-                                break;
-                            default:
-                                if (permCollection) {
-                                    existingNames.push(...permCollection.keys());
-                                }
-                        }
-                        const typeNames = new Set(members);
-                        for (const existingName of existingNames) {
-                            if (!typeNames.has(existingName)) {
-                                permSetErrors.push(`${existingName} NOT found.`);
-                            }
-                            else {
-                                newPermCollection.set(existingName, permCollection.get(existingName));
-                            }
-                        }
-                        if (standardTabs.length > 0) {
-                            for (const standardTab of standardTabs) {
-                                permSetErrors.push(`\t${standardTab} (*)`);
-                            }
-                        }
-                        if (permSetErrors.length > 0) {
-                            this.ux.log(`\t\t${metadataName}:`);
-                            for (const error of permSetErrors) {
-                                this.ux.log(`\t\t\t${error}`);
-                            }
-                        }
-                    }
-                    if (this.flags.modify) {
-                        const outFilePath = this.flags.output
-                            ? path.join(this.flags.output, filePath)
-                            : filePath;
-                        this.ux.log(`\tUpdating: ${outFilePath}`);
-                        await utils_1.default.writeObjectToXmlFile(outFilePath, newPermSet.toXmlObj());
-                    }
+                    custObjs.push(...Array.from(permSet.getPermissionCollection(sfdx_permission_1.SfdxPermission.customObject).keys()));
+                    // Add to collection for update later
+                    sourceFilePaths.add(filePath);
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
                 }
                 finally { if (e_1) throw e_1.error; }
+            }
+        }
+        // Debug
+        const customObjects = new Set(utils_1.default.sortArray(custObjs));
+        this.ux.log(`CustomObjects: ${customObjects}`);
+        // Get Objects and fields first
+        const notFoundInOrg = new Set();
+        let custFields = [];
+        let counter = 0;
+        for (const customObject of customObjects) {
+            this.ux.log(`Gathering (${++counter}/${customObjects.size}) ${customObject} schema...`);
+            try {
+                const objMeta = await sfdx_tasks_1.SfdxTasks.describeObject(this.orgAlias, customObject);
+                for (const field of objMeta.fields) {
+                    custFields.push(`${customObject}.${field.name}`);
+                }
+            }
+            catch (ex) {
+                this.ux.log(`Error Gathering ${customObject} schema: ${ex.message}`);
+                notFoundInOrg.add(customObject);
+            }
+        }
+        custFields = utils_1.default.sortArray(custFields);
+        const customFields = new Set(custFields);
+        // Debug
+        this.ux.log(`CustomFields: ${custFields}`);
+        // Now get rest - and skip Objects & Fields
+        const orgMetaDataMap = new Map();
+        orgMetaDataMap.set(sfdx_permission_1.SfdxPermission.customObject, customObjects);
+        orgMetaDataMap.set(sfdx_permission_1.SfdxPermission.customField, customFields);
+        this.ux.log(`${sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes}`);
+        for (const permissionMetaDataType of sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes) {
+            switch (permissionMetaDataType) {
+                case sfdx_permission_1.SfdxPermission.customObject:
+                case sfdx_permission_1.SfdxPermission.customField:
+                    continue;
+                default:
+                    const nameSet = new Set();
+                    try {
+                        for (var _e = (e_2 = void 0, tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.listMetadata(this.orgAlias, permissionMetaDataType))), _f; _f = await _e.next(), !_f.done;) {
+                            const metaData = _f.value;
+                            if (!metaData.fullName) {
+                                this.ux.log(`Error No fullName field on type ${permissionMetaDataType}`);
+                                continue;
+                            }
+                            nameSet.add(metaData.fullName);
+                        }
+                    }
+                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                    finally {
+                        try {
+                            if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
+                        }
+                        finally { if (e_2) throw e_2.error; }
+                    }
+                    orgMetaDataMap.set(permissionMetaDataType, nameSet);
+            }
+        }
+        // Now run back through Permission files and determine if anything is missing in Org
+        counter = 0;
+        for (const sourceFilePath of sourceFilePaths) {
+            const permSetErrors = [];
+            const permSetStandardTabs = [];
+            this.ux.log(`Verifying (${++counter}/${sourceFilePaths.size}) ${sourceFilePath} schema...`);
+            const json = await utils_1.default.readObjectFromXmlFile(sourceFilePath);
+            const permSet = sfdx_permission_1.PermissionSet.fromXml(sourceFilePath, json);
+            for (const metadataName of sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes) {
+                const permCollection = permSet.getPermissionCollection(metadataName);
+                if (!permCollection) {
+                    switch (metadataName) {
+                        case sfdx_permission_1.SfdxPermission.profile:
+                        case sfdx_permission_1.SfdxPermission.permissionSet:
+                            // These items are not found in the Profile or PermissionSet XML
+                            continue;
+                        default:
+                            permSetErrors.push(`WARNING: No Permission entries found for ${metadataName}.`);
+                            break;
+                    }
+                    continue;
+                }
+                let permSetExistingNames = [];
+                switch (metadataName) {
+                    case sfdx_permission_1.SfdxPermission.customTab:
+                        if (permSet.tabVisibilities) {
+                            for (const [tabName, tabPerm] of permCollection) {
+                                if (tabPerm['isStandard']) {
+                                    // Standard Tabs are not exposed via the Metadata API
+                                    permSetStandardTabs.push(tabName);
+                                    gotStandardTabs = true;
+                                    continue;
+                                }
+                                permSetExistingNames.push(tabName);
+                            }
+                        }
+                        break;
+                    default:
+                        permSetExistingNames = Array.from(permCollection.keys());
+                        break;
+                }
+                for (const permSetExistingName of permSetExistingNames) {
+                    const orgTypeNames = orgMetaDataMap.get(metadataName);
+                    if (!orgTypeNames.has(permSetExistingName)) {
+                        if (!notFoundInOrg.has(permSetExistingName.split('.')[0])) {
+                            permSetErrors.push(`${permSetExistingName} NOT visible/found in Org.`);
+                        }
+                    }
+                }
+            }
+            if (permSetStandardTabs.length > 0) {
+                for (const standardTab of permSetStandardTabs) {
+                    permSetErrors.push(`\t${standardTab} (*)`);
+                }
+            }
+            if (permSetErrors.length > 0) {
+                this.ux.log('Warnings & Errors:');
+                for (const error of permSetErrors) {
+                    this.ux.log(`\t\t${error}`);
+                }
+            }
+            if (notFoundInOrg.size > 0) {
+                this.ux.log('Objects Not Visible/Found:');
+                for (const notFound of notFoundInOrg) {
+                    this.ux.log(`\t\t${notFound}`);
+                }
+            }
+            if (this.flags.modify) {
+                /*
+                const outFilePath = this.flags.output
+                  ? path.join(this.flags.output, filePath)
+                  : filePath;
+        
+                this.ux.log(`\tUpdating: ${outFilePath}`);
+                await Utils.writeObjectToXmlFile(outFilePath, newPermSet.toXmlObj());
+                */
             }
         }
         if (gotStandardTabs) {
@@ -117,7 +199,7 @@ Profile.examples = [
     `$ sfdx acumen:source:profile -u myOrgAlias
     Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to detemrine deployment compatibility.`,
     `$ sfdx acumen:source:profile -m true -u myOrgAlias
-    Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to detemrine deployment compatibility.`
+    Compares the profile metadata files in ${Profile.defaultPermissionsGlobs.join(',')} to the specified Org to and updates the metadat files to ensuredeployment compatibility.`
 ];
 Profile.flagsConfig = {
     source: command_1.flags.string({

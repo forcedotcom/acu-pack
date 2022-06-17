@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeltaProvider = exports.DeltaOptions = exports.Delta = void 0;
 const tslib_1 = require("tslib");
 const utils_1 = require("./utils");
 const fs_1 = require("fs");
@@ -105,7 +106,7 @@ class DeltaProvider {
                     for (var _h = tslib_1.__asyncValues(utils_1.default.readFileLines(ignoreFile)), _j; _j = await _h.next(), !_j.done;) {
                         const line = _j.value;
                         try {
-                            for (var _k = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _l; _l = await _k.next(), !_l.done;) {
+                            for (var _k = (e_2 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(line))), _l; _l = await _k.next(), !_l.done;) {
                                 const filePath = _l.value;
                                 ignoreSet.add(path.normalize(filePath));
                                 await this.logMessage(`\t${filePath}`);
@@ -149,7 +150,7 @@ class DeltaProvider {
                         for (var _m = tslib_1.__asyncValues(utils_1.default.readFileLines(forceFile)), _o; _o = await _m.next(), !_o.done;) {
                             const line = _o.value;
                             try {
-                                for (var _p = tslib_1.__asyncValues(utils_1.default.getFiles(line)), _q; _q = await _p.next(), !_q.done;) {
+                                for (var _p = (e_4 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(line))), _q; _q = await _p.next(), !_q.done;) {
                                     const filePath = _q.value;
                                     if (this.deltas.delete(filePath)) {
                                         await this.logMessage(`Purged: ${filePath}`, true);
@@ -207,7 +208,7 @@ class DeltaProvider {
                             const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
                             let foundMetadataFile = false;
                             try {
-                                for (var _t = tslib_1.__asyncValues(utils_1.default.getFiles(dirName, false)), _u; _u = await _t.next(), !_u.done;) {
+                                for (var _t = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(dirName, false))), _u; _u = await _t.next(), !_u.done;) {
                                     const filePath = _u.value;
                                     // have we already processed this file?
                                     if (copiedSet.has(filePath)) {
@@ -247,7 +248,7 @@ class DeltaProvider {
                                 const parentDirName = path.dirname(dirName);
                                 const deltaParentBaseName = `${path.basename(dirName)}.`;
                                 try {
-                                    for (var _v = tslib_1.__asyncValues(utils_1.default.getFiles(parentDirName, false)), _w; _w = await _v.next(), !_w.done;) {
+                                    for (var _v = (e_7 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(parentDirName, false))), _w; _w = await _v.next(), !_w.done;) {
                                         const parentFilePath = _w.value;
                                         // have we already processed this file?
                                         if (copiedSet.has(parentFilePath)) {

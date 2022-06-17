@@ -1,10 +1,12 @@
-export declare abstract class Named {
+export declare abstract class XmlPermission {
     protected static getValue(json: any): any;
+    abstract toXmlObj(): any;
+}
+export declare abstract class Named extends XmlPermission {
     name: string;
 }
 export declare abstract class MetadataDetail extends Named {
     label: string;
-    abstract toXmlObj(): any;
 }
 export declare class ObjectDetail extends MetadataDetail {
     static fromXml(filePath: string, json: any): ObjectDetail;
@@ -41,6 +43,11 @@ export declare class UserPermission extends MetaDataPermission {
 }
 export declare class PagePermission extends MetaDataPermission {
     static fromXml(json: any): PagePermission;
+    toXmlObj(): any;
+}
+export declare class LayoutAssignment extends MetaDataPermission {
+    static fromXml(json: any): MetaDataPermission;
+    recordType: string;
     toXmlObj(): any;
 }
 export declare abstract class DefaultablePermission extends MetaDataPermission {
@@ -85,6 +92,7 @@ export declare class PermissionSet extends Named {
     tabVisibilities: Map<string, TabPermission>;
     applicationVisibilities: Map<string, ApplicationPermission>;
     objectPermissions: Map<string, ObjectPermission>;
+    layoutAssignments: Map<string, LayoutAssignment>;
     constructor();
     toXmlObj(): any;
     getPermissionCollection(metadataName: string): Map<string, MetaDataPermission>;
@@ -99,6 +107,7 @@ export declare class SfdxPermission {
     static permissionSet: string;
     static profile: string;
     static recordType: string;
+    static layout: string;
     static defaultPermissionMetaTypes: string[];
     static getPermisionString(permissionSet: Named): string;
 }

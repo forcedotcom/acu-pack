@@ -41,6 +41,7 @@ export declare class SfdxClient {
     updateByRecords(metaDataType: string, records: any[], recordIdField?: string, apiKind?: ApiKind): AsyncGenerator<RestResult, void, void>;
     do(action: RestAction, metaDataType: string, records?: any[], recordIdField?: string, apiKind?: ApiKind, validStatusCodes?: number[]): AsyncGenerator<RestResult, void, void>;
     doComposite(action: RestAction, record: any, validStatusCodes?: number[]): Promise<RestResult>;
+    getMaxApiVersion(): Promise<string>;
     private doInternal;
     private doInternalByIds;
     private doInternalById;

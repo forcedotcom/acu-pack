@@ -124,7 +124,7 @@ export class SfdxTasks {
                     //  We are excluding namespaces OR
                     //  The list of allowed namespaces does not include the metdata namespace
                     // Continue.
-                    if (result.namespacePrefix && (!namespaces || !namespaces.has(result.namespacePrefix))) {
+                    if (result.namespacePrefix && namespaces && !namespaces.has(result.namespacePrefix)) {
                         continue;
                     }
                     members.push(result.fullName);
@@ -358,6 +358,13 @@ export class SfdxTasks {
             */
         }
         return statuses;
+    }
+
+    public static async getDefaultOrgAlias(): Promise<string> {
+        const result = await SfdxCore.command('sfdx config:get defaultusername --json');
+        return result[0] != null
+            ? result[0].value
+            : null;
     }
 
     protected static _folderPaths: Map<string, string> = null;

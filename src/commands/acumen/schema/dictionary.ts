@@ -8,6 +8,7 @@ import Utils from '../../../lib/utils';
 import SchemaUtils from '../../../lib/schema-utils';
 import SchemaOptions from '../../../lib/schema-options';
 import path = require('path');
+import { SfdxQuery } from '../../../lib/sfdx-query';
 
 export default class Dictionary extends CommandBase {
   public static description = CommandBase.messages.getMessage('schema.dictionary.commandDescription');
@@ -46,6 +47,7 @@ export default class Dictionary extends CommandBase {
       const schemaTmpFile = `schema-${this.orgAlias}.tmp`;
 
       const sortedTypeNames = await this.getSortedTypeNames(this.orgAlias);
+      // sortedTypeNames = ['Account', 'Case', 'Lead'];
 
       // Create for writing - truncates if exists
       const fileStream = createWriteStream(schemaTmpFile, { flags: 'w' });
@@ -66,11 +68,44 @@ export default class Dictionary extends CommandBase {
             if (!collection) {
               continue;
             }
+
+            let nameFieldIndex = -1;
+            // Query for Entity & Field Definition
+            const entityDefinitionFields = this.options.getEntityDefinitionFields(name);
+            const outputDefs = this.options.outputDefMap.get(name);
+
+            if (entityDefinitionFields.length > 0) {
+              for (let index = 0; index < outputDefs.length; index++) {
+                const outputDef = outputDefs[index];
+                if (outputDef.includes(`|${SchemaUtils.CONTEXT_FIELD_NAME}`)) {
+                  nameFieldIndex = index;
+                  break;
+                }
+              }
+              if (nameFieldIndex === -1) {
+                throw new Error('No Name field found');
+              }
+            }
+
+            const fieldDefinitionMap = await this.entityDefinitionValues(metaDataType, entityDefinitionFields);
             const dynamicCode = this.options.getDynamicCode(name);
             for await (const row of SchemaUtils.getDynamicSchemaData(schema, dynamicCode, collection)) {
-              if (row.length > 0) {
-                fileStream.write(`${JSON.stringify(row)}\r\n`);
+              if (row.length === 0) {
+                continue;
               }
+              const nameFieldValue = row[nameFieldIndex];
+              const fieldDefinitionRecord = fieldDefinitionMap.get(nameFieldValue);
+              if (fieldDefinitionRecord != null) {
+                for (let index = 0; index < outputDefs.length; index++) {
+                  const outputDef = outputDefs[index];
+                  for (const entityDefinitionField of entityDefinitionFields) {
+                    if (outputDef.includes(`|${SchemaUtils.ENTITY_DEFINITION}.${entityDefinitionField}`)) {
+                      row[index] = fieldDefinitionRecord[entityDefinitionField];
+                    }
+                  }
+                }
+              }
+              fileStream.write(`${JSON.stringify(row)}\r\n`);
             }
           }
           schemas.add(schema.name);
@@ -78,6 +113,7 @@ export default class Dictionary extends CommandBase {
           this.ux.log(`FAILED: ${err.message}.`);
         }
       }
+
       fileStream.end();
 
       try {
@@ -115,6 +151,10 @@ export default class Dictionary extends CommandBase {
     } catch (err) {
       throw err;
     }
+    // Write options JSON incase there have been structure changes since it was last saved.
+    if (this.flags.options) {
+      await this.options.save(this.flags.options);
+    }
   }
 
   private getColumnRow(outputDefs: string[]): string[] {
@@ -134,7 +174,7 @@ export default class Dictionary extends CommandBase {
       // Are we including namespaces?
       const namespaces = this.flags.namespaces
         ? new Set<string>(this.flags.namespaces.split())
-        : new Set<string>();
+        : null;
 
       this.ux.log(`Gathering CustomObject names from Org: ${orgAlias}(${this.org.getOrgId()})`);
       const objectMap = await SfdxTasks.listMetadatas(orgAlias, ['CustomObject'], namespaces);
@@ -145,5 +185,24 @@ export default class Dictionary extends CommandBase {
       this.options.excludeCustomObjectNames.forEach(item => typeNames.delete(item));
     }
     return Utils.sortArray(Array.from(typeNames));
+  }
+
+  private async entityDefinitionValues(sObjectName: string, fieldNames: string[]): Promise<Map<string, any>> {
+    const valueMap = new Map<string, any>();
+    if (!sObjectName || !fieldNames || fieldNames.length === 0) {
+      return valueMap;
+    }
+
+    let query = `SELECT QualifiedApiName,DurableID FROM EntityDefinition WHERE QualifiedApiName='${sObjectName}'`;
+    let records = await SfdxQuery.doSoqlQuery(this.orgAlias, query);
+    const durableId = records[0].DurableId;
+
+    query = `SELECT QualifiedApiName,${fieldNames.join(',')} FROM FieldDefinition where EntityDefinition.DurableID in ('${durableId}')`;
+    records = await SfdxQuery.doSoqlQuery(this.orgAlias, query);
+
+    for (const record of records) {
+      valueMap.set(record.QualifiedApiName, record);
+    }
+    return valueMap;
   }
 }
