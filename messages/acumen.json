@@ -2,17 +2,17 @@
   "namespacesFlagDescription": "A comma separated list of namespaces to include when retrieveing metadata. By default namespaces are excluded.",
   "package": {
     "merge": {
-      "commandDescription": "Merges one SFDX package file into another.",
+      "commandDescription": "\r\nMerges one SFDX package file into another.",
       "sourceFlagDescription": "The source SFDX package. This package wins all conflict battles!",
       "destinationFlagDescription": "The destination SFDX package which contains the merge results. It will be created if it does not exist."
     },
     "permissions": {
-      "commandDescription": "Retrieve all metadata related to Profile security/access permissions.",
+      "commandDescription": "\r\nRetrieve all metadata related to Profile security/access permissions.",
       "packageFlagDescription": "The path to the package file to be generated. By default the path is '%s'",
       "metadataFlagDescription": "A comma separated list of the metadata types to include. This overrides the default list: %s."
     },
     "build": {
-      "commandDescription": "Builds a standard SFDX source format package file from the specified org's existing metadata.",
+      "commandDescription": "\r\nBuilds a standard SFDX source format package file from the specified org's existing metadata.",
       "packageFlagDescription": "The path to the package file to be generated. By default the path is '%s'",
       "optionsFlagDescription": "A file containing the package build options. Specifying this option will create the file if it doesn't exist already.",
       "metadataFlagDescription": "A comma separated list of metadata to include. This list overrides any exclude list in the options file.",
@@ -22,20 +22,20 @@
   },
   "schema": {
     "dictionary": {
-      "commandDescription": "Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.",
+      "commandDescription": "\r\nGenerates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.",
       "reportFlagDescription": "The path for the data dictionary report XLSX file. This overrides the default: %s.",
       "optionsFlagDescription": "A file containing the Data Dictionary options. Specifying this option will create the file if it doesn't exist already."
     },
     "profile": {
       "retrieve": {
-        "commandDescription": "Retrives Profiles from Org without need to generate package.xml" ,
+        "commandDescription": "\r\nRetrives Profiles from Org without need to generate package.xml" ,
         "names": "Comma seperated profile names with out any extension.Example \"Admin,Agent\". 5 Profiles can be retrieved at a time"
       }
     }
   },
   "source": {
     "permissions": {
-      "commandDescription": "Generate a security report based on configured permissions.\r\nThe accuracy of this report is dependant on the configuration in the local project.\r\nIt is suggested that a permissions package be created using the acumen:package:permissions\r\ncommand and that package is retrieved from the org prior to executing this command.",
+      "commandDescription": "\r\nGenerate a security report based on configured permissions.\r\nThe accuracy of this report is dependant on the configuration in the local project.\r\nIt is suggested that a permissions package be created using the acumen:package:permissions\r\ncommand and that package is retrieved from the org prior to executing this command.",
       "sourceFlagDescription": "OPTIONAL: The source folder to start the meta scan from. Overrides the project's default package directory folder.",
       "metadataFoldersFlagDescription": "OPTIONAL: A comma separated list of folders to include. This list overrides the defaults: %s.",
       "reportFlagDescription": "OPTIONAL: The path for the permissions report XLSX file. This overrides the default: %s."
@@ -49,20 +49,20 @@
       "checkFlagDescription": "Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination option is provided.",
       "copyFullDirFlagDescription": "Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The default list is: %s",
       "git": {
-        "commandDescription": "Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt",
+        "commandDescription": "\r\nUses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt",
         "gitFlagDescription": "The output of a git-diff command (https://git-scm.com/docs/git-diff)"
       },
       "md5": {
-        "commandDescription": "Uses an MD5 hash file to detect deltas.",
+        "commandDescription": "\r\nUses an MD5 hash file to detect deltas.",
         "md5FlagDescription": "The MD5 hash list file to use"
       }
     },
     "xpath": {
-      "commandDescription": "Validates XML against xpath selects and known bad values.",
+      "commandDescription": "\r\nValidates XML against xpath selects and known bad values.",
       "optionsFlagDescription": "A file containing the XPathOptions json. Specifying this option will create the file if it doesn't exist already."
     },
     "profile": {
-      "commandDescription": "Determines the compatibility for one or more profiles metadat data files with a specified Org",
+      "commandDescription": "\r\nDetermines the compatibility for one or more profiles metadata files with a specified Org. WARNING: This command should be executed by a user with full read permissions to all objects & fields.",
       "profilePathFlagDescription": "OPTIONAL: Comma separated path to the Profile and/or PermissionsSet  metadata to evaluate. This overrides the defaults: %s.",
       "outputFoldersFlagDescription": "OPTIONAL: The output folder path for the modified profile metadata files. The existing files are overwritten if not specififed.",
       "modifyFlagDescription": "OPTIONAL: Setting this flag to true will updated the existing metadat to remove the incompatibile entries."
@@ -71,22 +71,22 @@
   "apex": {
     "coverage": {
       "clear": {
-        "commandDescription": "Clears the Apex Code Coverage data from the specified Org.",
+        "commandDescription": "\r\nClears the Apex Code Coverage data from the specified Org.",
         "metadataFlagDescription": "An optional comma separated list of metadata to include. The defaults are: (%s.)",
         "classortriggernamesFlagDescription": "An optional comma seperated list of class or trigger names to include"
       },
       "execute": {
-        "commandDescription": "Executes Apex tests and includes Code Coverage metrics.",
+        "commandDescription": "\r\nExecutes Apex tests and includes Code Coverage metrics.",
         "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait. The default is %s"
       },
       "report": {
-        "commandDescription": "Pull Code Coverage metrics and generates a report.",
+        "commandDescription": "\r\nPull Code Coverage metrics and generates a report.",
         "waitDescription": "The optional wait time (minutes) for test execution to complete. A value of -1 means infinite wait. A value of 0 means no wait. The default is %s",
         "reportFlagDescription": "The optional path for the generated report."
       }
     },
     "scaffold": {
-      "commandDescription": "Generates Apex test classes (and cls-meta files) for specified CustomObjects.",
+      "commandDescription": "\r\nGenerates Apex test classes (and cls-meta files) for specified CustomObjects.",
       "optionsFlagDescription": "A file containing the Apex Test scaffold options. Specifying this option will create the file if it doesn't exist already.",
       "sObjectsFlagDescription": "A comma separated list of SObject types generate Apex Test classes for. This list overrides any SObjects list in the options file."
     }
@@ -94,21 +94,21 @@
   "admin": {
     "user": {
       "unmask": {
-        "commandDescription": "Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.",
+        "commandDescription": "\r\nRemoves the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.",
         "userListFlagDescription": "A comma delimited list of usernames for the User objects to update.",
         "userFileFlagDescription": "A file which contains a list of usernames for the User objects to update."
       }
     },
     "workspace": {
       "delete": {
-        "commandDescription": "Deletes the Developer Console IDEWorkspace object for the specified user(s).",
+        "commandDescription": "\r\nDeletes the Developer Console IDEWorkspace object for the specified user(s).",
         "userListFlagDescription": "A comma delimited list of usernames to reset workspaces for."
       }
     }
   },
   "api": {
     "get": {
-      "commandDescription": "Performs the GET REST action against the specified URL/URI.",
+      "commandDescription": "\r\nPerforms the GET REST action against the specified URL/URI.",
       "metadataFlagDescription": "The metadata to execute the API against. The dot operator can be used to retrieve a specific field (i.e. ContentVersion.VersionData)",
       "idsFlagDescription": "A comma delimited list of Ids to get. A file will be written for each Id provided",
       "toolingAPIFlagDescription": "Set to true to specify the Tooling API.",

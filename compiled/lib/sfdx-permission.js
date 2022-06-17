@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SfdxPermission = exports.PermissionSet = exports.ObjectPermission = exports.TabPermission = exports.ApplicationPermission = exports.RecordTypePermission = exports.DefaultablePermission = exports.PagePermission = exports.UserPermission = exports.ClassPermission = exports.FieldPermission = exports.MetaDataPermission = exports.FieldDetail = exports.ObjectDetail = exports.MetadataDetail = exports.Named = void 0;
+exports.SfdxPermission = exports.PermissionSet = exports.ObjectPermission = exports.TabPermission = exports.ApplicationPermission = exports.RecordTypePermission = exports.DefaultablePermission = exports.LayoutAssignment = exports.PagePermission = exports.UserPermission = exports.ClassPermission = exports.FieldPermission = exports.MetaDataPermission = exports.FieldDetail = exports.ObjectDetail = exports.MetadataDetail = exports.Named = exports.XmlPermission = void 0;
 const path = require("path");
 const sfdx_core_1 = require("./sfdx-core");
-class Named {
+class XmlPermission {
     static getValue(json) {
         const value = json && json instanceof Array
             ? json[0]
@@ -12,6 +12,9 @@ class Named {
             ? value === 'true'
             : value;
     }
+}
+exports.XmlPermission = XmlPermission;
+class Named extends XmlPermission {
 }
 exports.Named = Named;
 class MetadataDetail extends Named {
@@ -159,6 +162,24 @@ class PagePermission extends MetaDataPermission {
     }
 }
 exports.PagePermission = PagePermission;
+class LayoutAssignment extends MetaDataPermission {
+    static fromXml(json) {
+        if (!json) {
+            return null;
+        }
+        const permission = new LayoutAssignment();
+        permission.name = this.getValue(json.layout);
+        permission.recordType = this.getValue(json.recordType);
+        return permission;
+    }
+    toXmlObj() {
+        return {
+            layout: this.name,
+            recordType: this.recordType
+        };
+    }
+}
+exports.LayoutAssignment = LayoutAssignment;
 class DefaultablePermission extends MetaDataPermission {
     toString() {
         let result = super.toString();
@@ -320,6 +341,7 @@ class PermissionSet extends Named {
         this.tabVisibilities = new Map();
         this.applicationVisibilities = new Map();
         this.objectPermissions = new Map();
+        this.layoutAssignments = new Map();
     }
     static fromXml(filePath, json) {
         if (!filePath || !json) {
@@ -361,6 +383,10 @@ class PermissionSet extends Named {
             const userPermission = UserPermission.fromXml(usrPerm);
             permSet.userPermissions.set(userPermission.name, userPermission);
         }
+        for (const layoutAss of root.layoutAssignments || []) {
+            const layoutAssignment = LayoutAssignment.fromXml(layoutAss);
+            permSet.layoutAssignments.set(layoutAssignment.name, layoutAss);
+        }
         return permSet;
     }
     toXmlObj() {
@@ -376,7 +402,8 @@ class PermissionSet extends Named {
                 pageAccesses: [],
                 recordTypeVisibilities: [],
                 tabVisibilities: [],
-                userPermissions: []
+                userPermissions: [],
+                layoutAssignments: []
             }
         };
         for (const propertyName of Object.keys(xmlObj.Profile)) {
@@ -405,6 +432,8 @@ class PermissionSet extends Named {
                 return this.recordTypeVisibilities;
             case SfdxPermission.customTab:
                 return this.tabVisibilities;
+            case SfdxPermission.layout:
+                return this.layoutAssignments;
             default:
                 return null;
         }
@@ -429,6 +458,7 @@ class SfdxPermission {
         }
         else if (permissionSet instanceof UserPermission ||
             permissionSet instanceof ClassPermission ||
+            permissionSet instanceof LayoutAssignment ||
             permissionSet instanceof PagePermission) {
             result += permissionSet.toString();
         }
@@ -447,6 +477,7 @@ SfdxPermission.customTab = 'CustomTab';
 SfdxPermission.permissionSet = 'PermissionSet';
 SfdxPermission.profile = 'Profile';
 SfdxPermission.recordType = 'RecordType';
+SfdxPermission.layout = 'Layout';
 SfdxPermission.defaultPermissionMetaTypes = [
     SfdxPermission.apexClass,
     SfdxPermission.apexPage,
@@ -456,6 +487,7 @@ SfdxPermission.defaultPermissionMetaTypes = [
     SfdxPermission.customTab,
     SfdxPermission.permissionSet,
     SfdxPermission.profile,
-    SfdxPermission.recordType
+    SfdxPermission.recordType,
+    SfdxPermission.layout
 ];
 //# sourceMappingURL=sfdx-permission.js.map

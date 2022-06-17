@@ -1,7 +1,6 @@
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
 import Utils from '../../../lib/utils';
-import path = require('path');
 import { SfdxPermission, PermissionSet } from '../../../lib/sfdx-permission';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
 

@@ -143,6 +143,10 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is 
+  refreshed.
+
 EXAMPLES
   $ sfdx admin:user:unmask -u myOrgAlias -l 'user1@sf.com, user2@sf.com, user3@sf.com'
        Removes the .invalid extension from the email address associated to the list of specified users in the specified 
@@ -177,6 +181,9 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+DESCRIPTION
+  Deletes the Developer Console IDEWorkspace object for the specified user(s).
 
 EXAMPLES
   $ sfdx admin:workspace:delete -u myOrgAlias
@@ -215,6 +222,9 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Clears the Apex Code Coverage data from the specified Org.
+
 EXAMPLE
   $ sfdx acumen:apex:coverage:clear -u myOrgAlias
        Deletes the existing instances of ApexCodeCoverageAggregate from the specific Org.
@@ -248,6 +258,9 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+DESCRIPTION
+  Executes Apex tests and includes Code Coverage metrics.
 
 EXAMPLES
   $ sfdx acumen:apex:coverage:execute -u myOrgAlias
@@ -293,6 +306,9 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Pull Code Coverage metrics and generates a report.
+
 EXAMPLE
   $ sfdx acumen:apex:coverage:report -u myOrgAlias -r myCodeCoverageReport.xlsx
        Pulls the Code Coverage metrics from myOrgAlias and generates a CodeCoverageReport-myOrgAlias.xlsx report.
@@ -330,6 +346,9 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+DESCRIPTION
+  Generates Apex test classes (and cls-meta files) for specified CustomObjects.
 
 EXAMPLES
   $ sfdx acumen:apex:scaffold -u myOrgAlias -s Account,MyObject__c'
@@ -378,6 +397,9 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+DESCRIPTION
+  Performs the GET REST action against the specified URL/URI.
 
 EXAMPLES
   $ sfdx acumen:api:get -u myOrgAlias -m Account -i 068r0000003slVtAAI
@@ -443,6 +465,9 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Builds a standard SFDX source format package file from the specified org's existing metadata.
+
 EXAMPLE
   $ sfdx acumen:package:build -o options/package-options.json -x manifest/package-acu.xml -u myOrgAlias
        Builds a SFDX package file (./manifest/package.xml) which contains all the metadata from the myOrgAlias.
@@ -475,6 +500,9 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Merges one SFDX package file into another.
+
 EXAMPLE
   $ sfdx acumen:package:merge -s manifest/package.xml -d manifest/package-sprint17.xml
        Merges package.xml into package-sprint17.xml
@@ -494,7 +522,7 @@ USAGE
 OPTIONS
   -m, --metadata=metadata
       A comma separated list of the metadata types to include. This overrides the default list: ApexClass, ApexPage, 
-      CustomApplication, CustomObject, CustomTab, PermissionSet, Profile.
+      CustomApplication, CustomObject, CustomField, CustomTab, PermissionSet, Profile, RecordType, Layout.
 
   -n, --namespaces=namespaces
       A comma separated list of namespaces to include when retrieveing metadata. By default namespaces are excluded.
@@ -514,11 +542,14 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)
       [default: warn] logging level for this command invocation
 
+DESCRIPTION
+  Retrieve all metadata related to Profile security/access permissions.
+
 EXAMPLES
   $ sfdx acumen:package:permissions -u myOrgAlias
        Creates a package file (package-permissions.xml) which contains
-       Profile & PermissionSet metadata related to ApexClass, ApexPage, CustomApplication, CustomObject, CustomTab, 
-  PermissionSet, Profile permissions.
+       Profile & PermissionSet metadata related to ApexClass, ApexPage, CustomApplication, CustomObject, CustomField, 
+  CustomTab, PermissionSet, Profile, RecordType, Layout permissions.
   $ sfdx acumen:package:permissions -u myOrgAlias -m CustomObject,CustomApplication
        Creates a package file (package-permissions.xml) which contains
        Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.
@@ -561,6 +592,9 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata.
+
 EXAMPLE
   $ sfdx acumen:schema:dictionary -u myOrgAlias
        Generates a DataDictionary-myOrgAlias.xlsx file from an Org's configured Object & Field metadata.
@@ -593,6 +627,9 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+DESCRIPTION
+  Retrives Profiles from Org without need to generate package.xml
 
 EXAMPLE
 
@@ -650,6 +687,10 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status 
+  --no-renames -w <target branch> > git-diff.txt
+
 EXAMPLE
   $ sfdx acumen:source:delta:git -g git.txt -s force-app -d deploy
        Reads the specified -(g)it diff file 'git.txt' and uses it to identify the deltas in
@@ -705,6 +746,9 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+DESCRIPTION
+  Uses an MD5 hash file to detect deltas.
+
 EXAMPLE
   $ sfdx acumen:source:delta:md5 -m md5.txt -s force-app -d deploy
        Reads the specified -(m)d5 file 'md5.txt' and uses it to identify the deltas in
@@ -744,6 +788,7 @@ OPTIONS
       [default: warn] logging level for this command invocation
 
 DESCRIPTION
+  Generate a security report based on configured permissions.
   The accuracy of this report is dependant on the configuration in the local project.
   It is suggested that a permissions package be created using the acumen:package:permissions
   command and that package is retrieved from the org prior to executing this command.
@@ -757,10 +802,10 @@ EXAMPLE
 
 ## `sfdx acumen:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
-Determines the compatibility for one or more profiles metadat data files with a specified Org
+Determines the compatibility for one or more profiles metadata files with a specified Org. WARNING: This command should be executed by a user with full read permissions to all objects & fields.
 
 ```
-Determines the compatibility for one or more profiles metadat data files with a specified Org
+Determines the compatibility for one or more profiles metadata files with a specified Org. WARNING: This command should be executed by a user with full read permissions to all objects & fields.
 
 USAGE
   $ sfdx acumen:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] 
@@ -790,13 +835,17 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)
       [default: warn] logging level for this command invocation
 
+DESCRIPTION
+  Determines the compatibility for one or more profiles metadata files with a specified Org. WARNING: This command 
+  should be executed by a user with full read permissions to all objects & fields.
+
 EXAMPLES
   $ sfdx acumen:source:profile -u myOrgAlias
        Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml 
   to the specified Org to detemrine deployment compatibility.
   $ sfdx acumen:source:profile -m true -u myOrgAlias
        Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml 
-  to the specified Org to detemrine deployment compatibility.
+  to the specified Org to and updates the metadat files to ensuredeployment compatibility.
 ```
 
 ## `sfdx acumen:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
@@ -820,6 +869,9 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+DESCRIPTION
+  Validates XML against xpath selects and known bad values.
 
 EXAMPLE
   $ sfdx acumen:source:xpath -o ./xpathOptions.json"
