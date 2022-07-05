@@ -56,11 +56,25 @@ describe('Options Tests', () => {
       await Utils.writeFile(optionsPath, JSON.stringify(options));
       // It writes the file
       expect(await Utils.pathExists(optionsPath)).is.true;
-      
+
       options = await OptionsFactory.get(TestOptions, optionsPath);
       // It contains default data
       expect(options).to.not.be.null;
       expect(options.isCurrentVersion).to.be.true;
+    });
+    it('Can NOT automatically update version', async function () {
+      let options = new TestOptions();
+      options.version = 1.0;
+      expect(options.isCurrentVersion).to.be.false;
+
+      await Utils.writeFile(optionsPath, JSON.stringify(options));
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+      
+      options = await OptionsFactory.get(TestOptions, optionsPath, true);
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.false;
     });
   });
   describe('PackageOptions Tests', function () {

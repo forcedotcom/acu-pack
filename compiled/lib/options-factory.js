@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OptionsFactory = void 0;
 const options_1 = require("./options");
 class OptionsFactory {
-    static async get(type, optionsFilePath) {
+    static async get(type, optionsFilePath = null, ignoreVersion = false) {
         if (!type) {
             return null;
         }
@@ -11,7 +11,7 @@ class OptionsFactory {
             throw new Error('Specified type does not extend OptionsBase.');
         }
         const options = new type();
-        await options.load(optionsFilePath);
+        await options.load(optionsFilePath, ignoreVersion);
         return options;
     }
 }

@@ -2,7 +2,7 @@ import { OptionsBase } from './options';
 
 export class OptionsFactory {
 
-    public static async get<T extends OptionsBase>(type: new() => T, optionsFilePath?: string): Promise<T> {
+    public static async get<T extends OptionsBase>(type: new() => T, optionsFilePath: string = null, ignoreVersion: boolean = false): Promise<T> {
         if (!type) {
             return null;
         }
@@ -10,7 +10,7 @@ export class OptionsFactory {
             throw new Error('Specified type does not extend OptionsBase.');
         }
         const options = new type();
-        await options.load(optionsFilePath);
+        await options.load(optionsFilePath, ignoreVersion);
 
         return options;
     }
