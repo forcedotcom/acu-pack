@@ -13,6 +13,7 @@ describe('PackageOptions Tests', () => {
   it('Loads Defaults', function() {
     const packageOptions = new PackageOptions();
     packageOptions.loadDefaults();
-    expect(packageOptions.excludeMetadataTypes.length).does.not.equal(0);
+    expect(packageOptions.excludeMetadataTypes).is.not.null;
+    expect(packageOptions.excludeMetadataTypes.length).equals(0);
   });
 });

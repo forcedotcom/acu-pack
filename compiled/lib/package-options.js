@@ -8,71 +8,8 @@ class PackageOptions extends options_1.OptionsBase {
         this.excludeMetadataTypes = [];
     }
     loadDefaults() {
-        return new Promise((resolve, reject) => {
-            try {
-                this.excludeMetadataTypes = [
-                    'ActionLinkGroupTemplate',
-                    'AnalyticSnapshot',
-                    'AnimationRule',
-                    'ApexTestSuite',
-                    'AuthProvider',
-                    'CallCenter',
-                    'CaseSubjectParticle',
-                    'ChannelLayout',
-                    'ChatterExtension',
-                    'CleanDataService',
-                    'CMSConnectSource',
-                    'CommunityTemplateDefinition',
-                    'CommunityThemeDefinition',
-                    'CspTrustedSite',
-                    'CustomApplicationComponent',
-                    'CustomFeedFilter',
-                    'CustomHelpMenuSection',
-                    'CustomNotificationType',
-                    'Document',
-                    'EclairGeoData',
-                    'EmbeddedServiceBranding',
-                    'EmbeddedServiceConfig',
-                    'EmbeddedServiceFlowConfig',
-                    'EmbeddedServiceMenuSettings',
-                    'ExternalDataSource',
-                    'ExternalServiceRegistration',
-                    'FlowCategory',
-                    'FlowDefinition',
-                    'GlobalValueSetTranslation',
-                    'HomePageComponent',
-                    'Letterhead',
-                    'LightningBolt',
-                    'LightningMessageChannel',
-                    'LightningOnboardingConfig',
-                    'ManagedContentType',
-                    'MobileApplicationDetail',
-                    'MutingPermissionSet',
-                    'MyDomainDiscoverableLogin',
-                    'NamedCredential',
-                    'OauthCustomScope',
-                    'PermissionSetGroup',
-                    'PlatformCachePartition',
-                    'PlatformEventChannel',
-                    'PlatformEventChannelMember',
-                    'PostTemplate',
-                    'Prompt',
-                    'RecommendationStrategy',
-                    'RedirectWhitelistUrl',
-                    'Role',
-                    'Scontrol',
-                    'SiteDotCom',
-                    'StandardValueSet',
-                    'StandardValueSetTranslation',
-                    'SynonymDictionary',
-                    'TransactionSecurityPolicy'
-                ];
-                resolve();
-            }
-            catch (err) {
-                reject(err);
-            }
-        });
+        this.excludeMetadataTypes = [];
+        return Promise.resolve();
     }
     get currentVersion() {
         return PackageOptions.CURRENT_VERSION;

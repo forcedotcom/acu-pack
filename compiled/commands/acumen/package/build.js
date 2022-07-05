@@ -35,7 +35,8 @@ class Build extends command_base_1.CommandBase {
             options = new package_options_1.PackageOptions();
             await options.loadDefaults();
         }
-        const excluded = new Set(options.excludeMetadataTypes);
+        this.ux.log(`Getting Unsupported Metadata Types list from: ${sfdx_tasks_1.SfdxTasks.METADATA_COVERAGE_REPORT_URL}.`);
+        const excluded = new Set(await sfdx_tasks_1.SfdxTasks.getUnsupportedMetadataTypes());
         // Are we including namespaces?
         const namespaces = this.flags.namespaces
             ? new Set(this.flags.namespaces.split())

@@ -1,7 +1,7 @@
 import { expect } from '@salesforce/command/lib/test';
 import { OptionsBase } from '../../src/lib/options';
 import { OptionsFactory } from '../../src/lib/options-factory';
-import { PackageOptions } from '../../src/lib/package-options';
+import SchmeaOptions from '../../src/lib/schema-options';
 import { UnmaskOptions } from '../../src/lib/unmask-options';
 import { XPathOptions } from '../../src/lib/xpath-options';
 import Utils from '../../src/lib/utils';
@@ -77,17 +77,17 @@ describe('Options Tests', () => {
       expect(options.isCurrentVersion).to.be.false;
     });
   });
-  describe('PackageOptions Tests', function () {
+  describe('SchmeaOptions Tests', function () {
     it('Creates New Object & File', async function () {
-      const options = await OptionsFactory.get(PackageOptions, optionsPath);
+      const options = await OptionsFactory.get(SchmeaOptions, optionsPath);
 
       // It writes the file
       expect(await Utils.pathExists(optionsPath)).is.true;
 
       // It contains default data
       expect(options).to.not.be.null;
-      expect(options.excludeMetadataTypes).to.be.instanceOf(Array);
-      expect(options.excludeMetadataTypes.length).to.not.equal(0);
+      expect(options.outputDefMap).to.be.instanceOf(Map);
+      expect(options.outputDefMap.size).to.not.equal(0);
     });
   });
   describe('XPathOptions Tests', function () {
