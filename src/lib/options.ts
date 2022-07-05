@@ -11,10 +11,10 @@ export abstract class OptionsBase {
     }
 
     public get isCurrentVersion(): boolean {
-        return true;
+        return this.version === this.currentVersion;
     }
 
-    public async load(optionsPath: string): Promise<void> {
+    public async load(optionsPath: string, ignoreVersion: boolean = false): Promise<void> {
         const json = await this.readFile(optionsPath);
         if (!json) {
             await this.loadDefaults();
@@ -23,6 +23,11 @@ export abstract class OptionsBase {
             }
         } else {
             await this.deserialize(json);
+            // If we have a filepath AND the version is not current => write the current version
+            if (!this.isCurrentVersion && !ignoreVersion && optionsPath) {
+                this.setCurrentVersion();
+                await this.save(optionsPath);
+            }
         }
     }
 
@@ -56,6 +61,10 @@ export abstract class OptionsBase {
     protected serialize(): Promise<string> {
         return new Promise((resolve, reject) => {
             try {
+                // Always check & set the current version before serializing
+                if (!this.isCurrentVersion) {
+                    this.setCurrentVersion();
+                }
                 resolve(JSON.stringify(this, null, SfdxCore.jsonSpaces));
             } catch (err) {
                 reject(err);
@@ -74,5 +83,13 @@ export abstract class OptionsBase {
         } else {
             return null;
         }
+    }
+
+    protected get currentVersion(): number {
+        return this.version;
+    }
+
+    protected setCurrentVersion(): void {
+        this.version = this.currentVersion;
     }
 }

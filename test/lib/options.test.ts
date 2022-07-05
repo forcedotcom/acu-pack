@@ -8,7 +8,7 @@ import Utils from '../../src/lib/utils';
 
 class TestOptions extends OptionsBase {
   private static CURRENT_VERSION: number = 2.0;
-  public version: number;
+  public version: number = 1.0;
   
   public loadDefaults(): Promise<void> {
     return Promise.resolve();
@@ -16,6 +16,10 @@ class TestOptions extends OptionsBase {
 
   public get isCurrentVersion(): boolean {
     return TestOptions.CURRENT_VERSION === this.version;
+  }
+
+  protected setCurrentVersion(): void {
+    this.version = TestOptions.CURRENT_VERSION;
   }
 }
 
@@ -32,16 +36,6 @@ describe('Options Tests', () => {
       expect(options).to.not.be.null;
       expect(options.isCurrentVersion).to.be.false;
     });
-    it('Checks for old versions after deserialization', async function () {
-      const options = await OptionsFactory.get(TestOptions, optionsPath);
-
-      // It writes the file
-      expect(await Utils.pathExists(optionsPath)).is.true;
-
-      // It contains default data
-      expect(options).to.not.be.null;
-      expect(options.isCurrentVersion).to.be.false;
-    });
     it('Can set new version correctly', async function () {
       let options = new TestOptions();
       options.version = 2.0;
@@ -49,6 +43,20 @@ describe('Options Tests', () => {
       // It writes the file
       expect(await Utils.pathExists(optionsPath)).is.true;
 
+      options = await OptionsFactory.get(TestOptions, optionsPath);
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.true;
+    });
+    it('Can automatically update version', async function () {
+      let options = new TestOptions();
+      options.version = 1.0;
+      expect(options.isCurrentVersion).to.be.false;
+
+      await Utils.writeFile(optionsPath, JSON.stringify(options));
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+      
       options = await OptionsFactory.get(TestOptions, optionsPath);
       // It contains default data
       expect(options).to.not.be.null;

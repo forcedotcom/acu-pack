@@ -8,7 +8,6 @@ export class PackageOptions extends OptionsBase {
     public packageApiVersionOverride: string = '48.0';
     public customObjectNamePattern: string = '__';
     public sfdxLogLevel: string = 'WARN';
-    public version: number = 1.0;
 
     public loadDefaults(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -78,7 +77,8 @@ export class PackageOptions extends OptionsBase {
         });
     }
 
-    public get isCurrentVersion(): boolean {
-        return PackageOptions.CURRENT_VERSION === this.version;
+    protected get currentVersion(): number {
+        return PackageOptions.CURRENT_VERSION;
     }
+
 }

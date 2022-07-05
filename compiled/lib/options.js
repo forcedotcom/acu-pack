@@ -11,9 +11,9 @@ class OptionsBase {
         this.version = 1.0;
     }
     get isCurrentVersion() {
-        return true;
+        return this.version === this.currentVersion;
     }
-    async load(optionsPath) {
+    async load(optionsPath, ignoreVersion = false) {
         const json = await this.readFile(optionsPath);
         if (!json) {
             await this.loadDefaults();
@@ -23,6 +23,11 @@ class OptionsBase {
         }
         else {
             await this.deserialize(json);
+            // If we have a filepath AND the version is not current => write the current version
+            if (!this.isCurrentVersion && !ignoreVersion && optionsPath) {
+                this.setCurrentVersion();
+                await this.save(optionsPath);
+            }
         }
     }
     async save(optionsPath) {
@@ -54,6 +59,10 @@ class OptionsBase {
     serialize() {
         return new Promise((resolve, reject) => {
             try {
+                // Always check & set the current version before serializing
+                if (!this.isCurrentVersion) {
+                    this.setCurrentVersion();
+                }
                 resolve(JSON.stringify(this, null, sfdx_core_1.SfdxCore.jsonSpaces));
             }
             catch (err) {
@@ -71,6 +80,12 @@ class OptionsBase {
         else {
             return null;
         }
+    }
+    get currentVersion() {
+        return this.version;
+    }
+    setCurrentVersion() {
+        this.version = this.currentVersion;
     }
 }
 exports.OptionsBase = OptionsBase;

@@ -6,7 +6,6 @@ export declare class PackageOptions extends OptionsBase {
     packageApiVersionOverride: string;
     customObjectNamePattern: string;
     sfdxLogLevel: string;
-    version: number;
     loadDefaults(): Promise<void>;
-    get isCurrentVersion(): boolean;
+    protected get currentVersion(): number;
 }

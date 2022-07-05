@@ -5,11 +5,10 @@ export default class SchemaOptions extends OptionsBase {
     includeCustomObjectNames: string[];
     outputDefMap: Map<string, string[]>;
     excludeFieldIfTrueFilter: string;
-    version: number;
-    get isCurrentVersion(): boolean;
     getDynamicCode(sheetName?: string): string;
     getEntityDefinitionFields(sheetName?: string): string[];
     deserialize(serializedOptions: string): Promise<void>;
     serialize(): Promise<string>;
     protected loadDefaults(): Promise<void>;
+    protected get currentVersion(): number;
 }

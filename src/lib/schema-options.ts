@@ -10,12 +10,6 @@ export default class SchemaOptions extends OptionsBase {
 
     public excludeFieldIfTrueFilter: string;
 
-    public version: number = 1.0;
-
-    public get isCurrentVersion(): boolean {
-        return SchemaOptions.CURRENT_VERSION === this.version;
-    }
-
     public getDynamicCode(sheetName: string = null): string {
         let code = 'main(); function main() { const row=[];';
 
@@ -153,5 +147,9 @@ export default class SchemaOptions extends OptionsBase {
             }
             resolve();
         });
+    }
+
+    protected get currentVersion(): number {
+        return SchemaOptions.CURRENT_VERSION;
     }
 }

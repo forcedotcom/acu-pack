@@ -9,10 +9,6 @@ class SchemaOptions extends options_1.OptionsBase {
         this.excludeCustomObjectNames = [];
         this.includeCustomObjectNames = [];
         this.outputDefMap = new Map();
-        this.version = 1.0;
-    }
-    get isCurrentVersion() {
-        return SchemaOptions.CURRENT_VERSION === this.version;
     }
     getDynamicCode(sheetName = null) {
         let code = 'main(); function main() { const row=[];';
@@ -145,6 +141,9 @@ class SchemaOptions extends options_1.OptionsBase {
             }
             resolve();
         });
+    }
+    get currentVersion() {
+        return SchemaOptions.CURRENT_VERSION;
     }
 }
 exports.default = SchemaOptions;
