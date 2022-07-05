@@ -3,11 +3,18 @@ import { SfdxCore } from './sfdx-core';
 import SchemaUtils from './schema-utils';
 
 export default class SchemaOptions extends OptionsBase {
+    private static CURRENT_VERSION: number = 1.0;
     public excludeCustomObjectNames: string[] = [];
     public includeCustomObjectNames: string[] = [];
     public outputDefMap = new Map<string, string[]>();
 
     public excludeFieldIfTrueFilter: string;
+
+    public version: number = 1.0;
+
+    public get isCurrentVersion(): boolean {
+        return SchemaOptions.CURRENT_VERSION === this.version;
+    }
 
     public getDynamicCode(sheetName: string = null): string {
         let code = 'main(); function main() { const row=[];';

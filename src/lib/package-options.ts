@@ -1,11 +1,14 @@
 import { OptionsBase } from './options';
 
 export class PackageOptions extends OptionsBase {
+    private static CURRENT_VERSION: number = 1.0;
+
     public excludeMetadataTypes: string[] = [];
     public skipFileNamePattern: string;
     public packageApiVersionOverride: string = '48.0';
     public customObjectNamePattern: string = '__';
     public sfdxLogLevel: string = 'WARN';
+    public version: number = 1.0;
 
     public loadDefaults(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -73,5 +76,9 @@ export class PackageOptions extends OptionsBase {
                 reject(err);
             }
         });
+    }
+
+    public get isCurrentVersion(): boolean {
+        return PackageOptions.CURRENT_VERSION === this.version;
     }
 }

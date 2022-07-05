@@ -4,9 +4,14 @@ import { promises as fs } from 'fs';
 import { SfdxCore } from './sfdx-core';
 
 export abstract class OptionsBase {
+    public version: number = 1.0;
     // Make sure we have a default ctor
     constructor() {
 
+    }
+
+    public get isCurrentVersion(): boolean {
+        return true;
     }
 
     public async load(optionsPath: string): Promise<void> {

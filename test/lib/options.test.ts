@@ -1,15 +1,60 @@
 import { expect } from '@salesforce/command/lib/test';
+import { OptionsBase } from '../../src/lib/options';
 import { OptionsFactory } from '../../src/lib/options-factory';
 import { PackageOptions } from '../../src/lib/package-options';
 import { UnmaskOptions } from '../../src/lib/unmask-options';
 import { XPathOptions } from '../../src/lib/xpath-options';
 import Utils from '../../src/lib/utils';
 
+class TestOptions extends OptionsBase {
+  private static CURRENT_VERSION: number = 2.0;
+  public version: number;
+  
+  public loadDefaults(): Promise<void> {
+    return Promise.resolve();
+  };
+
+  public get isCurrentVersion(): boolean {
+    return TestOptions.CURRENT_VERSION === this.version;
+  }
+}
+
 const optionsPath = "./options.json";
 beforeEach('Cleanup', async () => {
   await Utils.deleteFile(optionsPath);
 });
 describe('Options Tests', () => {
+  describe('Version Tests', function () {
+    it('Checks for old versions', function () {
+      const options = new TestOptions();
+      options.version = 1.0;
+
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.false;
+    });
+    it('Checks for old versions after deserialization', async function () {
+      const options = await OptionsFactory.get(TestOptions, optionsPath);
+
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.false;
+    });
+    it('Can set new version correctly', async function () {
+      let options = new TestOptions();
+      options.version = 2.0;
+      await options.save(optionsPath);
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+
+      options = await OptionsFactory.get(TestOptions, optionsPath);
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.true;
+    });
+  });
   describe('PackageOptions Tests', function () {
     it('Creates New Object & File', async function () {
       const options = await OptionsFactory.get(PackageOptions, optionsPath);

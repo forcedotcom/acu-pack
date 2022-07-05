@@ -9,6 +9,10 @@ class SchemaOptions extends options_1.OptionsBase {
         this.excludeCustomObjectNames = [];
         this.includeCustomObjectNames = [];
         this.outputDefMap = new Map();
+        this.version = 1.0;
+    }
+    get isCurrentVersion() {
+        return SchemaOptions.CURRENT_VERSION === this.version;
     }
     getDynamicCode(sheetName = null) {
         let code = 'main(); function main() { const row=[];';
@@ -144,4 +148,5 @@ class SchemaOptions extends options_1.OptionsBase {
     }
 }
 exports.default = SchemaOptions;
+SchemaOptions.CURRENT_VERSION = 1.0;
 //# sourceMappingURL=schema-options.js.map

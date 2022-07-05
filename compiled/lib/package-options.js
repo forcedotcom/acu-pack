@@ -9,6 +9,7 @@ class PackageOptions extends options_1.OptionsBase {
         this.packageApiVersionOverride = '48.0';
         this.customObjectNamePattern = '__';
         this.sfdxLogLevel = 'WARN';
+        this.version = 1.0;
     }
     loadDefaults() {
         return new Promise((resolve, reject) => {
@@ -78,6 +79,10 @@ class PackageOptions extends options_1.OptionsBase {
             }
         });
     }
+    get isCurrentVersion() {
+        return PackageOptions.CURRENT_VERSION === this.version;
+    }
 }
 exports.PackageOptions = PackageOptions;
+PackageOptions.CURRENT_VERSION = 1.0;
 //# sourceMappingURL=package-options.js.map

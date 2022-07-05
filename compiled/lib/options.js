@@ -8,6 +8,10 @@ const sfdx_core_1 = require("./sfdx-core");
 class OptionsBase {
     // Make sure we have a default ctor
     constructor() {
+        this.version = 1.0;
+    }
+    get isCurrentVersion() {
+        return true;
     }
     async load(optionsPath) {
         const json = await this.readFile(optionsPath);
