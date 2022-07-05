@@ -4,9 +4,6 @@ export class PackageOptions extends OptionsBase {
     private static CURRENT_VERSION: number = 1.0;
 
     public excludeMetadataTypes: string[] = [];
-    public skipFileNamePattern: string;
-    public customObjectNamePattern: string = '__';
-    public sfdxLogLevel: string = 'WARN';
 
     public loadDefaults(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -68,7 +65,6 @@ export class PackageOptions extends OptionsBase {
                     'SynonymDictionary',
                     'TransactionSecurityPolicy'
                 ];
-                this.skipFileNamePattern = 'topicsForObjects/sma__|topicsForObjects/ltngsharing__';
                 resolve();
             } catch (err) {
                 reject(err);

@@ -6,8 +6,6 @@ class PackageOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);
         this.excludeMetadataTypes = [];
-        this.customObjectNamePattern = '__';
-        this.sfdxLogLevel = 'WARN';
     }
     loadDefaults() {
         return new Promise((resolve, reject) => {
@@ -69,7 +67,6 @@ class PackageOptions extends options_1.OptionsBase {
                     'SynonymDictionary',
                     'TransactionSecurityPolicy'
                 ];
-                this.skipFileNamePattern = 'topicsForObjects/sma__|topicsForObjects/ltngsharing__';
                 resolve();
             }
             catch (err) {
