@@ -5,7 +5,6 @@ export class PackageOptions extends OptionsBase {
 
     public excludeMetadataTypes: string[] = [];
     public skipFileNamePattern: string;
-    public packageApiVersionOverride: string = '48.0';
     public customObjectNamePattern: string = '__';
     public sfdxLogLevel: string = 'WARN';
 

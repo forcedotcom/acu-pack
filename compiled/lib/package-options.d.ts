@@ -3,7 +3,6 @@ export declare class PackageOptions extends OptionsBase {
     private static CURRENT_VERSION;
     excludeMetadataTypes: string[];
     skipFileNamePattern: string;
-    packageApiVersionOverride: string;
     customObjectNamePattern: string;
     sfdxLogLevel: string;
     loadDefaults(): Promise<void>;

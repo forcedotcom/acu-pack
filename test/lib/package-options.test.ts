@@ -10,7 +10,6 @@ describe('PackageOptions Tests', () => {
     expect(packageOptions.customObjectNamePattern).equals('__');
     expect(packageOptions.excludeMetadataTypes).is.not.null;
     expect(packageOptions.excludeMetadataTypes.length).equals(0);
-    expect(packageOptions.packageApiVersionOverride).equals('48.0');
     expect(packageOptions.sfdxLogLevel).equals('WARN');
     expect(packageOptions.skipFileNamePattern).is.undefined;
   });

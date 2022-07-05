@@ -6,7 +6,6 @@ class PackageOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);
         this.excludeMetadataTypes = [];
-        this.packageApiVersionOverride = '48.0';
         this.customObjectNamePattern = '__';
         this.sfdxLogLevel = 'WARN';
     }
