@@ -3,6 +3,7 @@ import { SfdxCore } from './sfdx-core';
 import { SfdxFolder, SfdxQuery, SfdxEntity } from './sfdx-query';
 import path = require('path');
 import Utils from '../lib/utils';
+import { RestAction } from '../lib/utils';
 import { openSync, writeSync } from 'fs';
 
 export class SfdxJobInfo {
@@ -48,6 +49,7 @@ export class SfdxOrgInfo {
 }
 
 export class SfdxTasks {
+    public static METADATA_COVERAGE_REPORT_URL = 'https://mdcoverage.secure.force.com/services/apexrest/report';
 
     public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
 
@@ -365,6 +367,18 @@ export class SfdxTasks {
         return result[0] != null
             ? result[0].value
             : null;
+    }
+
+    public static async getUnsupportedMetadataTypes(): Promise<string[]> {
+        const result = await Utils.getRestResult(RestAction.GET, SfdxTasks.METADATA_COVERAGE_REPORT_URL);
+        const myMap = new Map<string, any>(Object.entries(result.getContent().types));
+        const types = [];
+        for (const [key, value] of myMap) {
+            if (value.channels && !value.channels.metadataApi) {
+                types.push(key);
+            }
+        }
+        return Utils.sortArray(types);
     }
 
     protected static _folderPaths: Map<string, string> = null;

@@ -20,6 +20,7 @@ export declare class SfdxOrgInfo {
     constructor(result?: any);
 }
 export declare class SfdxTasks {
+    static METADATA_COVERAGE_REPORT_URL: string;
     static defaultMetaTypes: string[];
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
     static executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel?: string): Promise<any>;
@@ -40,6 +41,7 @@ export declare class SfdxTasks {
     static getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): any;
     static getSourceTrackingStatus(orgAliasOrUsername: string): Promise<any[]>;
     static getDefaultOrgAlias(): Promise<string>;
+    static getUnsupportedMetadataTypes(): Promise<string[]>;
     protected static _folderPaths: Map<string, string>;
     private static getFolderSOQLData;
     private static getFolderFullPath;

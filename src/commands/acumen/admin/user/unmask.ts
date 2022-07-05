@@ -2,8 +2,9 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
 import { OptionsFactory } from '../../../../lib/options-factory';
-import { SfdxClient, RestAction } from '../../../../lib/sfdx-client';
+import { SfdxClient } from '../../../../lib/sfdx-client';
 import Utils from '../../../../lib/utils';
+import { RestAction } from '../../../../lib/utils';
 import { UnmaskOptions } from '../../../../lib/unmask-options';
 
 export default class Unmask extends CommandBase {

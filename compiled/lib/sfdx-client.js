@@ -1,44 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SfdxClient = exports.ApiKind = exports.RestAction = exports.NO_CONTENT_CODE = void 0;
+exports.SfdxClient = exports.ApiKind = exports.NO_CONTENT_CODE = void 0;
 const tslib_1 = require("tslib");
 const sfdx_tasks_1 = require("./sfdx-tasks");
 const utils_1 = require("./utils");
+const utils_2 = require("./utils");
 exports.NO_CONTENT_CODE = 204;
-var RestAction;
-(function (RestAction) {
-    RestAction["GET"] = "GET";
-    RestAction["PUT"] = "PUT";
-    RestAction["POST"] = "POST";
-    RestAction["DELETE"] = "DELETE";
-    RestAction["PATCH"] = "PATCH";
-})(RestAction = exports.RestAction || (exports.RestAction = {}));
 var ApiKind;
 (function (ApiKind) {
     ApiKind["DEFAULT"] = "";
     ApiKind["TOOLING"] = "tooling";
     ApiKind["COMPOSITE"] = "composite";
 })(ApiKind = exports.ApiKind || (exports.ApiKind = {}));
-class RestResult {
-    constructor() {
-        this.isError = false;
-        this.isBinary = false;
-    }
-    throw() {
-        throw this.getError();
-    }
-    getContent() {
-        return this.getError() || this.body || this.id;
-    }
-    getError() {
-        return this.isError
-            ? new Error(`(${this.code}) ${this.body}`)
-            : null;
-    }
-}
 class SfdxClient {
     constructor(orgAliasOrUsername) {
-        this.bent = require('bent');
         this.headers = {};
         this.apiVersion = null;
         if (!orgAliasOrUsername || orgAliasOrUsername.length === 0) {
@@ -62,7 +37,7 @@ class SfdxClient {
     getMetadataSchemas(apiKind = ApiKind.DEFAULT) {
         return tslib_1.__asyncGenerator(this, arguments, function* getMetadataSchemas_1() {
             var e_1, _a;
-            const result = yield tslib_1.__await(this.doInternal(RestAction.GET, null, apiKind));
+            const result = yield tslib_1.__await(this.doInternal(utils_2.RestAction.GET, null, apiKind));
             if (result.isError) {
                 result.throw();
             }
@@ -85,7 +60,7 @@ class SfdxClient {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
         }
-        const result = await this.doInternal(RestAction.GET, metaDataType, null, apiKind);
+        const result = await this.doInternal(utils_2.RestAction.GET, metaDataType, null, apiKind);
         if (result.isError) {
             result.throw();
         }
@@ -98,7 +73,7 @@ class SfdxClient {
         if (!id) {
             throw new Error('id parameter is required.');
         }
-        const result = await this.doInternalById(RestAction.GET, metaDataType, id, null, apiKind);
+        const result = await this.doInternalById(utils_2.RestAction.GET, metaDataType, id, null, apiKind);
         if (result.isError) {
             result.throw();
         }
@@ -114,7 +89,7 @@ class SfdxClient {
                 throw new Error('id parameter is required.');
             }
             try {
-                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(RestAction.GET, metaDataType, ids, null, apiKind)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(utils_2.RestAction.GET, metaDataType, ids, null, apiKind)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
                     const result = _c.value;
                     if (result.isError) {
                         result.throw();
@@ -141,7 +116,7 @@ class SfdxClient {
                 throw new Error('records parameter is required.');
             }
             try {
-                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(RestAction.GET, metaDataType, records, recordIdField, apiKind)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(utils_2.RestAction.GET, metaDataType, records, recordIdField, apiKind)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
                     const result = _c.value;
                     if (result.isError) {
                         result.throw();
@@ -165,7 +140,7 @@ class SfdxClient {
         if (!record) {
             throw new Error('record parameter is required.');
         }
-        const result = await this.doInternalById(RestAction.PATCH, metaDataType, record, recordIdField, apiKind, [exports.NO_CONTENT_CODE]);
+        const result = await this.doInternalById(utils_2.RestAction.PATCH, metaDataType, record, recordIdField, apiKind, [exports.NO_CONTENT_CODE]);
         if (result.isError) {
             result.throw();
         }
@@ -182,7 +157,7 @@ class SfdxClient {
             }
             try {
                 // Salesforce uses PATCH for updates
-                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(RestAction.PATCH, metaDataType, records, recordIdField, apiKind, [exports.NO_CONTENT_CODE])), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(utils_2.RestAction.PATCH, metaDataType, records, recordIdField, apiKind, [exports.NO_CONTENT_CODE])), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
                     const result = _c.value;
                     if (result.isError) {
                         result.throw();
@@ -228,7 +203,7 @@ class SfdxClient {
             }
         });
     }
-    async doComposite(action = RestAction.GET, record, validStatusCodes = [200]) {
+    async doComposite(action = utils_2.RestAction.GET, record, validStatusCodes = [200]) {
         // https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections.htm
         if (!record) {
             throw new Error('record parameter is required.');
@@ -241,21 +216,21 @@ class SfdxClient {
     }
     async getMaxApiVersion() {
         await this.initialize(false);
-        const result = await this.handleResponse(RestAction.GET, `${this.orgInfo.instanceUrl}/services/data`);
+        const result = await this.handleResponse(utils_2.RestAction.GET, `${this.orgInfo.instanceUrl}/services/data`);
         return result.body[result.body.length - 1].version;
     }
-    async doInternal(action = RestAction.GET, metaDataType = null, record = null, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
+    async doInternal(action = utils_2.RestAction.GET, metaDataType = null, record = null, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         const uri = await this.getUri(metaDataType, null, apiKind);
         return await this.handleResponse(action, uri, record, validStatusCodes);
     }
-    doInternalByIds(action = RestAction.GET, metaDataType = null, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
+    doInternalByIds(action = utils_2.RestAction.GET, metaDataType = null, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         return tslib_1.__asyncGenerator(this, arguments, function* doInternalByIds_1() {
             for (const record of records) {
                 yield yield tslib_1.__await(yield tslib_1.__await(this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes)));
             }
         });
     }
-    async doInternalById(action = RestAction.GET, metaDataType = null, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
+    async doInternalById(action = utils_2.RestAction.GET, metaDataType = null, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         let id = null;
         if (apiKind !== ApiKind.COMPOSITE && record) {
             id = utils_1.default.getFieldValue(record, recordIdField, true);
@@ -296,35 +271,8 @@ class SfdxClient {
         }
         return uri;
     }
-    async handleResponse(action = RestAction.GET, uri, record = null, validStatusCodes = null) {
-        const result = new RestResult();
-        try {
-            const apiPromise = this.bent(action.toString(), this.headers, validStatusCodes || [200]);
-            const response = await apiPromise(uri, record);
-            // Do we have content?
-            result.code = response.statusCode;
-            switch (result.code) {
-                case exports.NO_CONTENT_CODE:
-                    return result;
-                default:
-                    // Read payload
-                    response.content_type = response.headers['content-type'];
-                    if (response.content_type === 'application/octetstream') {
-                        result.body = Buffer.from(await response.arrayBuffer());
-                        result.isBinary = true;
-                    }
-                    else {
-                        result.body = await response.json();
-                    }
-                    return result;
-            }
-        }
-        catch (err) {
-            result.isError = true;
-            result.code = err.statusCode;
-            result.body = err.message;
-        }
-        return result;
+    async handleResponse(action = utils_2.RestAction.GET, uri, record = null, validStatusCodes = null) {
+        return await utils_1.default.getRestResult(action, uri, record, this.headers, validStatusCodes);
     }
 }
 exports.SfdxClient = SfdxClient;

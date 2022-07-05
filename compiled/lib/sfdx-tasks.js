@@ -7,6 +7,7 @@ const sfdx_core_1 = require("./sfdx-core");
 const sfdx_query_1 = require("./sfdx-query");
 const path = require("path");
 const utils_1 = require("../lib/utils");
+const utils_2 = require("../lib/utils");
 const fs_1 = require("fs");
 class SfdxJobInfo {
     constructor() {
@@ -367,6 +368,17 @@ class SfdxTasks {
             ? result[0].value
             : null;
     }
+    static async getUnsupportedMetadataTypes() {
+        const result = await utils_1.default.getRestResult(utils_2.RestAction.GET, SfdxTasks.METADATA_COVERAGE_REPORT_URL);
+        const myMap = new Map(Object.entries(result.getContent().types));
+        const types = [];
+        for (const [key, value] of myMap) {
+            if (value.channels && !value.channels.metadataApi) {
+                types.push(key);
+            }
+        }
+        return utils_1.default.sortArray(types);
+    }
     static async getFolderSOQLData(usernameOrAlias) {
         if (!this._folderPaths) {
             const allFolders = await sfdx_query_1.SfdxQuery.getFolders(usernameOrAlias);
@@ -414,6 +426,7 @@ class SfdxTasks {
     }
 }
 exports.SfdxTasks = SfdxTasks;
+SfdxTasks.METADATA_COVERAGE_REPORT_URL = 'https://mdcoverage.secure.force.com/services/apexrest/report';
 SfdxTasks.defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
 SfdxTasks._folderPaths = null;
 //# sourceMappingURL=sfdx-tasks.js.map
