@@ -6,6 +6,7 @@ import { createInterface } from 'readline';
 import xpath = require('xpath');
 import { DOMParser as dom } from 'xmldom';
 import { Logger } from '@salesforce/core';
+import Constants from './constants';
 
 export const NO_CONTENT_CODE = 204;
 
@@ -175,7 +176,7 @@ export default class Utils {
     }
 
     public static isENOENT(err: any): boolean {
-        return err && err.code === 'ENOENT';
+        return err && err.code === Constants.ENOENT;
     }
 
     public static async mkDirPath(destination: string, hasFileName = false): Promise<void> {
@@ -369,8 +370,8 @@ export default class Utils {
                     return result;
                 default:
                     // Read payload
-                    response.content_type = response.headers['content-type'];
-                    if (response.content_type === 'application/octetstream') {
+                    response.content_type = response.headers[Constants.HEADERS_CONTENT_TYPE];
+                    if (response.content_type === Constants.CONTENT_TYPE_APPLICATION) {
                         result.body = Buffer.from(await response.arrayBuffer());
                         result.isBinary = true;
                     } else {

@@ -20,7 +20,6 @@ export declare class SfdxOrgInfo {
     constructor(result?: any);
 }
 export declare class SfdxTasks {
-    static METADATA_COVERAGE_REPORT_URL: string;
     static defaultMetaTypes: string[];
     static describeMetadata(usernameOrAlias: string): Promise<any[]>;
     static executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel?: string): Promise<any>;

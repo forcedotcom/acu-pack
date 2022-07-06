@@ -2,6 +2,8 @@ import { expect } from '@salesforce/command/lib/test';
 import { OptionsFactory } from '../../src/lib/options-factory';
 import SchemaOptions from '../../src/lib/schema-options';
 import Utils from '../../src/lib/utils';
+import { PackageOptions } from '../../src/lib/package-options';
+import { OptionsSettings } from '../../src/lib/options';
 
 const optionsPath = "./options.json";
 beforeEach('Cleanup', async () => {
@@ -23,5 +25,12 @@ describe('OptionsFactory Tests', () => {
     
     const fileExists = await Utils.pathExists(optionsPath);
     expect(fileExists).to.be.true;
+  });
+  it('Uses OptionSettings correctly', async function() {
+    const optionsSettings = new OptionsSettings();
+    optionsSettings.blockExternalConnections = true;
+    const packageOptions = await OptionsFactory.get(PackageOptions, optionsPath, optionsSettings);
+    expect(packageOptions.excludeMetadataTypes).is.not.null;
+    expect(packageOptions.excludeMetadataTypes.length).equals(0);
   });
 });

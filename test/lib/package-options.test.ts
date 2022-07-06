@@ -17,13 +17,21 @@ describe('PackageOptions Tests', () => {
     expect(packageOptions.excludeMetadataTypes).is.not.null;
     expect(packageOptions.excludeMetadataTypes.length).equals(0);
   });
-  it('Loads Defaults from Metadata Coverage Report', async function() {
+  it('Does Loads Defaults from Metadata Coverage Report', async function() {
     this.timeout(0);
     const types  = await SfdxTasks.getUnsupportedMetadataTypes();
     const packageOptions = new PackageOptions();
     await packageOptions.loadDefaults();
     expect(packageOptions.excludeMetadataTypes).is.not.null;
     expect(packageOptions.excludeMetadataTypes.length).equals(types.length);
+  });
+  it('Does NOT LoadsDefaults from Metadata Coverage Report', async function() {
+    this.timeout(0);
+    const packageOptions = new PackageOptions();
+    packageOptions.settings.blockExternalConnections = true;
+    await packageOptions.loadDefaults();
+    expect(packageOptions.excludeMetadataTypes).is.not.null;
+    expect(packageOptions.excludeMetadataTypes.length).equals(0);
   });
   it('Loads Defaults from Metadata Coverage Report and saves', async function() {
     this.timeout(0);

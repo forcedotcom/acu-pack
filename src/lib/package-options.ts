@@ -8,7 +8,10 @@ export class PackageOptions extends OptionsBase {
 
     public async loadDefaults(): Promise<void> {
         // When the defaults are loaded - we will pull from the Metadata Coverage Report
-        this.excludeMetadataTypes = await SfdxTasks.getUnsupportedMetadataTypes();
+        // If we are not allowing external connections at runtime (FedRAMP) - just set to empty array
+        this.excludeMetadataTypes = this.settings.blockExternalConnections
+            ? []
+            : await SfdxTasks.getUnsupportedMetadataTypes();
         return;
     }
 

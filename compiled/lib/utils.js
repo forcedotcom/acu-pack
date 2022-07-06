@@ -10,6 +10,7 @@ const readline_1 = require("readline");
 const xpath = require("xpath");
 const xmldom_1 = require("xmldom");
 const core_1 = require("@salesforce/core");
+const constants_1 = require("./constants");
 exports.NO_CONTENT_CODE = 204;
 var LoggerLevel;
 (function (LoggerLevel) {
@@ -169,7 +170,7 @@ class Utils {
             : await fs_1.promises.stat(pathToCheck);
     }
     static isENOENT(err) {
-        return err && err.code === 'ENOENT';
+        return err && err.code === constants_1.default.ENOENT;
     }
     static async mkDirPath(destination, hasFileName = false) {
         if (!destination) {
@@ -336,8 +337,8 @@ class Utils {
                     return result;
                 default:
                     // Read payload
-                    response.content_type = response.headers['content-type'];
-                    if (response.content_type === 'application/octetstream') {
+                    response.content_type = response.headers[constants_1.default.HEADERS_CONTENT_TYPE];
+                    if (response.content_type === constants_1.default.CONTENT_TYPE_APPLICATION) {
                         result.body = Buffer.from(await response.arrayBuffer());
                         result.isBinary = true;
                     }

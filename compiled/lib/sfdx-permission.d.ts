@@ -98,16 +98,16 @@ export declare class PermissionSet extends Named {
     getPermissionCollection(metadataName: string): Map<string, MetaDataPermission>;
 }
 export declare class SfdxPermission {
-    static apexClass: string;
-    static apexPage: string;
-    static customApplication: string;
-    static customObject: string;
-    static customField: string;
-    static customTab: string;
-    static permissionSet: string;
-    static profile: string;
-    static recordType: string;
-    static layout: string;
+    static readonly apexClass = "ApexClass";
+    static readonly apexPage = "ApexPage";
+    static readonly customApplication = "CustomApplication";
+    static readonly customObject = "CustomObject";
+    static readonly customField = "CustomField";
+    static readonly customTab = "CustomTab";
+    static readonly permissionSet = "PermissionSet";
+    static readonly profile = "Profile";
+    static readonly recordType = "RecordType";
+    static readonly layout = "Layout";
     static defaultPermissionMetaTypes: string[];
     static getPermisionString(permissionSet: Named): string;
 }

@@ -1,5 +1,5 @@
 import { expect } from '@salesforce/command/lib/test';
-import { OptionsBase } from '../../src/lib/options';
+import { OptionsBase, OptionsSettings } from '../../src/lib/options';
 import { OptionsFactory } from '../../src/lib/options-factory';
 import SchmeaOptions from '../../src/lib/schema-options';
 import { UnmaskOptions } from '../../src/lib/unmask-options';
@@ -70,8 +70,9 @@ describe('Options Tests', () => {
       await Utils.writeFile(optionsPath, JSON.stringify(options));
       // It writes the file
       expect(await Utils.pathExists(optionsPath)).is.true;
-      
-      options = await OptionsFactory.get(TestOptions, optionsPath, true);
+      const optionsSettings = new OptionsSettings();
+      optionsSettings.ignoreVersion = true;
+      options = await OptionsFactory.get(TestOptions, optionsPath, optionsSettings);
       // It contains default data
       expect(options).to.not.be.null;
       expect(options.isCurrentVersion).to.be.false;
