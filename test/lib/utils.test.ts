@@ -1,7 +1,7 @@
 import Setup from './setup'
 import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
-import Utils from '../../src/lib/utils';
+import Utils from '../../src/lib/utils'
 import path = require('path');
 
 var testItemCount = 0;

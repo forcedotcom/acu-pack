@@ -3,9 +3,7 @@ import { SfdxCore } from './sfdx-core';
 import { SfdxFolder, SfdxQuery, SfdxEntity } from './sfdx-query';
 import path = require('path');
 import Utils from '../lib/utils';
-import { RestAction } from '../lib/utils';
 import { openSync, writeSync } from 'fs';
-import Constants from '../lib/constants';
 
 export class SfdxJobInfo {
     public id: string;
@@ -50,27 +48,28 @@ export class SfdxOrgInfo {
 }
 
 export class SfdxTasks {
+
     public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
 
     public static async describeMetadata(usernameOrAlias: string): Promise<any[]> {
-        const response = await SfdxCore.command(`${Constants.SFDX_DESCRIBE_METADATA} --json -u ${usernameOrAlias}`);
+        const response = await SfdxCore.command(`sfdx force:mdapi:describemetadata --json -u ${usernameOrAlias}`);
         return !response || !response.metadataObjects
             ? []
             : ensureArray(response.metadataObjects);
     }
 
     public static async executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel: string = 'debug' ): Promise<any> {
-        const response = await SfdxCore.command(`${Constants.SFDX_APEX_EXECUTE} --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+        const response = await SfdxCore.command(`sfdx force:apex:execute --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
         return response.result;
     }
 
-    public static async retrievePackage(usernameOrAlias: string, packageFilePath: string = Constants.DEFAULT_PACKAGE_PATH): Promise<any> {
+    public static async retrievePackage(usernameOrAlias: string, packageFilePath: string = 'manifest/package.xml'): Promise<any> {
         // get custom objects
-        return await SfdxCore.command(`${Constants.SFDX_SOURCE_RETRIEVE} --json -x ${packageFilePath} -u ${usernameOrAlias}`);
+        return await SfdxCore.command(`sfdx force:source:retrieve --json -x ${packageFilePath} -u ${usernameOrAlias}`);
     }
 
     public static async initializeProject(projectName: string): Promise<string> {
-        return await SfdxCore.command(`${Constants.SFDX_PROJECT_CREATE} --projectname ${projectName}`);
+        return await SfdxCore.command(`sfdx force:project:create --projectname ${projectName}`);
     }
 
     public static async* getTypesForPackage(usernameOrAlias: string, describeMetadatas: Set<any>, namespaces: Set<string> = null) {
@@ -116,7 +115,7 @@ export class SfdxTasks {
     public static async listMetadatas(usernameOrAlias: string, metadataTypes: Iterable<string>, namespaces: Set<string> = null): Promise<Map<string, string[]>> {
         const response = new Map<string, string[]>();
         for (const metadataType of metadataTypes) {
-            const results = await SfdxCore.command(`${Constants.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`);
+            const results = await SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} -u ${usernameOrAlias}`);
             // If there are no instances of the metadatatype SFDX just returns {status:0}
             const members = [];
             if (results) {
@@ -136,7 +135,7 @@ export class SfdxTasks {
         return response;
     }
     public static async* listMetadata(usernameOrAlias: string, metadataType: string, namespaces: Set<string> = null) {
-        const results = await SfdxCore.command(`${Constants.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`);
+        const results = await SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} -u ${usernameOrAlias}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
         if (results) {
             let resultsArray: any[];
@@ -159,7 +158,7 @@ export class SfdxTasks {
     }
 
     public static async* listMetadataInFolder(usernameOrAlias: string, metadataType: string, folderName: string, namespaces: Set<string> = null) {
-        const results = await SfdxCore.command(`${Constants.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`);
+        const results = await SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
         if (results) {
             let resultsArray: any[];
@@ -182,7 +181,7 @@ export class SfdxTasks {
     }
 
     public static async describeObject(usernameOrAlias: string, objectName: string): Promise<any> {
-        return await SfdxCore.command(`${Constants.SFDX_SCHEMA_DESCRIBE} --json -s ${objectName} -u ${usernameOrAlias}`);
+        return await SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
     }
 
     public static async enqueueApexTests(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage: boolean = false): Promise<SfdxJobInfo> {
@@ -201,7 +200,7 @@ export class SfdxTasks {
             writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}\r\n`);
         }
 
-        const command = `${Constants.SFDX_DATA_UPSERT} --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
+        const command = `sfdx force:data:bulk:upsert --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
         const results = await SfdxCore.command(command);
         return SfdxTasks.getJobInfo(results);
     }
@@ -210,7 +209,7 @@ export class SfdxTasks {
         if (!usernameOrAlias || !jobInfo || !jobInfo.id) {
             return null;
         }
-        let command = `${Constants.SFDX_DATA_STATUS} --json -i ${jobInfo.id} -u ${usernameOrAlias}`;
+        let command = `sfdx force:data:bulk:status --json -i ${jobInfo.id} -u ${usernameOrAlias}`;
         if (jobInfo.batchId) {
             command += ` -b ${jobInfo.batchId}`;
         }
@@ -240,7 +239,7 @@ export class SfdxTasks {
         if (!orgAliasOrUsername) {
             return null;
         }
-        const result = await SfdxCore.command(`${Constants.SFDX_ORG_DISPLAY} --json -u ${orgAliasOrUsername}`);
+        const result = await SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
     }
 
@@ -316,7 +315,7 @@ export class SfdxTasks {
         if (!orgAliasOrUsername) {
             return null;
         }
-        const results = await SfdxCore.command(`${Constants.SFDX_SOURCE_STATUS} --json -u ${orgAliasOrUsername}`);
+        const results = await SfdxCore.command(`sfdx force:source:status --json -u ${orgAliasOrUsername}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
         if (!results) {
             return null;
@@ -362,22 +361,10 @@ export class SfdxTasks {
     }
 
     public static async getDefaultOrgAlias(): Promise<string> {
-        const result = await SfdxCore.command(`${Constants.SFDX_GET_DEFAULT_USERNAME} --json`);
+        const result = await SfdxCore.command('sfdx config:get defaultusername --json');
         return result[0] != null
             ? result[0].value
             : null;
-    }
-
-    public static async getUnsupportedMetadataTypes(): Promise<string[]> {
-        const result = await Utils.getRestResult(RestAction.GET, Constants.METADATA_COVERAGE_REPORT_URL);
-        const myMap = new Map<string, any>(Object.entries(result.getContent().types));
-        const types = [];
-        for (const [key, value] of myMap) {
-            if (value.channels && !value.channels.metadataApi) {
-                types.push(key);
-            }
-        }
-        return Utils.sortArray(types);
     }
 
     protected static _folderPaths: Map<string, string> = null;

@@ -6,9 +6,6 @@ import { createInterface } from 'readline';
 import xpath = require('xpath');
 import { DOMParser as dom } from 'xmldom';
 import { Logger } from '@salesforce/core';
-import Constants from './constants';
-
-export const NO_CONTENT_CODE = 204;
 
 export enum LoggerLevel {
     trace = 'trace',
@@ -19,38 +16,8 @@ export enum LoggerLevel {
     fatal = 'fatal'
 }
 
-export enum RestAction {
-    GET = 'GET',
-    PUT = 'PUT',
-    POST = 'POST',
-    DELETE = 'DELETE',
-    PATCH = 'PATCH'
-}
-
-export class RestResult {
-    public id: string;
-    public code: number;
-    public body: any;
-    public isError = false;
-    public contentType: string;
-    public isBinary = false;
-
-    public throw(): Error {
-        throw this.getError();
-    }
-
-    public getContent(): any {
-        return this.getError() || this.body || this.id;
-    }
-
-    private getError(): Error {
-        return this.isError
-            ? new Error(`(${this.code}) ${this.body}`)
-            : null;
-    }
-}
-
 export default class Utils {
+
     public static logger: Logger;
     public static isJsonEnabled = false;
 
@@ -176,7 +143,7 @@ export default class Utils {
     }
 
     public static isENOENT(err: any): boolean {
-        return err && err.code === Constants.ENOENT;
+        return err && err.code === 'ENOENT';
     }
 
     public static async mkDirPath(destination: string, hasFileName = false): Promise<void> {
@@ -356,38 +323,6 @@ export default class Utils {
         return chunk(recordsToChunk, chunkSize);
     }
 
-    public static async getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: []): Promise<RestResult> {
-        const result = new RestResult();
-
-        try {
-            const apiPromise = Utils.bent(action.toString(), headers || {}, validStatusCodes || [200]);
-            const response = await apiPromise(url, parameter);
-
-            // Do we have content?
-            result.code = response.statusCode;
-            switch (result.code) {
-                case NO_CONTENT_CODE:
-                    return result;
-                default:
-                    // Read payload
-                    response.content_type = response.headers[Constants.HEADERS_CONTENT_TYPE];
-                    if (response.content_type === Constants.CONTENT_TYPE_APPLICATION) {
-                        result.body = Buffer.from(await response.arrayBuffer());
-                        result.isBinary = true;
-                    } else {
-                        result.body = await response.json();
-                    }
-
-                    return result;
-            }
-        } catch (err) {
-            result.isError = true;
-            result.code = err.statusCode;
-            result.body = err.message;
-        }
-        return result;
-    }
-
     private static glob = require('util').promisify(require('glob'));
-    private static bent = require('bent');
+
 }

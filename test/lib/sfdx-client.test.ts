@@ -1,8 +1,7 @@
 import { expect } from '@salesforce/command/lib/test';
 import { SfdxQuery } from '../../src/lib/sfdx-query';
-import { SfdxClient, ApiKind } from '../../src/lib/sfdx-client';
+import { SfdxClient, RestAction, ApiKind } from '../../src/lib/sfdx-client';
 import Utils from '../../src/lib/utils';
-import { RestAction } from '../../src/lib/utils';
 const unknownId = '00000000001';
 
 const orgAlias = 'mmalling@resilient-koala-5j8tt5.com';//Setup.orgAlias;

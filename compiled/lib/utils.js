@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RestResult = exports.RestAction = exports.LoggerLevel = exports.NO_CONTENT_CODE = void 0;
+exports.LoggerLevel = void 0;
 const tslib_1 = require("tslib");
 const path = require("path");
 const xml2js = require("xml2js");
@@ -10,8 +10,6 @@ const readline_1 = require("readline");
 const xpath = require("xpath");
 const xmldom_1 = require("xmldom");
 const core_1 = require("@salesforce/core");
-const constants_1 = require("./constants");
-exports.NO_CONTENT_CODE = 204;
 var LoggerLevel;
 (function (LoggerLevel) {
     LoggerLevel["trace"] = "trace";
@@ -21,32 +19,6 @@ var LoggerLevel;
     LoggerLevel["error"] = "error";
     LoggerLevel["fatal"] = "fatal";
 })(LoggerLevel = exports.LoggerLevel || (exports.LoggerLevel = {}));
-var RestAction;
-(function (RestAction) {
-    RestAction["GET"] = "GET";
-    RestAction["PUT"] = "PUT";
-    RestAction["POST"] = "POST";
-    RestAction["DELETE"] = "DELETE";
-    RestAction["PATCH"] = "PATCH";
-})(RestAction = exports.RestAction || (exports.RestAction = {}));
-class RestResult {
-    constructor() {
-        this.isError = false;
-        this.isBinary = false;
-    }
-    throw() {
-        throw this.getError();
-    }
-    getContent() {
-        return this.getError() || this.body || this.id;
-    }
-    getError() {
-        return this.isError
-            ? new Error(`(${this.code}) ${this.body}`)
-            : null;
-    }
-}
-exports.RestResult = RestResult;
 class Utils {
     static async log(logMessage, logLevel, isJsonEnabled) {
         if (!this.logger) {
@@ -170,7 +142,7 @@ class Utils {
             : await fs_1.promises.stat(pathToCheck);
     }
     static isENOENT(err) {
-        return err && err.code === constants_1.default.ENOENT;
+        return err && err.code === 'ENOENT';
     }
     static async mkDirPath(destination, hasFileName = false) {
         if (!destination) {
@@ -325,36 +297,6 @@ class Utils {
         const chunk = (arr, size) => Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size));
         return chunk(recordsToChunk, chunkSize);
     }
-    static async getRestResult(action, url, parameter, headers, validStatusCodes) {
-        const result = new RestResult();
-        try {
-            const apiPromise = Utils.bent(action.toString(), headers || {}, validStatusCodes || [200]);
-            const response = await apiPromise(url, parameter);
-            // Do we have content?
-            result.code = response.statusCode;
-            switch (result.code) {
-                case exports.NO_CONTENT_CODE:
-                    return result;
-                default:
-                    // Read payload
-                    response.content_type = response.headers[constants_1.default.HEADERS_CONTENT_TYPE];
-                    if (response.content_type === constants_1.default.CONTENT_TYPE_APPLICATION) {
-                        result.body = Buffer.from(await response.arrayBuffer());
-                        result.isBinary = true;
-                    }
-                    else {
-                        result.body = await response.json();
-                    }
-                    return result;
-            }
-        }
-        catch (err) {
-            result.isError = true;
-            result.code = err.statusCode;
-            result.body = err.message;
-        }
-        return result;
-    }
 }
 exports.default = Utils;
 Utils.isJsonEnabled = false;
@@ -366,5 +308,4 @@ Utils.defaultXmlOptions = {
     encoding: 'utf-8'
 };
 Utils.glob = require('util').promisify(require('glob'));
-Utils.bent = require('bent');
 //# sourceMappingURL=utils.js.map

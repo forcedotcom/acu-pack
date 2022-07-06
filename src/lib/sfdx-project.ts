@@ -1,11 +1,14 @@
 import { SfdxProject as BaseProject } from '@salesforce/core';
-import Constants from './constants';
 export class PackageDirectory {
     public path: string = null;
     public default: boolean = false;
 }
 
 export default class SfdxProject {
+    public static DEFAULT_PROJECT_FILE_NAME = 'sfdx-project.json';
+    public static DEFAULT_SFDC_LOGIN_URL = 'https://login.salesforce.com';
+    public static DEFAULT_PACKAGE_VERSION = '49.0';
+
     public static async default(): Promise<SfdxProject> {
         if (!SfdxProject.defaultInstance) {
             SfdxProject.defaultInstance = await SfdxProject.deserialize();
@@ -29,8 +32,8 @@ export default class SfdxProject {
     constructor() {
         this.packageDirectories = [];
         this.namespace = '';
-        this.sfdcLoginUrl = Constants.DEFAULT_SFDC_LOGIN_URL;
-        this.sourceApiVersion = Constants.DEFAULT_PACKAGE_VERSION;
+        this.sfdcLoginUrl = SfdxProject.DEFAULT_SFDC_LOGIN_URL;
+        this.sourceApiVersion = SfdxProject.DEFAULT_PACKAGE_VERSION;
     }
 
     public getDefaultDirectory(): string {

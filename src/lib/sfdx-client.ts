@@ -1,8 +1,15 @@
 import { SfdxTasks, SfdxOrgInfo } from './sfdx-tasks';
 import Utils from './utils';
-import { RestAction, RestResult } from './utils';
 
 export const NO_CONTENT_CODE = 204;
+
+export enum RestAction {
+    GET = 'GET',
+    PUT = 'PUT',
+    POST = 'POST',
+    DELETE = 'DELETE',
+    PATCH = 'PATCH'
+}
 
 export enum ApiKind {
     DEFAULT = '',
@@ -10,9 +17,33 @@ export enum ApiKind {
     COMPOSITE = 'composite'
 }
 
+class RestResult {
+    public id: string;
+    public code: number;
+    public body: any;
+    public isError = false;
+    public contentType: string;
+    public isBinary = false;
+
+    public throw(): Error {
+        throw this.getError();
+    }
+
+    public getContent(): any {
+        return this.getError() || this.body || this.id;
+    }
+
+    private getError(): Error {
+        return this.isError
+            ? new Error(`(${this.code}) ${this.body}`)
+            : null;
+    }
+}
+
 export class SfdxClient {
     private static defailtIdField = 'id';
 
+    private bent = require('bent');
     private headers = {};
     private orgAliasOrUsername: string;
     private orgInfo: SfdxOrgInfo;
@@ -230,6 +261,35 @@ export class SfdxClient {
     }
 
     private async handleResponse(action: RestAction = RestAction.GET, uri: string, record: any = null, validStatusCodes = null): Promise<RestResult> {
-        return await Utils.getRestResult(action, uri, record, this.headers, validStatusCodes);
+        const result = new RestResult();
+
+        try {
+
+            const apiPromise = this.bent(action.toString(), this.headers, validStatusCodes || [200]);
+            const response = await apiPromise(uri, record);
+
+            // Do we have content?
+            result.code = response.statusCode;
+            switch (result.code) {
+                case NO_CONTENT_CODE:
+                    return result;
+                default:
+                    // Read payload
+                    response.content_type = response.headers['content-type'];
+                    if (response.content_type === 'application/octetstream') {
+                        result.body = Buffer.from(await response.arrayBuffer());
+                        result.isBinary = true;
+                    } else {
+                        result.body = await response.json();
+                    }
+
+                    return result;
+            }
+        } catch (err) {
+            result.isError = true;
+            result.code = err.statusCode;
+            result.body = err.message;
+        }
+        return result;
     }
 }

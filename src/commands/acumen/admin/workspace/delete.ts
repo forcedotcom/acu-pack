@@ -2,8 +2,7 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
 import { SfdxTasks } from '../../../../lib/sfdx-tasks';
-import { SfdxClient, ApiKind, NO_CONTENT_CODE } from '../../../../lib/sfdx-client';
-import { RestAction } from '../../../../lib/utils';
+import { SfdxClient, RestAction, ApiKind, NO_CONTENT_CODE } from '../../../../lib/sfdx-client';
 
 export default class Delete extends CommandBase {
   public static description = CommandBase.messages.getMessage('admin.workspace.delete.commandDescription');

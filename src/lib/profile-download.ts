@@ -3,7 +3,6 @@ import path = require('path');
 import { UX } from '@salesforce/command';
 import { SfdxQuery } from './sfdx-query';
 import { Connection } from 'jsforce';
-import Constants from './constants';
 
 export class ProfileDownload {
 
@@ -48,7 +47,7 @@ export class ProfileDownload {
 
   public static async writeProfileToXML(profileMetadata: any, filePath: string): Promise<void> {
     profileMetadata['$'] = {
-      xmlns: Constants.DEFAULT_XML_NAMESPACE
+      xmlns: 'http://soap.sforce.com/2006/04/metadata'
     };
 
     const nonArrayKeys = ['custom', 'description', 'fullName', 'userLicense'];
