@@ -2,14 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackageOptions = void 0;
 const options_1 = require("./options");
+const sfdx_tasks_1 = require("../lib/sfdx-tasks");
 class PackageOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);
         this.excludeMetadataTypes = [];
     }
-    loadDefaults() {
-        this.excludeMetadataTypes = [];
-        return Promise.resolve();
+    async loadDefaults() {
+        // When the defaults are loaded - we will pull from the Metadata Coverage Report
+        this.excludeMetadataTypes = await sfdx_tasks_1.SfdxTasks.getUnsupportedMetadataTypes();
+        return;
     }
     get currentVersion() {
         return PackageOptions.CURRENT_VERSION;
