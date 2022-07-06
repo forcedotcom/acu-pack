@@ -2,10 +2,9 @@ import { exec } from 'child_process';
 import Utils from '../lib/utils';
 import SfdxProject from '../lib/sfdx-project';
 import XmlMerge from './xml-merge';
+import Constants from '../lib/constants';
 
 export class SfdxCore {
-    public static DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
-
     public static ASTERIX: string = '*';
     public static MAIN: string = 'main';
     public static DEFAULT: string = 'default';
@@ -47,7 +46,7 @@ export class SfdxCore {
         return {
             Package: {
                 $: {
-                    xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
+                    xmlns: Constants.DEFAULT_XML_NAMESPACE
                 },
                 types: [],
                 version: version || (await SfdxProject.default()).sourceApiVersion

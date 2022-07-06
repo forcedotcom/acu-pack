@@ -1,5 +1,4 @@
 export declare class SfdxCore {
-    static DEFAULT_XML_NAMESPACE: string;
     static ASTERIX: string;
     static MAIN: string;
     static DEFAULT: string;

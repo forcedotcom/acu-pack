@@ -6,6 +6,7 @@ const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const options_factory_1 = require("../../../../lib/options-factory");
 const sfdx_client_1 = require("../../../../lib/sfdx-client");
 const utils_1 = require("../../../../lib/utils");
+const utils_2 = require("../../../../lib/utils");
 const unmask_options_1 = require("../../../../lib/unmask-options");
 class Unmask extends command_base_1.CommandBase {
     async run() {
@@ -104,7 +105,7 @@ class Unmask extends command_base_1.CommandBase {
             if (patchObj.records.length !== 0) {
                 this.ux.log('Unmasking Users...');
                 const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
-                const results = await sfdxClient.doComposite(sfdx_client_1.RestAction.PATCH, patchObj);
+                const results = await sfdxClient.doComposite(utils_2.RestAction.PATCH, patchObj);
                 for (const result of results.getContent()) {
                     for (const user of unmaskUsers) {
                         if (user.Id === result.id) {

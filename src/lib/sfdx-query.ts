@@ -1,3 +1,4 @@
+import Constants from './constants';
 import { SfdxCore } from './sfdx-core';
 import Utils from './utils';
 
@@ -213,7 +214,7 @@ export class SfdxQuery {
 
     public static async doSoqlQuery(usernameOrAlias: string, query: string, recordOffset: number = null, recordLimit: number = null, isToolingAPIQuery: boolean = false): Promise<any[]> {
         const records = [];
-        const queryCmd = isToolingAPIQuery ? 'sfdx force:data:soql:query -t' : 'sfdx force:data:soql:query';
+        const queryCmd = isToolingAPIQuery ? `${Constants.SFDX_DATA_QUERY} -t` : Constants.SFDX_DATA_QUERY;
         if (!recordLimit) {
             const cmd = `${queryCmd} -q \"${query}\" --json -u ${usernameOrAlias}`;
             const results = await SfdxCore.command(cmd);

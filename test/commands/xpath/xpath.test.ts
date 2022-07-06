@@ -5,6 +5,7 @@ import { spawnSync } from 'child_process';
 import Utils from '../../../src/lib/utils'
 import { XPathOptions } from '../../../src/lib/xpath-options';
 import { OptionsFactory } from '../../../src/lib/options-factory';
+import Constants from '../../../src/lib/constants';
 
 const optionsPath = 'exit-code-options.json';
 const xmlPath = 'exit-code.profile-meta.xml';
@@ -35,7 +36,7 @@ describe("XPath Tests", function () {
 
   it("Returns Exit Code 0", async () => {
     await fs.writeFile(xmlPath, `<?xml version="1.0" encoding="UTF-8"?>
-    <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <Profile xmlns="${Constants.DEFAULT_XML_NAMESPACE}">
         <classAccesses>
             <apexClass>MyMJM</apexClass>
             <enabled>false</enabled>
@@ -53,7 +54,7 @@ describe("XPath Tests", function () {
   });
   it("Returns Exit Code 1", async () => {
     await fs.writeFile(xmlPath, `<?xml version="1.0" encoding="UTF-8"?>
-    <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <Profile xmlns="${Constants.DEFAULT_XML_NAMESPACE}">
         <classAccesses>
             <apexClass>MyMJM</apexClass>
             <enabled>false</enabled>
