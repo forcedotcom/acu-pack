@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackageDirectory = void 0;
 const core_1 = require("@salesforce/core");
-const constants_1 = require("./constants");
 class PackageDirectory {
     constructor() {
         this.path = null;
@@ -14,8 +13,8 @@ class SfdxProject {
     constructor() {
         this.packageDirectories = [];
         this.namespace = '';
-        this.sfdcLoginUrl = constants_1.default.DEFAULT_SFDC_LOGIN_URL;
-        this.sourceApiVersion = constants_1.default.DEFAULT_PACKAGE_VERSION;
+        this.sfdcLoginUrl = SfdxProject.DEFAULT_SFDC_LOGIN_URL;
+        this.sourceApiVersion = SfdxProject.DEFAULT_PACKAGE_VERSION;
     }
     static async default() {
         if (!SfdxProject.defaultInstance) {
@@ -41,4 +40,7 @@ class SfdxProject {
     }
 }
 exports.default = SfdxProject;
+SfdxProject.DEFAULT_PROJECT_FILE_NAME = 'sfdx-project.json';
+SfdxProject.DEFAULT_SFDC_LOGIN_URL = 'https://login.salesforce.com';
+SfdxProject.DEFAULT_PACKAGE_VERSION = '49.0';
 //# sourceMappingURL=sfdx-project.js.map

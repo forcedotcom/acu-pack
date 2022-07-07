@@ -4,7 +4,6 @@ exports.ProfileDownload = void 0;
 const utils_1 = require("./utils");
 const path = require("path");
 const sfdx_query_1 = require("./sfdx-query");
-const constants_1 = require("./constants");
 class ProfileDownload {
     constructor(sfdxCon, orgAlias, profileList, profileIDMap, rootDir, ux) {
         this.sfdxCon = sfdxCon;
@@ -39,7 +38,7 @@ class ProfileDownload {
     }
     static async writeProfileToXML(profileMetadata, filePath) {
         profileMetadata['$'] = {
-            xmlns: constants_1.default.DEFAULT_XML_NAMESPACE
+            xmlns: 'http://soap.sforce.com/2006/04/metadata'
         };
         const nonArrayKeys = ['custom', 'description', 'fullName', 'userLicense'];
         // Delete empty arrays

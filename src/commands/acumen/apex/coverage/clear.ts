@@ -1,8 +1,7 @@
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
-import { SfdxClient, NO_CONTENT_CODE, ApiKind } from '../../../../lib/sfdx-client';
-import { RestAction } from '../../../../lib/utils';
+import { SfdxClient, RestAction, NO_CONTENT_CODE, ApiKind } from '../../../../lib/sfdx-client';
 
 export default class Clear extends CommandBase {
   public static defaultJobStatusWaitMax = -1;

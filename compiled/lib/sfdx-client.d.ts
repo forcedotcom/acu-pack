@@ -1,12 +1,30 @@
-import { RestAction, RestResult } from './utils';
 export declare const NO_CONTENT_CODE = 204;
+export declare enum RestAction {
+    GET = "GET",
+    PUT = "PUT",
+    POST = "POST",
+    DELETE = "DELETE",
+    PATCH = "PATCH"
+}
 export declare enum ApiKind {
     DEFAULT = "",
     TOOLING = "tooling",
     COMPOSITE = "composite"
 }
+declare class RestResult {
+    id: string;
+    code: number;
+    body: any;
+    isError: boolean;
+    contentType: string;
+    isBinary: boolean;
+    throw(): Error;
+    getContent(): any;
+    private getError;
+}
 export declare class SfdxClient {
     private static defailtIdField;
+    private bent;
     private headers;
     private orgAliasOrUsername;
     private orgInfo;
@@ -30,3 +48,4 @@ export declare class SfdxClient {
     private getUri;
     private handleResponse;
 }
+export {};

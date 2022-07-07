@@ -5,7 +5,6 @@ const child_process_1 = require("child_process");
 const utils_1 = require("../lib/utils");
 const sfdx_project_1 = require("../lib/sfdx-project");
 const xml_merge_1 = require("./xml-merge");
-const constants_1 = require("../lib/constants");
 class SfdxCore {
     static command(cmd) {
         return new Promise((resolve, reject) => {
@@ -44,7 +43,7 @@ class SfdxCore {
         return {
             Package: {
                 $: {
-                    xmlns: constants_1.default.DEFAULT_XML_NAMESPACE
+                    xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 types: [],
                 version: version || (await sfdx_project_1.default.default()).sourceApiVersion
@@ -75,6 +74,7 @@ class SfdxCore {
     }
 }
 exports.SfdxCore = SfdxCore;
+SfdxCore.DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
 SfdxCore.ASTERIX = '*';
 SfdxCore.MAIN = 'main';
 SfdxCore.DEFAULT = 'default';

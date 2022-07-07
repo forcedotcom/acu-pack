@@ -7,9 +7,7 @@ const sfdx_core_1 = require("./sfdx-core");
 const sfdx_query_1 = require("./sfdx-query");
 const path = require("path");
 const utils_1 = require("../lib/utils");
-const utils_2 = require("../lib/utils");
 const fs_1 = require("fs");
-const constants_1 = require("../lib/constants");
 class SfdxJobInfo {
     constructor() {
         this.statusCount = 0;
@@ -38,21 +36,21 @@ class SfdxOrgInfo {
 exports.SfdxOrgInfo = SfdxOrgInfo;
 class SfdxTasks {
     static async describeMetadata(usernameOrAlias) {
-        const response = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_DESCRIBE_METADATA} --json -u ${usernameOrAlias}`);
+        const response = await sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:describemetadata --json -u ${usernameOrAlias}`);
         return !response || !response.metadataObjects
             ? []
             : ts_types_1.ensureArray(response.metadataObjects);
     }
     static async executeAnonymousBlock(usernameOrAlias, apexFilePath, logLevel = 'debug') {
-        const response = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_APEX_EXECUTE} --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+        const response = await sfdx_core_1.SfdxCore.command(`sfdx force:apex:execute --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
         return response.result;
     }
-    static async retrievePackage(usernameOrAlias, packageFilePath = constants_1.default.DEFAULT_PACKAGE_PATH) {
+    static async retrievePackage(usernameOrAlias, packageFilePath = 'manifest/package.xml') {
         // get custom objects
-        return await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_SOURCE_RETRIEVE} --json -x ${packageFilePath} -u ${usernameOrAlias}`);
+        return await sfdx_core_1.SfdxCore.command(`sfdx force:source:retrieve --json -x ${packageFilePath} -u ${usernameOrAlias}`);
     }
     static async initializeProject(projectName) {
-        return await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_PROJECT_CREATE} --projectname ${projectName}`);
+        return await sfdx_core_1.SfdxCore.command(`sfdx force:project:create --projectname ${projectName}`);
     }
     static getTypesForPackage(usernameOrAlias, describeMetadatas, namespaces = null) {
         return tslib_1.__asyncGenerator(this, arguments, function* getTypesForPackage_1() {
@@ -126,7 +124,7 @@ class SfdxTasks {
     static async listMetadatas(usernameOrAlias, metadataTypes, namespaces = null) {
         const response = new Map();
         for (const metadataType of metadataTypes) {
-            const results = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`);
+            const results = await sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} -u ${usernameOrAlias}`);
             // If there are no instances of the metadatatype SFDX just returns {status:0}
             const members = [];
             if (results) {
@@ -147,7 +145,7 @@ class SfdxTasks {
     }
     static listMetadata(usernameOrAlias, metadataType, namespaces = null) {
         return tslib_1.__asyncGenerator(this, arguments, function* listMetadata_1() {
-            const results = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`));
+            const results = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} -u ${usernameOrAlias}`));
             // If there are no instances of the metadatatype SFDX just returns {status:0}
             if (results) {
                 let resultsArray;
@@ -172,7 +170,7 @@ class SfdxTasks {
     }
     static listMetadataInFolder(usernameOrAlias, metadataType, folderName, namespaces = null) {
         return tslib_1.__asyncGenerator(this, arguments, function* listMetadataInFolder_1() {
-            const results = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`));
+            const results = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(`sfdx force:mdapi:listmetadata --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`));
             // If there are no instances of the metadatatype SFDX just returns {status:0}
             if (results) {
                 let resultsArray;
@@ -196,7 +194,7 @@ class SfdxTasks {
         });
     }
     static async describeObject(usernameOrAlias, objectName) {
-        return await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_SCHEMA_DESCRIBE} --json -s ${objectName} -u ${usernameOrAlias}`);
+        return await sfdx_core_1.SfdxCore.command(`sfdx force:schema:sobject:describe --json -s ${objectName} -u ${usernameOrAlias}`);
     }
     static async enqueueApexTests(usernameOrAlias, sfdxEntities, shouldSkipCodeCoverage = false) {
         if (!usernameOrAlias || !sfdxEntities) {
@@ -211,7 +209,7 @@ class SfdxTasks {
         for (const sfdxEntity of sfdxEntities) {
             fs_1.writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}\r\n`);
         }
-        const command = `${constants_1.default.SFDX_DATA_UPSERT} --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
+        const command = `sfdx force:data:bulk:upsert --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
         const results = await sfdx_core_1.SfdxCore.command(command);
         return SfdxTasks.getJobInfo(results);
     }
@@ -219,7 +217,7 @@ class SfdxTasks {
         if (!usernameOrAlias || !jobInfo || !jobInfo.id) {
             return null;
         }
-        let command = `${constants_1.default.SFDX_DATA_STATUS} --json -i ${jobInfo.id} -u ${usernameOrAlias}`;
+        let command = `sfdx force:data:bulk:status --json -i ${jobInfo.id} -u ${usernameOrAlias}`;
         if (jobInfo.batchId) {
             command += ` -b ${jobInfo.batchId}`;
         }
@@ -246,7 +244,7 @@ class SfdxTasks {
         if (!orgAliasOrUsername) {
             return null;
         }
-        const result = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_ORG_DISPLAY} --json -u ${orgAliasOrUsername}`);
+        const result = await sfdx_core_1.SfdxCore.command(`sfdx force:org:display --json -u ${orgAliasOrUsername}`);
         return new SfdxOrgInfo(result);
     }
     static getMapFromSourceTrackingStatus(sourceTrackingStatues) {
@@ -319,7 +317,7 @@ class SfdxTasks {
         if (!orgAliasOrUsername) {
             return null;
         }
-        const results = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_SOURCE_STATUS} --json -u ${orgAliasOrUsername}`);
+        const results = await sfdx_core_1.SfdxCore.command(`sfdx force:source:status --json -u ${orgAliasOrUsername}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
         if (!results) {
             return null;
@@ -364,21 +362,10 @@ class SfdxTasks {
         return statuses;
     }
     static async getDefaultOrgAlias() {
-        const result = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_GET_DEFAULT_USERNAME} --json`);
+        const result = await sfdx_core_1.SfdxCore.command('sfdx config:get defaultusername --json');
         return result[0] != null
             ? result[0].value
             : null;
-    }
-    static async getUnsupportedMetadataTypes() {
-        const result = await utils_1.default.getRestResult(utils_2.RestAction.GET, constants_1.default.METADATA_COVERAGE_REPORT_URL);
-        const myMap = new Map(Object.entries(result.getContent().types));
-        const types = [];
-        for (const [key, value] of myMap) {
-            if (value.channels && !value.channels.metadataApi) {
-                types.push(key);
-            }
-        }
-        return utils_1.default.sortArray(types);
     }
     static async getFolderSOQLData(usernameOrAlias) {
         if (!this._folderPaths) {

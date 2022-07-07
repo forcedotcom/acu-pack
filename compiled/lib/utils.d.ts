@@ -1,5 +1,4 @@
 import { Logger } from '@salesforce/core';
-export declare const NO_CONTENT_CODE = 204;
 export declare enum LoggerLevel {
     trace = "trace",
     debug = "debug",
@@ -7,24 +6,6 @@ export declare enum LoggerLevel {
     warn = "warn",
     error = "error",
     fatal = "fatal"
-}
-export declare enum RestAction {
-    GET = "GET",
-    PUT = "PUT",
-    POST = "POST",
-    DELETE = "DELETE",
-    PATCH = "PATCH"
-}
-export declare class RestResult {
-    id: string;
-    code: number;
-    body: any;
-    isError: boolean;
-    contentType: string;
-    isBinary: boolean;
-    throw(): Error;
-    getContent(): any;
-    private getError;
 }
 export default class Utils {
     static logger: Logger;
@@ -66,7 +47,5 @@ export default class Utils {
     static deleteDirectory(dirPath: string): Promise<void>;
     static writeFile(filePath: string, contents: any): Promise<void>;
     static chunkRecords(recordsToChunk: any[], chunkSize: number): any[];
-    static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: []): Promise<RestResult>;
     private static glob;
-    private static bent;
 }

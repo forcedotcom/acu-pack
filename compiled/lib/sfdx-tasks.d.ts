@@ -40,7 +40,6 @@ export declare class SfdxTasks {
     static getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): any;
     static getSourceTrackingStatus(orgAliasOrUsername: string): Promise<any[]>;
     static getDefaultOrgAlias(): Promise<string>;
-    static getUnsupportedMetadataTypes(): Promise<string[]>;
     protected static _folderPaths: Map<string, string>;
     private static getFolderSOQLData;
     private static getFolderFullPath;

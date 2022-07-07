@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxPermission = exports.PermissionSet = exports.ObjectPermission = exports.TabPermission = exports.ApplicationPermission = exports.RecordTypePermission = exports.DefaultablePermission = exports.LayoutAssignment = exports.PagePermission = exports.UserPermission = exports.ClassPermission = exports.FieldPermission = exports.MetaDataPermission = exports.FieldDetail = exports.ObjectDetail = exports.MetadataDetail = exports.Named = exports.XmlPermission = void 0;
 const path = require("path");
-const constants_1 = require("./constants");
+const sfdx_core_1 = require("./sfdx-core");
 class XmlPermission {
     static getValue(json) {
         const value = json && json instanceof Array
@@ -393,7 +393,7 @@ class PermissionSet extends Named {
         const xmlObj = {
             Profile: {
                 $: {
-                    xmlns: constants_1.default.DEFAULT_XML_NAMESPACE
+                    xmlns: sfdx_core_1.SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 applicationVisibilities: [],
                 classAccesses: [],
@@ -468,16 +468,16 @@ class SfdxPermission {
     }
 }
 exports.SfdxPermission = SfdxPermission;
-SfdxPermission.apexClass = constants_1.default.SFDX_PERMISSION_APEX_CLASS;
-SfdxPermission.apexPage = constants_1.default.SFDX_PERMISSION_APEX_PAGE;
-SfdxPermission.customApplication = constants_1.default.SFDX_PERMISSION_CUSTOM_APP;
-SfdxPermission.customObject = constants_1.default.SFDX_PERMISSION_CUSTOM_OBJ;
-SfdxPermission.customField = constants_1.default.SFDX_PERMISSION_CUSTOM_FIELD;
-SfdxPermission.customTab = constants_1.default.SFDX_PERMISSION_CUSTOM_TAB;
-SfdxPermission.permissionSet = constants_1.default.SFDX_PERMISSION_SET;
-SfdxPermission.profile = constants_1.default.SFDX_PERMISSION_PROFILE;
-SfdxPermission.recordType = constants_1.default.SFDX_PERMISSION_RECORD_TYPE;
-SfdxPermission.layout = constants_1.default.SFDX_PERMISSION_LAYOUT;
+SfdxPermission.apexClass = 'ApexClass';
+SfdxPermission.apexPage = 'ApexPage';
+SfdxPermission.customApplication = 'CustomApplication';
+SfdxPermission.customObject = 'CustomObject';
+SfdxPermission.customField = 'CustomField';
+SfdxPermission.customTab = 'CustomTab';
+SfdxPermission.permissionSet = 'PermissionSet';
+SfdxPermission.profile = 'Profile';
+SfdxPermission.recordType = 'RecordType';
+SfdxPermission.layout = 'Layout';
 SfdxPermission.defaultPermissionMetaTypes = [
     SfdxPermission.apexClass,
     SfdxPermission.apexPage,

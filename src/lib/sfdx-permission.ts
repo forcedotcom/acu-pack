@@ -1,5 +1,5 @@
 import path = require('path');
-import Constants from './constants';
+import { SfdxCore } from './sfdx-core';
 
 export abstract class XmlPermission {
     protected static getValue(json: any): any {
@@ -464,7 +464,7 @@ export class PermissionSet extends Named {
         const xmlObj = {
             Profile: {
                 $: {
-                    xmlns: Constants.DEFAULT_XML_NAMESPACE
+                    xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
                 },
                 applicationVisibilities: [],
                 classAccesses: [],
@@ -513,16 +513,16 @@ export class PermissionSet extends Named {
 }
 
 export class SfdxPermission {
-    public static readonly apexClass = Constants.SFDX_PERMISSION_APEX_CLASS;
-    public static readonly apexPage = Constants.SFDX_PERMISSION_APEX_PAGE;
-    public static readonly customApplication = Constants.SFDX_PERMISSION_CUSTOM_APP;
-    public static readonly customObject = Constants.SFDX_PERMISSION_CUSTOM_OBJ;
-    public static readonly customField = Constants.SFDX_PERMISSION_CUSTOM_FIELD;
-    public static readonly customTab = Constants.SFDX_PERMISSION_CUSTOM_TAB;
-    public static readonly permissionSet = Constants.SFDX_PERMISSION_SET;
-    public static readonly profile = Constants.SFDX_PERMISSION_PROFILE;
-    public static readonly recordType = Constants.SFDX_PERMISSION_RECORD_TYPE;
-    public static readonly layout = Constants.SFDX_PERMISSION_LAYOUT;
+    public static apexClass = 'ApexClass';
+    public static apexPage = 'ApexPage';
+    public static customApplication = 'CustomApplication';
+    public static customObject = 'CustomObject';
+    public static customField = 'CustomField';
+    public static customTab = 'CustomTab';
+    public static permissionSet = 'PermissionSet';
+    public static profile = 'Profile';
+    public static recordType = 'RecordType';
+    public static layout = 'Layout';
 
     public static defaultPermissionMetaTypes = [
         SfdxPermission.apexClass,
