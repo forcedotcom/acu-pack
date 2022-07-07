@@ -3,6 +3,7 @@ import { SfdxCore } from './sfdx-core';
 import SchemaUtils from './schema-utils';
 
 export default class SchemaOptions extends OptionsBase {
+    private static CURRENT_VERSION: number = 1.0;
     public excludeCustomObjectNames: string[] = [];
     public includeCustomObjectNames: string[] = [];
     public outputDefMap = new Map<string, string[]>();
@@ -146,5 +147,9 @@ export default class SchemaOptions extends OptionsBase {
             }
             resolve();
         });
+    }
+
+    protected get currentVersion(): number {
+        return SchemaOptions.CURRENT_VERSION;
     }
 }

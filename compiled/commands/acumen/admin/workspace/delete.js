@@ -6,6 +6,7 @@ const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const sfdx_tasks_1 = require("../../../../lib/sfdx-tasks");
 const sfdx_client_1 = require("../../../../lib/sfdx-client");
+const utils_1 = require("../../../../lib/utils");
 class Delete extends command_base_1.CommandBase {
     async run() {
         var e_1, _a;
@@ -41,7 +42,7 @@ class Delete extends command_base_1.CommandBase {
                 }
                 try {
                     try {
-                        for (var _b = (e_1 = void 0, tslib_1.__asyncValues(sfdxClient.do(sfdx_client_1.RestAction.DELETE, 'IDEWorkspace', workspaceIds, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE]))), _c; _c = await _b.next(), !_c.done;) {
+                        for (var _b = (e_1 = void 0, tslib_1.__asyncValues(sfdxClient.do(utils_1.RestAction.DELETE, 'IDEWorkspace', workspaceIds, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE]))), _c; _c = await _b.next(), !_c.done;) {
                             const result = _c.value;
                             this.ux.log(`Deleted Workspace(${result}) for user: '${username}'.`);
                         }
