@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackageOptions = void 0;
-const options_1 = require("./options");
 const sfdx_tasks_1 = require("../lib/sfdx-tasks");
+const options_1 = require("./options");
 class PackageOptions extends options_1.OptionsBase {
     constructor() {
         super(...arguments);

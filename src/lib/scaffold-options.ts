@@ -2,8 +2,8 @@ import { OptionsBase } from './options';
 
 export class ScaffoldOptions extends OptionsBase {
     public sObjectTypes: string[] = [];
-    public includeOptionalFields: boolean = false;
-    public includeRandomValues: boolean = true;
+    public includeOptionalFields = false;
+    public includeRandomValues = true;
 
     public loadDefaults(): Promise<void> {
         return new Promise((resolve, reject) => {

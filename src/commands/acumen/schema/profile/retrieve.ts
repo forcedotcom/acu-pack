@@ -1,19 +1,18 @@
-import { CommandBase } from '../../../../lib/command-base';
+import path = require('path');
 import { flags } from '@salesforce/command';
 import { SfdxError } from '@salesforce/core';
-import path = require('path');
+import { CommandBase } from '../../../../lib/command-base';
 import Utils from '../../../../lib/utils';
 import { ProfileDownload } from '../../../../lib/profile-download';
 import SfdxProject from '../../../../lib/sfdx-project';
 
 export default class ProfileRetrieve extends CommandBase {
-  public static description = CommandBase.messages.getMessage(
-    'schema.profile.retrieve.commandDescription'
-  );
+  public static description = CommandBase.messages.getMessage('schema.profile.retrieve.commandDescription');
 
-  public static examples = [`
+  public static examples = [
+    `
     $ sfdx acumen:schema:profile:retrieve -u myOrgAlias -n "Admin,Support"
-    Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile `
+    Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile `,
   ];
 
   protected static flagsConfig = {
@@ -21,8 +20,8 @@ export default class ProfileRetrieve extends CommandBase {
       char: 'n',
       description: CommandBase.messages.getMessage('schema.profile.retrieve.names'),
       required: true,
-      map: (n: string) => n.trim()
-    })
+      map: (n: string) => n.trim(),
+    }),
   };
 
   // Comment this out if your command does not require an org username
@@ -31,19 +30,15 @@ export default class ProfileRetrieve extends CommandBase {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = true;
 
-  public async run(): Promise<void> {
-
-    const orgAlias = this.flags.targetusername;
-
-    let packageDir: string;
+  protected async runInternal(): Promise<void> {
     const profileList: string[] = this.flags.names;
 
-    packageDir = (await SfdxProject.default()).getDefaultDirectory();
+    const packageDir = (await SfdxProject.default()).getDefaultDirectory();
     if (!(await Utils.pathExists(packageDir))) {
       throw new SfdxError('No default folder found in sfdx-project.json file');
     }
 
-    const orgAllProfilesMap = await ProfileDownload.checkOrgProfiles(orgAlias);
+    const orgAllProfilesMap = await ProfileDownload.checkOrgProfiles(this.orgAlias);
 
     const orgAllProfiles = [...orgAllProfilesMap.keys()];
 
@@ -51,19 +46,25 @@ export default class ProfileRetrieve extends CommandBase {
       throw new SfdxError('Only 5 Profiles can be retrieved at once');
     }
 
-    const notAvailableProfiles = [];
+    const notAvailableProfiles: string[] = [];
     for (const profile of profileList) {
       if (!orgAllProfiles.includes(profile)) {
         notAvailableProfiles.push(profile);
       }
     }
     if (notAvailableProfiles.length > 0) {
-      throw new SfdxError(`Profiles not found in Org: ${notAvailableProfiles}`);
+      throw new SfdxError(`Profiles not found in Org: ${notAvailableProfiles.join(',')}`);
     }
 
     this.ux.log('Retrieving Profiles...');
-    const profileDownloader = new ProfileDownload(this.connection, orgAlias, profileList,
-      orgAllProfilesMap, path.join(process.cwd()), this.ux);
+    const profileDownloader = new ProfileDownload(
+      this.connection,
+      this.orgAlias,
+      profileList,
+      orgAllProfilesMap,
+      path.join(process.cwd()),
+      this.ux
+    );
 
     // Profile Directory Path
     const profileDirPath = path.join(process.cwd(), packageDir, 'main', 'default', 'profiles');
@@ -87,6 +88,6 @@ export default class ProfileRetrieve extends CommandBase {
     }
 
     this.ux.log(`Done. Profiles stored in folder-> ${profileDirPath}`);
-    await Utils.deleteDirectory(path.join(process.cwd(), Utils._tempFilesPath));
+    await Utils.deleteDirectory(path.join(process.cwd(), Utils.TempFilesPath));
   }
 }

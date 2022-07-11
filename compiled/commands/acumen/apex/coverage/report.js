@@ -6,93 +6,84 @@ const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const office_1 = require("../../../../lib/office");
 class Report extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         var e_1, _a;
         var _b;
+        this.ux.log('Checking for pending tests...');
+        const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
+        let recordCount = 0;
         try {
-            this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
-            this.ux.log('Checking for pending tests...');
-            const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
-            let recordCount = 0;
-            try {
-                for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)), _d; _d = await _c.next(), !_d.done;) {
-                    recordCount = _d.value;
-                    if (recordCount === 0) {
-                        break;
-                    }
+            for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)), _d; _d = await _c.next(), !_d.done;) {
+                recordCount = _d.value;
+                if (recordCount === 0) {
+                    break;
                 }
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
-            if (recordCount !== 0) {
-                this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
-                // Set the proper exit code to indicate violation/failure
-                process.exitCode = 1;
-                return;
-            }
-            // Get Code Coverage Report
-            this.ux.log('Getting Code Coverage Report Data.');
-            const codeCoverage = await sfdx_query_1.SfdxQuery.getCodeCoverage(this.orgAlias);
-            codeCoverage.calculateCodeCoverage();
-            const workbookMap = new Map();
-            // Code Coverage
-            workbookMap.set(`${this.orgAlias} Code Coverage`, [
-                ['Total Classes',
-                    'Total Lines',
-                    'Total Covered',
-                    'Total Uncovered',
-                    'Total % Covered'
-                ],
-                [`${codeCoverage.codeCoverage.length}`,
-                    `${codeCoverage.totalCoveredLines + codeCoverage.totalUncoveredLines}`,
-                    `${codeCoverage.totalCoveredLines}`,
-                    `${codeCoverage.totalUncoveredLines}`,
-                    `${codeCoverage.codeCoveragePercent.toFixed(3)}`
-                ]
-            ]);
-            // Code Coverage Details
-            let sheetData = [['Class Name', 'Covered Lines', 'Uncovered Lines', '% Covered']];
-            for (const codeCoverageItem of codeCoverage.codeCoverage) {
-                sheetData.push([
-                    codeCoverageItem.name,
-                    `${codeCoverageItem.coveredLines.length}`,
-                    `${codeCoverageItem.uncoveredLines.length}`,
-                    `${codeCoverageItem.getCodeCoveragePercent().toFixed(3)}`
-                ]);
-            }
-            workbookMap.set('Code Coverage Details', sheetData);
-            // Check Apex Test Failures
-            const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
-            const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
-            const records = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query);
-            sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
-            for (const record of records) {
-                sheetData.push([
-                    (_b = record.ApexClass) === null || _b === void 0 ? void 0 : _b.Name,
-                    record.MethodName,
-                    record.Message,
-                    record.StackTrace,
-                    record.AsyncApexJobId,
-                    record.ApexTestRunResultId,
-                    record.TestTimestamp
-                ]);
-            }
-            workbookMap.set('Apex Test Failures', sheetData);
-            const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, this.orgAlias);
-            office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
-            this.ux.log(`${reportPath} written.`);
         }
-        catch (err) {
-            throw err;
-        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
-            this.ux.log('Done.');
+            try {
+                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+            }
+            finally { if (e_1) throw e_1.error; }
         }
+        if (recordCount !== 0) {
+            this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
+            // Set the proper exit code to indicate violation/failure
+            process.exitCode = 1;
+            return;
+        }
+        // Get Code Coverage Report
+        this.ux.log('Getting Code Coverage Report Data.');
+        const codeCoverage = await sfdx_query_1.SfdxQuery.getCodeCoverage(this.orgAlias);
+        codeCoverage.calculateCodeCoverage();
+        const workbookMap = new Map();
+        // Code Coverage
+        workbookMap.set(`${this.orgAlias} Code Coverage`, [
+            ['Total Classes',
+                'Total Lines',
+                'Total Covered',
+                'Total Uncovered',
+                'Total % Covered'
+            ],
+            [`${codeCoverage.codeCoverage.length}`,
+                `${codeCoverage.totalCoveredLines + codeCoverage.totalUncoveredLines}`,
+                `${codeCoverage.totalCoveredLines}`,
+                `${codeCoverage.totalUncoveredLines}`,
+                `${codeCoverage.codeCoveragePercent.toFixed(3)}`
+            ]
+        ]);
+        // Code Coverage Details
+        let sheetData = [['Class Name', 'Covered Lines', 'Uncovered Lines', '% Covered']];
+        for (const codeCoverageItem of codeCoverage.codeCoverage) {
+            sheetData.push([
+                codeCoverageItem.name,
+                `${codeCoverageItem.coveredLines.length}`,
+                `${codeCoverageItem.uncoveredLines.length}`,
+                `${codeCoverageItem.getCodeCoveragePercent().toFixed(3)}`
+            ]);
+        }
+        workbookMap.set('Code Coverage Details', sheetData);
+        // Check Apex Test Failures
+        const today = `${new Date().toJSON().slice(0, 10)}T00:00:00.000Z`;
+        const query = `SELECT ApexClass.Name, AsyncApexJobId, ApexTestRunResultId, Message, MethodName, StackTrace, TestTimestamp FROM ApexTestResult WHERE SystemModstamp >= ${today} AND Outcome='Fail' ORDER BY ApexClass.Name, MethodName, SystemModstamp ASC`;
+        const records = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query);
+        sheetData = [['Class Name', 'Method Name', 'Error Message', 'Stack Trace', 'AsyncApexJobId', 'ApexTestRunResultId', 'TestTimestamp']];
+        for (const record of records) {
+            sheetData.push([
+                (_b = record.ApexClass) === null || _b === void 0 ? void 0 : _b.Name,
+                record.MethodName,
+                record.Message,
+                record.StackTrace,
+                record.AsyncApexJobId,
+                record.ApexTestRunResultId,
+                record.TestTimestamp
+            ]);
+        }
+        workbookMap.set('Apex Test Failures', sheetData);
+        const reportPath = this.flags.report || Report.defaultReportPath.replace(/\{ORG\}/, this.orgAlias);
+        office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
+        this.ux.log(`${reportPath} written.`);
     }
 }
 exports.default = Report;

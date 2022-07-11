@@ -1,31 +1,31 @@
 import path = require('path');
-import Utils from './utils';
 import { promises as fs } from 'fs';
+import Utils from './utils';
 import { SfdxCore } from './sfdx-core';
 
 export class OptionsSettings {
-    public ignoreVersion: boolean = false;
-    public blockExternalConnections: boolean = false;
+    public ignoreVersion = false;
+    public blockExternalConnections = false;
 }
 
 export abstract class OptionsBase {
     // This field should NOT be serialized see includeField method below
-    public version: number = 1.0;
+    public version = 1.0;
 
     public get settings(): OptionsSettings {
-        return this._settings;
+        return this.prvSettings;
     }
     public set settings(optionSettings: OptionsSettings) {
         if (optionSettings) {
-            this._settings = optionSettings;
+            this.prvSettings = optionSettings;
         }
     }
 
-    private _settings: OptionsSettings;
+    private prvSettings: OptionsSettings;
 
     // Make sure we have a default ctor
-    constructor() {
-        this._settings = new OptionsSettings();
+    public constructor() {
+        this.prvSettings = new OptionsSettings();
     }
 
     public get isCurrentVersion(): boolean {
@@ -42,7 +42,7 @@ export abstract class OptionsBase {
         } else {
             await this.deserialize(json);
             // If we have a filepath AND the version is not current => write the current version
-            if (!this.isCurrentVersion && !this._settings.ignoreVersion && optionsPath) {
+            if (!this.isCurrentVersion && !this.prvSettings.ignoreVersion && optionsPath) {
                 this.setCurrentVersion();
                 await this.save(optionsPath);
             }
@@ -61,7 +61,7 @@ export abstract class OptionsBase {
     }
 
     protected ignoreField(fieldName: string): boolean {
-        return fieldName === '_settings';
+        return fieldName === 'prvSettings';
     }
 
     protected deserialize(serializedOptionBase: string): Promise<void> {
@@ -69,7 +69,7 @@ export abstract class OptionsBase {
             try {
                 const options = JSON.parse(serializedOptionBase);
                 for (const field of Object.keys(options)) {
-                    if (this.hasOwnProperty(field) && !this.ignoreField(field)) {
+                    if (Object.prototype.hasOwnProperty.call(this, field) && !this.ignoreField(field)) {
                         this[field] = options[field];
                     }
                 }
@@ -81,26 +81,23 @@ export abstract class OptionsBase {
     }
 
     protected serialize(): Promise<string> {
+        // Always check & set the current version before serializing
+        if (!this.isCurrentVersion) {
+            this.setCurrentVersion();
+        }
+        const stringify = (key, value): boolean => {
+            return (this.ignoreField(key)
+                ? undefined
+                : value) as boolean;
+        };
         return new Promise((resolve, reject) => {
             try {
-                // Always check & set the current version before serializing
-                if (!this.isCurrentVersion) {
-                    this.setCurrentVersion();
-                }
-                const ignoreFieldMethodName = this.ignoreField;
-                const stringify = (key, value) => {
-                    return ignoreFieldMethodName(key)
-                        ? undefined
-                        : value;
-                };
                 resolve(JSON.stringify(this, stringify, SfdxCore.jsonSpaces));
             } catch (err) {
                 reject(err);
             }
         });
     }
-
-    protected abstract loadDefaults(): Promise<void>;
 
     protected async readFile(optionsPath: string): Promise<string> {
         if (!optionsPath) {
@@ -120,4 +117,6 @@ export abstract class OptionsBase {
     protected setCurrentVersion(): void {
         this.version = this.currentVersion;
     }
+
+    protected abstract loadDefaults(): Promise<void>;
 }

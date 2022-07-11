@@ -133,6 +133,7 @@ class SfdxClient {
             }
         });
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     async updateByRecord(metaDataType, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
@@ -187,7 +188,7 @@ class SfdxClient {
                         if (result.isError) {
                             result.throw();
                         }
-                        yield yield tslib_1.__await(result.getContent());
+                        yield yield tslib_1.__await(result);
                     }
                 }
                 catch (e_5_1) { e_5 = { error: e_5_1 }; }
@@ -203,6 +204,7 @@ class SfdxClient {
             }
         });
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     async doComposite(action = utils_2.RestAction.GET, record, validStatusCodes = [200]) {
         // https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections.htm
         if (!record) {

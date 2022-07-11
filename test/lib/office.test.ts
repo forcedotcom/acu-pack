@@ -12,21 +12,21 @@ before('Cleanup', async () => {
 after('Cleanup', async () => {
     await Utils.deleteFile(testFilePath);
 });
-describe("Office Tests", function () {
-    describe("writeXlxsWorkbook Test", function () {
-        it("Throws on Nulls", async function () {
+describe('Office Tests', function () {
+    describe('writeXlxsWorkbook Test', function () {
+        it('Throws on Nulls', function () {
             expect(Office.writeXlxsWorkbook.bind(null,null,null)).to.throw('workboodMap cannot be null.');
         });
-        it("Throws on Null Data", async function () {
+        it('Throws on Null Data', function () {
             expect(Office.writeXlxsWorkbook.bind(null,null,testFilePath)).to.throw('workboodMap cannot be null.');
         });
-        it("Throws on Null Path", async function () {
+        it('Throws on Null Path', function () {
             expect(Office.writeXlxsWorkbook.bind(null,data,null)).to.throw('xlxsFilePath cannot be null.');
         });
-        it("Throws on invalid file extensions", async function () {
+        it('Throws on invalid file extensions', function () {
             expect(Office.writeXlxsWorkbook.bind(null,data,'./invalid.file.extension.test')).to.throw('Unrecognized bookType |test|');
         });
-        it("Writes XLXS File", async function () {
+        it('Writes XLXS File', async function () {
             Office.writeXlxsWorkbook(data, testFilePath);
             expect(await Utils.pathExists(testFilePath)).to.be.true;
         });

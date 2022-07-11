@@ -29,5 +29,5 @@ export default class Git extends CommandBase {
     protected static flagsConfig: any;
     protected name: string;
     protected deltas: Map<string, string>;
-    run(): Promise<any>;
+    protected runInternal(): Promise<void>;
 }

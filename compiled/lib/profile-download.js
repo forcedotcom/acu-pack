@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileDownload = void 0;
-const utils_1 = require("./utils");
 const path = require("path");
+const utils_1 = require("./utils");
 const sfdx_query_1 = require("./sfdx-query");
 const constants_1 = require("./constants");
 class ProfileDownload {
@@ -15,7 +15,7 @@ class ProfileDownload {
         this.ux = ux;
         this.profileFilePath = new Map();
     }
-    static async processMissingObjectPermissions(objectData, includedObjects) {
+    static processMissingObjectPermissions(objectData, includedObjects) {
         const profileObjectPermissions = new Map();
         const uniqueObjectNames = new Set();
         for (const obj of objectData) {
@@ -26,7 +26,7 @@ class ProfileDownload {
         }
         return profileObjectPermissions;
     }
-    static async processMissingFieldPermissions(fielddata) {
+    static processMissingFieldPermissions(fielddata) {
         const profileFieldPermissions = [];
         const uniqueFieldNames = new Set();
         for (const field of fielddata) {
@@ -37,9 +37,10 @@ class ProfileDownload {
         }
         return profileFieldPermissions;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async writeProfileToXML(profileMetadata, filePath) {
         profileMetadata['$'] = {
-            xmlns: constants_1.default.DEFAULT_XML_NAMESPACE
+            xmlns: constants_1.default.DEFAULT_XML_NAMESPACE,
         };
         const nonArrayKeys = ['custom', 'description', 'fullName', 'userLicense'];
         // Delete empty arrays
@@ -53,7 +54,7 @@ class ProfileDownload {
         const xmlOptions = {
             renderOpts: { pretty: true, indent: '    ', newline: '\n' },
             rootName: 'Profile',
-            xmldec: { version: '1.0', encoding: 'UTF-8' }
+            xmldec: { version: '1.0', encoding: 'UTF-8' },
         };
         await utils_1.default.writeObjectToXmlFile(filePath, profileMetadata, xmlOptions);
     }
@@ -74,7 +75,7 @@ class ProfileDownload {
             ['Marketing User', 'MarketingProfile'],
             ['Solution Manager', 'SolutionManager'],
             ['Read Only', 'ReadOnly'],
-            ['Standard Platform User', 'StandardAul']
+            ['Standard Platform User', 'StandardAul'],
         ]);
         const getProfiles = await sfdx_query_1.SfdxQuery.doSoqlQuery(orgName, 'Select Id, Name from Profile');
         if (getProfiles.length > 0) {
@@ -93,7 +94,7 @@ class ProfileDownload {
             allowEdit,
             allowDelete,
             viewAllRecords,
-            modifyAllRecords
+            modifyAllRecords,
         };
         return objStructure;
     }
@@ -101,13 +102,13 @@ class ProfileDownload {
         const fieldStructure = {
             field,
             editable,
-            readable
+            readable,
         };
         return fieldStructure;
     }
     async downloadPermissions() {
-        if (!(await utils_1.default.pathExists(path.join(this.rootDir, utils_1.default._tempFilesPath)))) {
-            await utils_1.default.mkDirPath(path.join(this.rootDir, utils_1.default._tempFilesPath));
+        if (!(await utils_1.default.pathExists(path.join(this.rootDir, utils_1.default.TempFilesPath)))) {
+            await utils_1.default.mkDirPath(path.join(this.rootDir, utils_1.default.TempFilesPath));
         }
         const resultsArray = [];
         for (const profileName of this.profileList) {
@@ -123,10 +124,10 @@ class ProfileDownload {
         return new Promise((resolve, reject) => {
             this.sfdxCon.metadata
                 .readSync('Profile', profileName)
-                .then(async (data) => {
+                .then((data) => {
                 resolve(Array.isArray(data) ? data[0] : data);
             })
-                .catch(err => {
+                .catch((err) => {
                 reject(err);
             });
         });
@@ -141,7 +142,7 @@ class ProfileDownload {
             if (!profileJson) {
                 return;
             }
-            const filePath = path.join(path.join(this.rootDir, utils_1.default._tempFilesPath, profileName + '.json'));
+            const filePath = path.join(path.join(this.rootDir, utils_1.default.TempFilesPath, profileName + '.json'));
             this.profileFilePath.set(profileName, filePath);
             const retrievedObjects = [];
             if (profileJson['objectPermissions'] && Array.isArray(profileJson.objectPermissions)) {
@@ -157,10 +158,13 @@ class ProfileDownload {
                     'PermissionsViewAllRecords,' +
                     'SobjectType ' +
                     'FROM ObjectPermissions ' +
-                    'WHERE Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\' ' +
+                    'WHERE Parent.ProfileId=' +
+                    "'" +
+                    this.profileIDMap.get(profileName) +
+                    "' " +
                     'ORDER BY SObjectType ASC';
                 const objData = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, objectPermQuery);
-                const processObjData = await ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
+                const processObjData = ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
                 if (processObjData.size === 0) {
                     return;
                 }
@@ -175,9 +179,12 @@ class ProfileDownload {
                     'PermissionsRead ' +
                     'FROM FieldPermissions ' +
                     `WHERE SobjectType IN (${sobjects.join(',')})` +
-                    ' AND Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\'';
+                    ' AND Parent.ProfileId=' +
+                    "'" +
+                    this.profileIDMap.get(profileName) +
+                    "'";
                 const fieldMissingData = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
-                const processFieldData = await ProfileDownload.processMissingFieldPermissions(fieldMissingData);
+                const processFieldData = ProfileDownload.processMissingFieldPermissions(fieldMissingData);
                 profileJson.objectPermissions.push(...processObjData.values());
                 if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0) {
                     profileJson.fieldLevelSecurities.push(...processFieldData);

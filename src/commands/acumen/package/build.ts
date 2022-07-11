@@ -1,10 +1,10 @@
+import path = require('path');
 import { flags } from '@salesforce/command';
 import { SfdxError } from '@salesforce/core';
 import { CommandBase } from '../../../lib/command-base';
 import { SfdxCore } from '../../../lib/sfdx-core';
 import Utils from '../../../lib/utils';
 import { PackageOptions } from '../../../lib/package-options';
-import path = require('path');
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
 import { OptionsFactory } from '../../../lib/options-factory';
 
@@ -50,9 +50,9 @@ export default class Build extends CommandBase {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
 
-  public async run(): Promise<void> {
+  protected async runInternal(): Promise<void> {
     // Validate the package path
-    const packageFileName = this.flags.package || Build.defaultPackageFileName;
+    const packageFileName: string = this.flags.package || Build.defaultPackageFileName;
     const packageDir = path.dirname(packageFileName);
 
     if (packageDir && !await Utils.pathExists(packageDir)) {
@@ -64,7 +64,7 @@ export default class Build extends CommandBase {
     if (this.flags.options) {
       options = await OptionsFactory.get(PackageOptions, this.flags.options);
       if (!options) {
-        this.ux.log(`Unable to read options file: ${this.flags.options}.`);
+        this.ux.log(`Unable to read options file: ${this.flags.options as string}.`);
         // Set the proper exit code to indicate violation/failure
         process.exitCode = 1;
         return;
@@ -81,92 +81,85 @@ export default class Build extends CommandBase {
       ? new Set<string>(this.flags.namespaces.split())
       : new Set<string>();
 
-    try {
+    const describeMetadatas = new Set<any>();
 
-      const describeMetadatas = new Set<object>();
+    this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
 
-      this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
-
-      let filterMetadataTypes: Set<string> = null;
-      if (this.flags.metadata) {
-        filterMetadataTypes = new Set<string>();
-        for (const metaName of this.flags.metadata.split(',')) {
-          filterMetadataTypes.add(metaName.trim());
-        }
+    let filterMetadataTypes: Set<string> = null;
+    if (this.flags.metadata) {
+      filterMetadataTypes = new Set<string>();
+      for (const metaName of this.flags.metadata.split(',')) {
+        filterMetadataTypes.add(metaName.trim());
       }
-
-      const metadataMap = new Map<string, string[]>();
-      if (this.flags.source) {
-        const statuses = await SfdxTasks.getSourceTrackingStatus(this.orgAlias);
-        if (!statuses || statuses.length === 0) {
-          this.ux.log('No Source Tracking changes found.');
-          return;
-        }
-        const results = SfdxTasks.getMapFromSourceTrackingStatus(statuses);
-        if (results.conflicts.size > 0) {
-          this.ux.log('WARNING: The following conflicts were found:');
-          for (const [conflictType, members] of results.conflicts) {
-            this.ux.log(`\t${conflictType}`);
-            for (const member of members) {
-              this.ux.log(`\t\t${member}`);
-            }
-          }
-          throw new Error('All Conflicts must be resolved.');
-        }
-        if (results.deletes.size > 0) {
-          this.ux.log('WARNING: The following deleted items need to be handled manually:');
-          for (const [deleteType, members] of results.deletes) {
-            this.ux.log(`\t${deleteType}`);
-            for (const member of members) {
-              this.ux.log(`\t\t${member}`);
-            }
-          }
-        }
-        if (!results.map?.size) {
-          this.ux.log('No Deployable Source Tracking changes found.');
-          return;
-        }
-        for (const [typeName, members] of results.map) {
-          if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
-            continue;
-          }
-          metadataMap.set(typeName, members);
-        }
-      } else {
-        const describeMetadata = await SfdxTasks.describeMetadata(this.orgAlias);
-
-        for (const metadata of describeMetadata) {
-          if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
-            continue;
-          }
-          describeMetadatas.add(metadata);
-        }
-
-        let counter = 0;
-        for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)) {
-          // If specific members were defined previously - just use them
-          metadataMap.set(entry.name, entry.members);
-          this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-        }
-
-      }
-      const packageMap = new Map<string, string[]>();
-
-      // Filter excluded types
-      for (const [typeName, members] of metadataMap) {
-        if (!excluded.has(typeName)) {
-          packageMap.set(typeName, members);
-        }
-      }
-
-      this.ux.log(`Generating: ${packageFileName}`);
-      // Write the final package
-      await SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
-
-      this.ux.log('Done.');
-    } catch (err) {
-      throw err;
     }
+
+    const metadataMap = new Map<string, string[]>();
+    if (this.flags.source) {
+      const statuses = await SfdxTasks.getSourceTrackingStatus(this.orgAlias);
+      if (!statuses || statuses.length === 0) {
+        this.ux.log('No Source Tracking changes found.');
+        return;
+      }
+      const results = SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+      if (results.conflicts.size > 0) {
+        this.ux.log('WARNING: The following conflicts were found:');
+        for (const [conflictType, members] of results.conflicts) {
+          this.ux.log(`\t${conflictType as string}`);
+          for (const member of members) {
+            this.ux.log(`\t\t${member as string}`);
+          }
+        }
+        throw new Error('All Conflicts must be resolved.');
+      }
+      if (results.deletes.size > 0) {
+        this.ux.log('WARNING: The following deleted items need to be handled manually:');
+        for (const [deleteType, members] of results.deletes) {
+          this.ux.log(`\t${deleteType as string}`);
+          for (const member of members) {
+            this.ux.log(`\t\t${member as string}`);
+          }
+        }
+      }
+      if (!results.map?.size) {
+        this.ux.log('No Deployable Source Tracking changes found.');
+        return;
+      }
+      for (const [typeName, members] of results.map) {
+        if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+          continue;
+        }
+        metadataMap.set(typeName, members);
+      }
+    } else {
+      const describeMetadata = await SfdxTasks.describeMetadata(this.orgAlias);
+
+      for (const metadata of describeMetadata) {
+        if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+          continue;
+        }
+        describeMetadatas.add(metadata);
+      }
+
+      let counter = 0;
+      for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)) {
+        // If specific members were defined previously - just use them
+        metadataMap.set(entry.name, entry.members);
+        this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name as string}`);
+      }
+
+    }
+    const packageMap = new Map<string, string[]>();
+
+    // Filter excluded types
+    for (const [typeName, members] of metadataMap) {
+      if (!excluded.has(typeName)) {
+        packageMap.set(typeName, members);
+      }
+    }
+
+    this.ux.log(`Generating: ${packageFileName}`);
+    // Write the final package
+    await SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
     return;
   }
 }

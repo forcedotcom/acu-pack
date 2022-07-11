@@ -1,16 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const command_base_1 = require("../../../lib/command-base");
+const path = require("path");
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
+// import { AnyJson } from '@salesforce/ts-types';
+const command_base_1 = require("../../../lib/command-base");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_core_1 = require("../../../lib/sfdx-core");
-const path = require("path");
 const utils_1 = require("../../../lib/utils");
 class Permissions extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         var e_1, _a;
         // Gather metadata names to include
         const metaNames = utils_1.default.sortArray(this.flags.metadata
@@ -26,49 +27,43 @@ class Permissions extends command_base_1.CommandBase {
         if (packageDir && !await utils_1.default.pathExists(packageDir)) {
             throw new core_1.SfdxError(`The specified package folder does not exist: '${packageDir}'`);
         }
-        try {
-            this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
-            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);
-            const describeMetadatas = new Set();
-            for (const metadata of describeMetadata) {
-                if (this.metaNames.has(metadata.xmlName)) {
-                    describeMetadatas.add(metadata);
-                    continue;
-                }
-                if (metadata.childXmlNames) {
-                    for (const childName of metadata.childXmlNames) {
-                        if (this.metaNames.has(childName)) {
-                            // 'adopt' the childName as the xmlName to pull the child metadata
-                            metadata.xmlName = childName;
-                            describeMetadatas.add(metadata);
-                        }
+        this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
+        const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);
+        const describeMetadatas = new Set();
+        for (const metadata of describeMetadata) {
+            if (this.metaNames.has(metadata.xmlName)) {
+                describeMetadatas.add(metadata);
+                continue;
+            }
+            if (metadata.childXmlNames) {
+                for (const childName of metadata.childXmlNames) {
+                    if (this.metaNames.has(childName)) {
+                        // 'adopt' the childName as the xmlName to pull the child metadata
+                        metadata.xmlName = childName;
+                        describeMetadatas.add(metadata);
                     }
                 }
             }
-            this.ux.log(`Generating: ${this.packageFileName}`);
-            const metadataMap = new Map();
-            let counter = 0;
+        }
+        this.ux.log(`Generating: ${this.packageFileName}`);
+        const metadataMap = new Map();
+        let counter = 0;
+        try {
+            for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)), _c; _c = await _b.next(), !_c.done;) {
+                const entry = _c.value;
+                metadataMap.set(entry.name, entry.members);
+                this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name}`);
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
             try {
-                for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)), _c; _c = await _b.next(), !_c.done;) {
-                    const entry = _c.value;
-                    metadataMap.set(entry.name, entry.members);
-                    this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name}`);
-                }
+                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
-            // Write the final package
-            await sfdx_core_1.SfdxCore.writePackageFile(metadataMap, this.packageFileName);
-            this.ux.log('Done.');
+            finally { if (e_1) throw e_1.error; }
         }
-        catch (err) {
-            throw err;
-        }
+        // Write the final package
+        await sfdx_core_1.SfdxCore.writePackageFile(metadataMap, this.packageFileName);
         return;
     }
 }

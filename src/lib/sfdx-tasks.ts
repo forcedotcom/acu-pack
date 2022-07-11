@@ -1,11 +1,11 @@
-import { ensureArray } from '@salesforce/ts-types';
-import { SfdxCore } from './sfdx-core';
-import { SfdxFolder, SfdxQuery, SfdxEntity } from './sfdx-query';
 import path = require('path');
+import { openSync, writeSync } from 'fs';
+import { ensureArray } from '@salesforce/ts-types';
 import Utils from '../lib/utils';
 import { RestAction } from '../lib/utils';
-import { openSync, writeSync } from 'fs';
 import Constants from '../lib/constants';
+import { SfdxCore } from './sfdx-core';
+import { SfdxFolder, SfdxQuery, SfdxEntity } from './sfdx-query';
 
 export class SfdxJobInfo {
     public id: string;
@@ -15,7 +15,7 @@ export class SfdxJobInfo {
     public statusCount: number;
     public maxStatusCount: number;
 
-    constructor() {
+    public constructor() {
         this.statusCount = 0;
         this.maxStatusCount = 0;
     }
@@ -35,7 +35,7 @@ export class SfdxOrgInfo {
     public clientId: string;
     public alias: string;
 
-    constructor(result: any = null) {
+    public constructor(result: any = null) {
         if (!result) {
             return;
         }
@@ -52,28 +52,33 @@ export class SfdxOrgInfo {
 export class SfdxTasks {
     public static defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
 
+    protected static proFolderPaths: Map<string, string> = null;
+
     public static async describeMetadata(usernameOrAlias: string): Promise<any[]> {
         const response = await SfdxCore.command(`${Constants.SFDX_DESCRIBE_METADATA} --json -u ${usernameOrAlias}`);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return !response || !response.metadataObjects
             ? []
             : ensureArray(response.metadataObjects);
     }
 
-    public static async executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel: string = 'debug' ): Promise<any> {
+    public static async executeAnonymousBlock(usernameOrAlias: string, apexFilePath: string, logLevel = 'debug' ): Promise<any> {
         const response = await SfdxCore.command(`${Constants.SFDX_APEX_EXECUTE} --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return response.result;
     }
 
     public static async retrievePackage(usernameOrAlias: string, packageFilePath: string = Constants.DEFAULT_PACKAGE_PATH): Promise<any> {
         // get custom objects
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return await SfdxCore.command(`${Constants.SFDX_SOURCE_RETRIEVE} --json -x ${packageFilePath} -u ${usernameOrAlias}`);
     }
 
     public static async initializeProject(projectName: string): Promise<string> {
-        return await SfdxCore.command(`${Constants.SFDX_PROJECT_CREATE} --projectname ${projectName}`);
+        return await SfdxCore.command(`${Constants.SFDX_PROJECT_CREATE} --projectname ${projectName}`) as string;
     }
 
-    public static async* getTypesForPackage(usernameOrAlias: string, describeMetadatas: Set<any>, namespaces: Set<string> = null) {
+    public static async* getTypesForPackage(usernameOrAlias: string, describeMetadatas: Set<any>, namespaces: Set<string> = null): AsyncGenerator<any, void, void> {
         let folderPathMap: Map<string, string>;
         for (const describeMetadata of describeMetadatas) {
             const members = [];
@@ -84,7 +89,7 @@ export class SfdxTasks {
             } else {
                 const folderMetaName = describeMetadata.xmlName === SfdxCore.EMAIL_TEMPLATE_XML_NAME
                     ? SfdxCore.EMAIL_TEMPLATE_XML_NAME
-                    : `${describeMetadata.xmlName}Folder`;
+                    : `${describeMetadata.xmlName as string}Folder`;
 
                 // Get SOQL folder data (ONCE!)
                 if (!folderPathMap) {
@@ -135,7 +140,7 @@ export class SfdxTasks {
         }
         return response;
     }
-    public static async* listMetadata(usernameOrAlias: string, metadataType: string, namespaces: Set<string> = null) {
+    public static async* listMetadata(usernameOrAlias: string, metadataType: string, namespaces: Set<string> = null): AsyncGenerator<any, void, void> {
         const results = await SfdxCore.command(`${Constants.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
         if (results) {
@@ -158,7 +163,7 @@ export class SfdxTasks {
         }
     }
 
-    public static async* listMetadataInFolder(usernameOrAlias: string, metadataType: string, folderName: string, namespaces: Set<string> = null) {
+    public static async* listMetadataInFolder(usernameOrAlias: string, metadataType: string, folderName: string, namespaces: Set<string> = null): AsyncGenerator<any, void, void> {
         const results = await SfdxCore.command(`${Constants.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`);
         // If there are no instances of the metadatatype SFDX just returns {status:0}
         if (results) {
@@ -182,10 +187,11 @@ export class SfdxTasks {
     }
 
     public static async describeObject(usernameOrAlias: string, objectName: string): Promise<any> {
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return await SfdxCore.command(`${Constants.SFDX_SCHEMA_DESCRIBE} --json -s ${objectName} -u ${usernameOrAlias}`);
     }
 
-    public static async enqueueApexTests(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage: boolean = false): Promise<SfdxJobInfo> {
+    public static async enqueueApexTests(usernameOrAlias: string, sfdxEntities: SfdxEntity[], shouldSkipCodeCoverage = false): Promise<SfdxJobInfo> {
         if (!usernameOrAlias || !sfdxEntities) {
             return null;
         }
@@ -220,7 +226,7 @@ export class SfdxTasks {
         return newJobInfo;
     }
 
-    public static async* waitForJob(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
+    public static async* waitForJob(usernameOrAlias: string, jobInfo: SfdxJobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000): AsyncGenerator<SfdxJobInfo, SfdxJobInfo, void> {
         const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
         jobInfo.statusCount = 0;
         while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
@@ -293,7 +299,7 @@ export class SfdxTasks {
                         collection = deleteTypes;
                         break;
                     default:
-                        throw new Error(`Unknown Action: ${actionParts[1]}`);
+                        throw new Error(`Unknown Action: ${actionParts[1] as string}`);
                 }
             }
             if (collection != null) {
@@ -358,14 +364,15 @@ export class SfdxTasks {
               },
             */
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return statuses;
     }
 
     public static async getDefaultOrgAlias(): Promise<string> {
         const result = await SfdxCore.command(`${Constants.SFDX_GET_DEFAULT_USERNAME} --json`);
-        return result[0] != null
+        return (result[0] != null
             ? result[0].value
-            : null;
+            : null) as string;
     }
 
     public static async getUnsupportedMetadataTypes(): Promise<string[]> {
@@ -377,25 +384,23 @@ export class SfdxTasks {
                 types.push(key);
             }
         }
-        return Utils.sortArray(types);
+        return Utils.sortArray(types) as string[];
     }
 
-    protected static _folderPaths: Map<string, string> = null;
-
     private static async getFolderSOQLData(usernameOrAlias: string): Promise<Map<string, string>> {
-        if (!this._folderPaths) {
+        if (!this.proFolderPaths) {
             const allFolders = await SfdxQuery.getFolders(usernameOrAlias);
 
-            this._folderPaths = new Map<string, string>();
+            this.proFolderPaths = new Map<string, string>();
             for (const folder of allFolders) {
                 if (!folder) {
                     continue;
                 }
                 const pathParts = this.getFolderFullPath(allFolders, folder, []);
-                this._folderPaths.set(folder.id, pathParts.join('/'));
+                this.proFolderPaths.set(folder.id, pathParts.join('/'));
             }
         }
-        return this._folderPaths;
+        return this.proFolderPaths;
     }
 
     // Recursively looks up a Folder's parent until it reaches the tree's root.

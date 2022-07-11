@@ -7,7 +7,7 @@ const utils_1 = require("../../../lib/utils");
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 class Profile extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         var e_1, _a, e_2, _b;
         const sourceFolders = !this.flags.source
             ? Profile.defaultPermissionsGlobs
@@ -47,7 +47,7 @@ class Profile extends command_base_1.CommandBase {
         }
         // Debug
         const customObjects = new Set(utils_1.default.sortArray(custObjs));
-        this.ux.log(`CustomObjects: ${customObjects}`);
+        this.ux.log(`CustomObjects: ${[...customObjects].join(',')}`);
         // Get Objects and fields first
         const notFoundInOrg = new Set();
         let custFields = [];
@@ -68,18 +68,18 @@ class Profile extends command_base_1.CommandBase {
         custFields = utils_1.default.sortArray(custFields);
         const customFields = new Set(custFields);
         // Debug
-        this.ux.log(`CustomFields: ${custFields}`);
+        this.ux.log(`CustomFields: ${[...custFields].join(',')}`);
         // Now get rest - and skip Objects & Fields
         const orgMetaDataMap = new Map();
         orgMetaDataMap.set(sfdx_permission_1.SfdxPermission.customObject, customObjects);
         orgMetaDataMap.set(sfdx_permission_1.SfdxPermission.customField, customFields);
-        this.ux.log(`${sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes}`);
+        this.ux.log(`${sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes.join(',')}`);
         for (const permissionMetaDataType of sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes) {
             switch (permissionMetaDataType) {
                 case sfdx_permission_1.SfdxPermission.customObject:
                 case sfdx_permission_1.SfdxPermission.customField:
                     continue;
-                default:
+                default: {
                     const nameSet = new Set();
                     try {
                         for (var _e = (e_2 = void 0, tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.listMetadata(this.orgAlias, permissionMetaDataType))), _f; _f = await _e.next(), !_f.done;) {
@@ -99,6 +99,7 @@ class Profile extends command_base_1.CommandBase {
                         finally { if (e_2) throw e_2.error; }
                     }
                     orgMetaDataMap.set(permissionMetaDataType, nameSet);
+                }
             }
         }
         // Now run back through Permission files and determine if anything is missing in Org
@@ -184,7 +185,6 @@ class Profile extends command_base_1.CommandBase {
             this.ux.log('Salesforce does not expose Standard Tabs via the Metadata API.');
             this.ux.log(`Compatibility with '${this.orgAlias}' can only be ensured if these permissions are removed.`);
         }
-        this.ux.log('Done.');
         return;
     }
 }

@@ -1,11 +1,14 @@
 import { SfdxCommand } from '@salesforce/command';
-import { Messages } from '@salesforce/core';
+import { Messages, Connection } from '@salesforce/core';
 export declare abstract class CommandBase extends SfdxCommand {
     static messages: Messages;
     static args: {
         name: string;
     }[];
-    get orgAlias(): string;
-    get orgId(): string;
-    get connection(): any;
+    protected get orgAlias(): string;
+    protected get orgId(): string;
+    protected get connection(): Connection;
+    run(): Promise<void>;
+    protected handlerError(err: Error, throwErr?: boolean): Promise<void>;
+    protected abstract runInternal(): Promise<void>;
 }

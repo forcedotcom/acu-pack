@@ -1,9 +1,9 @@
-import Setup from '../../lib/setup';
 import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
+import Setup from '../../lib/setup';
+import { DeltaOptions } from '../../../src/lib/delta-provider'
 import Utils from '../../../src/lib/utils'
 import Git from '../../../src/commands/acumen/source/delta/git'
-import { DeltaOptions } from '../../../src/lib/delta-provider'
 
 const bogusGitFilePath = 'bogus_' + Setup.gitFilePath;
 const gitProvider = new Git.gitDeltaProvider();
@@ -20,22 +20,22 @@ beforeEach(async () => {
     }
     gitProvider.deltas.clear();
 });
-describe("GitDeltaProvider Tests", function () {
-    it("Has Name", async function () {
+describe('GitDeltaProvider Tests', function () {
+    it('Has Name', function () {
         expect(gitProvider.name).equals('git');
     });
 
-    it("Has deltaLineToken", async function () {
+    it('Has deltaLineToken', function () {
         expect(gitProvider.deltaLineToken).equals('\t');
     });
 
-    describe("loadDeltaFile Tests", function () {
-        it("Can handle null", async function () {
+    describe('loadDeltaFile Tests', function () {
+        it('Can handle null', async function () {
             expect(gitProvider.deltas.size).equals(0);
             await gitProvider.loadDeltaFile(null);
             expect(gitProvider.deltas.size).equals(0);
         });
-        it("Can load git diff file", async function () {
+        it('Can load git diff file', async function () {
             expect(gitProvider.deltas.size).equals(0);
             await gitProvider.loadDeltaFile(Setup.gitFilePath);
             expect(gitProvider.deltas.size).not.equals(0);
@@ -47,8 +47,8 @@ describe("GitDeltaProvider Tests", function () {
         });
     });
 
-    describe("diff Tests", function () {
-        it("Can NOT build missing git file", async function () {
+    describe('diff Tests', function () {
+        it('Can NOT build missing git file', async function () {
             expect(gitProvider.deltas.size).equals(0);
             
             gitProvider.deltaOptions.deltaFilePath = bogusGitFilePath;
@@ -60,7 +60,7 @@ describe("GitDeltaProvider Tests", function () {
             }
             expect(diffSet.size).equals(0);
         });
-        it("Can diff", async function () {
+        it('Can diff', async function () {
             expect(gitProvider.deltas.size).equals(0);
             
             gitProvider.deltaOptions.deltaFilePath = Setup.gitFilePath;
@@ -73,7 +73,7 @@ describe("GitDeltaProvider Tests", function () {
             expect(diffSet.size).not.equals(0);
             expect(diffSet.size).equals(gitProvider.deltas.size);
         });
-        it("Can run", async function () {
+        it('Can run', async function () {
             const deltaOptions = new DeltaOptions();
             deltaOptions.deltaFilePath = Setup.gitFilePath;
             deltaOptions.source = Setup.sourceRoot;
@@ -84,8 +84,8 @@ describe("GitDeltaProvider Tests", function () {
             expect(metrics.Copy).equals(testFilesCreated);
         });
     });
-    describe("validateDeltaOptions Tests", function () {
-        it("Checks missing minimum required", async function () {
+    describe('validateDeltaOptions Tests', function () {
+        it('Checks missing minimum required', async function () {
             const deltaOptions = new DeltaOptions();
             
             // NOT OK

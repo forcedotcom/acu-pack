@@ -14,7 +14,7 @@ export declare class SfdxClient {
     constructor(orgAliasOrUsername: string);
     initialize(forceRefresh?: boolean): Promise<void>;
     setApiVersion(apiVersion: number): void;
-    getMetadataSchemas(apiKind?: ApiKind): AsyncGenerator<any, void, unknown>;
+    getMetadataSchemas(apiKind?: ApiKind): AsyncGenerator<any, void, void>;
     getMetadataSchema(metaDataType: string, apiKind?: ApiKind): Promise<RestResult>;
     getById(metaDataType: string, id: string, apiKind?: ApiKind): Promise<RestResult>;
     getByIds(metaDataType: string, ids: string[], apiKind?: ApiKind): AsyncGenerator<RestResult, void, void>;

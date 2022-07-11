@@ -1,13 +1,13 @@
-import Utils from './utils';
-import { promises as fs } from 'fs';
 import path = require('path');
+import { promises as fs } from 'fs';
+import Utils from './utils';
 import { DeltaCommandBase } from './delta-command';
 
 export class Delta {
     public deltaKind: string;
     public deltaFile: string;
 
-    constructor(deltaKind: string, deltaFile: string) {
+    public constructor(deltaKind: string, deltaFile: string) {
         this.deltaKind = deltaKind;
         this.deltaFile = deltaFile;
     }
@@ -23,7 +23,7 @@ export class DeltaOptions {
     public isDryRun: boolean;
     public fullCopyDirNames: string[] = DeltaCommandBase.defaultCopyDirList;
 
-    public normalize() {
+    public normalize(): void {
         if (this.deltaFilePath) {
             this.deltaFilePath = path.normalize(this.deltaFilePath);
         }
@@ -53,6 +53,13 @@ export abstract class DeltaProvider {
         D: 'D'
     };
 
+    public logFile = 'delta.log';
+    public deltaOptions = new DeltaOptions();
+
+    public abstract name: string;
+    public abstract deltaLineToken: string;
+    public abstract deltas: Map<string, any>;
+
     public static isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean {
         if (filePath && deltaOptions) {
             for (const dirName of deltaOptions.fullCopyDirNames) {
@@ -63,18 +70,7 @@ export abstract class DeltaProvider {
         }
         return false;
     }
-
-    public logFile = 'delta.log';
-    public deltaOptions = new DeltaOptions();
-
-    public abstract name: string;
-    public abstract deltaLineToken: string;
-    public abstract deltas: Map<string, any>;
-
-    public abstract processDeltaLine(deltaLine: string): void;
-    public abstract getMessage(name: string): string;
-    public abstract diff(source: string): AsyncGenerator<Delta, any, any>;
-
+    
     public async run(deltaOptions: DeltaOptions): Promise<any> {
         if (!deltaOptions) {
             throw new Error('No DeltaOptions specified.');
@@ -118,7 +114,7 @@ export abstract class DeltaProvider {
                     await Utils.deleteFile(deleteReportFile);
                 } catch (err) {
                     if (!Utils.isENOENT(err)) {
-                        await this.logMessage(`Unable to delete old report: ${err.message}.`);
+                        await this.logMessage(`Unable to delete old report: ${err.message as string}.`);
                     }
                 }
             }
@@ -188,7 +184,7 @@ export abstract class DeltaProvider {
                         break;
                     // [A]dded & [M]odified files
                     case DeltaProvider.deltaTypeKind.A:
-                    case DeltaProvider.deltaTypeKind.M:
+                    case DeltaProvider.deltaTypeKind.M: {
                         // check the source folder for associated files.
                         const dirName = path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
@@ -246,6 +242,7 @@ export abstract class DeltaProvider {
                             }
                         }
                         break;
+                    }
                     case DeltaProvider.deltaTypeKind.NONE:
                         await this.logMessage(`Delta (${deltaKind}): ${deltaFile}`);
                         metrics.None++;
@@ -255,8 +252,6 @@ export abstract class DeltaProvider {
             await this.logMessage(`Metrics: ${JSON.stringify(metrics)}`, true);
         } catch (err) {
             await this.logMessage(err, true);
-        } finally {
-            await this.logMessage('Done', true);
         }
         return metrics;
     }
@@ -287,14 +282,22 @@ export abstract class DeltaProvider {
             await fs.appendFile(this.logFile, `${JSON.stringify(message)}\r\n`);
         }
         if (includeConsole) {
+            /* eslint-disable-next-line no-console */
             console.log(message);
         }
     }
 
     public async validateDeltaOptions(deltaOptions: DeltaOptions): Promise<string> {
-        if (!deltaOptions.source) {
-            return 'No delta -s(ource) specified.';
-        }
-        return null;
+        const result = (): string =>{
+            if (!deltaOptions.source) {
+                return 'No delta -s(ource) specified.';
+            }
+            return null;
+        };
+        return Promise.resolve(result());
     }
+
+    public abstract processDeltaLine(deltaLine: string): void;
+    public abstract getMessage(name: string): string;
+    public abstract diff(source: string): AsyncGenerator<Delta, any, any>;
 }

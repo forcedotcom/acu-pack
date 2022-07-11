@@ -6,7 +6,7 @@ export declare abstract class OptionsBase {
     version: number;
     get settings(): OptionsSettings;
     set settings(optionSettings: OptionsSettings);
-    private _settings;
+    private prvSettings;
     constructor();
     get isCurrentVersion(): boolean;
     load(optionsPath: string): Promise<void>;
@@ -14,8 +14,8 @@ export declare abstract class OptionsBase {
     protected ignoreField(fieldName: string): boolean;
     protected deserialize(serializedOptionBase: string): Promise<void>;
     protected serialize(): Promise<string>;
-    protected abstract loadDefaults(): Promise<void>;
     protected readFile(optionsPath: string): Promise<string>;
     protected get currentVersion(): number;
     protected setCurrentVersion(): void;
+    protected abstract loadDefaults(): Promise<void>;
 }

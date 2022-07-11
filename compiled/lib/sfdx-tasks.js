@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxTasks = exports.SfdxOrgInfo = exports.SfdxJobInfo = void 0;
 const tslib_1 = require("tslib");
-const ts_types_1 = require("@salesforce/ts-types");
-const sfdx_core_1 = require("./sfdx-core");
-const sfdx_query_1 = require("./sfdx-query");
 const path = require("path");
+const fs_1 = require("fs");
+const ts_types_1 = require("@salesforce/ts-types");
 const utils_1 = require("../lib/utils");
 const utils_2 = require("../lib/utils");
-const fs_1 = require("fs");
 const constants_1 = require("../lib/constants");
+const sfdx_core_1 = require("./sfdx-core");
+const sfdx_query_1 = require("./sfdx-query");
 class SfdxJobInfo {
     constructor() {
         this.statusCount = 0;
@@ -39,16 +39,19 @@ exports.SfdxOrgInfo = SfdxOrgInfo;
 class SfdxTasks {
     static async describeMetadata(usernameOrAlias) {
         const response = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_DESCRIBE_METADATA} --json -u ${usernameOrAlias}`);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return !response || !response.metadataObjects
             ? []
             : ts_types_1.ensureArray(response.metadataObjects);
     }
     static async executeAnonymousBlock(usernameOrAlias, apexFilePath, logLevel = 'debug') {
         const response = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_APEX_EXECUTE} --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return response.result;
     }
     static async retrievePackage(usernameOrAlias, packageFilePath = constants_1.default.DEFAULT_PACKAGE_PATH) {
         // get custom objects
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_SOURCE_RETRIEVE} --json -x ${packageFilePath} -u ${usernameOrAlias}`);
     }
     static async initializeProject(projectName) {
@@ -196,6 +199,7 @@ class SfdxTasks {
         });
     }
     static async describeObject(usernameOrAlias, objectName) {
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_SCHEMA_DESCRIBE} --json -s ${objectName} -u ${usernameOrAlias}`);
     }
     static async enqueueApexTests(usernameOrAlias, sfdxEntities, shouldSkipCodeCoverage = false) {
@@ -361,13 +365,14 @@ class SfdxTasks {
               },
             */
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return statuses;
     }
     static async getDefaultOrgAlias() {
         const result = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_GET_DEFAULT_USERNAME} --json`);
-        return result[0] != null
+        return (result[0] != null
             ? result[0].value
-            : null;
+            : null);
     }
     static async getUnsupportedMetadataTypes() {
         const result = await utils_1.default.getRestResult(utils_2.RestAction.GET, constants_1.default.METADATA_COVERAGE_REPORT_URL);
@@ -381,18 +386,18 @@ class SfdxTasks {
         return utils_1.default.sortArray(types);
     }
     static async getFolderSOQLData(usernameOrAlias) {
-        if (!this._folderPaths) {
+        if (!this.proFolderPaths) {
             const allFolders = await sfdx_query_1.SfdxQuery.getFolders(usernameOrAlias);
-            this._folderPaths = new Map();
+            this.proFolderPaths = new Map();
             for (const folder of allFolders) {
                 if (!folder) {
                     continue;
                 }
                 const pathParts = this.getFolderFullPath(allFolders, folder, []);
-                this._folderPaths.set(folder.id, pathParts.join('/'));
+                this.proFolderPaths.set(folder.id, pathParts.join('/'));
             }
         }
-        return this._folderPaths;
+        return this.proFolderPaths;
     }
     // Recursively looks up a Folder's parent until it reaches the tree's root.
     // This is only needed for Folder structures which are more than one level deep.
@@ -428,5 +433,5 @@ class SfdxTasks {
 }
 exports.SfdxTasks = SfdxTasks;
 SfdxTasks.defaultMetaTypes = ['ApexClass', 'ApexPage', 'CustomApplication', 'CustomObject', 'CustomTab', 'PermissionSet', 'Profile'];
-SfdxTasks._folderPaths = null;
+SfdxTasks.proFolderPaths = null;
 //# sourceMappingURL=sfdx-tasks.js.map

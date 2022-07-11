@@ -3,7 +3,7 @@ import { SfdxCore } from './sfdx-core';
 import SchemaUtils from './schema-utils';
 
 export default class SchemaOptions extends OptionsBase {
-    private static CURRENT_VERSION: number = 1.0;
+    private static CURRENT_VERSION = 1.0;
     public excludeCustomObjectNames: string[] = [];
     public includeCustomObjectNames: string[] = [];
     public outputDefMap = new Map<string, string[]>();
@@ -37,7 +37,7 @@ export default class SchemaOptions extends OptionsBase {
     }
 
     public getEntityDefinitionFields(sheetName: string = null): string[] {
-        const fields = [];
+        const fields: string[] = [];
         const outputDefs = sheetName
             ? this.outputDefMap.get(sheetName)
             : this.outputDefMap.get(this.outputDefMap.keys[0]);

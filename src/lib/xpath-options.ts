@@ -9,7 +9,7 @@ export class XPathRule {
 export class XPathOptions extends OptionsBase {
     public rules: Map<string, XPathRule[]>;
 
-    constructor() {
+    public constructor() {
         super();
         this.rules = new Map();
     }

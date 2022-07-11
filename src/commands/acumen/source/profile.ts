@@ -41,8 +41,8 @@ export default class Profile extends CommandBase {
 
   protected permissions: Map<string, PermissionSet>;
 
-  public async run(): Promise<void> {
-    const sourceFolders = !this.flags.source
+  protected async runInternal(): Promise<void> {
+    const sourceFolders: string[] = !this.flags.source
       ? Profile.defaultPermissionsGlobs
       : this.flags.source.split(',');
 
@@ -73,8 +73,8 @@ export default class Profile extends CommandBase {
       }
     }
     // Debug
-    const customObjects = new Set<string>(Utils.sortArray(custObjs));
-    this.ux.log(`CustomObjects: ${customObjects}`);
+    const customObjects: Set<string> = new Set<string>(Utils.sortArray(custObjs));
+    this.ux.log(`CustomObjects: ${[...customObjects].join(',')}`);
 
     // Get Objects and fields first
     const notFoundInOrg = new Set<string>();
@@ -85,30 +85,30 @@ export default class Profile extends CommandBase {
       try {
         const objMeta = await SfdxTasks.describeObject(this.orgAlias, customObject);
         for (const field of objMeta.fields) {
-          custFields.push(`${customObject}.${field.name}`);
+          custFields.push(`${customObject}.${field.name as string}`);
         }
       } catch (ex) {
-        this.ux.log(`Error Gathering ${customObject} schema: ${ex.message}`);
+        this.ux.log(`Error Gathering ${customObject} schema: ${ex.message as string}`);
         notFoundInOrg.add(customObject);
       }
     }
     custFields = Utils.sortArray(custFields);
     const customFields = new Set<string>(custFields);
     // Debug
-    this.ux.log(`CustomFields: ${custFields}`);
+    this.ux.log(`CustomFields: ${[...custFields].join(',')}`);
 
     // Now get rest - and skip Objects & Fields
     const orgMetaDataMap = new Map<string, Set<string>>();
     orgMetaDataMap.set(SfdxPermission.customObject, customObjects);
     orgMetaDataMap.set(SfdxPermission.customField, customFields);
 
-    this.ux.log(`${SfdxPermission.defaultPermissionMetaTypes}`);
+    this.ux.log(`${SfdxPermission.defaultPermissionMetaTypes.join(',')}`);
     for (const permissionMetaDataType of SfdxPermission.defaultPermissionMetaTypes) {
       switch (permissionMetaDataType) {
         case SfdxPermission.customObject:
         case SfdxPermission.customField:
           continue;
-        default:
+        default: {
           const nameSet = new Set<string>();
           for await(const metaData of SfdxTasks.listMetadata(this.orgAlias, permissionMetaDataType)) {
             if (!metaData.fullName) {
@@ -118,6 +118,7 @@ export default class Profile extends CommandBase {
             nameSet.add(metaData.fullName);
           }
           orgMetaDataMap.set(permissionMetaDataType, nameSet);
+        }
       }
     }
 
@@ -125,8 +126,8 @@ export default class Profile extends CommandBase {
     counter = 0;
 
     for (const sourceFilePath of sourceFilePaths) {
-      const permSetErrors = [];
-      const permSetStandardTabs = [];
+      const permSetErrors: string[] = [];
+      const permSetStandardTabs: string[] = [];
       this.ux.log(`Verifying (${++counter}/${sourceFilePaths.size}) ${sourceFilePath} schema...`);
       const json = await Utils.readObjectFromXmlFile(sourceFilePath);
       const permSet = PermissionSet.fromXml(sourceFilePath, json);
@@ -145,7 +146,7 @@ export default class Profile extends CommandBase {
           }
           continue;
         }
-        let permSetExistingNames = [];
+        let permSetExistingNames: string[] = [];
         switch (metadataName) {
           case SfdxPermission.customTab:
             if (permSet.tabVisibilities) {
@@ -209,9 +210,6 @@ export default class Profile extends CommandBase {
       this.ux.log('Salesforce does not expose Standard Tabs via the Metadata API.');
       this.ux.log(`Compatibility with '${this.orgAlias}' can only be ensured if these permissions are removed.`);
     }
-
-    this.ux.log('Done.');
-
     return;
   }
 }

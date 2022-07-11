@@ -8,7 +8,7 @@ export class UnmaskOptions extends OptionsBase {
 
     public userQuery: string;
 
-    constructor() {
+    public constructor() {
         super();
         this.sandboxes = new Map();
         this.userQuery = UnmaskOptions.defaultUserQuery;

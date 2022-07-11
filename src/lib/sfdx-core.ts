@@ -1,27 +1,28 @@
 import { exec } from 'child_process';
 import Utils from '../lib/utils';
 import SfdxProject from '../lib/sfdx-project';
-import XmlMerge from './xml-merge';
 import Constants from '../lib/constants';
+import XmlMerge from './xml-merge';
 
 export class SfdxCore {
-    public static ASTERIX: string = '*';
-    public static MAIN: string = 'main';
-    public static DEFAULT: string = 'default';
-    public static EMAIL_TEMPLATE_XML_NAME: string = 'EmailTemplate';
+    public static ASTERIX = '*';
+    public static MAIN = 'main';
+    public static DEFAULT = 'default';
+    public static EMAIL_TEMPLATE_XML_NAME = 'EmailTemplate';
 
-    public static bufferOptions: object = { env: { NODE_OPTIONS: null }, maxBuffer: 10 * 1024 * 1024 };
-    public static jsonSpaces: number = 2;
+    public static bufferOptions = { env: { NODE_OPTIONS: null }, maxBuffer: 10 * 1024 * 1024 };
+    public static jsonSpaces = 2;
 
     public static command(cmd: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            exec(cmd, SfdxCore.bufferOptions, (error: any, stdout: any, stderr: any) => {
+            exec(cmd, SfdxCore.bufferOptions, (error: any, stdout: any) => {
                 let response: any;
                 try {
                     if (stdout && String(stdout) !== '') {
                         response = JSON.parse(stdout);
                     }
                 } catch (err) {
+                    /* eslint-disable-next-line no-console */
                     console.warn(stdout);
                 } finally {
                     if (!response) {
@@ -65,10 +66,12 @@ export class SfdxCore {
                 members
             });
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return packageObj;
     }
 
-    public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, append?: boolean, xmlOptions?: object): Promise<void> {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    public static async writePackageFile(metadataMap: Map<string, string[]>, packageFilePath: string, append?: boolean, xmlOptions?: any): Promise<void> {
         // Convert into Package format
         const sfdxPackage = await SfdxCore.createPackage(metadataMap);
         if (append) {

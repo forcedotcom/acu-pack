@@ -1,8 +1,8 @@
-import { OptionsBase } from './options';
 import { SfdxTasks } from '../lib/sfdx-tasks';
+import { OptionsBase } from './options';
 
 export class PackageOptions extends OptionsBase {
-    private static CURRENT_VERSION: number = 1.0;
+    private static CURRENT_VERSION = 1.0;
 
     public excludeMetadataTypes: string[] = [];
 

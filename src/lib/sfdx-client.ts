@@ -18,14 +18,14 @@ export class SfdxClient {
     private orgInfo: SfdxOrgInfo;
     private apiVersion: string = null;
 
-    constructor(orgAliasOrUsername: string) {
+    public constructor(orgAliasOrUsername: string) {
         if (!orgAliasOrUsername || orgAliasOrUsername.length === 0) {
             throw new Error('orgAliasOrUsername is required');
         }
         this.orgAliasOrUsername = orgAliasOrUsername;
     }
 
-    public async initialize(forceRefresh: boolean = false): Promise<void> {
+    public async initialize(forceRefresh = false): Promise<void> {
         if (!forceRefresh && this.orgInfo) {
             return;
         }
@@ -40,7 +40,7 @@ export class SfdxClient {
         this.apiVersion = apiVersion.toString();
     }
 
-    public async* getMetadataSchemas(apiKind: ApiKind = ApiKind.DEFAULT) {
+    public async* getMetadataSchemas(apiKind: ApiKind = ApiKind.DEFAULT): AsyncGenerator<any, void, void> {
         const result = await this.doInternal(RestAction.GET, null, apiKind);
         if (result.isError) {
             result.throw();
@@ -106,6 +106,7 @@ export class SfdxClient {
         }
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public async updateByRecord(metaDataType: string, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT): Promise<RestResult> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
@@ -145,7 +146,7 @@ export class SfdxClient {
                 if (result.isError) {
                     result.throw();
                 }
-                yield result.getContent();
+                yield result;
             }
 
         } else {
@@ -153,6 +154,7 @@ export class SfdxClient {
         }
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public async doComposite(action: RestAction = RestAction.GET, record: any, validStatusCodes = [200]): Promise<RestResult> {
         // https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections.htm
         if (!record) {
@@ -171,7 +173,7 @@ export class SfdxClient {
             RestAction.GET,
             `${this.orgInfo.instanceUrl}/services/data`);
 
-        return result.body[result.body.length - 1].version;
+        return result.body[result.body.length - 1].version as string;
     }
 
     private async doInternal(action: RestAction = RestAction.GET, metaDataType: string = null, record: any = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
@@ -179,7 +181,7 @@ export class SfdxClient {
         return await this.handleResponse(action, uri, record, validStatusCodes);
     }
 
-    private async* doInternalByIds(action: RestAction = RestAction.GET, metaDataType: string = null, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null) {
+    private async* doInternalByIds(action: RestAction = RestAction.GET, metaDataType: string = null, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): AsyncGenerator<any, void, void> {
         for (const record of records) {
             yield await this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes);
         }

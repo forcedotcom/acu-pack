@@ -29,5 +29,5 @@ export default class Md5 extends CommandBase {
     protected static flagsConfig: any;
     protected name: string;
     protected deltas: Map<string, any>;
-    run(): Promise<any>;
+    protected runInternal(): Promise<void>;
 }

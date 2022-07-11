@@ -29,7 +29,7 @@ export declare class RestResult {
 export default class Utils {
     static logger: Logger;
     static isJsonEnabled: boolean;
-    static _tempFilesPath: string;
+    static TempFilesPath: string;
     static defaultXmlOptions: {
         renderOpts: {
             pretty: boolean;
@@ -43,12 +43,16 @@ export default class Utils {
         eofChar: string;
         encoding: string;
     };
+    private static reqUtils;
+    private static reqGlob;
+    private static glob;
+    private static bent;
     static log(logMessage: string, logLevel: string, isJsonEnabled?: boolean): Promise<void>;
-    static getFiles(folderPath: string, isRecursive?: boolean): any;
-    static readFileLines(filePath: string): AsyncGenerator<any, void, unknown>;
+    static getFiles(folderPath: string, isRecursive?: boolean): AsyncGenerator<string, void, void>;
+    static readFileLines(filePath: string): AsyncGenerator<string, void, void>;
     static readFile(filePath: string, options?: any): Promise<string>;
     static pathExists(pathToCheck: string): Promise<boolean>;
-    static getPathStat(pathToCheck: any): Promise<any>;
+    static getPathStat(pathToCheck: string): Promise<any>;
     static isENOENT(err: any): boolean;
     static mkDirPath(destination: string, hasFileName?: boolean): Promise<void>;
     static copyFile(source: string, destination: string): Promise<void>;
@@ -67,6 +71,4 @@ export default class Utils {
     static writeFile(filePath: string, contents: any): Promise<void>;
     static chunkRecords(recordsToChunk: any[], chunkSize: number): any[];
     static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: []): Promise<RestResult>;
-    private static glob;
-    private static bent;
 }

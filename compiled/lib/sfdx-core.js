@@ -4,12 +4,12 @@ exports.SfdxCore = void 0;
 const child_process_1 = require("child_process");
 const utils_1 = require("../lib/utils");
 const sfdx_project_1 = require("../lib/sfdx-project");
-const xml_merge_1 = require("./xml-merge");
 const constants_1 = require("../lib/constants");
+const xml_merge_1 = require("./xml-merge");
 class SfdxCore {
     static command(cmd) {
         return new Promise((resolve, reject) => {
-            child_process_1.exec(cmd, SfdxCore.bufferOptions, (error, stdout, stderr) => {
+            child_process_1.exec(cmd, SfdxCore.bufferOptions, (error, stdout) => {
                 let response;
                 try {
                     if (stdout && String(stdout) !== '') {
@@ -17,6 +17,7 @@ class SfdxCore {
                     }
                 }
                 catch (err) {
+                    /* eslint-disable-next-line no-console */
                     console.warn(stdout);
                 }
                 finally {
@@ -61,8 +62,10 @@ class SfdxCore {
                 members
             });
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return packageObj;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async writePackageFile(metadataMap, packageFilePath, append, xmlOptions) {
         // Convert into Package format
         const sfdxPackage = await SfdxCore.createPackage(metadataMap);

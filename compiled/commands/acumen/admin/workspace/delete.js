@@ -8,68 +8,53 @@ const sfdx_tasks_1 = require("../../../../lib/sfdx-tasks");
 const sfdx_client_1 = require("../../../../lib/sfdx-client");
 const utils_1 = require("../../../../lib/utils");
 class Delete extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         var e_1, _a;
-        let hasErrors = false;
-        try {
-            this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
-            const usernames = [];
-            if (this.flags.userlist) {
-                for (const username of this.flags.userlist.split(',')) {
-                    usernames.push(username.trim());
-                }
-            }
-            else {
-                const orgInfo = await sfdx_tasks_1.SfdxTasks.getOrgInfo(this.orgAlias);
-                usernames.push(orgInfo.username);
-            }
-            if (!usernames || usernames.length === 0) {
-                this.ux.log('No usernames specified.');
-                // Set the proper exit code to indicate violation/failure
-                process.exitCode = 1;
-                return;
-            }
-            this.ux.log('Deleteing Workspaces for users:');
-            this.ux.log(`\t${usernames.join(',')}`);
-            // https://help.salesforce.com/articleView?id=000332898&type=1&mode=1
-            const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
-            for (const username of usernames) {
-                const query = `SELECT Id FROM IDEWorkspace WHERE CreatedById IN (SELECT Id FROM User WHERE Username = '${username}')`;
-                const workspaceIds = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query, null, null, true);
-                if (!workspaceIds || workspaceIds.length === 0) {
-                    this.ux.log(`No workspaces found for user: '${username}'.`);
-                    continue;
-                }
-                try {
-                    try {
-                        for (var _b = (e_1 = void 0, tslib_1.__asyncValues(sfdxClient.do(utils_1.RestAction.DELETE, 'IDEWorkspace', workspaceIds, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE]))), _c; _c = await _b.next(), !_c.done;) {
-                            const result = _c.value;
-                            this.ux.log(`Deleted Workspace(${result}) for user: '${username}'.`);
-                        }
-                    }
-                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                    finally {
-                        try {
-                            if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
-                        }
-                        finally { if (e_1) throw e_1.error; }
-                    }
-                }
-                catch (err) {
-                    this.ux.log(`Error Deleting Workspace(s) (${workspaceIds}) for user: '${username}'.`);
-                    hasErrors = true;
-                }
+        const usernames = [];
+        if (this.flags.userlist) {
+            for (const username of this.flags.userlist.split(',')) {
+                usernames.push(username.trim());
             }
         }
-        catch (err) {
+        else {
+            const orgInfo = await sfdx_tasks_1.SfdxTasks.getOrgInfo(this.orgAlias);
+            usernames.push(orgInfo.username);
+        }
+        if (!usernames || usernames.length === 0) {
+            this.ux.log('No usernames specified.');
+            // Set the proper exit code to indicate violation/failure
             process.exitCode = 1;
-            throw err;
+            return;
         }
-        finally {
-            if (hasErrors) {
-                process.exitCode = 1;
+        this.ux.log('Deleteing Workspaces for users:');
+        this.ux.log(`\t${usernames.join(',')}`);
+        // https://help.salesforce.com/articleView?id=000332898&type=1&mode=1
+        const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
+        for (const username of usernames) {
+            const query = `SELECT Id FROM IDEWorkspace WHERE CreatedById IN (SELECT Id FROM User WHERE Username = '${username}')`;
+            const workspaceRecords = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query, null, null, true);
+            if (!workspaceRecords || workspaceRecords.length === 0) {
+                this.ux.log(`No workspaces found for user: '${username}'.`);
+                continue;
             }
-            this.ux.log('Done.');
+            try {
+                try {
+                    for (var _b = (e_1 = void 0, tslib_1.__asyncValues(sfdxClient.do(utils_1.RestAction.DELETE, 'IDEWorkspace', workspaceRecords, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE]))), _c; _c = await _b.next(), !_c.done;) {
+                        const result = _c.value;
+                        this.ux.log(`Deleted Workspace(${result.getContent()}) for user: '${username}'.`);
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+            }
+            catch (err) {
+                this.ux.log(`Error Deleting Workspace(s) (${JSON.stringify(workspaceRecords)}) for user: '${username}'.`);
+            }
         }
     }
 }

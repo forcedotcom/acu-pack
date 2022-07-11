@@ -5,7 +5,7 @@ import Utils from '../../src/lib/utils';
 import { PackageOptions } from '../../src/lib/package-options';
 import { OptionsSettings } from '../../src/lib/options';
 
-const optionsPath = "./options.json";
+const optionsPath = './options.json';
 beforeEach('Cleanup', async () => {
   await Utils.deleteFile(optionsPath);
 });

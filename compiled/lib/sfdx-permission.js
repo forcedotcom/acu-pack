@@ -4,6 +4,7 @@ exports.SfdxPermission = exports.PermissionSet = exports.ObjectPermission = expo
 const path = require("path");
 const constants_1 = require("./constants");
 class XmlPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static getValue(json) {
         const value = json && json instanceof Array
             ? json[0]
@@ -21,6 +22,7 @@ class MetadataDetail extends Named {
 }
 exports.MetadataDetail = MetadataDetail;
 class ObjectDetail extends MetadataDetail {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(filePath, json) {
         if (!filePath || !json) {
             return null;
@@ -46,6 +48,7 @@ class ObjectDetail extends MetadataDetail {
 }
 exports.ObjectDetail = ObjectDetail;
 class FieldDetail extends MetadataDetail {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(filePath, json) {
         if (!filePath || !json) {
             return null;
@@ -82,6 +85,7 @@ class MetaDataPermission extends Named {
 }
 exports.MetaDataPermission = MetaDataPermission;
 class FieldPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -109,6 +113,7 @@ class FieldPermission extends MetaDataPermission {
 }
 exports.FieldPermission = FieldPermission;
 class ClassPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -127,6 +132,7 @@ class ClassPermission extends MetaDataPermission {
 }
 exports.ClassPermission = ClassPermission;
 class UserPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -145,6 +151,7 @@ class UserPermission extends MetaDataPermission {
 }
 exports.UserPermission = UserPermission;
 class PagePermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -163,6 +170,7 @@ class PagePermission extends MetaDataPermission {
 }
 exports.PagePermission = PagePermission;
 class LayoutAssignment extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -191,6 +199,7 @@ class DefaultablePermission extends MetaDataPermission {
 }
 exports.DefaultablePermission = DefaultablePermission;
 class RecordTypePermission extends DefaultablePermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -211,6 +220,7 @@ class RecordTypePermission extends DefaultablePermission {
 }
 exports.RecordTypePermission = RecordTypePermission;
 class ApplicationPermission extends DefaultablePermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -233,13 +243,13 @@ exports.ApplicationPermission = ApplicationPermission;
 class TabPermission extends MetaDataPermission {
     constructor() {
         super(...arguments);
-        // @ts-ignore
         this.tabVisibilityKind = {
             OFF: 'DefaultOff',
             ON: 'DefaultOn',
             HIDDEN: 'Hidden'
         };
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXMl(json) {
         if (!json) {
             return null;
@@ -285,6 +295,7 @@ class TabPermission extends MetaDataPermission {
 exports.TabPermission = TabPermission;
 TabPermission.standardPrefix = 'standard-';
 class ObjectPermission extends FieldPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -343,6 +354,7 @@ class PermissionSet extends Named {
         this.objectPermissions = new Map();
         this.layoutAssignments = new Map();
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(filePath, json) {
         if (!filePath || !json) {
             return null;
@@ -444,13 +456,13 @@ class SfdxPermission {
     static getPermisionString(permissionSet) {
         let result = '';
         if (permissionSet instanceof ObjectPermission) {
-            result += permissionSet.toString();
+            result += (permissionSet).toString();
         }
         else if (permissionSet instanceof FieldPermission) {
-            result += permissionSet.toString();
+            result += (permissionSet).toString();
         }
         else if (permissionSet instanceof TabPermission) {
-            result += permissionSet.toString();
+            result += (permissionSet).toString();
         }
         else if (permissionSet instanceof RecordTypePermission ||
             permissionSet instanceof ApplicationPermission) {

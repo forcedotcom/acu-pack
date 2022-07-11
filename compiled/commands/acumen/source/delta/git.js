@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const path = require("path");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const delta_command_1 = require("../../../../lib/delta-command");
 const utils_1 = require("../../../../lib/utils");
 const delta_provider_1 = require("../../../../lib/delta-provider");
-const path = require("path");
 class Git extends command_base_1.CommandBase {
     constructor() {
         super(...arguments);
         this.name = 'git';
         this.deltas = new Map();
     }
-    async run() {
+    async runInternal() {
         const deltaOptions = delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
         deltaOptions.deltaFilePath = this.flags.git;
         const gitProvider = new Git.gitDeltaProvider();

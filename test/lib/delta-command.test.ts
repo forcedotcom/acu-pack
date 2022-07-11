@@ -2,14 +2,14 @@ import { flags } from '@salesforce/command';
 import { expect } from '@salesforce/command/lib/test';
 import { DeltaCommandBase } from '../../src/lib/delta-command'
 
-describe("DeltaCommand Tests", function () {
-  describe("getFlagsConfig Tests", function () {
-    it("Can Handle Nulls", async function () {
+describe('DeltaCommand Tests', function () {
+  describe('getFlagsConfig Tests', function () {
+    it('Can Handle Nulls', function () {
       const testFlags = DeltaCommandBase.getFlagsConfig(null);
       expect(testFlags).is.not.null;
     });
 
-    it("Can Add a Flag", async function () {
+    it('Can Add a Flag', function () {
       const testFlagsConfig = DeltaCommandBase.getFlagsConfig({
         test: flags.filepath({
           char: 't',

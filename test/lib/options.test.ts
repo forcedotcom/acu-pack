@@ -7,8 +7,8 @@ import { XPathOptions } from '../../src/lib/xpath-options';
 import Utils from '../../src/lib/utils';
 
 class TestOptions extends OptionsBase {
-  private static CURRENT_VERSION: number = 2.0;
-  public version: number = 1.0;
+  private static CURRENT_VERSION = 2.0;
+  public version = 1.0;
   
   public loadDefaults(): Promise<void> {
     return Promise.resolve();
@@ -23,7 +23,7 @@ class TestOptions extends OptionsBase {
   }
 }
 
-const optionsPath = "./options.json";
+const optionsPath = './options.json';
 beforeEach('Cleanup', async () => {
   await Utils.deleteFile(optionsPath);
 });

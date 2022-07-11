@@ -68,24 +68,28 @@ describe('SchemaUtils Tests', function () {
   });
   describe('getDynamicSchemaData Tests', function () {
     it('Can Handle Nulls', function () {
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
       expect(() => Array.from(SchemaUtils.getDynamicSchemaData(null, null, null))).to.throw('The schema argument cannot be null.');
     });
     it('Can Handle bad schema', function () {
-      const schema = {};
-      schema['test'] = [];
-      expect(() => Array.from(SchemaUtils.getDynamicSchemaData(schema, null, null))).to.throw('The schema argument does not contains a fields member.');
+      const schemaTest = {};
+      schemaTest['test'] = [];
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+      expect(() => Array.from(SchemaUtils.getDynamicSchemaData(schemaTest, null, null))).to.throw('The schema argument does not contains a fields member.');
     });
 
     it('Can Handle Null code', function () {
-      const schema = {};
-      schema['fields'] = [];
-      expect(() => Array.from(SchemaUtils.getDynamicSchemaData(schema, null, null))).to.throw('The dynamicCode argument cannot be null.');
+      const schemaTest = {};
+      schemaTest['fields'] = [];
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+      expect(() => Array.from(SchemaUtils.getDynamicSchemaData(schemaTest, null, null))).to.throw('The dynamicCode argument cannot be null.');
     });
 
     it('Can Handle Null Collection', function () {
-      const schema = {};
-      schema['fields'] = [];
-      expect(() => Array.from(SchemaUtils.getDynamicSchemaData(schema, 'dynsmic code', null))).to.throw('The collection argument cannot be null.');
+      const schemaTest = {};
+      schemaTest['fields'] = [];
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+      expect(() => Array.from(SchemaUtils.getDynamicSchemaData(schemaTest, 'dynsmic code', null))).to.throw('The collection argument cannot be null.');
     });
 
     it('Works with schema', function () {
@@ -111,7 +115,7 @@ describe('SchemaUtils Tests', function () {
       const code = testOptions.getDynamicCode('fields');
       for (const row of SchemaUtils.getDynamicSchemaData(schema, code, schema.fields)) {
         expect(row).is.not.null;
-        if (row.length != 0) {
+        if (row.length !== 0) {
           expect(row.length).equals(outputDefs.length);
           rows.push(row);
         }

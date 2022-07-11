@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OptionsBase = exports.OptionsSettings = void 0;
 const path = require("path");
-const utils_1 = require("./utils");
 const fs_1 = require("fs");
+const utils_1 = require("./utils");
 const sfdx_core_1 = require("./sfdx-core");
 class OptionsSettings {
     constructor() {
@@ -17,14 +17,14 @@ class OptionsBase {
     constructor() {
         // This field should NOT be serialized see includeField method below
         this.version = 1.0;
-        this._settings = new OptionsSettings();
+        this.prvSettings = new OptionsSettings();
     }
     get settings() {
-        return this._settings;
+        return this.prvSettings;
     }
     set settings(optionSettings) {
         if (optionSettings) {
-            this._settings = optionSettings;
+            this.prvSettings = optionSettings;
         }
     }
     get isCurrentVersion() {
@@ -41,7 +41,7 @@ class OptionsBase {
         else {
             await this.deserialize(json);
             // If we have a filepath AND the version is not current => write the current version
-            if (!this.isCurrentVersion && !this._settings.ignoreVersion && optionsPath) {
+            if (!this.isCurrentVersion && !this.prvSettings.ignoreVersion && optionsPath) {
                 this.setCurrentVersion();
                 await this.save(optionsPath);
             }
@@ -58,14 +58,14 @@ class OptionsBase {
         await fs_1.promises.writeFile(optionsPath, (await this.serialize()));
     }
     ignoreField(fieldName) {
-        return fieldName === '_settings';
+        return fieldName === 'prvSettings';
     }
     deserialize(serializedOptionBase) {
         return new Promise((resolve, reject) => {
             try {
                 const options = JSON.parse(serializedOptionBase);
                 for (const field of Object.keys(options)) {
-                    if (this.hasOwnProperty(field) && !this.ignoreField(field)) {
+                    if (Object.prototype.hasOwnProperty.call(this, field) && !this.ignoreField(field)) {
                         this[field] = options[field];
                     }
                 }
@@ -77,18 +77,17 @@ class OptionsBase {
         });
     }
     serialize() {
+        // Always check & set the current version before serializing
+        if (!this.isCurrentVersion) {
+            this.setCurrentVersion();
+        }
+        const stringify = (key, value) => {
+            return (this.ignoreField(key)
+                ? undefined
+                : value);
+        };
         return new Promise((resolve, reject) => {
             try {
-                // Always check & set the current version before serializing
-                if (!this.isCurrentVersion) {
-                    this.setCurrentVersion();
-                }
-                const ignoreFieldMethodName = this.ignoreField;
-                const stringify = (key, value) => {
-                    return ignoreFieldMethodName(key)
-                        ? undefined
-                        : value;
-                };
                 resolve(JSON.stringify(this, stringify, sfdx_core_1.SfdxCore.jsonSpaces));
             }
             catch (err) {

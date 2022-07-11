@@ -1,13 +1,23 @@
-import Utils from './utils';
 import path = require('path');
 import { UX } from '@salesforce/command';
-import { SfdxQuery } from './sfdx-query';
 import { Connection } from 'jsforce';
+import Utils from './utils';
+import { SfdxQuery } from './sfdx-query';
 import Constants from './constants';
 
 export class ProfileDownload {
+  public profileFilePath: Map<string, string> = new Map<string, string>();
 
-  public static async processMissingObjectPermissions(objectData: any, includedObjects: string[]): Promise<Map<string, any>> {
+  public constructor(
+    public sfdxCon: Connection,
+    public orgAlias: string,
+    public profileList: string[],
+    public profileIDMap: Map<string, string>,
+    public rootDir: string,
+    public ux: UX
+  ) {}
+
+  public static processMissingObjectPermissions(objectData: any[], includedObjects: string[]): Map<string, any> {
     const profileObjectPermissions: Map<string, any> = new Map<string, any>();
     const uniqueObjectNames = new Set<string>();
     for (const obj of objectData) {
@@ -29,7 +39,7 @@ export class ProfileDownload {
     return profileObjectPermissions;
   }
 
-  public static async processMissingFieldPermissions(fielddata: any): Promise<any[]> {
+  public static processMissingFieldPermissions(fielddata: any[]): any[] {
     const profileFieldPermissions: any[] = [];
 
     const uniqueFieldNames = new Set<string>();
@@ -46,9 +56,10 @@ export class ProfileDownload {
     return profileFieldPermissions;
   }
 
+  /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
   public static async writeProfileToXML(profileMetadata: any, filePath: string): Promise<void> {
     profileMetadata['$'] = {
-      xmlns: Constants.DEFAULT_XML_NAMESPACE
+      xmlns: Constants.DEFAULT_XML_NAMESPACE,
     };
 
     const nonArrayKeys = ['custom', 'description', 'fullName', 'userLicense'];
@@ -64,7 +75,7 @@ export class ProfileDownload {
     const xmlOptions = {
       renderOpts: { pretty: true, indent: '    ', newline: '\n' },
       rootName: 'Profile',
-      xmldec: { version: '1.0', encoding: 'UTF-8' }
+      xmldec: { version: '1.0', encoding: 'UTF-8' },
     };
 
     await Utils.writeObjectToXmlFile(filePath, profileMetadata, xmlOptions);
@@ -87,7 +98,7 @@ export class ProfileDownload {
       ['Marketing User', 'MarketingProfile'],
       ['Solution Manager', 'SolutionManager'],
       ['Read Only', 'ReadOnly'],
-      ['Standard Platform User', 'StandardAul']
+      ['Standard Platform User', 'StandardAul'],
     ]);
 
     const getProfiles = await SfdxQuery.doSoqlQuery(orgName, 'Select Id, Name from Profile');
@@ -101,7 +112,15 @@ export class ProfileDownload {
     return profileMap;
   }
 
-  private static objPermissionStructure(objName: string, allowRead: boolean, allowCreate: boolean, allowEdit: boolean, allowDelete: boolean, viewAllRecords: boolean, modifyAllRecords: boolean): any {
+  private static objPermissionStructure(
+    objName: string,
+    allowRead: boolean,
+    allowCreate: boolean,
+    allowEdit: boolean,
+    allowDelete: boolean,
+    viewAllRecords: boolean,
+    modifyAllRecords: boolean
+  ): any {
     const objStructure = {
       object: objName,
       allowRead,
@@ -109,7 +128,7 @@ export class ProfileDownload {
       allowEdit,
       allowDelete,
       viewAllRecords,
-      modifyAllRecords
+      modifyAllRecords,
     };
     return objStructure;
   }
@@ -118,25 +137,14 @@ export class ProfileDownload {
     const fieldStructure = {
       field,
       editable,
-      readable
+      readable,
     };
     return fieldStructure;
   }
-  public profileFilePath: Map<string, string> = new Map<string, string>();
-
-  constructor(
-    public sfdxCon: Connection,
-    public orgAlias: string,
-    public profileList: string[],
-    public profileIDMap: Map<string, string>,
-    public rootDir: string,
-    public ux: UX
-  ) { }
 
   public async downloadPermissions(): Promise<Map<string, string>> {
-
-    if (!(await Utils.pathExists(path.join(this.rootDir, Utils._tempFilesPath)))) {
-      await Utils.mkDirPath(path.join(this.rootDir, Utils._tempFilesPath));
+    if (!(await Utils.pathExists(path.join(this.rootDir, Utils.TempFilesPath)))) {
+      await Utils.mkDirPath(path.join(this.rootDir, Utils.TempFilesPath));
     }
 
     const resultsArray: Array<Promise<any>> = [];
@@ -157,10 +165,10 @@ export class ProfileDownload {
     return new Promise((resolve, reject) => {
       this.sfdxCon.metadata
         .readSync('Profile', profileName)
-        .then(async data => {
+        .then((data) => {
           resolve(Array.isArray(data) ? data[0] : data);
         })
-        .catch(err => {
+        .catch((err) => {
           reject(err);
         });
     });
@@ -172,14 +180,13 @@ export class ProfileDownload {
     }
 
     try {
-
       this.ux.log(`Downloading '${profileName}' Profile ...`);
       const profileJson = await this.retrieveProfileMetaData(profileName);
       if (!profileJson) {
         return;
       }
 
-      const filePath = path.join(path.join(this.rootDir, Utils._tempFilesPath, profileName + '.json'));
+      const filePath = path.join(path.join(this.rootDir, Utils.TempFilesPath, profileName + '.json'));
       this.profileFilePath.set(profileName, filePath);
 
       const retrievedObjects: string[] = [];
@@ -188,7 +195,8 @@ export class ProfileDownload {
           retrievedObjects.push(obj['object']);
         }
 
-        const objectPermQuery: string = 'SELECT Parent.ProfileId,' +
+        const objectPermQuery: string =
+          'SELECT Parent.ProfileId,' +
           'PermissionsCreate,' +
           'PermissionsDelete,' +
           'PermissionsEdit,' +
@@ -197,38 +205,44 @@ export class ProfileDownload {
           'PermissionsViewAllRecords,' +
           'SobjectType ' +
           'FROM ObjectPermissions ' +
-          'WHERE Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\' ' +
+          'WHERE Parent.ProfileId=' +
+          "'" +
+          this.profileIDMap.get(profileName) +
+          "' " +
           'ORDER BY SObjectType ASC';
 
         const objData = await SfdxQuery.doSoqlQuery(this.orgAlias, objectPermQuery);
 
-        const processObjData = await ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
-        if (processObjData.size === 0) {
-          return;
-        }
-        const sobjects = [];
-        for (const obj of processObjData.keys()) {
-          sobjects.push(`'${obj}'`);
-        }
+        const processObjData = ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
+        if (processObjData.size !== 0) {
+          const sobjects = [];
+          for (const obj of processObjData.keys()) {
+            sobjects.push(`'${obj}'`);
+          }
 
-        const fieldPermQuery = 'SELECT Field,' +
-          'Parent.ProfileId,' +
-          'SobjectType,' +
-          'PermissionsEdit,' +
-          'PermissionsRead ' +
-          'FROM FieldPermissions ' +
-          `WHERE SobjectType IN (${sobjects.join(',')})` +
-          ' AND Parent.ProfileId=' + '\'' + this.profileIDMap.get(profileName) + '\'';
+          const fieldPermQuery =
+            'SELECT Field,' +
+            'Parent.ProfileId,' +
+            'SobjectType,' +
+            'PermissionsEdit,' +
+            'PermissionsRead ' +
+            'FROM FieldPermissions ' +
+            `WHERE SobjectType IN (${sobjects.join(',')})` +
+            ' AND Parent.ProfileId=' +
+            "'" +
+            this.profileIDMap.get(profileName) +
+            "'";
 
-        const fieldMissingData = await SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
+          const fieldMissingData = await SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
 
-        const processFieldData = await ProfileDownload.processMissingFieldPermissions(fieldMissingData);
+          const processFieldData = ProfileDownload.processMissingFieldPermissions(fieldMissingData);
 
-        profileJson.objectPermissions.push(...processObjData.values());
-        if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0) {
-          profileJson.fieldLevelSecurities.push(...processFieldData);
-        } else {
-          profileJson.fieldPermissions.push(...processFieldData);
+          profileJson.objectPermissions.push(...processObjData.values());
+          if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0) {
+            profileJson.fieldLevelSecurities.push(...processFieldData);
+          } else {
+            profileJson.fieldPermissions.push(...processFieldData);
+          }
         }
       }
       await Utils.writeFile(filePath, JSON.stringify(profileJson));

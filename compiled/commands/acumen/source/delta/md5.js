@@ -1,21 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const fs_1 = require("fs");
+const path = require("path");
 const command_1 = require("@salesforce/command");
+const md5File = require("md5-file");
 const command_base_1 = require("../../../../lib/command-base");
 const delta_command_1 = require("../../../../lib/delta-command");
 const utils_1 = require("../../../../lib/utils");
 const delta_provider_1 = require("../../../../lib/delta-provider");
-const md5File = require("md5-file");
-const fs_1 = require("fs");
-const path = require("path");
 class Md5 extends command_base_1.CommandBase {
     constructor() {
         super(...arguments);
         this.name = 'md5';
         this.deltas = new Map();
     }
-    async run() {
+    async runInternal() {
         const deltaOptions = delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
         deltaOptions.deltaFilePath = this.flags.md5;
         const gitProvider = new Md5.md5DeltaProvider();

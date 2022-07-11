@@ -1,9 +1,9 @@
+import path = require('path');
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { DeltaCommandBase } from '../../../../lib/delta-command';
 import Utils from '../../../../lib/utils';
 import { DeltaProvider, DeltaOptions, Delta } from '../../../../lib/delta-provider';
-import path = require('path');
 
 export default class Git extends CommandBase {
     public static description = CommandBase.messages.getMessage('source.delta.git.commandDescription');
@@ -57,7 +57,7 @@ export default class Git extends CommandBase {
     protected name = 'git';
     protected deltas = new Map<string, string>();
 
-    public async run(): Promise<any> {
+    protected async runInternal(): Promise<void> {
         const deltaOptions = DeltaCommandBase.getDeltaOptions(this.flags);
         deltaOptions.deltaFilePath = this.flags.git;
 

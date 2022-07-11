@@ -1,6 +1,5 @@
-import { CommandBase } from '../../../lib/command-base';
 import { flags } from '@salesforce/command';
-import { AnyJson } from '@salesforce/ts-types';
+import { CommandBase } from '../../../lib/command-base';
 export default class Permissions extends CommandBase {
     static packageFileName: string;
     static description: string;
@@ -15,5 +14,5 @@ export default class Permissions extends CommandBase {
     protected metaNames: Set<string>;
     protected namespaces: Set<string>;
     protected packageFileName: string;
-    run(): Promise<AnyJson>;
+    protected runInternal(): Promise<void>;
 }

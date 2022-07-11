@@ -4,7 +4,7 @@ import { SfdxTasks } from '../../src/lib/sfdx-tasks';
 import Utils from '../../src/lib/utils';
 import { OptionsFactory } from '../../src/lib/options-factory';
 
-const optionsPath = "./options.json";
+const optionsPath = './options.json';
 beforeEach('Cleanup', async () => {
   await Utils.deleteFile(optionsPath);
 });

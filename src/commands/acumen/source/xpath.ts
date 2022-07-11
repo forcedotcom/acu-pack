@@ -20,38 +20,36 @@ export default class XPath extends CommandBase {
     })
   };
 
-  public async run(): Promise<void> {
+  protected async runInternal(): Promise<void> {
     // Read/Write the options file if it does not exist already
     const options = await OptionsFactory.get(XPathOptions, this.flags.options ?? XPath.defaultOptionsFileName);
 
-    try {
-      for (const [sourceFolder, rules] of options.rules) {
-        if (!sourceFolder) {
-          continue;
+    for (const [sourceFolder, rules] of options.rules) {
+      if (!sourceFolder) {
+        continue;
+      }
+      for await (const filePath of Utils.getFiles(sourceFolder)) {
+        this.ux.log(`Processing file: '${filePath}`);
+        let xml = null;
+        for await (const line of Utils.readFileLines(filePath)) {
+          xml += line;
         }
-        for await (const filePath of Utils.getFiles(sourceFolder)) {
-          this.ux.log(`Processing file: '${filePath}`);
-          let xml = null;
-          for await (const line of Utils.readFileLines(filePath)) {
-            xml += line;
-          }
-          const xPaths = [];
+        const xPaths = [];
+        for (const rule of rules) {
+          xPaths.push(rule.xPath);
+        }
+        for (const [xPath, values] of Utils.selectXPath(xml, xPaths)) {
           for (const rule of rules) {
-            xPaths.push(rule.xPath);
-          }
-          for (const [xPath, values] of Utils.selectXPath(xml, xPaths)) {
-            for (const rule of rules) {
-              if (rule.xPath === xPath) {
-                for (const ruleValue of rule.values) {
-                  for (const xmlValue of values) {
-                    if (ruleValue.trim() === xmlValue.trim()) {
-                      // Set the proper exit code to indicate violation/failure
-                      process.exitCode = 1;
+            if (rule.xPath === xPath) {
+              for (const ruleValue of rule.values) {
+                for (const xmlValue of values) {
+                  if (ruleValue.trim() === xmlValue.trim()) {
+                    // Set the proper exit code to indicate violation/failure
+                    process.exitCode = 1;
 
-                      this.ux.log(`${rule.name} - Violation!`);
-                      this.ux.log(`\txpath: ${xPath}`);
-                      this.ux.log(`\tvalue: ${xmlValue}`);
-                    }
+                    this.ux.log(`${rule.name} - Violation!`);
+                    this.ux.log(`\txpath: ${xPath}`);
+                    this.ux.log(`\tvalue: ${xmlValue}`);
                   }
                 }
               }
@@ -59,12 +57,8 @@ export default class XPath extends CommandBase {
           }
         }
       }
-    } catch (err) {
-      throw err;
     }
-
-    this.ux.log('Done.');
-
+    
     return;
   }
 }

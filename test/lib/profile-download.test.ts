@@ -1,8 +1,8 @@
+import path = require('path');
 import { expect } from '@salesforce/command/lib/test';
 import { UX } from '@salesforce/command';
-import { ProfileDownload } from '../../src/lib/profile-download';
 import Utils from '../../src/lib/utils';
-import path = require('path');
+import { ProfileDownload } from '../../src/lib/profile-download';
 
 const profileJson = {
   fullName: 'Admin',
@@ -61,15 +61,15 @@ describe('Profile Command Tests', () => {
   });
 
   describe('Missing Objects', () => {
-    it('Process missing Objects', async () => {
-      const getObjectPermissions = await ProfileDownload.processMissingObjectPermissions(objectPermissionFromQuery, ['Account']);
+    it('Process missing Objects', () => {
+      const getObjectPermissions = ProfileDownload.processMissingObjectPermissions(objectPermissionFromQuery, ['Account']);
       expect(getObjectPermissions).to.include.keys('Company__c');
     });
   });
 
   describe('Missing Fields', () => {
-    it('Process missing Fields', async () => {
-      const getFieldPermissions = await ProfileDownload.processMissingFieldPermissions(fieldPermissionsFromQuery);
+    it('Process missing Fields', () => {
+      const getFieldPermissions = ProfileDownload.processMissingFieldPermissions(fieldPermissionsFromQuery);
       expect(getFieldPermissions).to.be.an('array');
     });
   });
@@ -87,7 +87,7 @@ describe('Profile Command Tests', () => {
       const profileDownloader = new ProfileDownload(null, null, ['Admin', 'Admin1'], null, path.join(process.cwd()), await UX.create());
       const permissions = await profileDownloader.downloadPermissions();
       expect(permissions).is.not.null;
-      await Utils.deleteDirectory(path.join(process.cwd(), Utils._tempFilesPath));
+      await Utils.deleteDirectory(path.join(process.cwd(), Utils.TempFilesPath));
     });
   });
 

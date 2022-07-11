@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path = require('path');
-import { expect } from '@salesforce/command/lib/test';
 import { spawnSync } from 'child_process';
+import { expect } from '@salesforce/command/lib/test';
 import Utils from '../../../src/lib/utils'
 import { XPathOptions } from '../../../src/lib/xpath-options';
 import { OptionsFactory } from '../../../src/lib/options-factory';
@@ -31,12 +31,12 @@ afterEach(async () => {
   await Utils.deleteFile(xmlPath);
 });
 
-describe("XPath Tests", function () {
+describe('XPath Tests', function () {
   this.timeout(50000); // Times out due to blocking spawnSync otherwise
 
-  it("Returns Exit Code 0", async () => {
-    await fs.writeFile(xmlPath, `<?xml version="1.0" encoding="UTF-8"?>
-    <Profile xmlns="${Constants.DEFAULT_XML_NAMESPACE}">
+  it('Returns Exit Code 0', async () => {
+    await fs.writeFile(xmlPath, `<?xml version='1.0' encoding='UTF-8'?>
+    <Profile xmlns='${Constants.DEFAULT_XML_NAMESPACE}'>
         <classAccesses>
             <apexClass>MyMJM</apexClass>
             <enabled>false</enabled>
@@ -52,9 +52,9 @@ describe("XPath Tests", function () {
     expect(result.status).to.equal(0);
     await Utils.deleteFile(xmlPath);
   });
-  it("Returns Exit Code 1", async () => {
-    await fs.writeFile(xmlPath, `<?xml version="1.0" encoding="UTF-8"?>
-    <Profile xmlns="${Constants.DEFAULT_XML_NAMESPACE}">
+  it('Returns Exit Code 1', async () => {
+    await fs.writeFile(xmlPath, `<?xml version='1.0' encoding='UTF-8'?>
+    <Profile xmlns='${Constants.DEFAULT_XML_NAMESPACE}'>
         <classAccesses>
             <apexClass>MyMJM</apexClass>
             <enabled>false</enabled>

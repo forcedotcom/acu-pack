@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("./utils");
-const fs_1 = require("fs");
 const path = require("path");
+const fs_1 = require("fs");
+const utils_1 = require("./utils");
 class XmlMerge {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async mergeXmlFiles(sourceXmlFile, destinationXmlFile, ux) {
         let merged;
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
@@ -34,8 +35,10 @@ class XmlMerge {
         finally {
             await this.logMessage('Done', logFilePath, ux);
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return merged;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async mergeXmlToFile(sourceXml, destinationXmlFile) {
         let merged;
         if (await utils_1.default.pathExists(destinationXmlFile)) {
@@ -46,8 +49,10 @@ class XmlMerge {
             merged = sourceXml;
         }
         await utils_1.default.writeObjectToXmlFile(destinationXmlFile, merged);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return merged;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static getType(pack, name) {
         for (const type of pack.types) {
             if (type.name[0] === name) {
@@ -56,6 +61,7 @@ class XmlMerge {
         }
         return null;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async logMessage(message, logFile, ux) {
         if (typeof message === 'string') {
             await fs_1.promises.appendFile(logFile, `${message}\r\n`);
@@ -67,6 +73,7 @@ class XmlMerge {
             ux.log(message);
         }
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static mergeObjects(source, destination) {
         if (!source.Package) {
             source['Package'] = {};

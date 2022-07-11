@@ -43,14 +43,14 @@ export default class Scaffold extends CommandBase {
   private schemas = new Map<string, any>();
   private index = 0;
 
-  public async run(): Promise<void> {
+  protected async runInternal(): Promise<void> {
 
     let options: ScaffoldOptions;
     // Read/Write the options file if it does not exist already
     if (this.flags.options) {
       options = await OptionsFactory.get(ScaffoldOptions, this.flags.options);
       if (!options) {
-        this.ux.log(`Unable to read options file: ${this.flags.options}.`);
+        this.ux.log(`Unable to read options file: ${this.flags.options as string}.`);
         // Set the proper exit code to indicate violation/failure
         process.exitCode = 1;
         return;
@@ -64,39 +64,31 @@ export default class Scaffold extends CommandBase {
       options.sObjectTypes.push(...this.flags.sobjects.split(','));
     }
 
-    try {
-      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
+    this.ux.log('Retrieving Schemas...');
+    for (const sObjectType of options.sObjectTypes) {
+      await this.getSchema(sObjectType.replace(' ', ''));
+    }
 
-      this.ux.log('Retrieving Schemas...');
-      for (const sObjectType of options.sObjectTypes) {
-        await this.getSchema(sObjectType.replace(' ', ''));
-      }
+    this.ux.log('Reading ./sfdx-project.json file...');
+    const project = await SfdxProject.default();
+    const defaultFolder = project.getDefaultDirectory();
 
-      this.ux.log('Reading ./sfdx-project.json file...');
-      const project = await SfdxProject.default();
-      const defaultFolder = project.getDefaultDirectory();
+    this.ux.log('Generating Apex cls & cls-meta files...');
 
-      this.ux.log('Generating Apex cls & cls-meta files...');
+    const rootPath = `./${defaultFolder}/main/default/classes/`;
+    await Utils.mkDirPath(rootPath);
 
-      const rootPath = `./${defaultFolder}/main/default/classes/`;
-      for (const [schemaName, schema] of this.schemas) {
-        this.ux.log('\t' + schemaName);
-        const fileDetails = this.generateTestSetupCode(schemaName, schema, options);
+    for (const [schemaName, schema] of this.schemas) {
+      this.ux.log('\t' + schemaName);
+      const fileDetails = this.generateTestSetupCode(schemaName, schema, options);
 
-        await Utils.writeFile(
-          rootPath + `${fileDetails.name}.cls`,
-          fileDetails.contents);
+      await Utils.writeFile(
+        rootPath + `${fileDetails.name as string}.cls`,
+        fileDetails.contents);
 
-        await Utils.writeFile(
-          rootPath + `${fileDetails.name}.cls-meta.xml`,
-          Scaffold.META_XML.replace(/API_VERSION_TOKEN/, project.sourceApiVersion));
-      }
-
-    } catch (err) {
-      process.exitCode = 1;
-      throw err;
-    } finally {
-      this.ux.log('Done.');
+      await Utils.writeFile(
+        rootPath + `${fileDetails.name as string}.cls-meta.xml`,
+        Scaffold.META_XML.replace(/API_VERSION_TOKEN/, project.sourceApiVersion));
     }
   }
   private async getSchema(sObjectType: string): Promise<any> {
@@ -111,6 +103,7 @@ export default class Scaffold extends CommandBase {
       }
       this.schemas.set(schema.name.split('__')[0], schema);
     }
+    /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
     return schema;
   }
 
@@ -128,7 +121,7 @@ export default class Scaffold extends CommandBase {
       '\t@TestSetup',
       '\tstatic void setupTestData() {',
       '\t\t// Create instance',
-      `\t\t${schema.name} ${varName} = new ${schema.name}( `
+      `\t\t${schema.name as string} ${varName} = new ${schema.name as string}( `
     ];
 
     const codeLines = new Map<string, string>();
@@ -139,7 +132,7 @@ export default class Scaffold extends CommandBase {
       }
       if (field.createable) {
         const value = options.includeRandomValues ? this.generateFieldValue(field) : null;
-        codeLines.set(field.name, `${pre}${field.name} = ${value}`);
+        codeLines.set(field.name, `${pre}${field.name as string} = ${value}`);
       }
     }
 
@@ -169,14 +162,14 @@ export default class Scaffold extends CommandBase {
     if (!field) {
       throw new Error('The field argument cannot be null.');
     }
-    const noUnderscoreName = field.name.split('__')[0].replace(/_/g, '');
+    const noUnderscoreName: string = field.name.split('__')[0].replace(/_/g, '');
 
     const getStr = (fld: any, maxLength?: number): string => {
       if (!fld) {
         throw new Error('The fld argument cannot be null.');
       }
 
-      const value = fld.name;
+      const value: string = fld.name;
       let strLen = fld.length;
       if (!strLen || strLen === 0 || strLen > maxLength) {
         strLen = maxLength;
@@ -221,7 +214,7 @@ export default class Scaffold extends CommandBase {
     };
 
     const getPicklist = (picklistValues: any[], count: number): string[] => {
-      const values = [];
+      const values: string[] = [];
       const index = getRand(0, picklistValues.length);
       for (const picklist of picklistValues.slice(index)) {
         if (!picklist.active) {
@@ -245,10 +238,9 @@ export default class Scaffold extends CommandBase {
         case 'encryptedString':
         case 'textarea':
           return `'${getStr(fld)}'`;
-
         case 'base64':
           return `'${Buffer.from(getStr(fld)).toString('base64')}'`;
-        case 'textarea1':
+        case 'textarea1': {
           const lineCount = 3;
           // Calculate length of each line (subract for \n) then divide
           const lineLength = Math.floor((fld.length - lineCount) / 3);
@@ -257,6 +249,7 @@ export default class Scaffold extends CommandBase {
             lines.push(`${getStr(fld, lineLength)}`);
           }
           return lines.join('+\n');
+        }
         case 'int':
         case 'integer':
           return `${getDec(fld, 10)}`;
@@ -270,7 +263,7 @@ export default class Scaffold extends CommandBase {
           return `${getDec(fld)}`;
 
         case 'address':
-          return `'123 ${fld.name} St.'`;
+          return `'123 ${fld.name as string} St.'`;
 
         case 'boolean':
           return `${Math.random() < 0.5 ? 'true' : 'false'}`;
@@ -285,28 +278,28 @@ export default class Scaffold extends CommandBase {
           return 'Datetime.getTime()';
 
         case 'email':
-          return `'${fld.name}@${noUnderscoreName}.email.org'`;
+          return `'${fld.name as string}@${noUnderscoreName}.email.org'`;
 
-        case 'phone':
+        case 'phone': {
           const phone = `555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${++this.index}`;
           // phone max is 40
           return `'${phone.substr(0, 40)}'`;
-
-        case 'multipicklist':
+        }
+        case 'multipicklist': {
           if (fld.picklistValues?.length === 0) {
-            this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
+            this.ux.log(`Skipping: ${fld.name as string} (${fld.type as string}) - no picklist values.`);
           }
           const count = Math.floor(fld.picklistValues.length / 3);
           const values = getPicklist(fld.picklistValues, count);
           return values ? `'${values.join(';').replace(/'/g, "\\'")}'` : null;
-
-        case 'picklist':
+        }
+        case 'picklist': {
           if (fld.picklistValues?.length === 0) {
-            this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
+            this.ux.log(`Skipping: ${fld.name as string} (${fld.type as string}) - no picklist values.`);
           }
           const value = getPicklist(fld.picklistValues, 1);
           return value ? `'${value.join(';').replace(/'/g, "\\'")}'` : null;
-
+        }
         case 'url':
           return `'https://www.${noUnderscoreName}.salesforce.com.${this.orgAlias}/index'`;
 
@@ -315,7 +308,7 @@ export default class Scaffold extends CommandBase {
         case 'combobox':
         case 'dataCategoryGroupReference':
         default:
-          this.ux.log(`Skipping: ${fld.name} (${fld.type})`);
+          this.ux.log(`Skipping: ${fld.name as string} (${fld.type as string})`);
           return null;
       }
     };

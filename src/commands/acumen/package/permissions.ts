@@ -1,11 +1,11 @@
-import { CommandBase } from '../../../lib/command-base';
+import path = require('path');
 import { flags } from '@salesforce/command';
 import { SfdxError } from '@salesforce/core';
-import { AnyJson } from '@salesforce/ts-types';
+// import { AnyJson } from '@salesforce/ts-types';
+import { CommandBase } from '../../../lib/command-base';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
 import { SfdxPermission } from '../../../lib/sfdx-permission';
 import { SfdxCore } from '../../../lib/sfdx-core';
-import path = require('path');
 import Utils from '../../../lib/utils';
 
 export default class Permissions extends CommandBase {
@@ -44,7 +44,7 @@ export default class Permissions extends CommandBase {
   protected namespaces: Set<string>;
   protected packageFileName: string;
 
-  public async run(): Promise<AnyJson> {
+  protected async runInternal(): Promise<void> {
     // Gather metadata names to include
     const metaNames = Utils.sortArray(this.flags.metadata
       ? this.flags.metadata.split()
@@ -63,43 +63,37 @@ export default class Permissions extends CommandBase {
       throw new SfdxError(`The specified package folder does not exist: '${packageDir}'`);
     }
 
-    try {
-      this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
-      const describeMetadata = await SfdxTasks.describeMetadata(this.orgAlias);
+    this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
+    const describeMetadata = await SfdxTasks.describeMetadata(this.orgAlias);
 
-      const describeMetadatas = new Set<string>();
-      for (const metadata of describeMetadata) {
-        if (this.metaNames.has(metadata.xmlName)) {
-          describeMetadatas.add(metadata);
-          continue;
-        }
+    const describeMetadatas = new Set<string>();
+    for (const metadata of describeMetadata) {
+      if (this.metaNames.has(metadata.xmlName)) {
+        describeMetadatas.add(metadata);
+        continue;
+      }
 
-        if (metadata.childXmlNames) {
-          for (const childName of metadata.childXmlNames) {
-            if (this.metaNames.has(childName)) {
-              // 'adopt' the childName as the xmlName to pull the child metadata
-              metadata.xmlName = childName;
-              describeMetadatas.add(metadata);
-            }
+      if (metadata.childXmlNames) {
+        for (const childName of metadata.childXmlNames) {
+          if (this.metaNames.has(childName)) {
+            // 'adopt' the childName as the xmlName to pull the child metadata
+            metadata.xmlName = childName;
+            describeMetadatas.add(metadata);
           }
         }
       }
-
-      this.ux.log(`Generating: ${this.packageFileName}`);
-
-      const metadataMap = new Map<string, string[]>();
-      let counter = 0;
-      for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)) {
-        metadataMap.set(entry.name, entry.members);
-        this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name}`);
-      }
-      // Write the final package
-      await SfdxCore.writePackageFile(metadataMap, this.packageFileName);
-
-      this.ux.log('Done.');
-    } catch (err) {
-      throw err;
     }
+
+    this.ux.log(`Generating: ${this.packageFileName}`);
+
+    const metadataMap = new Map<string, string[]>();
+    let counter = 0;
+    for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)) {
+      metadataMap.set(entry.name, entry.members);
+      this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name as string}`);
+    }
+    // Write the final package
+    await SfdxCore.writePackageFile(metadataMap, this.packageFileName);
     return;
   }
 }

@@ -60,8 +60,8 @@ describe('Sfdx Tasks Tests', () => {
       expect(orgAlias.length).to.be.greaterThan(0);
     });
   });
-  describe("REST Tests", function () {
-    it("Can getUnsupportedMetadataTypes", async function () {
+  describe('REST Tests', function () {
+    it('Can getUnsupportedMetadataTypes', async function () {
       this.timeout(0);
       const types = await SfdxTasks.getUnsupportedMetadataTypes();
       expect(types).to.not.be.undefined;
