@@ -32,9 +32,6 @@ class XmlMerge {
         catch (err) {
             await this.logMessage(err, logFilePath, ux);
         }
-        finally {
-            await this.logMessage('Done', logFilePath, ux);
-        }
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return merged;
     }
