@@ -82,6 +82,6 @@ SfdxCore.ASTERIX = '*';
 SfdxCore.MAIN = 'main';
 SfdxCore.DEFAULT = 'default';
 SfdxCore.EMAIL_TEMPLATE_XML_NAME = 'EmailTemplate';
-SfdxCore.bufferOptions = { env: { NODE_OPTIONS: null }, maxBuffer: 10 * 1024 * 1024 };
+SfdxCore.bufferOptions = { env: process.env, maxBuffer: 10 * 1024 * 1024 };
 SfdxCore.jsonSpaces = 2;
 //# sourceMappingURL=sfdx-core.js.map

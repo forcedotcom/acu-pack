@@ -10,7 +10,7 @@ export class SfdxCore {
     public static DEFAULT = 'default';
     public static EMAIL_TEMPLATE_XML_NAME = 'EmailTemplate';
 
-    public static bufferOptions = { env: { NODE_OPTIONS: null }, maxBuffer: 10 * 1024 * 1024 };
+    public static bufferOptions = { env: process.env, maxBuffer: 10 * 1024 * 1024 };
     public static jsonSpaces = 2;
 
     public static command(cmd: string): Promise<any> {

@@ -1,12 +1,11 @@
+/// <reference types="node" />
 export declare class SfdxCore {
     static ASTERIX: string;
     static MAIN: string;
     static DEFAULT: string;
     static EMAIL_TEMPLATE_XML_NAME: string;
     static bufferOptions: {
-        env: {
-            NODE_OPTIONS: any;
-        };
+        env: NodeJS.ProcessEnv;
         maxBuffer: number;
     };
     static jsonSpaces: number;
