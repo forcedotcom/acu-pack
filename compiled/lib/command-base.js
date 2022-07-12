@@ -37,10 +37,11 @@ class CommandBase extends command_1.SfdxCommand {
     }
     async handlerError(err, throwErr = false) {
         process.exitCode = 1;
-        await Promise.resolve(this.ux.log(`An error occurred: ${err.stack}`));
+        this.ux.log(`An error occurred: ${err.stack}`);
         if (throwErr) {
             throw err;
         }
+        return Promise.resolve();
     }
 }
 exports.CommandBase = CommandBase;
