@@ -18,7 +18,7 @@ class Office {
                 // There is  character limit of 31 for sheet names
                 xlsx_1.utils.book_append_sheet(workbook, worksheet, name.slice(0, 31));
             }
-            xlsx_1.writeFile(workbook, xlxsFilePath);
+            (0, xlsx_1.writeFile)(workbook, xlxsFilePath);
         }
     }
 }
