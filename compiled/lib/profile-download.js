@@ -165,32 +165,31 @@ class ProfileDownload {
                     'ORDER BY SObjectType ASC';
                 const objData = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, objectPermQuery);
                 const processObjData = ProfileDownload.processMissingObjectPermissions(objData, retrievedObjects);
-                if (processObjData.size === 0) {
-                    return;
-                }
-                const sobjects = [];
-                for (const obj of processObjData.keys()) {
-                    sobjects.push(`'${obj}'`);
-                }
-                const fieldPermQuery = 'SELECT Field,' +
-                    'Parent.ProfileId,' +
-                    'SobjectType,' +
-                    'PermissionsEdit,' +
-                    'PermissionsRead ' +
-                    'FROM FieldPermissions ' +
-                    `WHERE SobjectType IN (${sobjects.join(',')})` +
-                    ' AND Parent.ProfileId=' +
-                    "'" +
-                    this.profileIDMap.get(profileName) +
-                    "'";
-                const fieldMissingData = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
-                const processFieldData = ProfileDownload.processMissingFieldPermissions(fieldMissingData);
-                profileJson.objectPermissions.push(...processObjData.values());
-                if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0) {
-                    profileJson.fieldLevelSecurities.push(...processFieldData);
-                }
-                else {
-                    profileJson.fieldPermissions.push(...processFieldData);
+                if (processObjData.size !== 0) {
+                    const sobjects = [];
+                    for (const obj of processObjData.keys()) {
+                        sobjects.push(`'${obj}'`);
+                    }
+                    const fieldPermQuery = 'SELECT Field,' +
+                        'Parent.ProfileId,' +
+                        'SobjectType,' +
+                        'PermissionsEdit,' +
+                        'PermissionsRead ' +
+                        'FROM FieldPermissions ' +
+                        `WHERE SobjectType IN (${sobjects.join(',')})` +
+                        ' AND Parent.ProfileId=' +
+                        "'" +
+                        this.profileIDMap.get(profileName) +
+                        "'";
+                    const fieldMissingData = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, fieldPermQuery);
+                    const processFieldData = ProfileDownload.processMissingFieldPermissions(fieldMissingData);
+                    profileJson.objectPermissions.push(...processObjData.values());
+                    if (profileJson.fieldLevelSecurities && profileJson.fieldLevelSecurities.length > 0) {
+                        profileJson.fieldLevelSecurities.push(...processFieldData);
+                    }
+                    else {
+                        profileJson.fieldPermissions.push(...processFieldData);
+                    }
                 }
             }
             await utils_1.default.writeFile(filePath, JSON.stringify(profileJson));

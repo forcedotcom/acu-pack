@@ -55,7 +55,7 @@ class DeltaCommandBase extends command_base_1.CommandBase {
         return flagsConfig;
     }
     static getDeltaOptions(commandFlags) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e;
         const deltaOptions = new delta_provider_1.DeltaOptions();
         if (!commandFlags) {
             return deltaOptions;
@@ -65,7 +65,12 @@ class DeltaCommandBase extends command_base_1.CommandBase {
         deltaOptions.destination = (_c = commandFlags.destination) !== null && _c !== void 0 ? _c : null;
         deltaOptions.forceFile = (_d = commandFlags.force) !== null && _d !== void 0 ? _d : null;
         deltaOptions.ignoreFile = (_e = commandFlags.ignore) !== null && _e !== void 0 ? _e : null;
-        deltaOptions.fullCopyDirNames = (_f = commandFlags.copyfulldir.split(',')) !== null && _f !== void 0 ? _f : DeltaCommandBase.defaultCopyDirList;
+        if (commandFlags.copyfulldir) {
+            deltaOptions.fullCopyDirNames = commandFlags.copyfulldir.split(',');
+        }
+        else {
+            deltaOptions.fullCopyDirNames = DeltaCommandBase.defaultCopyDirList;
+        }
         return deltaOptions;
     }
 }

@@ -13,7 +13,7 @@ class CommandBase extends command_1.SfdxCommand {
         if (this.org && this.org.getUsername()) {
             return this.org.getUsername();
         }
-        throw new Error('No username specified or project definition found');
+        return null;
     }
     get orgId() {
         return this.org.getOrgId();
@@ -23,7 +23,7 @@ class CommandBase extends command_1.SfdxCommand {
     }
     async run() {
         try {
-            if (this.orgAlias && this.orgId) {
+            if (this.orgAlias) {
                 this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
             }
             await this.runInternal();
@@ -37,10 +37,16 @@ class CommandBase extends command_1.SfdxCommand {
     }
     async handlerError(err, throwErr = false) {
         process.exitCode = 1;
-        await Promise.resolve(this.ux.log(`An error occurred: ${err.message}`));
+        if (err instanceof Error) {
+            this.ux.log(`An error occurred: ${err.stack}`);
+        }
+        else {
+            this.ux.log(`An error occurred: ${JSON.stringify(err)}`);
+        }
         if (throwErr) {
             throw err;
         }
+        return Promise.resolve();
     }
 }
 exports.CommandBase = CommandBase;

@@ -9,13 +9,12 @@ const profile_download_1 = require("../../../../lib/profile-download");
 const sfdx_project_1 = require("../../../../lib/sfdx-project");
 class ProfileRetrieve extends command_base_1.CommandBase {
     async runInternal() {
-        const orgAlias = this.flags.targetusername;
         const profileList = this.flags.names;
         const packageDir = (await sfdx_project_1.default.default()).getDefaultDirectory();
         if (!(await utils_1.default.pathExists(packageDir))) {
             throw new core_1.SfdxError('No default folder found in sfdx-project.json file');
         }
-        const orgAllProfilesMap = await profile_download_1.ProfileDownload.checkOrgProfiles(orgAlias);
+        const orgAllProfilesMap = await profile_download_1.ProfileDownload.checkOrgProfiles(this.orgAlias);
         const orgAllProfiles = [...orgAllProfilesMap.keys()];
         if (profileList.length > 5) {
             throw new core_1.SfdxError('Only 5 Profiles can be retrieved at once');
@@ -30,7 +29,7 @@ class ProfileRetrieve extends command_base_1.CommandBase {
             throw new core_1.SfdxError(`Profiles not found in Org: ${notAvailableProfiles.join(',')}`);
         }
         this.ux.log('Retrieving Profiles...');
-        const profileDownloader = new profile_download_1.ProfileDownload(this.connection, orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);
+        const profileDownloader = new profile_download_1.ProfileDownload(this.connection, this.orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);
         // Profile Directory Path
         const profileDirPath = path.join(process.cwd(), packageDir, 'main', 'default', 'profiles');
         const profileByPath = new Map();

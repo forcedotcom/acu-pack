@@ -301,9 +301,6 @@ class DeltaProvider {
         catch (err) {
             await this.logMessage(err, true);
         }
-        finally {
-            await this.logMessage('Done', true);
-        }
         return metrics;
     }
     async loadDeltaFile(deltaFilePath) {
