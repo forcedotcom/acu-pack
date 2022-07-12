@@ -1,8 +1,8 @@
+import path = require('path');
 import { expect } from '@salesforce/command/lib/test';
 import { before } from 'mocha';
 import Utils from '../../src/lib/utils';
 import { FieldDetail, ObjectDetail, PermissionSet } from '../../src/lib/sfdx-permission';
-import path = require('path');
 
 const profileMetadataFilePath = './test/force-app/main/default/profiles/sample.profile-meta.xml';
 const permissionSetMetadataFilePath = './test/force-app/main/default/permissionsets/sample.permissionset-meta.xml';

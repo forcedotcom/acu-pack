@@ -13,7 +13,7 @@ export default class Scaffold extends CommandBase {
     private static MAX_CLASS_NAME_LENGTH;
     private schemas;
     private index;
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
     private getSchema;
     private generateTestSetupCode;
     private generateFieldValue;

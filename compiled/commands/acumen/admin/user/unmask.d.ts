@@ -9,5 +9,5 @@ export default class Unmask extends CommandBase {
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
 }

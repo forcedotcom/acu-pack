@@ -17,11 +17,11 @@ export default class Permissions extends CommandBase {
     protected fieldMetadata: Map<string, FieldDetail>;
     protected permissions: Map<string, PermissionSet>;
     protected reportHeaders: string[];
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
     protected buildSheet(permCollectionPropertyName: string, metadataDetails?: Map<string, MetadataDetail>): string[][];
     protected getObjectDetails(name: string): ObjectDetail;
     protected getFieldDetails(name: string): FieldDetail;
-    protected processObjectMeta(filePath: string, json: any): void;
-    protected processFieldMeta(filePath: string, json: any): void;
-    protected processPermissionSetMeta(filePath: string, json: any): void;
+    protected processObjectMeta(filePath: string, json: string): void;
+    protected processFieldMeta(filePath: string, json: string): void;
+    protected processPermissionSetMeta(filePath: string, json: string): void;
 }

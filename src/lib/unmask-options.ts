@@ -8,7 +8,7 @@ export class UnmaskOptions extends OptionsBase {
 
     public userQuery: string;
 
-    constructor() {
+    public constructor() {
         super();
         this.sandboxes = new Map();
         this.userQuery = UnmaskOptions.defaultUserQuery;
@@ -55,19 +55,19 @@ export class UnmaskOptions extends OptionsBase {
                 this.sandboxes.set(
                     'SNDBX1',
                     [
-                        'test.user@aie.army.com.sndbx1'
+                        'test.user@salesforce.com.sndbx1'
                     ]
                 );
                 this.sandboxes.set(
                     'SNDBX2',
                     [
-                        'test.user@aie.army.com.sndbx2'
+                        'test.user@salesforce.com.sndbx2'
                     ]
                 );
                 this.sandboxes.set(
                     'SNDBX3',
                     [
-                        'test.user@aie.army.com.sndbx3'
+                        'test.user@salesforce.com.sndbx3'
                     ]
                 );
             } catch (err) {

@@ -1,11 +1,33 @@
 import * as vm from 'vm';
 
 export default class SchemaUtils {
+
     public static ENTITY_DEFINITION = 'EntityDefinition';
     public static CONTEXT_FIELD = 'ctx';
     public static CONTEXT_FIELD_NAME = SchemaUtils.CONTEXT_FIELD  + '.name';
     public static CONTEXT_SCHEMA = 'schema';
-    public static * getDynamicSchemaData(schema: any, dynamicCode: string, collection: any): Generator<any, void, string[]> {
+    
+    private static dynamicContext = {
+        getPicklistValues(fld: any): string[] {
+            const values: string[] = [];
+            for (const picklistValue of fld.picklistValues) {
+                // Show inactive values
+                values.push(`${picklistValue.active ? '' : '(-)'}${picklistValue.value as string}`);
+            }
+            return values;
+        },
+
+        getPicklistDefaultValue(fld: any): string {
+            for (const picklistValue of fld.picklistValues) {
+                if (picklistValue.active && picklistValue.defaultValue) {
+                    return picklistValue.value as string;
+                }
+            }
+        }
+    };
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    public static * getDynamicSchemaData(schema: any, dynamicCode: string, collection: any[]): Generator<any, void, string[]> {
         if (!schema) {
             throw new Error('The schema argument cannot be null.');
         }
@@ -27,23 +49,4 @@ export default class SchemaUtils {
             yield row;
         }
     }
-
-    private static dynamicContext = {
-        getPicklistValues(fld: any): string[] {
-            const values = [];
-            for (const picklistValue of fld.picklistValues) {
-                // Show inactive values
-                values.push(`${picklistValue.active ? '' : '(-)'}${picklistValue.value}`);
-            }
-            return values;
-        },
-
-        getPicklistDefaultValue(fld: any): string {
-            for (const picklistValue of fld.picklistValues) {
-                if (picklistValue.active && picklistValue.defaultValue) {
-                    return picklistValue.value;
-                }
-            }
-        }
-    };
 }

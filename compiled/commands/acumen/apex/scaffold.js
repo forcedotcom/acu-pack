@@ -13,7 +13,7 @@ class Scaffold extends command_base_1.CommandBase {
         this.schemas = new Map();
         this.index = 0;
     }
-    async run() {
+    async runInternal() {
         let options;
         // Read/Write the options file if it does not exist already
         if (this.flags.options) {
@@ -32,30 +32,21 @@ class Scaffold extends command_base_1.CommandBase {
         if (this.flags.sobjects) {
             options.sObjectTypes.push(...this.flags.sobjects.split(','));
         }
-        try {
-            this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
-            this.ux.log('Retrieving Schemas...');
-            for (const sObjectType of options.sObjectTypes) {
-                await this.getSchema(sObjectType.replace(' ', ''));
-            }
-            this.ux.log('Reading ./sfdx-project.json file...');
-            const project = await sfdx_project_1.default.default();
-            const defaultFolder = project.getDefaultDirectory();
-            this.ux.log('Generating Apex cls & cls-meta files...');
-            const rootPath = `./${defaultFolder}/main/default/classes/`;
-            for (const [schemaName, schema] of this.schemas) {
-                this.ux.log('\t' + schemaName);
-                const fileDetails = this.generateTestSetupCode(schemaName, schema, options);
-                await utils_1.default.writeFile(rootPath + `${fileDetails.name}.cls`, fileDetails.contents);
-                await utils_1.default.writeFile(rootPath + `${fileDetails.name}.cls-meta.xml`, Scaffold.META_XML.replace(/API_VERSION_TOKEN/, project.sourceApiVersion));
-            }
+        this.ux.log('Retrieving Schemas...');
+        for (const sObjectType of options.sObjectTypes) {
+            await this.getSchema(sObjectType.replace(' ', ''));
         }
-        catch (err) {
-            process.exitCode = 1;
-            throw err;
-        }
-        finally {
-            this.ux.log('Done.');
+        this.ux.log('Reading ./sfdx-project.json file...');
+        const project = await sfdx_project_1.default.default();
+        const defaultFolder = project.getDefaultDirectory();
+        this.ux.log('Generating Apex cls & cls-meta files...');
+        const rootPath = `./${defaultFolder}/main/default/classes/`;
+        await utils_1.default.mkDirPath(rootPath);
+        for (const [schemaName, schema] of this.schemas) {
+            this.ux.log('\t' + schemaName);
+            const fileDetails = this.generateTestSetupCode(schemaName, schema, options);
+            await utils_1.default.writeFile(rootPath + `${fileDetails.name}.cls`, fileDetails.contents);
+            await utils_1.default.writeFile(rootPath + `${fileDetails.name}.cls-meta.xml`, Scaffold.META_XML.replace(/API_VERSION_TOKEN/, project.sourceApiVersion));
         }
     }
     async getSchema(sObjectType) {
@@ -70,6 +61,7 @@ class Scaffold extends command_base_1.CommandBase {
             }
             this.schemas.set(schema.name.split('__')[0], schema);
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return schema;
     }
     generateTestSetupCode(simpleName, schema, options) {
@@ -194,7 +186,7 @@ class Scaffold extends command_base_1.CommandBase {
                     return `'${getStr(fld)}'`;
                 case 'base64':
                     return `'${Buffer.from(getStr(fld)).toString('base64')}'`;
-                case 'textarea1':
+                case 'textarea1': {
                     const lineCount = 3;
                     // Calculate length of each line (subract for \n) then divide
                     const lineLength = Math.floor((fld.length - lineCount) / 3);
@@ -203,6 +195,7 @@ class Scaffold extends command_base_1.CommandBase {
                         lines.push(`${getStr(fld, lineLength)}`);
                     }
                     return lines.join('+\n');
+                }
                 case 'int':
                 case 'integer':
                     return `${getDec(fld, 10)}`;
@@ -225,23 +218,26 @@ class Scaffold extends command_base_1.CommandBase {
                     return 'Datetime.getTime()';
                 case 'email':
                     return `'${fld.name}@${noUnderscoreName}.email.org'`;
-                case 'phone':
+                case 'phone': {
                     const phone = `555-${getRand(100, 999)}-${getRand(1000, 9999)} ext ${++this.index}`;
                     // phone max is 40
                     return `'${phone.substr(0, 40)}'`;
-                case 'multipicklist':
+                }
+                case 'multipicklist': {
                     if (((_a = fld.picklistValues) === null || _a === void 0 ? void 0 : _a.length) === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
                     }
                     const count = Math.floor(fld.picklistValues.length / 3);
                     const values = getPicklist(fld.picklistValues, count);
                     return values ? `'${values.join(';').replace(/'/g, "\\'")}'` : null;
-                case 'picklist':
+                }
+                case 'picklist': {
                     if (((_b = fld.picklistValues) === null || _b === void 0 ? void 0 : _b.length) === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
                     }
                     const value = getPicklist(fld.picklistValues, 1);
                     return value ? `'${value.join(';').replace(/'/g, "\\'")}'` : null;
+                }
                 case 'url':
                     return `'https://www.${noUnderscoreName}.salesforce.com.${this.orgAlias}/index'`;
                 case 'id':

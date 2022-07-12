@@ -16,9 +16,9 @@ export declare class SfdxPermissionSet extends SfdxEntity {
     profileName: string;
 }
 export declare abstract class SfdxPermission extends SfdxEntity {
-    abstract permissionType: string;
     permissionsEdit: boolean;
     permissionsRead: boolean;
+    abstract permissionType: string;
 }
 export declare class SfdxFieldPermission extends SfdxPermission {
     permissionType: string;
@@ -58,7 +58,7 @@ export declare class SfdxQuery {
     static doSoqlQuery(usernameOrAlias: string, query: string, recordOffset?: number, recordLimit?: number, isToolingAPIQuery?: boolean): Promise<any[]>;
     static getApexTestClasses(usernameOrAlias: string, namespacePrefixes?: string[]): Promise<SfdxEntity[]>;
     static getCodeCoverage(usernameOrAlias: string): Promise<SfdxCodeCoverage>;
-    static waitForRecordCount(usernameOrAlias: string, query: string, recordCount?: number, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<number, void, unknown>;
-    static waitForApexTests(username: string, waitCountMaxSeconds?: number, createdDate?: string): AsyncGenerator<number, number, unknown>;
+    static waitForRecordCount(usernameOrAlias: string, query: string, recordCount?: number, maxWaitSeconds?: number, sleepMiliseconds?: number): AsyncGenerator<number, void, void>;
+    static waitForApexTests(username: string, waitCountMaxSeconds?: number, createdDate?: string): AsyncGenerator<number, number, void>;
     static getInClause(values?: string[], isValueNumeric?: boolean): string;
 }

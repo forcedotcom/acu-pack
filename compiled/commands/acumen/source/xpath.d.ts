@@ -7,5 +7,5 @@ export default class XPath extends CommandBase {
     protected static flagsConfig: {
         options: flags.Discriminated<flags.String>;
     };
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
 }

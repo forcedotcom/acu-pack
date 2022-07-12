@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeltaProvider = exports.DeltaOptions = exports.Delta = void 0;
 const tslib_1 = require("tslib");
-const utils_1 = require("./utils");
-const fs_1 = require("fs");
 const path = require("path");
+const fs_1 = require("fs");
+const utils_1 = require("./utils");
 const delta_command_1 = require("./delta-command");
 class Delta {
     constructor(deltaKind, deltaFile) {
@@ -202,7 +202,7 @@ class DeltaProvider {
                             break;
                         // [A]dded & [M]odified files
                         case DeltaProvider.deltaTypeKind.A:
-                        case DeltaProvider.deltaTypeKind.M:
+                        case DeltaProvider.deltaTypeKind.M: {
                             // check the source folder for associated files.
                             const dirName = path.dirname(deltaFile);
                             const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
@@ -281,6 +281,7 @@ class DeltaProvider {
                                 }
                             }
                             break;
+                        }
                         case DeltaProvider.deltaTypeKind.NONE:
                             await this.logMessage(`Delta (${deltaKind}): ${deltaFile}`);
                             metrics.None++;
@@ -342,14 +343,18 @@ class DeltaProvider {
             await fs_1.promises.appendFile(this.logFile, `${JSON.stringify(message)}\r\n`);
         }
         if (includeConsole) {
+            /* eslint-disable-next-line no-console */
             console.log(message);
         }
     }
     async validateDeltaOptions(deltaOptions) {
-        if (!deltaOptions.source) {
-            return 'No delta -s(ource) specified.';
-        }
-        return null;
+        const result = () => {
+            if (!deltaOptions.source) {
+                return 'No delta -s(ource) specified.';
+            }
+            return null;
+        };
+        return Promise.resolve(result());
     }
 }
 exports.DeltaProvider = DeltaProvider;

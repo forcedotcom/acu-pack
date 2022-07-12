@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxQuery = exports.SfdxCodeCoverageItem = exports.SfdxCodeCoverage = exports.SfdxObjectPermission = exports.SfdxFieldPermission = exports.SfdxPermission = exports.SfdxPermissionSet = exports.SfdxFolder = exports.SfdxSeupEntityAccess = exports.SfdxEntity = void 0;
 const tslib_1 = require("tslib");
+const constants_1 = require("./constants");
 const sfdx_core_1 = require("./sfdx-core");
 const utils_1 = require("./utils");
 class SfdxEntity {
@@ -185,9 +186,9 @@ class SfdxQuery {
     }
     static async doSoqlQuery(usernameOrAlias, query, recordOffset = null, recordLimit = null, isToolingAPIQuery = false) {
         const records = [];
-        const queryCmd = isToolingAPIQuery ? 'sfdx force:data:soql:query -t' : 'sfdx force:data:soql:query';
+        const queryCmd = isToolingAPIQuery ? `${constants_1.default.SFDX_DATA_QUERY} -t` : constants_1.default.SFDX_DATA_QUERY;
         if (!recordLimit) {
-            const cmd = `${queryCmd} -q \"${query}\" --json -u ${usernameOrAlias}`;
+            const cmd = `${queryCmd} -q "${query}" --json -u ${usernameOrAlias}`;
             const results = await sfdx_core_1.SfdxCore.command(cmd);
             if (results && results.done) {
                 records.push(...results.records);
@@ -196,12 +197,13 @@ class SfdxQuery {
         else {
             let offset = recordOffset;
             const limitedQuery = `${query} LIMIT ${recordLimit}`;
-            while (true) {
+            const justGo = true;
+            while (justGo) {
                 let currentQuery = limitedQuery;
                 if (offset) {
                     currentQuery = `${limitedQuery} OFFSET ${offset}`;
                 }
-                const cmd = `${queryCmd} -q \"${currentQuery}\" --json -u ${usernameOrAlias}`;
+                const cmd = `${queryCmd} -q "${currentQuery}" --json -u ${usernameOrAlias}`;
                 const results = await sfdx_core_1.SfdxCore.command(cmd);
                 if (results && results.done) {
                     records.push(...results.records);
@@ -212,6 +214,7 @@ class SfdxQuery {
                 offset += results.records.length;
             }
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return records;
     }
     // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes

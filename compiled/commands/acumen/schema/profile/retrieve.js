@@ -1,18 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const command_base_1 = require("../../../../lib/command-base");
+const path = require("path");
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
-const path = require("path");
+const command_base_1 = require("../../../../lib/command-base");
 const utils_1 = require("../../../../lib/utils");
 const profile_download_1 = require("../../../../lib/profile-download");
 const sfdx_project_1 = require("../../../../lib/sfdx-project");
 class ProfileRetrieve extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         const orgAlias = this.flags.targetusername;
-        let packageDir;
         const profileList = this.flags.names;
-        packageDir = (await sfdx_project_1.default.default()).getDefaultDirectory();
+        const packageDir = (await sfdx_project_1.default.default()).getDefaultDirectory();
         if (!(await utils_1.default.pathExists(packageDir))) {
             throw new core_1.SfdxError('No default folder found in sfdx-project.json file');
         }
@@ -28,7 +27,7 @@ class ProfileRetrieve extends command_base_1.CommandBase {
             }
         }
         if (notAvailableProfiles.length > 0) {
-            throw new core_1.SfdxError(`Profiles not found in Org: ${notAvailableProfiles}`);
+            throw new core_1.SfdxError(`Profiles not found in Org: ${notAvailableProfiles.join(',')}`);
         }
         this.ux.log('Retrieving Profiles...');
         const profileDownloader = new profile_download_1.ProfileDownload(this.connection, orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);
@@ -49,22 +48,23 @@ class ProfileRetrieve extends command_base_1.CommandBase {
             await profile_download_1.ProfileDownload.writeProfileToXML(profileJson, profileByPath.get(profileName));
         }
         this.ux.log(`Done. Profiles stored in folder-> ${profileDirPath}`);
-        await utils_1.default.deleteDirectory(path.join(process.cwd(), utils_1.default._tempFilesPath));
+        await utils_1.default.deleteDirectory(path.join(process.cwd(), utils_1.default.TempFilesPath));
     }
 }
 exports.default = ProfileRetrieve;
 ProfileRetrieve.description = command_base_1.CommandBase.messages.getMessage('schema.profile.retrieve.commandDescription');
-ProfileRetrieve.examples = [`
+ProfileRetrieve.examples = [
+    `
     $ sfdx acumen:schema:profile:retrieve -u myOrgAlias -n "Admin,Support"
-    Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile `
+    Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile `,
 ];
 ProfileRetrieve.flagsConfig = {
     names: command_1.flags.array({
         char: 'n',
         description: command_base_1.CommandBase.messages.getMessage('schema.profile.retrieve.names'),
         required: true,
-        map: (n) => n.trim()
-    })
+        map: (n) => n.trim(),
+    }),
 };
 // Comment this out if your command does not require an org username
 ProfileRetrieve.requiresUsername = true;

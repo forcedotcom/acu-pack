@@ -7,5 +7,5 @@ export default class Merge extends CommandBase {
         source: flags.Discriminated<flags.String>;
         destination: flags.Discriminated<flags.String>;
     };
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
 }

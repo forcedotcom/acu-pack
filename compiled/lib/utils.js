@@ -1,15 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoggerLevel = void 0;
+exports.RestResult = exports.RestAction = exports.LoggerLevel = exports.NO_CONTENT_CODE = void 0;
 const tslib_1 = require("tslib");
 const path = require("path");
-const xml2js = require("xml2js");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
 const readline_1 = require("readline");
 const xpath = require("xpath");
 const xmldom_1 = require("xmldom");
+const xml2js = require("xml2js");
 const core_1 = require("@salesforce/core");
+const constants_1 = require("./constants");
+exports.NO_CONTENT_CODE = 204;
 var LoggerLevel;
 (function (LoggerLevel) {
     LoggerLevel["trace"] = "trace";
@@ -19,6 +21,30 @@ var LoggerLevel;
     LoggerLevel["error"] = "error";
     LoggerLevel["fatal"] = "fatal";
 })(LoggerLevel = exports.LoggerLevel || (exports.LoggerLevel = {}));
+var RestAction;
+(function (RestAction) {
+    RestAction["GET"] = "GET";
+    RestAction["PUT"] = "PUT";
+    RestAction["POST"] = "POST";
+    RestAction["DELETE"] = "DELETE";
+    RestAction["PATCH"] = "PATCH";
+})(RestAction = exports.RestAction || (exports.RestAction = {}));
+class RestResult {
+    constructor() {
+        this.isError = false;
+        this.isBinary = false;
+    }
+    throw() {
+        throw this.getError();
+    }
+    getContent() {
+        return this.getError() || this.body || this.id;
+    }
+    getError() {
+        return this.isError ? new Error(`(${this.code}) ${this.body}`) : null;
+    }
+}
+exports.RestResult = RestResult;
 class Utils {
     static async log(logMessage, logLevel, isJsonEnabled) {
         if (!this.logger) {
@@ -50,6 +76,7 @@ class Utils {
     }
     static getFiles(folderPath, isRecursive = true) {
         return tslib_1.__asyncGenerator(this, arguments, function* getFiles_1() {
+            var e_1, _a;
             let fileItems;
             // If we have a wildcarded path - lets use glob
             const isGlob = yield tslib_1.__await(this.glob.hasMagic(folderPath));
@@ -71,6 +98,7 @@ class Utils {
                 }
                 catch (err) {
                     if (Utils.isENOENT(err)) {
+                        /* eslint-disable-next-line no-console */
                         console.log(`WARNING: ${folderPath} not found.`);
                         return yield tslib_1.__await(void 0);
                     }
@@ -79,8 +107,20 @@ class Utils {
                 for (const fileName of fileItems) {
                     const filePath = path.join(folderPath, fileName);
                     if ((yield tslib_1.__await(fs_1.promises.stat(filePath))).isDirectory() && isRecursive) {
-                        // recurse folders
-                        yield tslib_1.__await(yield* tslib_1.__asyncDelegator(tslib_1.__asyncValues(yield tslib_1.__await(Utils.getFiles(filePath)))));
+                        try {
+                            // recurse folders
+                            for (var _b = (e_1 = void 0, tslib_1.__asyncValues(Utils.getFiles(filePath))), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                                const subFilePath = _c.value;
+                                yield yield tslib_1.__await(subFilePath);
+                            }
+                        }
+                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                        finally {
+                            try {
+                                if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
+                            }
+                            finally { if (e_1) throw e_1.error; }
+                        }
                     }
                     else {
                         yield yield tslib_1.__await(path.normalize(filePath));
@@ -91,7 +131,7 @@ class Utils {
     }
     static readFileLines(filePath) {
         return tslib_1.__asyncGenerator(this, arguments, function* readFileLines_1() {
-            var e_1, _a;
+            var e_2, _a;
             if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
                 return yield tslib_1.__await(void 0);
             }
@@ -99,25 +139,27 @@ class Utils {
                 input: fs_2.createReadStream(filePath),
                 // Note: we use the crlfDelay option to recognize all instances of CR LF
                 // ('\r\n') in input.txt as a single line break.
-                crlfDelay: Infinity
+                crlfDelay: Infinity,
             });
             try {
                 // Walk the file
+                /* eslint-disable @typescript-eslint/ban-ts-comment */
                 // @ts-ignore
                 for (var rl_1 = tslib_1.__asyncValues(rl), rl_1_1; rl_1_1 = yield tslib_1.__await(rl_1.next()), !rl_1_1.done;) {
                     const line = rl_1_1.value;
                     yield yield tslib_1.__await(line);
                 }
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
             finally {
                 try {
                     if (rl_1_1 && !rl_1_1.done && (_a = rl_1.return)) yield tslib_1.__await(_a.call(rl_1));
                 }
-                finally { if (e_1) throw e_1.error; }
+                finally { if (e_2) throw e_2.error; }
             }
         });
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async readFile(filePath, options) {
         if (!(await Utils.pathExists(filePath))) {
             return null;
@@ -137,12 +179,11 @@ class Utils {
         }
     }
     static async getPathStat(pathToCheck) {
-        return !pathToCheck || !(await Utils.pathExists(pathToCheck))
-            ? null
-            : await fs_1.promises.stat(pathToCheck);
+        return !pathToCheck || !(await Utils.pathExists(pathToCheck)) ? null : await fs_1.promises.stat(pathToCheck);
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static isENOENT(err) {
-        return err && err.code === 'ENOENT';
+        return err && err.code === constants_1.default.ENOENT;
     }
     static async mkDirPath(destination, hasFileName = false) {
         if (!destination) {
@@ -157,6 +198,7 @@ class Utils {
         }
         catch (err) {
             if (Utils.isENOENT(err)) {
+                /* eslint-disable-next-line no-console */
                 console.log(`${source} not found.`);
             }
             else {
@@ -210,7 +252,7 @@ class Utils {
     }
     static async sleep(sleepMiliseconds = 1000) {
         // tslint:disable-next-line no-string-based-set-timeout
-        await new Promise(resolve => setTimeout(resolve, sleepMiliseconds));
+        await new Promise((resolve) => setTimeout(resolve, sleepMiliseconds));
     }
     static getFieldValues(records, fieldName = 'id', mustHaveValue = false) {
         const values = [];
@@ -219,13 +261,12 @@ class Utils {
         }
         return values;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static getFieldValue(record, fieldName = 'id', mustHaveValue = false) {
         if (!record) {
             return null;
         }
-        const value = typeof record === 'string'
-            ? record
-            : record[fieldName];
+        const value = typeof record === 'string' ? record : record[fieldName];
         if (mustHaveValue && !value) {
             throw new Error(`Required Field: ${fieldName} not found in record: ${JSON.stringify(record)}.`);
         }
@@ -240,6 +281,7 @@ class Utils {
         }
         return email.split(mask).join('');
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static writeObjectToXml(metadata, xmlOptions) {
         if (!metadata) {
             return null;
@@ -251,6 +293,7 @@ class Utils {
         }
         return xml;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async writeObjectToXmlFile(filePath, metadata, xmlOptions) {
         if (!filePath || !metadata) {
             return null;
@@ -260,13 +303,15 @@ class Utils {
         await Utils.writeFile(filePath, xml);
         return filePath;
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async readObjectFromXmlFile(filePath, xmlOptions) {
         if (!filePath) {
             return null;
         }
         const options = xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions;
         const xmlString = await fs_1.promises.readFile(filePath, options.encoding);
-        return await (new xml2js.Parser(options).parseStringPromise((xmlString)));
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+        return await new xml2js.Parser(options).parseStringPromise(xmlString);
     }
     static setCwd(newCwdPath) {
         if (!newCwdPath) {
@@ -280,7 +325,7 @@ class Utils {
         return currentCwd;
     }
     static async deleteDirectory(dirPath) {
-        if (Utils.pathExists(dirPath)) {
+        if (await Utils.pathExists(dirPath)) {
             const getFiles = await fs_1.promises.readdir(dirPath);
             if (getFiles) {
                 for (const file of getFiles) {
@@ -290,6 +335,7 @@ class Utils {
             await fs_1.promises.rmdir(dirPath);
         }
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async writeFile(filePath, contents) {
         await fs_1.promises.writeFile(filePath, contents);
     }
@@ -297,15 +343,53 @@ class Utils {
         const chunk = (arr, size) => Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size));
         return chunk(recordsToChunk, chunkSize);
     }
+    static async getRestResult(action, url, 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    parameter, 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    headers, validStatusCodes) {
+        const result = new RestResult();
+        try {
+            const apiPromise = Utils.bent(action.toString(), headers || {}, validStatusCodes || [200]);
+            const response = await apiPromise(url, parameter);
+            // Do we have content?
+            result.code = response.statusCode;
+            switch (result.code) {
+                case exports.NO_CONTENT_CODE:
+                    return result;
+                default:
+                    // Read payload
+                    /* eslint-disable-next-line camelcase */
+                    response.content_type = response.headers[constants_1.default.HEADERS_CONTENT_TYPE];
+                    if (response.content_type === constants_1.default.CONTENT_TYPE_APPLICATION) {
+                        result.body = Buffer.from(await response.arrayBuffer());
+                        result.isBinary = true;
+                    }
+                    else {
+                        result.body = await response.json();
+                    }
+                    return result;
+            }
+        }
+        catch (err) {
+            result.isError = true;
+            result.code = err.statusCode;
+            result.body = err.message;
+        }
+        return result;
+    }
 }
 exports.default = Utils;
 Utils.isJsonEnabled = false;
-Utils._tempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
+Utils.TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
 Utils.defaultXmlOptions = {
     renderOpts: { pretty: true, indent: '    ', newline: '\n' },
     xmldec: { version: '1.0', encoding: 'UTF-8' },
     eofChar: '\n',
-    encoding: 'utf-8'
+    encoding: 'utf-8',
 };
-Utils.glob = require('util').promisify(require('glob'));
+Utils.reqUtils = require('util');
+Utils.reqGlob = require('glob');
+Utils.glob = Utils.reqUtils.promisify(Utils.reqGlob);
+Utils.bent = require('bent');
 //# sourceMappingURL=utils.js.map

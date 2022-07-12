@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vm = require("vm");
 class SchemaUtils {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static *getDynamicSchemaData(schema, dynamicCode, collection) {
         if (!schema) {
             throw new Error('The schema argument cannot be null.');

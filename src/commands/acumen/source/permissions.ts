@@ -1,8 +1,8 @@
+import path = require('path');
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
 import Utils from '../../../lib/utils';
 import { Office } from '../../../lib/office';
-import path = require('path');
 import { SfdxPermission, ObjectDetail, FieldDetail, PermissionSet, MetadataDetail } from '../../../lib/sfdx-permission';
 import SfdxProject from '../../../lib/sfdx-project';
 
@@ -49,13 +49,13 @@ export default class Permissions extends CommandBase {
   protected permissions: Map<string, PermissionSet>;
   protected reportHeaders: string[];
 
-  public async run(): Promise<void> {
+  protected async runInternal(): Promise<void> {
     if (!this.flags.source) {
       this.flags.source = (await SfdxProject.default()).getDefaultDirectory();
     }
 
     // Are we including namespaces?
-    const folders = this.flags.folders
+    const folders: string[] = this.flags.folders
       ? this.flags.folders.split()
       : Permissions.defaultMetadataFolders;
 
@@ -92,8 +92,6 @@ export default class Permissions extends CommandBase {
       workbookMap.set('Tabs', this.buildSheet('tabVisibilities'));
       workbookMap.set('Record Types', this.buildSheet('recordTypeVisibilities'));
 
-    } catch (err) {
-      throw err;
     } finally {
       if (originalCwd !== this.flags.source) {
         process.chdir(originalCwd);
@@ -104,8 +102,6 @@ export default class Permissions extends CommandBase {
     this.ux.log(`Writing Report: ${reportPath}`);
 
     Office.writeXlxsWorkbook(workbookMap, reportPath);
-
-    this.ux.log('Done.');
 
     return;
   }
@@ -219,17 +215,17 @@ export default class Permissions extends CommandBase {
     return this.fieldMetadata.get(name) || new FieldDetail();
   }
 
-  protected processObjectMeta(filePath: string, json: any) {
+  protected processObjectMeta(filePath: string, json: string): void {
     const objectDetail = ObjectDetail.fromXml(filePath, json);
     this.objectMetadata.set(objectDetail.name, objectDetail);
   }
 
-  protected processFieldMeta(filePath: string, json: any) {
+  protected processFieldMeta(filePath: string, json: string): void {
     const fieldDetail = FieldDetail.fromXml(filePath, json);
     this.fieldMetadata.set(fieldDetail.name, fieldDetail);
   }
 
-  protected processPermissionSetMeta(filePath: string, json: any) {
+  protected processPermissionSetMeta(filePath: string, json: string): void {
     const permSet = PermissionSet.fromXml(filePath, json);
     this.permissions.set(permSet.name, permSet);
   }

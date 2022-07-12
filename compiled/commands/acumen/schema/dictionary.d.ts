@@ -1,5 +1,5 @@
-import { CommandBase } from '../../../lib/command-base';
 import { flags } from '@salesforce/command';
+import { CommandBase } from '../../../lib/command-base';
 import SchemaOptions from '../../../lib/schema-options';
 export default class Dictionary extends CommandBase {
     static description: string;
@@ -12,7 +12,7 @@ export default class Dictionary extends CommandBase {
     };
     protected static requiresUsername: boolean;
     protected options: SchemaOptions;
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
     private getColumnRow;
     private getSortedTypeNames;
     private entityDefinitionValues;

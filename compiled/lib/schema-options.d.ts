@@ -1,5 +1,6 @@
 import { OptionsBase } from './options';
 export default class SchemaOptions extends OptionsBase {
+    private static CURRENT_VERSION;
     excludeCustomObjectNames: string[];
     includeCustomObjectNames: string[];
     outputDefMap: Map<string, string[]>;
@@ -9,4 +10,5 @@ export default class SchemaOptions extends OptionsBase {
     deserialize(serializedOptions: string): Promise<void>;
     serialize(): Promise<string>;
     protected loadDefaults(): Promise<void>;
+    protected get currentVersion(): number;
 }

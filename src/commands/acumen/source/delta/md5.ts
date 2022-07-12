@@ -1,11 +1,10 @@
-import { flags } from '@salesforce/command';
+import { promises as fs } from 'fs';
+import path = require('path');import { flags } from '@salesforce/command';
+import md5File = require('md5-file');
 import { CommandBase } from '../../../../lib/command-base';
 import { DeltaCommandBase } from '../../../../lib/delta-command';
 import Utils from '../../../../lib/utils';
 import { DeltaProvider, Delta } from '../../../../lib/delta-provider';
-import md5File = require('md5-file');
-import { promises as fs } from 'fs';
-import path = require('path');
 
 export default class Md5 extends CommandBase {
     public static description = CommandBase.messages.getMessage('source.delta.md5.commandDescription');
@@ -88,7 +87,7 @@ export default class Md5 extends CommandBase {
                     await fs.unlink(md5FilePath);
                 }
                 for (const [fp, data] of this.deltas) {
-                    await fs.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash}\r\n`);
+                    await fs.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash as string}\r\n`);
                 }
                 await this.logMessage(`Updated hash file: ${md5FilePath} with ${this.deltas.size} entries.`, true);
             }
@@ -105,7 +104,7 @@ export default class Md5 extends CommandBase {
     protected name = 'md5';
     protected deltas = new Map<string, any>();
 
-    public async run(): Promise<any> {
+    protected async runInternal(): Promise<void> {
         const deltaOptions = DeltaCommandBase.getDeltaOptions(this.flags);
         deltaOptions.deltaFilePath = this.flags.md5;
 

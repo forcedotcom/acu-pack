@@ -1,13 +1,24 @@
 import { SfdxProject as BaseProject } from '@salesforce/core';
+import Constants from './constants';
 export class PackageDirectory {
     public path: string = null;
-    public default: boolean = false;
+    public default = false;
 }
 
 export default class SfdxProject {
-    public static DEFAULT_PROJECT_FILE_NAME = 'sfdx-project.json';
-    public static DEFAULT_SFDC_LOGIN_URL = 'https://login.salesforce.com';
-    public static DEFAULT_PACKAGE_VERSION = '49.0';
+    private static defaultInstance: SfdxProject;
+
+    public packageDirectories: PackageDirectory[];
+    public namespace: string;
+    public sfdcLoginUrl: string;
+    public sourceApiVersion: string;
+
+    public constructor() {
+        this.packageDirectories = [];
+        this.namespace = '';
+        this.sfdcLoginUrl = Constants.DEFAULT_SFDC_LOGIN_URL;
+        this.sourceApiVersion = Constants.DEFAULT_PACKAGE_VERSION;
+    }
 
     public static async default(): Promise<SfdxProject> {
         if (!SfdxProject.defaultInstance) {
@@ -20,20 +31,6 @@ export default class SfdxProject {
         const project = await BaseProject.resolve(projectFilePath);
         const projectJson = await project.resolveProjectConfig();
         return Object.assign(new SfdxProject(), projectJson);
-    }
-
-    private static defaultInstance: SfdxProject;
-
-    public packageDirectories: PackageDirectory[];
-    public namespace: string;
-    public sfdcLoginUrl: string;
-    public sourceApiVersion: string;
-
-    constructor() {
-        this.packageDirectories = [];
-        this.namespace = '';
-        this.sfdcLoginUrl = SfdxProject.DEFAULT_SFDC_LOGIN_URL;
-        this.sourceApiVersion = SfdxProject.DEFAULT_PACKAGE_VERSION;
     }
 
     public getDefaultDirectory(): string {

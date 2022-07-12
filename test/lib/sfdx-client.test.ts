@@ -1,10 +1,13 @@
 import { expect } from '@salesforce/command/lib/test';
 import { SfdxQuery } from '../../src/lib/sfdx-query';
-import { SfdxClient, RestAction, ApiKind } from '../../src/lib/sfdx-client';
+import { SfdxClient, ApiKind } from '../../src/lib/sfdx-client';
 import Utils from '../../src/lib/utils';
+import { RestAction } from '../../src/lib/utils';
+import Setup from './setup'
 const unknownId = '00000000001';
+const NOT_FOUND = '(404) Not Found';
 
-const orgAlias = 'mmalling@resilient-koala-5j8tt5.com';//Setup.orgAlias;
+const orgAlias: string = Setup.orgAlias;
 let sfdxClient: SfdxClient;
 enum ApiTestKind {
   DEFAULT = 'Account',
@@ -20,29 +23,35 @@ before('Init', async function () {
   if(!orgAlias) {
     return;
   }
+  /* eslint-disable-next-line no-console */
   console.log('Getting Test Data....');
   sfdxClient = new SfdxClient(orgAlias);
   let dataErr: Error = null;
-  const getData = async () => {
+  const getData = async (): Promise<void> => {
     try {
       let query = `SELECT Id, Name, Description FROM ${ApiTestKind.DEFAULT.toString()} LIMIT 5`;
       testData.set(ApiTestKind.DEFAULT, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
+      /* eslint-disable-next-line no-console */
       console.log(`Got ${ApiTestKind.DEFAULT.toString()} Test Data.`);
 
       query = `SELECT Id FROM ${ApiTestKind.TOOLING.toString()} LIMIT 5`;
       testData.set(ApiTestKind.TOOLING, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, true));
+      /* eslint-disable-next-line no-console */
       console.log(`Got ${ApiTestKind.TOOLING.toString()} Test Data.`);
 
       query = `SELECT Id, Username, FirstName, Email FROM ${ApiTestKind.USER.toString()} LIMIT 5`;
       testData.set(ApiTestKind.USER, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
+      /* eslint-disable-next-line no-console */
       console.log(`Got ${ApiTestKind.USER.toString()} Test Data.`);
 
       query = `SELECT Id, VersionData FROM ${ApiTestKind.FILE.toString()} ORDER BY CreatedDate DESC LIMIT 5`;
       testData.set(ApiTestKind.FILE, await SfdxQuery.doSoqlQuery(orgAlias, query, null, null, false));
+      /* eslint-disable-next-line no-console */
       console.log(`Got ${ApiTestKind.FILE.toString()} Test Data.`);
 
     } catch (err) {
       if (err.name === 'NoOrgFound') {
+        /* eslint-disable-next-line no-console */
         console.warn(`Invalid OrgAlias: '${orgAlias}'. SfdxClient tests will be skipped.`);
         sfdxClient = null;
         return;
@@ -53,9 +62,11 @@ before('Init', async function () {
   };
   await getData();
   if (dataErr) {
+    /* eslint-disable-next-line no-console */
     console.log(`Error: ${dataErr.message}`);
     throw dataErr;
   }
+  /* eslint-disable-next-line no-console */
   console.log('Got Test Data.');
 });
 
@@ -106,7 +117,7 @@ describe('Rest Client Tests', () => {
       try {
         (await sfdxClient.getMetadataSchema(unknownMetaDataType)).getContent();
       } catch (err) {
-        expect(err.message).to.contain('(404) Not Found');
+        expect(err.message).to.contain(NOT_FOUND);
       }
     });
     it('Can Handle 404 (Default Record)', async function () {
@@ -117,7 +128,7 @@ describe('Rest Client Tests', () => {
       try {
         (await sfdxClient.getById(metaDataType, unknownId)).getContent();
       } catch (err) {
-        expect(err.message).to.contain('(404) Not Found');
+        expect(err.message).to.contain(NOT_FOUND);
       }
     });
     it('Can Handle 404 (Tooling Schema)', async function () {
@@ -128,7 +139,7 @@ describe('Rest Client Tests', () => {
       try {
         (await sfdxClient.getMetadataSchema(unknownMetaDataType, ApiKind.TOOLING)).getContent();
       } catch (err) {
-        expect(err.message).to.contain('(404) Not Found');
+        expect(err.message).to.contain(NOT_FOUND);
       }
     });
     it('Can Handle 404 (Tooling Record)', async function () {
@@ -139,7 +150,7 @@ describe('Rest Client Tests', () => {
       try {
         (await sfdxClient.getById(metaDataType, unknownId, ApiKind.TOOLING)).getContent();
       } catch (err) {
-        expect(err.message).to.contain('(404) Not Found');
+        expect(err.message).to.contain(NOT_FOUND);
       }
     });
     it('Can get Tooling Instance', async function () {
@@ -183,9 +194,9 @@ describe('Rest Client Tests', () => {
       if (!sfdxClient) {
         this.skip();
       }
-      let metaDataType = ApiTestKind.FILE.toString();
+      const metaDataType = ApiTestKind.FILE.toString();
       const ids = Utils.getFieldValues(testData.get(ApiTestKind.FILE), 'Id', true);
-      for (let id of ids) {
+      for (const id of ids) {
         const result = await sfdxClient.getById(metaDataType+'.VersionData', id);
         expect(result).to.not.be.null;
         expect(result.id).to.equal(id);

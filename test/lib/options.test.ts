@@ -1,26 +1,94 @@
 import { expect } from '@salesforce/command/lib/test';
+import { OptionsBase, OptionsSettings } from '../../src/lib/options';
 import { OptionsFactory } from '../../src/lib/options-factory';
-import { PackageOptions } from '../../src/lib/package-options';
+import SchmeaOptions from '../../src/lib/schema-options';
 import { UnmaskOptions } from '../../src/lib/unmask-options';
 import { XPathOptions } from '../../src/lib/xpath-options';
 import Utils from '../../src/lib/utils';
 
-const optionsPath = "./options.json";
+class TestOptions extends OptionsBase {
+  private static CURRENT_VERSION = 2.0;
+  public version = 1.0;
+  
+  public loadDefaults(): Promise<void> {
+    return Promise.resolve();
+  };
+
+  public get isCurrentVersion(): boolean {
+    return TestOptions.CURRENT_VERSION === this.version;
+  }
+
+  protected setCurrentVersion(): void {
+    this.version = TestOptions.CURRENT_VERSION;
+  }
+}
+
+const optionsPath = './options.json';
 beforeEach('Cleanup', async () => {
   await Utils.deleteFile(optionsPath);
 });
 describe('Options Tests', () => {
-  describe('PackageOptions Tests', function () {
+  describe('Version Tests', function () {
+    it('Checks for old versions', function () {
+      const options = new TestOptions();
+      options.version = 1.0;
+
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.false;
+    });
+    it('Can set new version correctly', async function () {
+      let options = new TestOptions();
+      options.version = 2.0;
+      await options.save(optionsPath);
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+
+      options = await OptionsFactory.get(TestOptions, optionsPath);
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.true;
+    });
+    it('Can automatically update version', async function () {
+      let options = new TestOptions();
+      options.version = 1.0;
+      expect(options.isCurrentVersion).to.be.false;
+
+      await Utils.writeFile(optionsPath, JSON.stringify(options));
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+
+      options = await OptionsFactory.get(TestOptions, optionsPath);
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.true;
+    });
+    it('Can NOT automatically update version', async function () {
+      let options = new TestOptions();
+      options.version = 1.0;
+      expect(options.isCurrentVersion).to.be.false;
+
+      await Utils.writeFile(optionsPath, JSON.stringify(options));
+      // It writes the file
+      expect(await Utils.pathExists(optionsPath)).is.true;
+      const optionsSettings = new OptionsSettings();
+      optionsSettings.ignoreVersion = true;
+      options = await OptionsFactory.get(TestOptions, optionsPath, optionsSettings);
+      // It contains default data
+      expect(options).to.not.be.null;
+      expect(options.isCurrentVersion).to.be.false;
+    });
+  });
+  describe('SchmeaOptions Tests', function () {
     it('Creates New Object & File', async function () {
-      const options = await OptionsFactory.get(PackageOptions, optionsPath);
+      const options = await OptionsFactory.get(SchmeaOptions, optionsPath);
 
       // It writes the file
       expect(await Utils.pathExists(optionsPath)).is.true;
 
       // It contains default data
       expect(options).to.not.be.null;
-      expect(options.excludeMetadataTypes).to.be.instanceOf(Array);
-      expect(options.excludeMetadataTypes.length).to.not.equal(0);
+      expect(options.outputDefMap).to.be.instanceOf(Map);
+      expect(options.outputDefMap.size).to.not.equal(0);
     });
   });
   describe('XPathOptions Tests', function () {

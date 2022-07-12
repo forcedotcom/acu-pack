@@ -1,30 +1,12 @@
+import { RestAction, RestResult } from './utils';
 export declare const NO_CONTENT_CODE = 204;
-export declare enum RestAction {
-    GET = "GET",
-    PUT = "PUT",
-    POST = "POST",
-    DELETE = "DELETE",
-    PATCH = "PATCH"
-}
 export declare enum ApiKind {
     DEFAULT = "",
     TOOLING = "tooling",
     COMPOSITE = "composite"
 }
-declare class RestResult {
-    id: string;
-    code: number;
-    body: any;
-    isError: boolean;
-    contentType: string;
-    isBinary: boolean;
-    throw(): Error;
-    getContent(): any;
-    private getError;
-}
 export declare class SfdxClient {
     private static defailtIdField;
-    private bent;
     private headers;
     private orgAliasOrUsername;
     private orgInfo;
@@ -32,7 +14,7 @@ export declare class SfdxClient {
     constructor(orgAliasOrUsername: string);
     initialize(forceRefresh?: boolean): Promise<void>;
     setApiVersion(apiVersion: number): void;
-    getMetadataSchemas(apiKind?: ApiKind): AsyncGenerator<any, void, unknown>;
+    getMetadataSchemas(apiKind?: ApiKind): AsyncGenerator<any, void, void>;
     getMetadataSchema(metaDataType: string, apiKind?: ApiKind): Promise<RestResult>;
     getById(metaDataType: string, id: string, apiKind?: ApiKind): Promise<RestResult>;
     getByIds(metaDataType: string, ids: string[], apiKind?: ApiKind): AsyncGenerator<RestResult, void, void>;
@@ -48,4 +30,3 @@ export declare class SfdxClient {
     private getUri;
     private handleResponse;
 }
-export {};

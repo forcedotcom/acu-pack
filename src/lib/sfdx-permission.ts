@@ -1,7 +1,8 @@
 import path = require('path');
-import { SfdxCore } from './sfdx-core';
+import Constants from './constants';
 
 export abstract class XmlPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     protected static getValue(json: any): any {
         const value = json && json instanceof Array
             ? json[0]
@@ -22,6 +23,11 @@ export abstract class MetadataDetail extends Named {
 }
 
 export class ObjectDetail extends MetadataDetail {
+    public visibility: string;
+    public intSharingModel: string;
+    public extSharingModel: string;
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(filePath: string, json: any): ObjectDetail {
         if (!filePath || !json) {
             return null;
@@ -37,10 +43,6 @@ export class ObjectDetail extends MetadataDetail {
         return detail;
     }
 
-    public visibility: string;
-    public intSharingModel: string;
-    public extSharingModel: string;
-
     public toXmlObj(): any {
         return {
             CustomObject: {
@@ -54,6 +56,11 @@ export class ObjectDetail extends MetadataDetail {
 }
 
 export class FieldDetail extends MetadataDetail {
+    public type: string;
+    public description: string;
+    public encryptionScheme: string;
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(filePath: string, json: any): FieldDetail {
         if (!filePath || !json) {
             return null;
@@ -62,7 +69,7 @@ export class FieldDetail extends MetadataDetail {
         const objectName = path.parse(path.dirname(path.dirname(filePath))).name;
 
         const detail = new FieldDetail();
-        detail.name = `${objectName}.${this.getValue(json.CustomField.fullName)}`;
+        detail.name = `${objectName}.${this.getValue(json.CustomField.fullName) as string}`;
         detail.label = this.getValue(json.CustomField.label);
         detail.description = this.getValue(json.CustomField.description);
         detail.type = this.getValue(json.CustomField.type);
@@ -70,9 +77,6 @@ export class FieldDetail extends MetadataDetail {
 
         return detail;
     }
-    public type: string;
-    public description: string;
-    public encryptionScheme: string;
 
     public toXmlObj(): any {
         return {
@@ -88,7 +92,6 @@ export class FieldDetail extends MetadataDetail {
 
 export abstract class MetaDataPermission extends Named {
     public r: boolean;
-    public abstract toXmlObj(): any;
 
     public toString(): string {
         let result = '';
@@ -97,9 +100,14 @@ export abstract class MetaDataPermission extends Named {
         }
         return result;
     }
+
+    public abstract toXmlObj(): any;
 }
 
 export class FieldPermission extends MetaDataPermission {
+    public u: boolean;
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): FieldPermission {
         if (!json) {
             return null;
@@ -111,7 +119,6 @@ export class FieldPermission extends MetaDataPermission {
         permission.r = this.getValue(json.readable) || false;
         return permission;
     }
-    public u: boolean;
 
     public toXmlObj(): any {
         return {
@@ -131,6 +138,7 @@ export class FieldPermission extends MetaDataPermission {
 }
 
 export class ClassPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): ClassPermission {
         if (!json) {
             return null;
@@ -151,6 +159,7 @@ export class ClassPermission extends MetaDataPermission {
 }
 
 export class UserPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): UserPermission {
         if (!json) {
             return null;
@@ -171,6 +180,7 @@ export class UserPermission extends MetaDataPermission {
 }
 
 export class PagePermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): PagePermission {
         if (!json) {
             return null;
@@ -191,6 +201,9 @@ export class PagePermission extends MetaDataPermission {
 }
 
 export class LayoutAssignment extends MetaDataPermission {
+    public recordType: string;
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): MetaDataPermission {
         if (!json) {
             return null;
@@ -201,8 +214,7 @@ export class LayoutAssignment extends MetaDataPermission {
         permission.recordType = this.getValue(json.recordType);
         return permission;
     }
-    public recordType: string;
-
+    
     public toXmlObj(): any {
         return {
             layout: this.name,
@@ -224,6 +236,7 @@ export abstract class DefaultablePermission extends MetaDataPermission {
 }
 
 export class RecordTypePermission extends DefaultablePermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): RecordTypePermission {
         if (!json) {
             return null;
@@ -246,6 +259,7 @@ export class RecordTypePermission extends DefaultablePermission {
 }
 
 export class ApplicationPermission extends DefaultablePermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): ApplicationPermission {
         if (!json) {
             return null;
@@ -268,6 +282,18 @@ export class ApplicationPermission extends DefaultablePermission {
 }
 
 export class TabPermission extends MetaDataPermission {
+    private static standardPrefix = 'standard-';
+
+    public visibility: string;
+    public isStandard: boolean;
+
+    private tabVisibilityKind = {
+        OFF: 'DefaultOff',
+        ON: 'DefaultOn',
+        HIDDEN: 'Hidden'
+    };
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXMl(json: any): TabPermission {
         if (!json) {
             return null;
@@ -278,18 +304,6 @@ export class TabPermission extends MetaDataPermission {
         tabPermission.visibility = this.getValue(json.visibility);
         return tabPermission;
     }
-
-    private static standardPrefix = 'standard-';
-
-    public visibility: string;
-    public isStandard: boolean;
-
-    // @ts-ignore
-    private tabVisibilityKind = {
-        OFF: 'DefaultOff',
-        ON: 'DefaultOn',
-        HIDDEN: 'Hidden'
-    };
 
     public setName(name: string): void {
         if (!name) {
@@ -328,6 +342,12 @@ export class TabPermission extends MetaDataPermission {
 }
 
 export class ObjectPermission extends FieldPermission {
+    public c: boolean;
+    public d: boolean;
+    public viewAll: boolean;
+    public modAll: boolean;
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(json: any): ObjectPermission {
         if (!json) {
             return null;
@@ -344,11 +364,6 @@ export class ObjectPermission extends FieldPermission {
 
         return permission;
     }
-
-    public c: boolean;
-    public d: boolean;
-    public viewAll: boolean;
-    public modAll: boolean;
 
     public toXmlObj(): any {
         return {
@@ -383,6 +398,32 @@ export class ObjectPermission extends FieldPermission {
 }
 
 export class PermissionSet extends Named {
+    
+    public isProfile: boolean;
+    public fieldPermissions: Map<string, FieldPermission>;
+    public userPermissions: Map<string, UserPermission>;
+    public classAccesses: Map<string, ClassPermission>;
+    public pageAccesses: Map<string, PagePermission>;
+    public recordTypeVisibilities: Map<string, RecordTypePermission>;
+    public tabVisibilities: Map<string, TabPermission>;
+    public applicationVisibilities: Map<string, ApplicationPermission>;
+    public objectPermissions: Map<string, ObjectPermission>;
+    public layoutAssignments: Map<string, LayoutAssignment>;
+
+    public constructor() {
+        super();
+        this.fieldPermissions = new Map<string, FieldPermission>();
+        this.userPermissions = new Map<string, UserPermission>();
+        this.classAccesses = new Map<string, ClassPermission>();
+        this.pageAccesses = new Map<string, PagePermission>();
+        this.recordTypeVisibilities = new Map<string, RecordTypePermission>();
+        this.tabVisibilities = new Map<string, TabPermission>();
+        this.applicationVisibilities = new Map<string, ApplicationPermission>();
+        this.objectPermissions = new Map<string, ObjectPermission>();
+        this.layoutAssignments = new Map<string, LayoutAssignment>();
+    }
+
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static fromXml(filePath: string, json: any): PermissionSet {
         if (!filePath || !json) {
             return null;
@@ -436,35 +477,11 @@ export class PermissionSet extends Named {
         return permSet;
     }
 
-    public isProfile: boolean;
-    public fieldPermissions: Map<string, FieldPermission>;
-    public userPermissions: Map<string, UserPermission>;
-    public classAccesses: Map<string, ClassPermission>;
-    public pageAccesses: Map<string, PagePermission>;
-    public recordTypeVisibilities: Map<string, RecordTypePermission>;
-    public tabVisibilities: Map<string, TabPermission>;
-    public applicationVisibilities: Map<string, ApplicationPermission>;
-    public objectPermissions: Map<string, ObjectPermission>;
-    public layoutAssignments: Map<string, LayoutAssignment>;
-
-    constructor() {
-        super();
-        this.fieldPermissions = new Map<string, FieldPermission>();
-        this.userPermissions = new Map<string, UserPermission>();
-        this.classAccesses = new Map<string, ClassPermission>();
-        this.pageAccesses = new Map<string, PagePermission>();
-        this.recordTypeVisibilities = new Map<string, RecordTypePermission>();
-        this.tabVisibilities = new Map<string, TabPermission>();
-        this.applicationVisibilities = new Map<string, ApplicationPermission>();
-        this.objectPermissions = new Map<string, ObjectPermission>();
-        this.layoutAssignments = new Map<string, LayoutAssignment>();
-    }
-
     public toXmlObj(): any {
         const xmlObj = {
             Profile: {
                 $: {
-                    xmlns: SfdxCore.DEFAULT_XML_NAMESPACE
+                    xmlns: Constants.DEFAULT_XML_NAMESPACE
                 },
                 applicationVisibilities: [],
                 classAccesses: [],
@@ -513,16 +530,16 @@ export class PermissionSet extends Named {
 }
 
 export class SfdxPermission {
-    public static apexClass = 'ApexClass';
-    public static apexPage = 'ApexPage';
-    public static customApplication = 'CustomApplication';
-    public static customObject = 'CustomObject';
-    public static customField = 'CustomField';
-    public static customTab = 'CustomTab';
-    public static permissionSet = 'PermissionSet';
-    public static profile = 'Profile';
-    public static recordType = 'RecordType';
-    public static layout = 'Layout';
+    public static readonly apexClass = Constants.SFDX_PERMISSION_APEX_CLASS;
+    public static readonly apexPage = Constants.SFDX_PERMISSION_APEX_PAGE;
+    public static readonly customApplication = Constants.SFDX_PERMISSION_CUSTOM_APP;
+    public static readonly customObject = Constants.SFDX_PERMISSION_CUSTOM_OBJ;
+    public static readonly customField = Constants.SFDX_PERMISSION_CUSTOM_FIELD;
+    public static readonly customTab = Constants.SFDX_PERMISSION_CUSTOM_TAB;
+    public static readonly permissionSet = Constants.SFDX_PERMISSION_SET;
+    public static readonly profile = Constants.SFDX_PERMISSION_PROFILE;
+    public static readonly recordType = Constants.SFDX_PERMISSION_RECORD_TYPE;
+    public static readonly layout = Constants.SFDX_PERMISSION_LAYOUT;
 
     public static defaultPermissionMetaTypes = [
         SfdxPermission.apexClass,
@@ -537,14 +554,14 @@ export class SfdxPermission {
         SfdxPermission.layout
     ];
 
-    public static getPermisionString(permissionSet: Named) {
+    public static getPermisionString(permissionSet: Named): string {
         let result = '';
         if (permissionSet instanceof ObjectPermission) {
-            result += (permissionSet as ObjectPermission).toString();
+            result += (permissionSet).toString();
         } else if (permissionSet instanceof FieldPermission) {
-            result += (permissionSet as FieldPermission).toString();
+            result += (permissionSet).toString();
         } else if (permissionSet instanceof TabPermission) {
-            result += (permissionSet as TabPermission).toString();
+            result += (permissionSet).toString();
         } else if (permissionSet instanceof RecordTypePermission ||
             permissionSet instanceof ApplicationPermission) {
             result += (permissionSet as DefaultablePermission).toString();

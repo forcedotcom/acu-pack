@@ -44,7 +44,7 @@ describe('Sfdx Core Tests', () => {
     it('Has Package.type.mmebrs', async function () {
       const pack = await SfdxCore.createPackage(packMap);
       expect(pack.Package.types);
-      for (let type of pack.Package.types) {
+      for (const type of pack.Package.types) {
         expect(type.members.length).equals(4);
       }
     });

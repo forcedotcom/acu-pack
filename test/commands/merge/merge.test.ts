@@ -3,18 +3,19 @@ import { expect } from '@salesforce/command/lib/test';
 import Utils from '../../../src/lib/utils'
 import xmlMerge from '../../../src/lib/xml-merge'
 
-describe("Xml-Merge Tests", function () {
+describe('Xml-Merge Tests', function () {
   const command = 'package:merge';
   const testPath = './test/lib/merge'
   const source = path.join(testPath, 'package-a.xml');
   const destination = path.join(testPath, 'package-b.xml');
 
-  async function cleanUp() {
+  async function cleanUp(): Promise<boolean> {
     try {
       await Utils.deleteFile(source);
       await Utils.deleteFile(destination);
       return true;
     } catch (err) {
+      /* eslint-disable-next-line no-console */
       console.log(err);
       return false;
     }
@@ -30,15 +31,15 @@ describe("Xml-Merge Tests", function () {
     await cleanUp();
   });
 
-  describe('Test XmlMerge', async () => {
-    it("Can Handle Empty package", async function () {
-      let source = {
+  describe('Test XmlMerge', () => {
+    it('Can Handle Empty package', async function () {
+      const testSource = {
         Package: {
-          version: "49.0"
+          version: '49.0'
         }
       };
       const parsed = await Utils.readObjectFromXmlFile(destination);
-      const merged = xmlMerge.mergeObjects(source, parsed);
+      const merged = xmlMerge.mergeObjects(testSource, parsed);
       expect(merged).not.null;
       expect(merged.Package).not.null;
       expect(merged.Package.types).not.null;

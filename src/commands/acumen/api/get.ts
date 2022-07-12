@@ -43,29 +43,20 @@ export default class Unmask extends CommandBase {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
 
-  public async run(): Promise<void> {
-    try {
-      this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
+  protected async runInternal(): Promise<void> {
+    const apiKind = this.flags.tooling ? ApiKind.TOOLING : ApiKind.DEFAULT;
 
-      const apiKind = this.flags.tooling ? ApiKind.TOOLING : ApiKind.DEFAULT;
+    const sfdxClient = new SfdxClient(this.orgAlias);
 
-      const sfdxClient = new SfdxClient(this.orgAlias);
-
-      const ids = this.flags.ids.split(',');
-      for await (const response of sfdxClient.getByIds(this.flags.metadata, ids, apiKind)) {
-        const outFilePath = this.flags.output || '{Id}.json';
-        const content = response.getContent();
-        if (response.isBinary) {
-          await Utils.writeFile(outFilePath.replace('{Id}', response.id), content);
-        } else {
-          await Utils.writeFile(outFilePath.replace('{Id}', response.id), JSON.stringify(content));
-        }
+    const ids = this.flags.ids.split(',');
+    for await (const response of sfdxClient.getByIds(this.flags.metadata, ids, apiKind)) {
+      const outFilePath = this.flags.output || '{Id}.json';
+      const content = response.getContent();
+      if (response.isBinary) {
+        await Utils.writeFile(outFilePath.replace('{Id}', response.id), content);
+      } else {
+        await Utils.writeFile(outFilePath.replace('{Id}', response.id), JSON.stringify(content));
       }
-    } catch (err) {
-      process.exitCode = 1;
-      throw err;
-    } finally {
-      this.ux.log('Done.');
     }
   }
 }

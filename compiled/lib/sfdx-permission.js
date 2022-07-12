@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxPermission = exports.PermissionSet = exports.ObjectPermission = exports.TabPermission = exports.ApplicationPermission = exports.RecordTypePermission = exports.DefaultablePermission = exports.LayoutAssignment = exports.PagePermission = exports.UserPermission = exports.ClassPermission = exports.FieldPermission = exports.MetaDataPermission = exports.FieldDetail = exports.ObjectDetail = exports.MetadataDetail = exports.Named = exports.XmlPermission = void 0;
 const path = require("path");
-const sfdx_core_1 = require("./sfdx-core");
+const constants_1 = require("./constants");
 class XmlPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static getValue(json) {
         const value = json && json instanceof Array
             ? json[0]
@@ -21,6 +22,7 @@ class MetadataDetail extends Named {
 }
 exports.MetadataDetail = MetadataDetail;
 class ObjectDetail extends MetadataDetail {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(filePath, json) {
         if (!filePath || !json) {
             return null;
@@ -46,6 +48,7 @@ class ObjectDetail extends MetadataDetail {
 }
 exports.ObjectDetail = ObjectDetail;
 class FieldDetail extends MetadataDetail {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(filePath, json) {
         if (!filePath || !json) {
             return null;
@@ -82,6 +85,7 @@ class MetaDataPermission extends Named {
 }
 exports.MetaDataPermission = MetaDataPermission;
 class FieldPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -109,6 +113,7 @@ class FieldPermission extends MetaDataPermission {
 }
 exports.FieldPermission = FieldPermission;
 class ClassPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -127,6 +132,7 @@ class ClassPermission extends MetaDataPermission {
 }
 exports.ClassPermission = ClassPermission;
 class UserPermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -145,6 +151,7 @@ class UserPermission extends MetaDataPermission {
 }
 exports.UserPermission = UserPermission;
 class PagePermission extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -163,6 +170,7 @@ class PagePermission extends MetaDataPermission {
 }
 exports.PagePermission = PagePermission;
 class LayoutAssignment extends MetaDataPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -191,6 +199,7 @@ class DefaultablePermission extends MetaDataPermission {
 }
 exports.DefaultablePermission = DefaultablePermission;
 class RecordTypePermission extends DefaultablePermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -211,6 +220,7 @@ class RecordTypePermission extends DefaultablePermission {
 }
 exports.RecordTypePermission = RecordTypePermission;
 class ApplicationPermission extends DefaultablePermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -233,13 +243,13 @@ exports.ApplicationPermission = ApplicationPermission;
 class TabPermission extends MetaDataPermission {
     constructor() {
         super(...arguments);
-        // @ts-ignore
         this.tabVisibilityKind = {
             OFF: 'DefaultOff',
             ON: 'DefaultOn',
             HIDDEN: 'Hidden'
         };
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXMl(json) {
         if (!json) {
             return null;
@@ -285,6 +295,7 @@ class TabPermission extends MetaDataPermission {
 exports.TabPermission = TabPermission;
 TabPermission.standardPrefix = 'standard-';
 class ObjectPermission extends FieldPermission {
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(json) {
         if (!json) {
             return null;
@@ -343,6 +354,7 @@ class PermissionSet extends Named {
         this.objectPermissions = new Map();
         this.layoutAssignments = new Map();
     }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static fromXml(filePath, json) {
         if (!filePath || !json) {
             return null;
@@ -393,7 +405,7 @@ class PermissionSet extends Named {
         const xmlObj = {
             Profile: {
                 $: {
-                    xmlns: sfdx_core_1.SfdxCore.DEFAULT_XML_NAMESPACE
+                    xmlns: constants_1.default.DEFAULT_XML_NAMESPACE
                 },
                 applicationVisibilities: [],
                 classAccesses: [],
@@ -444,13 +456,13 @@ class SfdxPermission {
     static getPermisionString(permissionSet) {
         let result = '';
         if (permissionSet instanceof ObjectPermission) {
-            result += permissionSet.toString();
+            result += (permissionSet).toString();
         }
         else if (permissionSet instanceof FieldPermission) {
-            result += permissionSet.toString();
+            result += (permissionSet).toString();
         }
         else if (permissionSet instanceof TabPermission) {
-            result += permissionSet.toString();
+            result += (permissionSet).toString();
         }
         else if (permissionSet instanceof RecordTypePermission ||
             permissionSet instanceof ApplicationPermission) {
@@ -468,16 +480,16 @@ class SfdxPermission {
     }
 }
 exports.SfdxPermission = SfdxPermission;
-SfdxPermission.apexClass = 'ApexClass';
-SfdxPermission.apexPage = 'ApexPage';
-SfdxPermission.customApplication = 'CustomApplication';
-SfdxPermission.customObject = 'CustomObject';
-SfdxPermission.customField = 'CustomField';
-SfdxPermission.customTab = 'CustomTab';
-SfdxPermission.permissionSet = 'PermissionSet';
-SfdxPermission.profile = 'Profile';
-SfdxPermission.recordType = 'RecordType';
-SfdxPermission.layout = 'Layout';
+SfdxPermission.apexClass = constants_1.default.SFDX_PERMISSION_APEX_CLASS;
+SfdxPermission.apexPage = constants_1.default.SFDX_PERMISSION_APEX_PAGE;
+SfdxPermission.customApplication = constants_1.default.SFDX_PERMISSION_CUSTOM_APP;
+SfdxPermission.customObject = constants_1.default.SFDX_PERMISSION_CUSTOM_OBJ;
+SfdxPermission.customField = constants_1.default.SFDX_PERMISSION_CUSTOM_FIELD;
+SfdxPermission.customTab = constants_1.default.SFDX_PERMISSION_CUSTOM_TAB;
+SfdxPermission.permissionSet = constants_1.default.SFDX_PERMISSION_SET;
+SfdxPermission.profile = constants_1.default.SFDX_PERMISSION_PROFILE;
+SfdxPermission.recordType = constants_1.default.SFDX_PERMISSION_RECORD_TYPE;
+SfdxPermission.layout = constants_1.default.SFDX_PERMISSION_LAYOUT;
 SfdxPermission.defaultPermissionMetaTypes = [
     SfdxPermission.apexClass,
     SfdxPermission.apexPage,

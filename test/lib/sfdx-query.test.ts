@@ -4,7 +4,7 @@ import Setup from '../lib/setup';
 
 let orgAlias = null;
 describe('Sfdx Query Tests', () => {
-  before('Init', async function () {
+  before('Init', function () {
     orgAlias = Setup.orgAlias;
     if(!orgAlias) {
       return;

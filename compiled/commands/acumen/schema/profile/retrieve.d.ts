@@ -1,5 +1,5 @@
-import { CommandBase } from '../../../../lib/command-base';
 import { flags } from '@salesforce/command';
+import { CommandBase } from '../../../../lib/command-base';
 export default class ProfileRetrieve extends CommandBase {
     static description: string;
     static examples: string[];
@@ -8,5 +8,5 @@ export default class ProfileRetrieve extends CommandBase {
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
 }

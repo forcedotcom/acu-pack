@@ -1,17 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const path = require("path");
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
 const command_base_1 = require("../../../lib/command-base");
 const sfdx_core_1 = require("../../../lib/sfdx-core");
 const utils_1 = require("../../../lib/utils");
 const package_options_1 = require("../../../lib/package-options");
-const path = require("path");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 const options_factory_1 = require("../../../lib/options-factory");
 class Build extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         var e_1, _a;
         var _b;
         // Validate the package path
@@ -40,94 +40,88 @@ class Build extends command_base_1.CommandBase {
         const namespaces = this.flags.namespaces
             ? new Set(this.flags.namespaces.split())
             : new Set();
-        try {
-            const describeMetadatas = new Set();
-            this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
-            let filterMetadataTypes = null;
-            if (this.flags.metadata) {
-                filterMetadataTypes = new Set();
-                for (const metaName of this.flags.metadata.split(',')) {
-                    filterMetadataTypes.add(metaName.trim());
+        const describeMetadatas = new Set();
+        this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
+        let filterMetadataTypes = null;
+        if (this.flags.metadata) {
+            filterMetadataTypes = new Set();
+            for (const metaName of this.flags.metadata.split(',')) {
+                filterMetadataTypes.add(metaName.trim());
+            }
+        }
+        const metadataMap = new Map();
+        if (this.flags.source) {
+            const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(this.orgAlias);
+            if (!statuses || statuses.length === 0) {
+                this.ux.log('No Source Tracking changes found.');
+                return;
+            }
+            const results = sfdx_tasks_1.SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+            if (results.conflicts.size > 0) {
+                this.ux.log('WARNING: The following conflicts were found:');
+                for (const [conflictType, members] of results.conflicts) {
+                    this.ux.log(`\t${conflictType}`);
+                    for (const member of members) {
+                        this.ux.log(`\t\t${member}`);
+                    }
+                }
+                throw new Error('All Conflicts must be resolved.');
+            }
+            if (results.deletes.size > 0) {
+                this.ux.log('WARNING: The following deleted items need to be handled manually:');
+                for (const [deleteType, members] of results.deletes) {
+                    this.ux.log(`\t${deleteType}`);
+                    for (const member of members) {
+                        this.ux.log(`\t\t${member}`);
+                    }
                 }
             }
-            const metadataMap = new Map();
-            if (this.flags.source) {
-                const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(this.orgAlias);
-                if (!statuses || statuses.length === 0) {
-                    this.ux.log('No Source Tracking changes found.');
-                    return;
+            if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
+                this.ux.log('No Deployable Source Tracking changes found.');
+                return;
+            }
+            for (const [typeName, members] of results.map) {
+                if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+                    continue;
                 }
-                const results = sfdx_tasks_1.SfdxTasks.getMapFromSourceTrackingStatus(statuses);
-                if (results.conflicts.size > 0) {
-                    this.ux.log('WARNING: The following conflicts were found:');
-                    for (const [conflictType, members] of results.conflicts) {
-                        this.ux.log(`\t${conflictType}`);
-                        for (const member of members) {
-                            this.ux.log(`\t\t${member}`);
-                        }
-                    }
-                    throw new Error('All Conflicts must be resolved.');
+                metadataMap.set(typeName, members);
+            }
+        }
+        else {
+            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);
+            for (const metadata of describeMetadata) {
+                if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+                    continue;
                 }
-                if (results.deletes.size > 0) {
-                    this.ux.log('WARNING: The following deleted items need to be handled manually:');
-                    for (const [deleteType, members] of results.deletes) {
-                        this.ux.log(`\t${deleteType}`);
-                        for (const member of members) {
-                            this.ux.log(`\t\t${member}`);
-                        }
-                    }
-                }
-                if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
-                    this.ux.log('No Deployable Source Tracking changes found.');
-                    return;
-                }
-                for (const [typeName, members] of results.map) {
-                    if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
-                        continue;
-                    }
-                    metadataMap.set(typeName, members);
+                describeMetadatas.add(metadata);
+            }
+            let counter = 0;
+            try {
+                for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+                    const entry = _d.value;
+                    // If specific members were defined previously - just use them
+                    metadataMap.set(entry.name, entry.members);
+                    this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
                 }
             }
-            else {
-                const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);
-                for (const metadata of describeMetadata) {
-                    if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
-                        continue;
-                    }
-                    describeMetadatas.add(metadata);
-                }
-                let counter = 0;
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
                 try {
-                    for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
-                        const entry = _d.value;
-                        // If specific members were defined previously - just use them
-                        metadataMap.set(entry.name, entry.members);
-                        this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-                    }
+                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
                 }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-                    }
-                    finally { if (e_1) throw e_1.error; }
-                }
+                finally { if (e_1) throw e_1.error; }
             }
-            const packageMap = new Map();
-            // Filter excluded types
-            for (const [typeName, members] of metadataMap) {
-                if (!excluded.has(typeName)) {
-                    packageMap.set(typeName, members);
-                }
+        }
+        const packageMap = new Map();
+        // Filter excluded types
+        for (const [typeName, members] of metadataMap) {
+            if (!excluded.has(typeName)) {
+                packageMap.set(typeName, members);
             }
-            this.ux.log(`Generating: ${packageFileName}`);
-            // Write the final package
-            await sfdx_core_1.SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
-            this.ux.log('Done.');
         }
-        catch (err) {
-            throw err;
-        }
+        this.ux.log(`Generating: ${packageFileName}`);
+        // Write the final package
+        await sfdx_core_1.SfdxCore.writePackageFile(packageMap, packageFileName, this.flags.append);
         return;
     }
 }

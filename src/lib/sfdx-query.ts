@@ -1,3 +1,4 @@
+import Constants from './constants';
 import { SfdxCore } from './sfdx-core';
 import Utils from './utils';
 
@@ -23,18 +24,18 @@ export class SfdxPermissionSet extends SfdxEntity {
 }
 
 export abstract class SfdxPermission extends SfdxEntity {
-    public abstract permissionType: string;
     public permissionsEdit: boolean;
     public permissionsRead: boolean;
+    public abstract permissionType: string;
 }
 
 export class SfdxFieldPermission extends SfdxPermission {
-    public permissionType: string = 'Field';
+    public permissionType = 'Field';
     public field: string;
 }
 
 export class SfdxObjectPermission extends SfdxPermission {
-    public permissionType: string = 'Object';
+    public permissionType = 'Object';
     public permissionsCreate: boolean;
     public permissionsDelete: boolean;
     public permissionsModifyAllRecords: boolean;
@@ -47,7 +48,7 @@ export class SfdxCodeCoverage {
     public totalUncoveredLines: number;
     public codeCoveragePercent: number;
 
-    constructor() {
+    public constructor() {
         this.codeCoverage = [];
     }
 
@@ -79,7 +80,7 @@ export class SfdxCodeCoverageItem extends SfdxEntity {
     public coveredLines: number[];
     public uncoveredLines: number[];
 
-    constructor() {
+    public constructor() {
         super();
         this.coveredLines = [];
         this.uncoveredLines = [];
@@ -98,7 +99,7 @@ export class SfdxQuery {
     public static async getCustomApplications(usernameOrAlias: string): Promise<SfdxEntity[]> {
         const query = "SELECT Id, ApplicationId, Label FROM AppMenuItem WHERE Type='TabSet'";
         const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
-        const customApplications = [];
+        const customApplications: SfdxEntity[] = [];
         for (const record of records) {
             const customApplication = new SfdxEntity();
             customApplication.id = record.Id;
@@ -114,7 +115,7 @@ export class SfdxQuery {
     public static async getSetupEntityTypes(usernameOrAlias: string): Promise<string[]> {
         const query = 'SELECT SetupEntityType FROM SetupEntityAccess GROUP BY SetupEntityType';
         const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
-        const setupEntityTypes = [];
+        const setupEntityTypes: string[] = [];
         for (const record of records) {
             setupEntityTypes.push(record.SetupEntityType);
         }
@@ -126,7 +127,7 @@ export class SfdxQuery {
     public static async getFolders(usernameOrAlias: string): Promise<SfdxFolder[]> {
         const query = 'SELECT Id,ParentId,Name,DeveloperName,Type FROM Folder ORDER BY ParentId';
         const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
-        const folders = [];
+        const folders: SfdxFolder[] = [];
         for (const record of records) {
             const folder = new SfdxFolder();
             folder.id = record.Id;
@@ -201,7 +202,7 @@ export class SfdxQuery {
 
         const query = `SELECT SetupEntityId,SetupEntityType FROM SetupEntityAccess WHERE SetupEntityType IN ('${entityTypes}') GROUP BY SetupEntityId,SetupEntityType ORDER BY SetupEntityType`;
         const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
-        const seupEntityAccesses = [];
+        const seupEntityAccesses: SfdxSeupEntityAccess[] = [];
         for (const record of records) {
             const seupEntityAccess = new SfdxSeupEntityAccess();
             seupEntityAccess.setupEntityType = record.SetupEntityType;
@@ -211,11 +212,12 @@ export class SfdxQuery {
         return seupEntityAccesses;
     }
 
-    public static async doSoqlQuery(usernameOrAlias: string, query: string, recordOffset: number = null, recordLimit: number = null, isToolingAPIQuery: boolean = false): Promise<any[]> {
-        const records = [];
-        const queryCmd = isToolingAPIQuery ? 'sfdx force:data:soql:query -t' : 'sfdx force:data:soql:query';
+    public static async doSoqlQuery(usernameOrAlias: string, query: string, recordOffset: number = null, recordLimit: number = null, isToolingAPIQuery = false): Promise<any[]> {
+        const records: any[] = [];
+        const queryCmd = isToolingAPIQuery ? `${Constants.SFDX_DATA_QUERY} -t` : Constants.SFDX_DATA_QUERY;
         if (!recordLimit) {
-            const cmd = `${queryCmd} -q \"${query}\" --json -u ${usernameOrAlias}`;
+            
+            const cmd = `${queryCmd} -q "${query}" --json -u ${usernameOrAlias}`;
             const results = await SfdxCore.command(cmd);
             if (results && results.done) {
                 records.push(...results.records);
@@ -223,12 +225,13 @@ export class SfdxQuery {
         } else {
             let offset = recordOffset;
             const limitedQuery = `${query} LIMIT ${recordLimit}`;
-            while (true) {
+            const justGo = true;
+            while (justGo) {
                 let currentQuery = limitedQuery;
                 if (offset) {
                     currentQuery = `${limitedQuery} OFFSET ${offset}`;
                 }
-                const cmd = `${queryCmd} -q \"${currentQuery}\" --json -u ${usernameOrAlias}`;
+                const cmd = `${queryCmd} -q "${currentQuery}" --json -u ${usernameOrAlias}`;
                 const results = await SfdxCore.command(cmd);
                 if (results && results.done) {
                     records.push(...results.records);
@@ -239,6 +242,7 @@ export class SfdxQuery {
                 offset += results.records.length;
             }
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return records;
     }
 
@@ -262,7 +266,7 @@ export class SfdxQuery {
         }
         query += ' ORDER BY Name ASC';
         const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query, null, null, true);
-        const apexClasses = [];
+        const apexClasses: SfdxEntity[] = [];
         for (const record of records) {
             let isTest = false;
             if (!record.SymbolTable || !record.SymbolTable.methods) {
@@ -306,7 +310,7 @@ export class SfdxQuery {
         return codeCoverage;
     }
 
-    public static async* waitForRecordCount(usernameOrAlias: string, query: string, recordCount = 0, maxWaitSeconds = 60, sleepMiliseconds = 5000) {
+    public static async* waitForRecordCount(usernameOrAlias: string, query: string, recordCount = 0, maxWaitSeconds = 60, sleepMiliseconds = 5000): AsyncGenerator<number, void, void> {
         const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
         let counter = 0;
         let records = [];
@@ -324,7 +328,7 @@ export class SfdxQuery {
         }
     }
 
-    public static async* waitForApexTests(username: string, waitCountMaxSeconds = 0, createdDate: string = new Date().toJSON()) {
+    public static async* waitForApexTests(username: string, waitCountMaxSeconds = 0, createdDate: string = new Date().toJSON()): AsyncGenerator<number, number, void>{
         const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;
         const targetCount = 0;
 

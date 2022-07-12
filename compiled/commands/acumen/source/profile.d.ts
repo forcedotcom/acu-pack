@@ -14,5 +14,5 @@ export default class Profile extends CommandBase {
     protected static requiresProject: boolean;
     protected static requiresUsername: boolean;
     protected permissions: Map<string, PermissionSet>;
-    run(): Promise<void>;
+    protected runInternal(): Promise<void>;
 }

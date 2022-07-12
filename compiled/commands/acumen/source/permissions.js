@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const path = require("path");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
 const office_1 = require("../../../lib/office");
-const path = require("path");
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_project_1 = require("../../../lib/sfdx-project");
 class Permissions extends command_base_1.CommandBase {
@@ -13,7 +13,7 @@ class Permissions extends command_base_1.CommandBase {
         super(...arguments);
         this.defaultReportHeaderName = '_HEADERS_';
     }
-    async run() {
+    async runInternal() {
         var e_1, _a;
         if (!this.flags.source) {
             this.flags.source = (await sfdx_project_1.default.default()).getDefaultDirectory();
@@ -63,9 +63,6 @@ class Permissions extends command_base_1.CommandBase {
             workbookMap.set('Tabs', this.buildSheet('tabVisibilities'));
             workbookMap.set('Record Types', this.buildSheet('recordTypeVisibilities'));
         }
-        catch (err) {
-            throw err;
-        }
         finally {
             if (originalCwd !== this.flags.source) {
                 process.chdir(originalCwd);
@@ -74,7 +71,6 @@ class Permissions extends command_base_1.CommandBase {
         const reportPath = path.resolve(this.flags.report || Permissions.defaultReportPath);
         this.ux.log(`Writing Report: ${reportPath}`);
         office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
-        this.ux.log('Done.');
         return;
     }
     buildSheet(permCollectionPropertyName, metadataDetails = null) {

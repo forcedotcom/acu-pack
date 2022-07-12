@@ -1,9 +1,9 @@
-import Utils from './utils';
-import { promises as fs } from 'fs';
 import path = require('path');
+import { promises as fs } from 'fs';
+import Utils from './utils';
 
 export default class XmlMerge {
-
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static async mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, ux?: any): Promise<any> {
         let merged: any;
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
@@ -34,12 +34,12 @@ export default class XmlMerge {
 
         } catch (err) {
             await this.logMessage(err, logFilePath, ux);
-        } finally {
-            await this.logMessage('Done', logFilePath, ux);
         }
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return merged;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static async mergeXmlToFile(sourceXml: any, destinationXmlFile: string): Promise<any> {
         let merged: any;
         if (await Utils.pathExists(destinationXmlFile)) {
@@ -49,9 +49,11 @@ export default class XmlMerge {
             merged = sourceXml;
         }
         await Utils.writeObjectToXmlFile(destinationXmlFile, merged);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return merged;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static getType(pack: any, name: string): any {
         for (const type of pack.types) {
             if (type.name[0] === name) {
@@ -61,6 +63,7 @@ export default class XmlMerge {
         return null;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static async logMessage(message: string, logFile: string, ux?: any): Promise<void> {
         if (typeof message === 'string') {
             await fs.appendFile(logFile, `${message}\r\n`);
@@ -72,6 +75,7 @@ export default class XmlMerge {
         }
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static mergeObjects(source: any, destination: any): any {
         if (!source.Package) {
             source['Package'] = {};

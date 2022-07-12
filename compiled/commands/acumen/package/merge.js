@@ -4,7 +4,7 @@ const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
 const xml_merge_1 = require("../../../lib/xml-merge");
 class Merge extends command_base_1.CommandBase {
-    async run() {
+    async runInternal() {
         await xml_merge_1.default.mergeXmlFiles(this.flags.source, this.flags.destination, this.ux);
     }
 }

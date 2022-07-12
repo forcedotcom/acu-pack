@@ -1,6 +1,6 @@
-import Setup from '../../lib/setup';
 import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
+import Setup from '../../lib/setup';
 import Utils from '../../../src/lib/utils'
 import Md5 from '../../../src/commands/acumen/source/delta/md5'
 import { DeltaOptions } from '../../../src/lib/delta-provider'
@@ -21,22 +21,22 @@ beforeEach(async () => {
     }
     md5Provider.deltas.clear();
 });
-describe("Md5DeltaProvider Tests", function () {
-    it("Has Name", async function () {
+describe('Md5DeltaProvider Tests', function () {
+    it('Has Name', function () {
         expect(md5Provider.name).equals('md5');
     });
 
-    it("Has deltaLineToken", async function () {
+    it('Has deltaLineToken', function () {
         expect(md5Provider.deltaLineToken).equals('=');
     });
 
-    describe("loadDeltaFile Tests", function () {
-        it("Can handle null", async function () {
+    describe('loadDeltaFile Tests', function () {
+        it('Can handle null', async function () {
             expect(md5Provider.deltas.size).equals(0);
             await md5Provider.loadDeltaFile(null);
             expect(md5Provider.deltas.size).equals(0);
         });
-        it("Can load md5 diff file", async function () {
+        it('Can load md5 diff file', async function () {
             expect(md5Provider.deltas.size).equals(0);
             await md5Provider.loadDeltaFile(Setup.md5FilePath);
             expect(md5Provider.deltas.size).not.equals(0);
@@ -48,10 +48,10 @@ describe("Md5DeltaProvider Tests", function () {
         });
     });
 
-    describe("diff Tests", function () {
-        it("Can build missing md5 file", async function () {
+    describe('diff Tests', function () {
+        it('Can build missing md5 file', async function () {
             md5Provider.deltaOptions.deltaFilePath = bogusMd5FilePath;
-            md5Provider.loadDeltaFile()
+            await md5Provider.loadDeltaFile();
             expect(md5Provider.deltas.size).equals(0);
             const diffSet = new Set();
             for await (const diff of md5Provider.diff(Setup.sourceRoot)) {
@@ -62,7 +62,7 @@ describe("Md5DeltaProvider Tests", function () {
             // we should have hash entries though
             expect(diffSet.size).equals(md5Provider.deltas.size);
         });
-        it("Can diff", async function () {
+        it('Can diff', async function () {
             md5Provider.deltaOptions.deltaFilePath = Setup.md5FilePath;
             expect(md5Provider.deltas.size).equals(0);
             const diffSet = new Set();
@@ -74,7 +74,7 @@ describe("Md5DeltaProvider Tests", function () {
             // we should have hash entries though
             expect(diffSet.size).equals(md5Provider.deltas.size);
         });
-        it("Can run", async function () {
+        it('Can run', async function () {
             const deltaOptions = new DeltaOptions();
             deltaOptions.deltaFilePath = Setup.md5FilePath;
             deltaOptions.source = Setup.sourceRoot;
@@ -85,8 +85,8 @@ describe("Md5DeltaProvider Tests", function () {
             expect(metrics.Copy).equals(testFilesCreated);
         });
     });
-    describe("validateDeltaOptions Tests", function () {
-        it("Checks missing minimum required", async function () {
+    describe('validateDeltaOptions Tests', function () {
+        it('Checks missing minimum required', async function () {
             const deltaOptions = new DeltaOptions();
 
             // NOT OK
