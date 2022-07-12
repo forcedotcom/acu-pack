@@ -40,7 +40,12 @@ export abstract class CommandBase extends SfdxCommand {
   }
   protected async handlerError(err: Error, throwErr = false): Promise<void> {
     process.exitCode = 1;
-    this.ux.log(`An error occurred: ${err.stack}`)
+    if(err instanceof Error) {
+      this.ux.log(`An error occurred: ${err.stack}`)
+    } else {
+      this.ux.log(`An error occurred: ${JSON.stringify(err)}`)
+    }
+    
     if(throwErr) {
       throw err;
     }

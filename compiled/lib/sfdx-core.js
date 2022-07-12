@@ -9,7 +9,7 @@ const xml_merge_1 = require("./xml-merge");
 class SfdxCore {
     static command(cmd) {
         return new Promise((resolve, reject) => {
-            (0, child_process_1.exec)(cmd, SfdxCore.bufferOptions, (error, stdout) => {
+            child_process_1.exec(cmd, SfdxCore.bufferOptions, (error, stdout) => {
                 let response;
                 try {
                     if (stdout && String(stdout) !== '') {
