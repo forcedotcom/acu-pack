@@ -50,10 +50,7 @@ export default class Scaffold extends CommandBase {
     if (this.flags.options) {
       options = await OptionsFactory.get(ScaffoldOptions, this.flags.options);
       if (!options) {
-        this.ux.log(`Unable to read options file: ${this.flags.options as string}.`);
-        // Set the proper exit code to indicate violation/failure
-        process.exitCode = 1;
-        return;
+        this.raiseError(`Unable to read options file: ${this.flags.options as string}.`);
       }
     } else {
       options = new ScaffoldOptions();
@@ -96,10 +93,10 @@ export default class Scaffold extends CommandBase {
     if (!schema) {
       schema = await SfdxTasks.describeObject(this.orgAlias, sObjectType);
       if (!schema) {
-        throw new Error('The returned schema is null.');
+        this.raiseError('The returned schema is null.');
       }
       if (!schema.fields) {
-        throw new Error('The returned schema does not contain a fields member.');
+        this.raiseError('The returned schema does not contain a fields member.');
       }
       this.schemas.set(schema.name.split('__')[0], schema);
     }
@@ -160,13 +157,13 @@ export default class Scaffold extends CommandBase {
   private generateFieldValue(field: any): string {
     // https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_variables_global_objecttype_schema_fields_reference.htm
     if (!field) {
-      throw new Error('The field argument cannot be null.');
+      this.raiseError('The field argument cannot be null.');
     }
     const noUnderscoreName: string = field.name.split('__')[0].replace(/_/g, '');
 
     const getStr = (fld: any, maxLength?: number): string => {
       if (!fld) {
-        throw new Error('The fld argument cannot be null.');
+        this.raiseError('The fld argument cannot be null.');
       }
 
       const value: string = fld.name;
@@ -184,7 +181,7 @@ export default class Scaffold extends CommandBase {
 
     const getDec = (fld: any, maxLength?: number): string => {
       if (!fld) {
-        throw new Error('The fld argument cannot be null.');
+        this.raiseError('The fld argument cannot be null.');
       }
 
       let num = '';
@@ -230,7 +227,7 @@ export default class Scaffold extends CommandBase {
 
     const getValue = (fld: any): string => {
       if (!fld) {
-        throw new Error('The fld argument cannot be null.');
+        this.raiseError('The fld argument cannot be null.');
       }
       switch (fld.type) {
         case 'anytype':

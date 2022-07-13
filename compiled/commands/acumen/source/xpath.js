@@ -45,7 +45,7 @@ class XPath extends command_base_1.CommandBase {
                                     for (const xmlValue of values) {
                                         if (ruleValue.trim() === xmlValue.trim()) {
                                             // Set the proper exit code to indicate violation/failure
-                                            process.exitCode = 1;
+                                            this.gotError = true;
                                             this.ux.log(`${rule.name} - Violation!`);
                                             this.ux.log(`\txpath: ${xPath}`);
                                             this.ux.log(`\tvalue: ${xmlValue}`);

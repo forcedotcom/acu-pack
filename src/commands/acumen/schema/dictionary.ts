@@ -82,7 +82,7 @@ export default class Dictionary extends CommandBase {
               }
             }
             if (nameFieldIndex === -1) {
-              throw new Error('No Name field found');
+              this.raiseError('No Name field found');
             }
           }
 

@@ -8,7 +8,9 @@ export declare abstract class CommandBase extends SfdxCommand {
     protected get orgAlias(): string;
     protected get orgId(): string;
     protected get connection(): Connection;
+    protected gotError: boolean;
     run(): Promise<void>;
-    protected handlerError(err: Error, throwErr?: boolean): Promise<void>;
+    protected errorHandler(err: Error, throwErr?: boolean): Promise<void>;
+    protected raiseError(message: string): void;
     protected abstract runInternal(): Promise<void>;
 }

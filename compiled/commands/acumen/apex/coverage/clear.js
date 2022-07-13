@@ -27,10 +27,7 @@ class Clear extends command_base_1.CommandBase {
             finally { if (e_1) throw e_1.error; }
         }
         if (recordCount !== 0) {
-            this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
-            // Set the proper exit code to indicate violation/failure
-            process.exitCode = 1;
-            return;
+            this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
         }
         // Clear Code Coverage Metadata
         const metaDataTypes = this.flags.metadatas

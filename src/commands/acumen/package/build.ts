@@ -1,6 +1,5 @@
 import path = require('path');
 import { flags } from '@salesforce/command';
-import { SfdxError } from '@salesforce/core';
 import { CommandBase } from '../../../lib/command-base';
 import { SfdxCore } from '../../../lib/sfdx-core';
 import Utils from '../../../lib/utils';
@@ -56,7 +55,7 @@ export default class Build extends CommandBase {
     const packageDir = path.dirname(packageFileName);
 
     if (packageDir && !await Utils.pathExists(packageDir)) {
-      throw new SfdxError(`The specified package folder does not exist: '${packageDir}'`);
+      this.raiseError(`The specified package folder does not exist: '${packageDir}'`);
     }
 
     let options: PackageOptions;
@@ -64,10 +63,7 @@ export default class Build extends CommandBase {
     if (this.flags.options) {
       options = await OptionsFactory.get(PackageOptions, this.flags.options);
       if (!options) {
-        this.ux.log(`Unable to read options file: ${this.flags.options as string}.`);
-        // Set the proper exit code to indicate violation/failure
-        process.exitCode = 1;
-        return;
+        this.raiseError(`Unable to read options file: ${this.flags.options as string}.`);
       }
     } else {
       options = new PackageOptions();
@@ -109,7 +105,7 @@ export default class Build extends CommandBase {
             this.ux.log(`\t\t${member as string}`);
           }
         }
-        throw new Error('All Conflicts must be resolved.');
+        this.raiseError('All Conflicts must be resolved.');
       }
       if (results.deletes.size > 0) {
         this.ux.log('WARNING: The following deleted items need to be handled manually:');

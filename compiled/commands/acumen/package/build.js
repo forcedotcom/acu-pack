@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const path = require("path");
 const command_1 = require("@salesforce/command");
-const core_1 = require("@salesforce/core");
 const command_base_1 = require("../../../lib/command-base");
 const sfdx_core_1 = require("../../../lib/sfdx-core");
 const utils_1 = require("../../../lib/utils");
@@ -18,17 +17,14 @@ class Build extends command_base_1.CommandBase {
         const packageFileName = this.flags.package || Build.defaultPackageFileName;
         const packageDir = path.dirname(packageFileName);
         if (packageDir && !await utils_1.default.pathExists(packageDir)) {
-            throw new core_1.SfdxError(`The specified package folder does not exist: '${packageDir}'`);
+            this.raiseError(`The specified package folder does not exist: '${packageDir}'`);
         }
         let options;
         // Read/Write the options file if it does not exist already
         if (this.flags.options) {
             options = await options_factory_1.OptionsFactory.get(package_options_1.PackageOptions, this.flags.options);
             if (!options) {
-                this.ux.log(`Unable to read options file: ${this.flags.options}.`);
-                // Set the proper exit code to indicate violation/failure
-                process.exitCode = 1;
-                return;
+                this.raiseError(`Unable to read options file: ${this.flags.options}.`);
             }
         }
         else {
@@ -65,7 +61,7 @@ class Build extends command_base_1.CommandBase {
                         this.ux.log(`\t\t${member}`);
                     }
                 }
-                throw new Error('All Conflicts must be resolved.');
+                this.raiseError('All Conflicts must be resolved.');
             }
             if (results.deletes.size > 0) {
                 this.ux.log('WARNING: The following deleted items need to be handled manually:');

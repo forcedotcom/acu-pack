@@ -41,10 +41,7 @@ export default class Delete extends CommandBase {
     }
 
     if (!usernames || usernames.length === 0) {
-      this.ux.log('No usernames specified.');
-      // Set the proper exit code to indicate violation/failure
-      process.exitCode = 1;
-      return;
+      this.raiseError('No usernames specified.');
     }
 
     this.ux.log('Deleteing Workspaces for users:');

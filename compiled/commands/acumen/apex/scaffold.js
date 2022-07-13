@@ -19,10 +19,7 @@ class Scaffold extends command_base_1.CommandBase {
         if (this.flags.options) {
             options = await options_factory_1.OptionsFactory.get(scaffold_options_1.ScaffoldOptions, this.flags.options);
             if (!options) {
-                this.ux.log(`Unable to read options file: ${this.flags.options}.`);
-                // Set the proper exit code to indicate violation/failure
-                process.exitCode = 1;
-                return;
+                this.raiseError(`Unable to read options file: ${this.flags.options}.`);
             }
         }
         else {
@@ -54,10 +51,10 @@ class Scaffold extends command_base_1.CommandBase {
         if (!schema) {
             schema = await sfdx_tasks_1.SfdxTasks.describeObject(this.orgAlias, sObjectType);
             if (!schema) {
-                throw new Error('The returned schema is null.');
+                this.raiseError('The returned schema is null.');
             }
             if (!schema.fields) {
-                throw new Error('The returned schema does not contain a fields member.');
+                this.raiseError('The returned schema does not contain a fields member.');
             }
             this.schemas.set(schema.name.split('__')[0], schema);
         }
@@ -113,12 +110,12 @@ class Scaffold extends command_base_1.CommandBase {
     generateFieldValue(field) {
         // https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_variables_global_objecttype_schema_fields_reference.htm
         if (!field) {
-            throw new Error('The field argument cannot be null.');
+            this.raiseError('The field argument cannot be null.');
         }
         const noUnderscoreName = field.name.split('__')[0].replace(/_/g, '');
         const getStr = (fld, maxLength) => {
             if (!fld) {
-                throw new Error('The fld argument cannot be null.');
+                this.raiseError('The fld argument cannot be null.');
             }
             const value = fld.name;
             let strLen = fld.length;
@@ -134,7 +131,7 @@ class Scaffold extends command_base_1.CommandBase {
         const getDec = (fld, maxLength) => {
             var _a;
             if (!fld) {
-                throw new Error('The fld argument cannot be null.');
+                this.raiseError('The fld argument cannot be null.');
             }
             let num = '';
             let numLen = fld.precision;
@@ -176,7 +173,7 @@ class Scaffold extends command_base_1.CommandBase {
         const getValue = (fld) => {
             var _a, _b;
             if (!fld) {
-                throw new Error('The fld argument cannot be null.');
+                this.raiseError('The fld argument cannot be null.');
             }
             switch (fld.type) {
                 case 'anytype':

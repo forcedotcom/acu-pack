@@ -189,7 +189,7 @@ export default class Permissions extends CommandBase {
       const rowIndex = rows.indexOf(apiName);
       // Compare to zero NOT -1 since we added one above....
       if (rowIndex === 0) {
-        throw new Error(`Unable to find apiName:'${apiName}' in row collection`);
+        this.raiseError(`Unable to find apiName:'${apiName}' in row collection`);
       }
 
       for (const permData of permDatas) {
@@ -197,7 +197,7 @@ export default class Permissions extends CommandBase {
         const colIndex = columns.indexOf(permData[0]);
         // Compare to zero NOT -1 since we added one above....
         if (colIndex === 0) {
-          throw new Error(`Unable to find name:'${permData[0]}' in header collection`);
+          this.raiseError(`Unable to find name:'${permData[0]}' in header collection`);
         }
 
         // Add data to matrix

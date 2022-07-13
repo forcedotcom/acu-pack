@@ -45,10 +45,7 @@ export default class Unmask extends CommandBase {
     } else if (this.flags.userfile) {
       options = await OptionsFactory.get(UnmaskOptions, this.flags.userfile);
       if (!options) {
-        this.ux.log(`Unable to read options file: ${this.flags.userfile as string}.`);
-        // Set the proper exit code to indicate violation/failure
-        process.exitCode = 1;
-        return;
+        this.raiseError(`Unable to read user file: ${this.flags.userfile as string}.`);
       }
       for (const [org, orgUsers] of options.sandboxes) {
         if (this.orgAlias.toUpperCase() === org.toUpperCase()) {
@@ -59,17 +56,11 @@ export default class Unmask extends CommandBase {
     }
 
     if (!options.userQuery) {
-      this.ux.log('No userQuery defined.');
-      // Set the proper exit code to indicate violation/failure
-      process.exitCode = 1;
-      return;
+      this.raiseError('No userQuery defined.');
     }
 
     if (!usernames || usernames.length === 0) {
-      this.ux.log('No usernames specified.');
-      // Set the proper exit code to indicate violation/failure
-      process.exitCode = 1;
-      return;
+      this.raiseError('No usernames specified.');
     }
 
     this.ux.log('Retrieving Users...');

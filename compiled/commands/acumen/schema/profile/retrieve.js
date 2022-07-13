@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const command_1 = require("@salesforce/command");
-const core_1 = require("@salesforce/core");
 const command_base_1 = require("../../../../lib/command-base");
 const utils_1 = require("../../../../lib/utils");
 const profile_download_1 = require("../../../../lib/profile-download");
@@ -12,12 +11,12 @@ class ProfileRetrieve extends command_base_1.CommandBase {
         const profileList = this.flags.names;
         const packageDir = (await sfdx_project_1.default.default()).getDefaultDirectory();
         if (!(await utils_1.default.pathExists(packageDir))) {
-            throw new core_1.SfdxError('No default folder found in sfdx-project.json file');
+            this.raiseError('No default folder found in sfdx-project.json file');
         }
         const orgAllProfilesMap = await profile_download_1.ProfileDownload.checkOrgProfiles(this.orgAlias);
         const orgAllProfiles = [...orgAllProfilesMap.keys()];
         if (profileList.length > 5) {
-            throw new core_1.SfdxError('Only 5 Profiles can be retrieved at once');
+            this.raiseError('Only 5 Profiles can be retrieved at once');
         }
         const notAvailableProfiles = [];
         for (const profile of profileList) {
@@ -26,7 +25,7 @@ class ProfileRetrieve extends command_base_1.CommandBase {
             }
         }
         if (notAvailableProfiles.length > 0) {
-            throw new core_1.SfdxError(`Profiles not found in Org: ${notAvailableProfiles.join(',')}`);
+            this.raiseError(`Profiles not found in Org: ${notAvailableProfiles.join(',')}`);
         }
         this.ux.log('Retrieving Profiles...');
         const profileDownloader = new profile_download_1.ProfileDownload(this.connection, this.orgAlias, profileList, orgAllProfilesMap, path.join(process.cwd()), this.ux);

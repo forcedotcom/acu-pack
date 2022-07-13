@@ -41,10 +41,7 @@ export default class Report extends CommandBase {
       }
     }
     if (recordCount !== 0) {
-      this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
-      // Set the proper exit code to indicate violation/failure
-      process.exitCode = 1;
-      return;
+      this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
     }
 
     // Get Code Coverage Report

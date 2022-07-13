@@ -38,10 +38,7 @@ export default class Execute extends CommandBase {
       }
     }
     if (recordCount !== 0) {
-      this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
-      // Set the proper exit code to indicate violation/failure
-      process.exitCode = 1;
-      return;
+      this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
     }
 
     // Execute tests (with CodeCoverage) ?
@@ -55,9 +52,7 @@ export default class Execute extends CommandBase {
     // Enqueue the Apex tests
     let jobInfo = await SfdxTasks.enqueueApexTests(this.orgAlias, testClasses);
     if (!jobInfo) {
-      this.ux.log('An unknown error occurred enqueuing Apex Tests');
-      process.exitCode = 1;
-      return;
+      this.raiseError('An unknown error occurred enqueuing Apex Tests');
     }
 
     this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
@@ -83,9 +78,7 @@ export default class Execute extends CommandBase {
       }
 
       if (!jobInfo.isDone()) {
-        this.ux.log('Timeout while waiting for Apex Test Job to Complete:');
-        this.ux.log(JSON.stringify(jobInfo));
-        process.exitCode = 1;
+        this.raiseError(`Timeout while waiting for Apex Test Job to Complete:${JSON.stringify(jobInfo)}`);
         return;
       }
     }
@@ -99,9 +92,7 @@ export default class Execute extends CommandBase {
     }
 
     if (recordCount !== 0) {
-      this.ux.log(`${recordCount} Apex Test(s) are still executing - please try again later.`);
-      // Set the proper exit code to indicate violation/failure
-      process.exitCode = 1;
+      this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
       return;
     }
     this.ux.log('Apex Tests Completed');

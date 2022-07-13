@@ -51,7 +51,7 @@ class Dictionary extends command_base_1.CommandBase {
                             }
                         }
                         if (nameFieldIndex === -1) {
-                            throw new Error('No Name field found');
+                            this.raiseError('No Name field found');
                         }
                     }
                     const fieldDefinitionMap = await this.entityDefinitionValues(metaDataType, entityDefinitionFields);

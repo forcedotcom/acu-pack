@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const path = require("path");
 const command_1 = require("@salesforce/command");
-const core_1 = require("@salesforce/core");
-// import { AnyJson } from '@salesforce/ts-types';
 const command_base_1 = require("../../../lib/command-base");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 const sfdx_permission_1 = require("../../../lib/sfdx-permission");
@@ -25,7 +23,7 @@ class Permissions extends command_base_1.CommandBase {
         this.packageFileName = this.flags.package || Permissions.packageFileName;
         const packageDir = path.dirname(this.packageFileName);
         if (packageDir && !await utils_1.default.pathExists(packageDir)) {
-            throw new core_1.SfdxError(`The specified package folder does not exist: '${packageDir}'`);
+            this.raiseError(`The specified package folder does not exist: '${packageDir}'`);
         }
         this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
         const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);

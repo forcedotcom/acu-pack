@@ -1,7 +1,5 @@
 import path = require('path');
 import { flags } from '@salesforce/command';
-import { SfdxError } from '@salesforce/core';
-// import { AnyJson } from '@salesforce/ts-types';
 import { CommandBase } from '../../../lib/command-base';
 import { SfdxTasks } from '../../../lib/sfdx-tasks';
 import { SfdxPermission } from '../../../lib/sfdx-permission';
@@ -60,7 +58,7 @@ export default class Permissions extends CommandBase {
 
     const packageDir = path.dirname(this.packageFileName);
     if (packageDir && !await Utils.pathExists(packageDir)) {
-      throw new SfdxError(`The specified package folder does not exist: '${packageDir}'`);
+      this.raiseError(`The specified package folder does not exist: '${packageDir}'`);
     }
 
     this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
