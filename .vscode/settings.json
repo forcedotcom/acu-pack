@@ -7,7 +7,8 @@
     "**/.DS_Store": true
   },
   "search.exclude": {
-    "**/bin": true
+    "**/bin": true,
+    "**compiled/**/*": true
   },
   "salesforcedx-vscode-core.show-cli-success-msg": false
 }
