@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class Constants {
 }
 exports.default = Constants;
+Constants.PLUGIN_NAME = 'acu-pack';
 Constants.DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
 Constants.METADATA_COVERAGE_REPORT_URL = 'https://mdcoverage.secure.force.com/services/apexrest/report';
 Constants.DEFAULT_PACKAGE_PATH = 'manifest/package.xml';

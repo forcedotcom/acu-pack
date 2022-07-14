@@ -48,7 +48,7 @@ describe('XPath Tests', function () {
             <readable>true</readable>
         </fieldPermissions>
     </Profile>`);
-    const result = spawnSync(path.join(path.resolve(process.cwd()), './bin/run.cmd'), ['acumen:source:xpath', '-o', optionsPath]);
+    const result = spawnSync(path.join(path.resolve(process.cwd()), './bin/run.cmd'), [`${Constants.PLUGIN_NAME}:source:xpath`, '-o', optionsPath]);
     expect(result.status).to.equal(0);
     await Utils.deleteFile(xmlPath);
   });
@@ -66,7 +66,7 @@ describe('XPath Tests', function () {
             <readable>true</readable>
         </fieldPermissions>
     </Profile>`);
-    const result = spawnSync(path.join(path.resolve(process.cwd()), './bin/run.cmd'), ['acumen:source:xpath', '-o', optionsPath]);
+    const result = spawnSync(path.join(path.resolve(process.cwd()), './bin/run.cmd'), [`${Constants.PLUGIN_NAME}:source:xpath`, '-o', optionsPath]);
     expect(result.status).to.equal(1);
     await Utils.deleteFile(xmlPath);
   });

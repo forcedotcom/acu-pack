@@ -7,7 +7,7 @@ export default class Setup {
     public static destinationRoot = 'test/destination_folder';
     public static md5FilePath = 'test/md5.test.txt';
     public static gitFilePath = 'test/git.test.txt';
-    public static orgAlias = null;// 'mmalling@resilient-koala-5j8tt5.com';
+    public static orgAlias = null;// '';
     /*
     public static get orgAlias(): Promise<String> {
         return (async () => {

@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
 import Setup from '../../lib/setup';
 import Utils from '../../../src/lib/utils'
-import Md5 from '../../../src/commands/acumen/source/delta/md5'
+import Md5 from '../../../src/commands/acu-pack/source/delta/md5'
 import { DeltaOptions } from '../../../src/lib/delta-provider'
 
 const bogusMd5FilePath = 'bogus_' + Setup.md5FilePath;

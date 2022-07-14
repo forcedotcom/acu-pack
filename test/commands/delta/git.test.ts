@@ -3,7 +3,7 @@ import { expect } from '@salesforce/command/lib/test';
 import Setup from '../../lib/setup';
 import { DeltaOptions } from '../../../src/lib/delta-provider'
 import Utils from '../../../src/lib/utils'
-import Git from '../../../src/commands/acumen/source/delta/git'
+import Git from '../../../src/commands/acu-pack/source/delta/git'
 
 const bogusGitFilePath = 'bogus_' + Setup.gitFilePath;
 const gitProvider = new Git.gitDeltaProvider();

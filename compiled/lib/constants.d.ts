@@ -1,4 +1,5 @@
 export default class Constants {
+    static readonly PLUGIN_NAME = "acu-pack";
     static readonly DEFAULT_XML_NAMESPACE = "http://soap.sforce.com/2006/04/metadata";
     static readonly METADATA_COVERAGE_REPORT_URL = "https://mdcoverage.secure.force.com/services/apexrest/report";
     static readonly DEFAULT_PACKAGE_PATH = "manifest/package.xml";

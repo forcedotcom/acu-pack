@@ -71,6 +71,6 @@ class CommandBase extends command_1.SfdxCommand {
 exports.CommandBase = CommandBase;
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-CommandBase.messages = core_1.Messages.loadMessages('@acumensolutions/acu-pack', 'acumen');
+CommandBase.messages = core_1.Messages.loadMessages('acu-pack', 'acu-pack');
 CommandBase.args = [{ name: 'file' }];
 //# sourceMappingURL=command-base.js.map
