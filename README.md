@@ -1,6 +1,6 @@
 # acu-pack
 
-SFDX CLI Extensions
+SFDX CLI Extensions from Salesforce Customer Success Group (CSG)
 
 [![Version](https://img.shields.io/npm/v/acu-pack.svg)](https://www.npmjs.com/package/acu-pack/acu-pack)
 [![Downloads/week](https://img.shields.io/npm/dw/acu-pack.svg)](https://www.npmjs.com/package/acu-pack/acu-pack)
