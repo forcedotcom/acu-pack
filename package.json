@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "author": "Salesforce Customer Success Group (CSG)",
   "bugs": {
-    "url": "https://github.com/CSGAMERSServices/acu-pack/issues"
+    "url": "https://github.com/forcedotcom/acu-pack/issues"
   },
   "dependencies": {
     "@oclif/command": "^1",
@@ -73,7 +73,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/CSGAMERSServices/acu-pack",
+  "homepage": "https://github.com/forcedotcom/acu-pack",
   "keywords": [
     "sfdx-plugin",
     "Salesforce",
@@ -89,7 +89,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CSGAMERSServices/acu-pack"
+    "url": "git+https://github.com/forcedotcom/acu-pack"
   },
   "scripts": {
     "lint": "eslint src/**/*.ts test/**/*.ts",
