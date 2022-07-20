@@ -53,3 +53,6 @@ demo/*
 
 results.txt
 /*.xlsx
+
+.sf/*
+*.tsbuildinfo
