@@ -56,3 +56,5 @@ results.txt
 
 .sf/*
 *.tsbuildinfo
+
+package-lock.json
