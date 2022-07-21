@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 import xpath = require('xpath');
-import { DOMParser as dom } from 'xmldom';
+import { DOMParser as dom } from '@xmldom/xmldom';
 import * as xml2js from 'xml2js';
 import { Logger } from '@salesforce/core';
 import Constants from './constants';
