@@ -92,7 +92,7 @@ export default class Permissions extends CommandBase {
     let counter = 0;
     for await (const entry of SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)) {
       metadataMap.set(entry.name, entry.members);
-      this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name as string}`);
+      this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name as string}`);
     }
     // Write the final package
     await SfdxCore.writePackageFile(metadataMap, this.packageFileName);
