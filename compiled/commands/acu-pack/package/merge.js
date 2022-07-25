@@ -5,7 +5,7 @@ const command_base_1 = require("../../../lib/command-base");
 const xml_merge_1 = require("../../../lib/xml-merge");
 class Merge extends command_base_1.CommandBase {
     async runInternal() {
-        await xml_merge_1.default.mergeXmlFiles(this.flags.source, this.flags.destination, this.ux);
+        await xml_merge_1.default.mergeXmlFiles(this.flags.source, this.flags.destination, this.flags.compare, this.ux);
     }
 }
 exports.default = Merge;
@@ -13,6 +13,8 @@ Merge.description = command_base_1.CommandBase.messages.getMessage('package.merg
 Merge.examples = [
     `$ sfdx acu-pack:package:merge -s manifest/package.xml -d manifest/package-sprint17.xml
     Merges package.xml into package-sprint17.xml`,
+    `$ sfdx acu-pack:package:merge -s manifest/package-a.xml -d manifest/package-b.xml -c
+    Compares package-a.xml to package-b.xml and removes common elements from BOTH packages - leaving only the differences.`,
 ];
 Merge.flagsConfig = {
     source: command_1.flags.filepath({
@@ -25,9 +27,9 @@ Merge.flagsConfig = {
         required: true,
         description: command_base_1.CommandBase.messages.getMessage('package.merge.destinationFlagDescription'),
     }),
-    ignore: command_1.flags.boolean({
-        char: 'i',
-        description: command_base_1.CommandBase.messages.getMessage('package.merge.ignoreCommonFlagDescription'),
+    compare: command_1.flags.boolean({
+        char: 'c',
+        description: command_base_1.CommandBase.messages.getMessage('package.merge.isPackageCompareFlagDescription'),
     }),
 };
 //# sourceMappingURL=merge.js.map

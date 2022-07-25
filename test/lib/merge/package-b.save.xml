@@ -24,5 +24,11 @@
 		<members>Zip2__c</members>
 		<members>Common__c</members>
 	</types>
+	<types>
+		<name>Tabs</name>
+		<members>Tab1</members>
+		<members>Tab2</members>
+		<members>Tab3</members>
+	</types>
 	<version>47.0</version>
 </Package>

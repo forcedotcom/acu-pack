@@ -3,10 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs_1 = require("fs");
 const utils_1 = require("./utils");
+class MergeResult {
+}
 class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    static async mergeXmlFiles(sourceXmlFile, destinationXmlFile, ux, keepOnlyDifferences) {
-        let merged;
+    static async mergeXmlFiles(sourceXmlFile, destinationXmlFile, isPackageCompare, ux) {
+        let results;
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
         try {
             // Reset log file
@@ -20,20 +22,27 @@ class XmlMerge {
             if (await utils_1.default.pathExists(destinationXmlFile)) {
                 const destination = await utils_1.default.readObjectFromXmlFile(destinationXmlFile);
                 await this.logMessage(`Parsed destination package: ${destinationXmlFile}`, logFilePath, ux);
-                merged = this.mergeObjects(source, destination, keepOnlyDifferences);
+                results = this.mergeObjects(source, destination, isPackageCompare);
             }
             else {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
-                merged = source;
+                results.merged = source;
             }
-            await utils_1.default.writeObjectToXmlFile(destinationXmlFile, merged);
-            await this.logMessage(`Merged package written: ${destinationXmlFile}`, logFilePath, ux);
+            if (!isPackageCompare) {
+                await utils_1.default.writeObjectToXmlFile(destinationXmlFile, results.merged);
+                await this.logMessage(`Merged package written: ${destinationXmlFile}`, logFilePath, ux);
+            }
+            else {
+                await utils_1.default.writeObjectToXmlFile(sourceXmlFile, results.source);
+                await utils_1.default.writeObjectToXmlFile(destinationXmlFile, results.destination);
+                await this.logMessage(`Packages written: ${sourceXmlFile} & ${destinationXmlFile}`, logFilePath, ux);
+            }
         }
         catch (err) {
             await this.logMessage(err, logFilePath, ux);
         }
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
-        return merged;
+        return results.merged;
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async mergeXmlToFile(sourceXml, destinationXmlFile) {
@@ -71,53 +80,69 @@ class XmlMerge {
         }
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    static mergeObjects(source, destination, keepOnlyDifferences) {
-        if (!source.Package) {
-            source['Package'] = {};
+    static mergeObjects(source, destination, isPackageCompare) {
+        const result = new MergeResult();
+        result.source = source;
+        result.destination = destination;
+        result.merged = new Object(destination);
+        if (!result.source.Package) {
+            result.source['Package'] = {};
         }
-        if (!source.Package.types) {
-            source.Package['types'] = [];
+        if (!result.source.Package.types) {
+            result.source.Package['types'] = [];
         }
-        const merged = new Object(destination);
-        if (!merged.Package) {
-            merged['Package'] = {};
+        if (!result.merged.Package) {
+            result.merged['Package'] = {};
         }
-        if (!merged.Package.types) {
-            merged.Package['types'] = [];
+        if (!result.merged.Package.types) {
+            result.merged.Package['types'] = [];
         }
-        for (const sType of source.Package.types) {
-            const dType = this.getType(merged.Package, sType.name[0]);
+        for (const sType of result.source.Package.types) {
+            const pops = [];
+            const typeName = sType.name[0];
+            const dType = this.getType(result.merged.Package, typeName);
             if (!dType) {
-                merged.Package.types.push(sType);
+                if (!isPackageCompare) {
+                    result.merged.Package.types.push(sType);
+                }
                 continue;
             }
             if (!sType.members) {
                 continue;
             }
             if (!dType.members) {
-                dType.members = sType.members;
+                if (!isPackageCompare) {
+                    dType.members = sType.members;
+                }
+                continue;
             }
-            else {
-                for (const sMem of sType.members) {
-                    let dMem;
-                    for (const memName of dType.members) {
-                        if (sMem === memName) {
-                            dMem = memName;
-                            break;
-                        }
-                    }
-                    if (!dMem) {
-                        dType.members.push(sMem);
-                    }
-                    else if (keepOnlyDifferences) {
-                        dType.members.splice(dType.members.indexOf(dMem), 1);
+            for (const sMem of sType.members) {
+                let dMem;
+                for (const memName of dType.members) {
+                    if (sMem === memName) {
+                        dMem = memName;
+                        break;
                     }
                 }
+                if (!dMem) {
+                    if (!isPackageCompare) {
+                        dType.members.push(sMem);
+                    }
+                }
+                else if (isPackageCompare) {
+                    pops.push(dMem);
+                }
             }
+            // remove all common types here
+            for (const pop of pops) {
+                sType.members.splice(sType.members.indexOf(pop), 1);
+                dType.members.splice(dType.members.indexOf(pop), 1);
+            }
+            sType.members.sort();
             dType.members.sort();
         }
-        merged.Package.version = source.Package.version;
-        return merged;
+        result.merged.Package.version = source.Package.version;
+        return result;
     }
 }
 exports.default = XmlMerge;

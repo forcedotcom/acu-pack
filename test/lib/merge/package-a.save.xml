@@ -27,5 +27,11 @@
 	<types>
 		<name>CustomApplication</name>
 	</types>
+	<types>
+		<name>Tabs</name>
+		<members>Tab1</members>
+		<members>Tab2</members>
+		<members>Tab3</members>
+	</types>
 	<version>48.0</version>
 </Package>

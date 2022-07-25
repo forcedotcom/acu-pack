@@ -8,6 +8,8 @@ export default class Merge extends CommandBase {
   public static examples = [
     `$ sfdx acu-pack:package:merge -s manifest/package.xml -d manifest/package-sprint17.xml
     Merges package.xml into package-sprint17.xml`,
+    `$ sfdx acu-pack:package:merge -s manifest/package-a.xml -d manifest/package-b.xml -c
+    Compares package-a.xml to package-b.xml and removes common elements from BOTH packages - leaving only the differences.`,
   ];
 
   protected static flagsConfig = {
@@ -21,13 +23,13 @@ export default class Merge extends CommandBase {
       required: true,
       description: CommandBase.messages.getMessage('package.merge.destinationFlagDescription'),
     }),
-    ignore: flags.boolean({
-      char: 'i',
-      description: CommandBase.messages.getMessage('package.merge.ignoreCommonFlagDescription'),
+    compare: flags.boolean({
+      char: 'c',
+      description: CommandBase.messages.getMessage('package.merge.isPackageCompareFlagDescription'),
     }),
   };
 
   protected async runInternal(): Promise<void> {
-    await xmlMerge.mergeXmlFiles(this.flags.source, this.flags.destination, this.ux);
+    await xmlMerge.mergeXmlFiles(this.flags.source, this.flags.destination, this.flags.compare, this.ux);
   }
 }
