@@ -105,27 +105,25 @@ export default class XmlMerge {
         if (!result.merged.Package.types) {
             result.merged.Package['types'] = [];
         }
+        if(!result.merged.Package.version) {
+            result.merged.Package['version'] = result.source.Package.version;
+        } 
         
         for (const sType of result.source.Package.types) {
-            const pops = [];
-            const typeName = sType.name[0];
-            const dType: any = this.getType(result.merged.Package, typeName);
-            if (!dType) {
+            if (!sType.members) {
+                continue;
+            }
+            Utils.sortArray(sType.members);
+
+            const dType: any = this.getType(result.merged.Package, sType.name[0]);
+            if (!dType || !dType.members) {
                 if(!isPackageCompare) {
                     result.merged.Package.types.push(sType);
                 }
                 continue;
             }
-            if (!sType.members) {
-                continue;
-            }
-            if (!dType.members) {
-                if(!isPackageCompare) {
-                    dType.members = sType.members;
-                }
-                continue;
-            } 
             
+            const pops = [];
             for (const sMem of sType.members) {
                 let dMem: string;
                 for (const memName of dType.members) {
@@ -147,10 +145,9 @@ export default class XmlMerge {
                 sType.members.splice(sType.members.indexOf(pop),1);
                 dType.members.splice(dType.members.indexOf(pop),1);
             }
-            sType.members.sort();
-            dType.members.sort();
+            Utils.sortArray(dType.members);
         }
-        result.merged.Package.version = source.Package.version;
+        
         return result;
     }
 }
