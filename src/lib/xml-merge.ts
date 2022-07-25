@@ -54,7 +54,7 @@ export default class XmlMerge {
         let merged: any;
         if (await Utils.pathExists(destinationXmlFile)) {
             const destination = await Utils.readObjectFromXmlFile(destinationXmlFile);
-            merged = this.mergeObjects(sourceXml, destination);
+            merged = this.mergeObjects(sourceXml, destination).merged;
         } else {
             merged = sourceXml;
         }
