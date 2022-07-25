@@ -21,6 +21,10 @@ export default class Merge extends CommandBase {
       required: true,
       description: CommandBase.messages.getMessage('package.merge.destinationFlagDescription'),
     }),
+    ignore: flags.boolean({
+      char: 'i',
+      description: CommandBase.messages.getMessage('package.merge.ignoreCommonFlagDescription'),
+    }),
   };
 
   protected async runInternal(): Promise<void> {

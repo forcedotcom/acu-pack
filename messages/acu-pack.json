@@ -4,7 +4,8 @@
     "merge": {
       "commandDescription": "\r\nMerges one SFDX package file into another.",
       "sourceFlagDescription": "The source SFDX package. This package wins all conflict battles!",
-      "destinationFlagDescription": "The destination SFDX package which contains the merge results. It will be created if it does not exist."
+      "destinationFlagDescription": "The destination SFDX package which contains the merge results. It will be created if it does not exist.",
+      "ignoreCommonFlagDescription": "Include this flag to only show the differences (aka compare) between the two packages in the destination package."
     },
     "permissions": {
       "commandDescription": "\r\nRetrieve all metadata related to Profile security/access permissions.",

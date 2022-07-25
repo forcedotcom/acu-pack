@@ -5,7 +5,7 @@ const fs_1 = require("fs");
 const utils_1 = require("./utils");
 class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    static async mergeXmlFiles(sourceXmlFile, destinationXmlFile, ux) {
+    static async mergeXmlFiles(sourceXmlFile, destinationXmlFile, ux, keepOnlyDifferences) {
         let merged;
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
         try {
@@ -20,7 +20,7 @@ class XmlMerge {
             if (await utils_1.default.pathExists(destinationXmlFile)) {
                 const destination = await utils_1.default.readObjectFromXmlFile(destinationXmlFile);
                 await this.logMessage(`Parsed destination package: ${destinationXmlFile}`, logFilePath, ux);
-                merged = this.mergeObjects(source, destination);
+                merged = this.mergeObjects(source, destination, keepOnlyDifferences);
             }
             else {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
@@ -71,7 +71,7 @@ class XmlMerge {
         }
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    static mergeObjects(source, destination) {
+    static mergeObjects(source, destination, keepOnlyDifferences) {
         if (!source.Package) {
             source['Package'] = {};
         }
@@ -108,6 +108,9 @@ class XmlMerge {
                     }
                     if (!dMem) {
                         dType.members.push(sMem);
+                    }
+                    else if (keepOnlyDifferences) {
+                        dType.members.splice(dType.members.indexOf(dMem), 1);
                     }
                 }
             }

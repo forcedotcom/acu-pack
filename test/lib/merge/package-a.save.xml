@@ -22,6 +22,7 @@
 	<types>
 		<name>CustomObject</name>
 		<members>Zip__c</members>
+		<members>Common__c</members>
 	</types>
 	<types>
 		<name>CustomApplication</name>

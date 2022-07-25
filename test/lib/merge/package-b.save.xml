@@ -19,5 +19,10 @@
 		<members>App2</members>
 		<members>App3</members>
 	</types>
+	<types>
+		<name>CustomObject</name>
+		<members>Zip2__c</members>
+		<members>Common__c</members>
+	</types>
 	<version>47.0</version>
 </Package>

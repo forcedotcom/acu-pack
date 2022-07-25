@@ -4,7 +4,6 @@ import Utils from '../../../src/lib/utils'
 import xmlMerge from '../../../src/lib/xml-merge'
 
 describe('Xml-Merge Tests', function () {
-  const command = 'package:merge';
   const testPath = './test/lib/merge'
   const source = path.join(testPath, 'package-a.xml');
   const destination = path.join(testPath, 'package-b.xml');
@@ -30,8 +29,7 @@ describe('Xml-Merge Tests', function () {
   afterEach(async () => {
     await cleanUp();
   });
-
-  describe('Test XmlMerge', () => {
+  describe('Test Xml Merge', () => {
     it('Can Handle Empty package', async function () {
       const testSource = {
         Package: {
@@ -45,7 +43,7 @@ describe('Xml-Merge Tests', function () {
       expect(merged.Package.types).not.null;
       expect(merged.Package.types.length).equals(parsed.Package.types.length);
     });
-    it(`runs ${command}  -s ${source} -d ${destination}`, async () => {
+    it('Merges Packages', async () => {
       await xmlMerge.mergeXmlFiles(source, destination);
 
       expect(await Utils.pathExists(destination));
@@ -72,7 +70,57 @@ describe('Xml-Merge Tests', function () {
       packType = xmlMerge.getType(merged.Package, 'CustomObject');
       expect(packType).not.null;
       expect(packType.members).not.null;
-      expect(packType.members.length).equals(1);
+      expect(packType.members.length).equals(3);
+
+      // Report
+      packType = xmlMerge.getType(merged.Package, 'CustomApplication');
+      expect(packType).not.null;
+      expect(packType.members).not.null;
+      expect(packType.members.length).equals(3);
+    });
+  });
+  describe('Test Xml Diff', () => {
+    it('Can Handle Empty package', async function () {
+      const testSource = {
+        Package: {
+          version: '49.0'
+        }
+      };
+      const parsed = await Utils.readObjectFromXmlFile(destination);
+      const merged = xmlMerge.mergeObjects(testSource, parsed, true);
+      expect(merged).not.null;
+      expect(merged.Package).not.null;
+      expect(merged.Package.types).not.null;
+      expect(merged.Package.types.length).equals(parsed.Package.types.length);
+    });
+    it('Diffs Packages', async () => {
+      await xmlMerge.mergeXmlFiles(source, destination, null, true);
+
+      expect(await Utils.pathExists(destination));
+
+      const merged = await Utils.readObjectFromXmlFile(destination);
+      expect(merged).not.null;
+      expect(merged.Package).not.null;
+      expect(merged.Package.types).not.null;
+      expect(merged.Package.types.length).equals(4);
+
+      // ApexClass
+      let packType = xmlMerge.getType(merged.Package, 'ApexClass');
+      expect(packType).not.null;
+      expect(packType.members).not.null;
+      expect(packType.members.length).equals(6);
+
+      // Report
+      packType = xmlMerge.getType(merged.Package, 'Report');
+      expect(packType).not.null;
+      expect(packType.members).not.null;
+      expect(packType.members.length).equals(6);
+
+      // Report
+      packType = xmlMerge.getType(merged.Package, 'CustomObject');
+      expect(packType).not.null;
+      expect(packType.members).not.null;
+      expect(packType.members.length).equals(2);
 
       // Report
       packType = xmlMerge.getType(merged.Package, 'CustomApplication');

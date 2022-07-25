@@ -4,7 +4,7 @@ import Utils from './utils';
 
 export default class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    public static async mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, ux?: any): Promise<any> {
+    public static async mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, ux?: any, keepOnlyDifferences?: boolean): Promise<any> {
         let merged: any;
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
         try {
@@ -24,7 +24,7 @@ export default class XmlMerge {
                 const destination = await Utils.readObjectFromXmlFile(destinationXmlFile);
                 await this.logMessage(`Parsed destination package: ${destinationXmlFile}`, logFilePath, ux);
 
-                merged = this.mergeObjects(source, destination);
+                merged = this.mergeObjects(source, destination, keepOnlyDifferences);
             } else {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
                 merged = source;
@@ -76,7 +76,7 @@ export default class XmlMerge {
     }
 
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    public static mergeObjects(source: any, destination: any): any {
+    public static mergeObjects(source: any, destination: any, keepOnlyDifferences?: boolean): any {
         if (!source.Package) {
             source['Package'] = {};
         }
@@ -113,9 +113,12 @@ export default class XmlMerge {
                     }
                     if (!dMem) {
                         dType.members.push(sMem);
+                    } else if(keepOnlyDifferences) {
+                        dType.members.splice(dType.members.indexOf(dMem),1);
                     }
                 }
             }
+
             dType.members.sort();
         }
         merged.Package.version = source.Package.version;

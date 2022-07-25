@@ -25,5 +25,9 @@ Merge.flagsConfig = {
         required: true,
         description: command_base_1.CommandBase.messages.getMessage('package.merge.destinationFlagDescription'),
     }),
+    ignore: command_1.flags.boolean({
+        char: 'i',
+        description: command_base_1.CommandBase.messages.getMessage('package.merge.ignoreCommonFlagDescription'),
+    }),
 };
 //# sourceMappingURL=merge.js.map
