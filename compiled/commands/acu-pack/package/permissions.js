@@ -46,7 +46,7 @@ class Permissions extends command_base_1.CommandBase {
             for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)), _c; _c = await _b.next(), !_c.done;) {
                 const entry = _c.value;
                 metadataMap.set(entry.name, entry.members);
-                this.ux.log(`Processed (${++counter}/${this.metaNames.size}): ${entry.name}`);
+                this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
