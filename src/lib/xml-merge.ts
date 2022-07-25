@@ -30,6 +30,9 @@ export default class XmlMerge {
                 const destination = await Utils.readObjectFromXmlFile(destinationXmlFile);
                 await this.logMessage(`Parsed destination package: ${destinationXmlFile}`, logFilePath, ux);
                 results = this.mergeObjects(source, destination, isPackageCompare);
+            } else if(isPackageCompare) {
+                await this.logMessage('Destination package does not exist.', logFilePath, ux);    
+                return;
             } else {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
                 results.merged = source;
