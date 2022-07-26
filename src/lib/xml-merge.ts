@@ -1,17 +1,17 @@
 import path = require('path');
 import { promises as fs } from 'fs';
 import Utils from './utils';
+import { SfdxCore } from './sfdx-core';
 
 class MergeResult {
     public source: any;
     public destination: any;
-    public merged: any;
 }
 
 export default class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static async mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, isPackageCompare?: boolean, ux?: any): Promise<any> {
-        let results: MergeResult;
+        let results = new MergeResult();
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
         try {
 
@@ -35,10 +35,10 @@ export default class XmlMerge {
                 return;
             } else {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
-                results.merged = source;
+                results.destination = source;
             }
             if(!isPackageCompare) {
-                await Utils.writeObjectToXmlFile(destinationXmlFile, results.merged);
+                await Utils.writeObjectToXmlFile(destinationXmlFile, results.destination);
                 await this.logMessage(`Merged package written: ${destinationXmlFile}`, logFilePath, ux);
             } else {
                 await Utils.writeObjectToXmlFile(sourceXmlFile, results.source);
@@ -49,7 +49,7 @@ export default class XmlMerge {
             await this.logMessage(err, logFilePath, ux);
         }
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
-        return results.merged;
+        return results.destination;
     }
 
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
@@ -57,7 +57,7 @@ export default class XmlMerge {
         let merged: any;
         if (await Utils.pathExists(destinationXmlFile)) {
             const destination = await Utils.readObjectFromXmlFile(destinationXmlFile);
-            merged = this.mergeObjects(sourceXml, destination).merged;
+            merged = this.mergeObjects(sourceXml, destination).destination;
         } else {
             merged = sourceXml;
         }
@@ -93,8 +93,7 @@ export default class XmlMerge {
         
         const result = new MergeResult();
         result.source = source;
-        result.destination = destination;
-        result.merged = new Object(destination);
+        result.destination = destination ?? new Object(destination);
 
         if (!result.source.Package) {
             result.source['Package'] = {};
@@ -102,14 +101,14 @@ export default class XmlMerge {
         if (!result.source.Package.types) {
             result.source.Package['types'] = [];
         }
-        if (!result.merged.Package) {
-            result.merged['Package'] = {};
+        if (!result.destination.Package) {
+            result.destination['Package'] = {};
         }
-        if (!result.merged.Package.types) {
-            result.merged.Package['types'] = [];
+        if (!result.destination.Package.types) {
+            result.destination.Package['types'] = [];
         }
-        if(!result.merged.Package.version) {
-            result.merged.Package['version'] = result.source.Package.version;
+        if(!result.destination.Package.version) {
+            result.destination.Package['version'] = result.source.Package.version;
         } 
         
         for (const sType of result.source.Package.types) {
@@ -118,10 +117,10 @@ export default class XmlMerge {
             }
             Utils.sortArray(sType.members);
 
-            const dType: any = this.getType(result.merged.Package, sType.name[0]);
+            const dType: any = this.getType(result.destination.Package, sType.name[0]);
             if (!dType || !dType.members) {
                 if(!isPackageCompare) {
-                    result.merged.Package.types.push(sType);
+                    result.destination.Package.types.push(sType);
                 }
                 continue;
             }
@@ -150,7 +149,11 @@ export default class XmlMerge {
             }
             Utils.sortArray(dType.members);
         }
-        
+        // If we removed items we may need to minify
+        if(isPackageCompare) {
+            result.source = SfdxCore.minifyPackage(result.source);
+            result.destination = SfdxCore.minifyPackage(result.destination);
+        }
         return result;
     }
 }

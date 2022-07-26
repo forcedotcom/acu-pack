@@ -39,9 +39,9 @@ describe('Xml-Merge Tests', function () {
       const parsed = await Utils.readObjectFromXmlFile(destination);
       const merged = xmlMerge.mergeObjects(testSource, parsed);
       expect(merged).not.null;
-      expect(merged.merged.Package).not.null;
-      expect(merged.merged.Package.types).not.null;
-      expect(merged.merged.Package.types.length).equals(parsed.Package.types.length);
+      expect(merged.destination.Package).not.null;
+      expect(merged.destination.Package.types).not.null;
+      expect(merged.destination.Package.types.length).equals(parsed.Package.types.length);
     });
     it('Merges Packages', async () => {
       await xmlMerge.mergeXmlFiles(source, destination);
@@ -95,9 +95,9 @@ describe('Xml-Merge Tests', function () {
       const parsed = await Utils.readObjectFromXmlFile(destination);
       const merged = xmlMerge.mergeObjects(testSource, parsed, true);
       expect(merged).not.null;
-      expect(merged.merged.Package).not.null;
-      expect(merged.merged.Package.types).not.null;
-      expect(merged.merged.Package.types.length).equals(parsed.Package.types.length);
+      expect(merged.destination.Package).not.null;
+      expect(merged.destination.Package.types).not.null;
+      expect(merged.destination.Package.types.length).equals(parsed.Package.types.length);
     });
     it('Diffs Packages', async () => {
       await xmlMerge.mergeXmlFiles(source, destination, true);
@@ -108,7 +108,7 @@ describe('Xml-Merge Tests', function () {
       const dMerged = await Utils.readObjectFromXmlFile(destination);
 
       // Same numnber of types
-      expect(sMerged.Package.types.length).equals(dMerged.Package.types.length);
+      expect(sMerged.Package.types.length).to.not.equal(dMerged.Package.types.length);
 
       // ApexClass
       let sPackType = xmlMerge.getType(sMerged.Package, 'ApexClass');
@@ -119,7 +119,7 @@ describe('Xml-Merge Tests', function () {
       sPackType = xmlMerge.getType(sMerged.Package, 'Report');
       dPackType = xmlMerge.getType(dMerged.Package, 'Report');
       expect(sPackType.members.length).equals(6);
-      expect(!dPackType.members);
+      expect(!dPackType);
 
       // CustomObject
       sPackType = xmlMerge.getType(sMerged.Package, 'CustomObject');
@@ -130,14 +130,14 @@ describe('Xml-Merge Tests', function () {
       // CustomApplication
       sPackType = xmlMerge.getType(sMerged.Package, 'CustomApplication');
       dPackType = xmlMerge.getType(dMerged.Package, 'CustomApplication');
-      expect(!sPackType.members);
+      expect(!sPackType);
       expect(dPackType.members.length).equals(3);
 
       // Tabs
       sPackType = xmlMerge.getType(sMerged.Package, 'Tabs');
       dPackType = xmlMerge.getType(dMerged.Package, 'Tabs');
       expect(!sPackType.members);
-      expect(!dPackType.members);
+      expect(!dPackType);
     });
   });
 });

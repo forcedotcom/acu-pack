@@ -9,7 +9,7 @@ const xml_merge_1 = require("./xml-merge");
 class SfdxCore {
     static command(cmd) {
         return new Promise((resolve, reject) => {
-            (0, child_process_1.exec)(cmd, SfdxCore.bufferOptions, (error, stdout) => {
+            child_process_1.exec(cmd, SfdxCore.bufferOptions, (error, stdout) => {
                 let response;
                 try {
                     if (stdout && String(stdout) !== '') {
@@ -63,6 +63,38 @@ class SfdxCore {
             });
         }
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+        return packageObj;
+    }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    static minifyPackage(packageObj) {
+        if (!packageObj) {
+            return null;
+        }
+        const popIndexes = [];
+        let typeIndex = 0;
+        for (const sType of packageObj.Package.types) {
+            if (!sType.members) {
+                continue;
+            }
+            const memPopIndexes = [];
+            let memIndex = 0;
+            for (const member of sType.members) {
+                if (!member || member === '') {
+                    memPopIndexes.push(memIndex);
+                }
+                ++memIndex;
+            }
+            while (memPopIndexes.length) {
+                sType.members.splice(memPopIndexes.pop(), 1);
+            }
+            if (!sType.members || sType.members.length === 0) {
+                popIndexes.push(typeIndex);
+            }
+            ++typeIndex;
+        }
+        while (popIndexes.length) {
+            packageObj.Package.types.splice(popIndexes.pop(), 1);
+        }
         return packageObj;
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */

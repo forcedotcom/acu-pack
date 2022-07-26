@@ -1,7 +1,6 @@
 declare class MergeResult {
     source: any;
     destination: any;
-    merged: any;
 }
 export default class XmlMerge {
     static mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, isPackageCompare?: boolean, ux?: any): Promise<any>;
