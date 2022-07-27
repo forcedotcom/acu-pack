@@ -4,15 +4,6 @@ import { CommandBase } from '../../../../lib/command-base';
 import { SfdxQuery } from '../../../../lib/sfdx-query';
 import { Office } from '../../../../lib/office';
 
-class AccessDetail {
-  public permSetLabel: string;
-  public permSetId: string;
-  public profileLabel: string;
-  public profileId: string;
-  public username: string;
-  public userId: string;
-  public expirationDate: string;
-}
 export default class Access extends CommandBase {
   public static description = CommandBase.messages.getMessage('admin.user.access.commandDescription');
 
@@ -55,7 +46,7 @@ export default class Access extends CommandBase {
   private permissionSetMap = new Map<string,any>();
 
   protected async runInternal(): Promise<void> {
-    const appAccessByAppLabel = new Map<string, AccessDetail[]>();
+    const appAccessByAppLabel = new Map<string, any[]>();
     const permissionSetsById = new Map<string, any[]>();
 
     this.ux.log('Getting PermissionSets...');
@@ -71,12 +62,12 @@ export default class Access extends CommandBase {
     }
 
     let query = 'SELECT Id, ApplicationId, Name, Label FROM AppMenuItem';
-    if(apps.length > 0) {
+    if(apps?.length > 0) {
       const appsFilter = `'${apps.join("','")}'`;
       query += ` WHERE Label IN (${appsFilter})`;
-      this.ux.log(`Getting Apps: ${appsFilter}`);
+      this.ux.log(`Getting Specific App Access: ${appsFilter}`);
     } else {
-      this.ux.log('Getting Apps: All');
+      this.ux.log('Getting All App Access');
     }
     const appMenuItems = await SfdxQuery.doSoqlQuery(this.orgAlias, query);
 
@@ -108,28 +99,10 @@ export default class Access extends CommandBase {
           this.ux.log(`Reusing Users for PermissionSet: ${String(permissionSet.Label)}`);
         }
         
-        for(const permissionSetAssignment of permissionSetAssignments) {
-          const accessDetail = new AccessDetail();
-          // User info
-          accessDetail.userId = permissionSetAssignment.AssigneeId;
-          accessDetail.username = permissionSetAssignment.Assignee?.Username;
-
-          // PermissionSet Info
-          accessDetail.permSetId = permissionSetAssignment.PermissionSetId;
-          accessDetail.permSetLabel = permissionSetAssignment.PermissionSet?.Label;
-
-          // Profile Info
-          accessDetail.profileId = permissionSetAssignment.PermissionSet.ProfileId;
-          accessDetail.profileLabel = permissionSetAssignment.PermissionSet.Profile?.Name;
-          
-          // Expiration?
-          accessDetail.expirationDate = permissionSetAssignment.ExpirationDate;
-
-          if(!appAccessByAppLabel.has(appMenuItem.Label)) {
-            appAccessByAppLabel.set(appMenuItem.Label, []);
-          }
-          appAccessByAppLabel.get(appMenuItem.Label).push(accessDetail);
+        if(!appAccessByAppLabel.has(appMenuItem.Label)) {
+          appAccessByAppLabel.set(appMenuItem.Label, []);
         }
+        appAccessByAppLabel.get(appMenuItem.Label).push(...permissionSetAssignments);
       }
     }
     
@@ -143,15 +116,14 @@ export default class Access extends CommandBase {
       const workbookMap = new Map<string, string[][]>();
       for (const appLabel of appAccessByAppLabel.keys() ) {
         const sheet: string[][] = [['Username', 'User Id','PermissionSet Label','PermissionSet Id','Profile Label','Profile Id','Expiration Date']];
-        for (const accessDetail of appAccessByAppLabel.get(appLabel) ) {
+        for (const permissionSetAssignment of appAccessByAppLabel.get(appLabel) ) {
           sheet.push([
-            accessDetail.username,
-            accessDetail.userId,
-            accessDetail.permSetLabel,
-            accessDetail.permSetId,
-            accessDetail.profileLabel,
-            accessDetail.profileId,
-            accessDetail.expirationDate
+            permissionSetAssignment.Assignee?.Username,
+            permissionSetAssignment.AssigneeId,
+            permissionSetAssignment.PermissionSet?.Label,
+            permissionSetAssignment.PermissionSetId,
+            permissionSetAssignment.PermissionSet?.Profile?.Name,
+            permissionSetAssignment.ExpirationDate,
           ]);
         }
         workbookMap.set(appLabel, sheet);
