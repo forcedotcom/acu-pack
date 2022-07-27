@@ -19,8 +19,16 @@ export default class Access extends CommandBase {
   public static defaultReportPath = 'UserAccess-{ORG}.xlsx';
 
   public static examples = [
-    `$ sfdx admin:user:access -u myOrgAlias -l 'user1@sf.com, user2@sf.com, user3@sf.com'
-    Removes the .invalid extension from the email address associated to the list of specified users in the specified Org.`
+    `$ sfdx admin:user:access -u myOrgAlias
+    Creates a report ${Access.defaultReportPath.replace(
+      /\{ORG\}/,
+      'myOrgAlias'
+    )}on User access to all the Apps based on PermisionSets and Profiles.`,
+    `$ sfdx admin:user:access -u myOrgAlias -l 'Sales','Platform'
+    Creates a report ${Access.defaultReportPath.replace(
+      /\{ORG\}/,
+      'myOrgAlias'
+    )}on User access to the specified Apps based on PermisionSets and Profiles.`
   ];
 
   protected static flagsConfig = {
@@ -94,7 +102,6 @@ export default class Access extends CommandBase {
           'PermissionSet.Profile.Name, AssigneeId, Assignee.Username, ExpirationDate '+
           'FROM PermissionSetAssignment ' +
           `WHERE PermissionSetId = '${String(permissionSet.Id)}'`;
-          // const query4 = `SELECT Id, PermissionSetId, AssigneeId, Assignee.Name, Assignee.Username FROM PermissionSetAssignment WHERE PermissionSetId = '${String(permissionSet.Id)}'`;
           permissionSetAssignments = await SfdxQuery.doSoqlQuery(this.orgAlias, query4);
           permissionSetsById.set(permissionSet.Id, permissionSetAssignments);
         } else {
