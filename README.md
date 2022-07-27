@@ -26,6 +26,8 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:apex:coverage:clear -u ORG_ALIAS
 Some common debug commands:
 
 ```sh-session
+$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:access -u ORG_ALIAS
+$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:access -u ORG_ALIAS -l 'Sales','Platform'
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:unmask -u ORG_ALIAS -l test.user@trail.com.trail
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:unmask -u ORG_ALIAS -f ./unmask-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:workspace:delete -u ORG_ALIAS
@@ -56,7 +58,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:xpath -o xpath-options.json
 4. In the upper left hand corner of VS Code, verify that the "Attach to Remote" launch configuration has been chosen.
 5. Hit the green play button to the left of the "Attach to Remote" launch configuration window. The debugger should now be suspended on the first line of the program.
 6. Hit the green play button at the top middle of VS Code (this play button will be to the right of the play button that you clicked in step #5).
-   ![Debug image](.images/vscodeScreenshot.png){width=480 height=278}
+   ![Debug image](.images/vscodeScreenshot.png)
    Congrats, you are debugging!
 
 # Usage

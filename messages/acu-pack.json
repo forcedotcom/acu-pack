@@ -98,6 +98,11 @@
         "commandDescription": "\r\nRemoves the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is refreshed.",
         "userListFlagDescription": "A comma delimited list of usernames for the User objects to update.",
         "userFileFlagDescription": "A file which contains a list of usernames for the User objects to update."
+      },
+      "access": {
+        "commandDescription": "\r\nGenerates a report which defines user access via PermissionSet to Salewsforce Apps.",
+        "appListFlagDescription": "A comma delimited list of Apps to check access for.",
+        "reportFlagDescription": "The optional path for the generated report."
       }
     },
     "workspace": {
