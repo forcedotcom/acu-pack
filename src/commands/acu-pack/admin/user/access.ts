@@ -41,24 +41,59 @@ export default class Access extends CommandBase {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
 
-  // private static skipPermissionSetLabelLike = '00e%';
+  /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+  public static async getAppAccess(
+    appMenuItems: any[],
+    permissionSetMap: Map<string,any>,
+    getSetupEntityAccessCallback: (id: string, label: string) => Promise<any[]>,
+    getPermissionSetAssignmentCallback: (id: string, label: string) => Promise<any[]> ): Promise<Map<string, any[]>> {
 
-  private permissionSetMap = new Map<string,any>();
+    const permissionSetsById = new Map<string, any[]>();
+    
+    const appAccessByAppLabel = new Map<string, any[]>();
+
+    for( const appMenuItem of appMenuItems) {
+      const setupEntityAccesses = await getSetupEntityAccessCallback(
+        String(appMenuItem.ApplicationId), 
+        String(appMenuItem.Label)
+      );
+      for(const setupEntityAccess of setupEntityAccesses) {
+        const permissionSet = permissionSetMap.get(String(setupEntityAccess.ParentId));
+        if(!permissionSet) {
+          continue;
+        }
+
+        // Chekc and see if we have already gotten the assigments for this PermSet
+        let permissionSetAssignments = permissionSetsById.get(permissionSet.Id);
+        if(!permissionSetAssignments) {
+          permissionSetAssignments = await getPermissionSetAssignmentCallback(
+            permissionSet.Id,
+            permissionSet.Label
+          );
+          permissionSetsById.set(permissionSet.Id, permissionSetAssignments);
+        }
+        
+        if(!appAccessByAppLabel.has(appMenuItem.Label)) {
+          appAccessByAppLabel.set(appMenuItem.Label, []);
+        }
+        appAccessByAppLabel.get(appMenuItem.Label).push(...permissionSetAssignments);
+      }
+    }
+    return appAccessByAppLabel;
+  }
 
   protected async runInternal(): Promise<void> {
-    const appAccessByAppLabel = new Map<string, any[]>();
-    const permissionSetsById = new Map<string, any[]>();
+    let apps: string[] = null;
+    if (this.flags.applist) {
+      apps = this.flags.applist.split(',');
+    }
 
     this.ux.log('Getting PermissionSets...');
     const query3 = 'SELECT Id, Label FROM PermissionSet';
     const permissionSets = await SfdxQuery.doSoqlQuery(this.orgAlias, query3);
+    const permissionSetMap = new Map<string,any>();
     for(const permissionSet of permissionSets) {
-      this.permissionSetMap.set(permissionSet.Id, permissionSet);
-    }
-
-    let apps: string[] = null;
-    if (this.flags.applist) {
-      apps = this.flags.applist.split(',');
+      permissionSetMap.set(permissionSet.Id, permissionSet);
     }
 
     let query = 'SELECT Id, ApplicationId, Name, Label FROM AppMenuItem';
@@ -71,41 +106,30 @@ export default class Access extends CommandBase {
     }
     const appMenuItems = await SfdxQuery.doSoqlQuery(this.orgAlias, query);
 
-    for( const appMenuItem of appMenuItems) {
-      const appId = String(appMenuItem.ApplicationId);
-      this.ux.log(`Getting permissions for App: ${String(appMenuItem.Label)}<${appId}>`);
-      const query2 = 'SELECT Id, SetupEntityId, SetupEntityType, ParentId ' + 
+    const getSetupEntityAccessCallBack = async (id: string, label: string): Promise<any> => {
+      this.ux.log(`Getting permissions for App: ${label}<${id}>`);
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+      return await SfdxQuery.doSoqlQuery(this.orgAlias, 'SELECT Id, SetupEntityId, ParentId ' + 
       'FROM SetupEntityAccess ' + 
-      `WHERE SetupEntityType = 'TabSet' AND SetupEntityId = '${appId}'`;
-      const setupEntityAccesses = await SfdxQuery.doSoqlQuery(this.orgAlias, query2);
-      for(const setupEntityAccess of setupEntityAccesses) {
-        const permissionSet = this.permissionSetMap.get(String(setupEntityAccess.ParentId));
-        if(!permissionSet) {
-          continue;
-        }
-
-        // Chekc and see if we have already gotten the assigments for this PermSet
-        let permissionSetAssignments = permissionSetsById.get(permissionSet.Id);
-        if(!permissionSetAssignments) {
-          this.ux.log(`Getting Users for PermissionSet: ${String(permissionSet.Label)}`);
-        
-          const query4 = 'SELECT Id, PermissionSetId, PermissionSet.Label, PermissionSet.ProfileId, '+
-          'PermissionSet.Profile.Name, AssigneeId, Assignee.Username, ExpirationDate '+
-          'FROM PermissionSetAssignment ' +
-          `WHERE PermissionSetId = '${String(permissionSet.Id)}'`;
-          permissionSetAssignments = await SfdxQuery.doSoqlQuery(this.orgAlias, query4);
-          permissionSetsById.set(permissionSet.Id, permissionSetAssignments);
-        } else {
-          this.ux.log(`Reusing Users for PermissionSet: ${String(permissionSet.Label)}`);
-        }
-        
-        if(!appAccessByAppLabel.has(appMenuItem.Label)) {
-          appAccessByAppLabel.set(appMenuItem.Label, []);
-        }
-        appAccessByAppLabel.get(appMenuItem.Label).push(...permissionSetAssignments);
-      }
+      `WHERE SetupEntityType = 'TabSet' AND SetupEntityId = '${id}'`);
     }
-    
+
+    const getPermissionSetAssignmentCallback = async (id: string, label: string): Promise<any[]> => {
+      this.ux.log(`Getting Users for PermissionSet: ${label}<${id}>`);
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+      return await SfdxQuery.doSoqlQuery(this.orgAlias, 'SELECT Id, PermissionSetId, PermissionSet.Label, PermissionSet.ProfileId, '+
+      'PermissionSet.Profile.Name, AssigneeId, Assignee.Username, ExpirationDate '+
+      'FROM PermissionSetAssignment ' +
+      `WHERE PermissionSetId = '${id}'`);
+    }
+
+    const appAccessByAppLabel = await Access.getAppAccess(
+      appMenuItems, 
+      permissionSetMap,
+      getSetupEntityAccessCallBack,
+      getPermissionSetAssignmentCallback
+    );
+
     try {
       const reportPath = path
         .resolve(this.flags.report || Access.defaultReportPath)

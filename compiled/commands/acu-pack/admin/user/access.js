@@ -5,84 +5,71 @@ const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const office_1 = require("../../../../lib/office");
-class AccessDetail {
-}
 class Access extends command_base_1.CommandBase {
-    constructor() {
-        super(...arguments);
-        // private static skipPermissionSetLabelLike = '00e%';
-        this.permissionSetMap = new Map();
-    }
-    async runInternal() {
-        var _a, _b, _c;
-        const appAccessByAppLabel = new Map();
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    static async getAppAccess(appMenuItems, permissionSetMap, getSetupEntityAccessCallback, getPermissionSetAssignmentCallback) {
         const permissionSetsById = new Map();
-        this.ux.log('Getting PermissionSets...');
-        const query3 = 'SELECT Id, Label FROM PermissionSet';
-        const permissionSets = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query3);
-        for (const permissionSet of permissionSets) {
-            this.permissionSetMap.set(permissionSet.Id, permissionSet);
-        }
-        let apps = null;
-        if (this.flags.applist) {
-            apps = this.flags.applist.split(',');
-        }
-        let query = 'SELECT Id, ApplicationId, Name, Label FROM AppMenuItem';
-        if (apps.length > 0) {
-            const appsFilter = `'${apps.join("','")}'`;
-            query += ` WHERE Label IN (${appsFilter})`;
-            this.ux.log(`Getting Apps: ${appsFilter}`);
-        }
-        else {
-            this.ux.log('Getting Apps: All');
-        }
-        const appMenuItems = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query);
+        const appAccessByAppLabel = new Map();
         for (const appMenuItem of appMenuItems) {
-            const appId = String(appMenuItem.ApplicationId);
-            this.ux.log(`Getting permissions for App: ${String(appMenuItem.Label)}<${appId}>`);
-            const query2 = 'SELECT Id, SetupEntityId, SetupEntityType, ParentId ' +
-                'FROM SetupEntityAccess ' +
-                `WHERE SetupEntityType = 'TabSet' AND SetupEntityId = '${appId}'`;
-            const setupEntityAccesses = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query2);
+            const setupEntityAccesses = await getSetupEntityAccessCallback(String(appMenuItem.ApplicationId), String(appMenuItem.Label));
             for (const setupEntityAccess of setupEntityAccesses) {
-                const permissionSet = this.permissionSetMap.get(String(setupEntityAccess.ParentId));
+                const permissionSet = permissionSetMap.get(String(setupEntityAccess.ParentId));
                 if (!permissionSet) {
                     continue;
                 }
                 // Chekc and see if we have already gotten the assigments for this PermSet
                 let permissionSetAssignments = permissionSetsById.get(permissionSet.Id);
                 if (!permissionSetAssignments) {
-                    this.ux.log(`Getting Users for PermissionSet: ${String(permissionSet.Label)}`);
-                    const query4 = 'SELECT Id, PermissionSetId, PermissionSet.Label, PermissionSet.ProfileId, ' +
-                        'PermissionSet.Profile.Name, AssigneeId, Assignee.Username, ExpirationDate ' +
-                        'FROM PermissionSetAssignment ' +
-                        `WHERE PermissionSetId = '${String(permissionSet.Id)}'`;
-                    permissionSetAssignments = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query4);
+                    permissionSetAssignments = await getPermissionSetAssignmentCallback(permissionSet.Id, permissionSet.Label);
                     permissionSetsById.set(permissionSet.Id, permissionSetAssignments);
                 }
-                else {
-                    this.ux.log(`Reusing Users for PermissionSet: ${String(permissionSet.Label)}`);
+                if (!appAccessByAppLabel.has(appMenuItem.Label)) {
+                    appAccessByAppLabel.set(appMenuItem.Label, []);
                 }
-                for (const permissionSetAssignment of permissionSetAssignments) {
-                    const accessDetail = new AccessDetail();
-                    // User info
-                    accessDetail.userId = permissionSetAssignment.AssigneeId;
-                    accessDetail.username = (_a = permissionSetAssignment.Assignee) === null || _a === void 0 ? void 0 : _a.Username;
-                    // PermissionSet Info
-                    accessDetail.permSetId = permissionSetAssignment.PermissionSetId;
-                    accessDetail.permSetLabel = (_b = permissionSetAssignment.PermissionSet) === null || _b === void 0 ? void 0 : _b.Label;
-                    // Profile Info
-                    accessDetail.profileId = permissionSetAssignment.PermissionSet.ProfileId;
-                    accessDetail.profileLabel = (_c = permissionSetAssignment.PermissionSet.Profile) === null || _c === void 0 ? void 0 : _c.Name;
-                    // Expiration?
-                    accessDetail.expirationDate = permissionSetAssignment.ExpirationDate;
-                    if (!appAccessByAppLabel.has(appMenuItem.Label)) {
-                        appAccessByAppLabel.set(appMenuItem.Label, []);
-                    }
-                    appAccessByAppLabel.get(appMenuItem.Label).push(accessDetail);
-                }
+                appAccessByAppLabel.get(appMenuItem.Label).push(...permissionSetAssignments);
             }
         }
+        return appAccessByAppLabel;
+    }
+    async runInternal() {
+        var _a, _b, _c, _d;
+        let apps = null;
+        if (this.flags.applist) {
+            apps = this.flags.applist.split(',');
+        }
+        this.ux.log('Getting PermissionSets...');
+        const query3 = 'SELECT Id, Label FROM PermissionSet';
+        const permissionSets = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query3);
+        const permissionSetMap = new Map();
+        for (const permissionSet of permissionSets) {
+            permissionSetMap.set(permissionSet.Id, permissionSet);
+        }
+        let query = 'SELECT Id, ApplicationId, Name, Label FROM AppMenuItem';
+        if ((apps === null || apps === void 0 ? void 0 : apps.length) > 0) {
+            const appsFilter = `'${apps.join("','")}'`;
+            query += ` WHERE Label IN (${appsFilter})`;
+            this.ux.log(`Getting Specific App Access: ${appsFilter}`);
+        }
+        else {
+            this.ux.log('Getting All App Access');
+        }
+        const appMenuItems = await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, query);
+        const getSetupEntityAccessCallBack = async (id, label) => {
+            this.ux.log(`Getting permissions for App: ${label}<${id}>`);
+            /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+            return await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, 'SELECT Id, SetupEntityId, ParentId ' +
+                'FROM SetupEntityAccess ' +
+                `WHERE SetupEntityType = 'TabSet' AND SetupEntityId = '${id}'`);
+        };
+        const getPermissionSetAssignmentCallback = async (id, label) => {
+            this.ux.log(`Getting Users for PermissionSet: ${label}<${id}>`);
+            /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
+            return await sfdx_query_1.SfdxQuery.doSoqlQuery(this.orgAlias, 'SELECT Id, PermissionSetId, PermissionSet.Label, PermissionSet.ProfileId, ' +
+                'PermissionSet.Profile.Name, AssigneeId, Assignee.Username, ExpirationDate ' +
+                'FROM PermissionSetAssignment ' +
+                `WHERE PermissionSetId = '${id}'`);
+        };
+        const appAccessByAppLabel = await Access.getAppAccess(appMenuItems, permissionSetMap, getSetupEntityAccessCallBack, getPermissionSetAssignmentCallback);
         try {
             const reportPath = path
                 .resolve(this.flags.report || Access.defaultReportPath)
@@ -92,15 +79,14 @@ class Access extends command_base_1.CommandBase {
             const workbookMap = new Map();
             for (const appLabel of appAccessByAppLabel.keys()) {
                 const sheet = [['Username', 'User Id', 'PermissionSet Label', 'PermissionSet Id', 'Profile Label', 'Profile Id', 'Expiration Date']];
-                for (const accessDetail of appAccessByAppLabel.get(appLabel)) {
+                for (const permissionSetAssignment of appAccessByAppLabel.get(appLabel)) {
                     sheet.push([
-                        accessDetail.username,
-                        accessDetail.userId,
-                        accessDetail.permSetLabel,
-                        accessDetail.permSetId,
-                        accessDetail.profileLabel,
-                        accessDetail.profileId,
-                        accessDetail.expirationDate
+                        (_a = permissionSetAssignment.Assignee) === null || _a === void 0 ? void 0 : _a.Username,
+                        permissionSetAssignment.AssigneeId,
+                        (_b = permissionSetAssignment.PermissionSet) === null || _b === void 0 ? void 0 : _b.Label,
+                        permissionSetAssignment.PermissionSetId,
+                        (_d = (_c = permissionSetAssignment.PermissionSet) === null || _c === void 0 ? void 0 : _c.Profile) === null || _d === void 0 ? void 0 : _d.Name,
+                        permissionSetAssignment.ExpirationDate,
                     ]);
                 }
                 workbookMap.set(appLabel, sheet);

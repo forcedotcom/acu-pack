@@ -10,6 +10,6 @@ export default class Access extends CommandBase {
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
-    private permissionSetMap;
+    static getAppAccess(appMenuItems: any[], permissionSetMap: Map<string, any>, getSetupEntityAccessCallback: (id: string, label: string) => Promise<any[]>, getPermissionSetAssignmentCallback: (id: string, label: string) => Promise<any[]>): Promise<Map<string, any[]>>;
     protected runInternal(): Promise<void>;
 }
