@@ -14,8 +14,7 @@ class Git extends command_base_1.CommandBase {
         this.deltas = new Map();
     }
     async runInternal() {
-        const deltaOptions = delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
-        deltaOptions.deltaFilePath = this.flags.git;
+        const deltaOptions = await delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
         const gitProvider = new Git.gitDeltaProvider();
         await gitProvider.run(deltaOptions);
     }

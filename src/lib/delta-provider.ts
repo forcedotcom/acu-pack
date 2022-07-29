@@ -1,7 +1,7 @@
 import path = require('path');
 import { promises as fs } from 'fs';
 import Utils from './utils';
-import { DeltaCommandBase } from './delta-command';
+import { DeltaOptions } from './delta-options';
 
 export class Delta {
     public deltaKind: string;
@@ -10,38 +10,6 @@ export class Delta {
     public constructor(deltaKind: string, deltaFile: string) {
         this.deltaKind = deltaKind;
         this.deltaFile = deltaFile;
-    }
-}
-
-export class DeltaOptions {
-    public deltaFilePath: string;
-    public source: string;
-    public destination: string;
-    public deleteReportFile: string;
-    public forceFile: string;
-    public ignoreFile: string;
-    public isDryRun: boolean;
-    public fullCopyDirNames: string[] = DeltaCommandBase.defaultCopyDirList;
-
-    public normalize(): void {
-        if (this.deltaFilePath) {
-            this.deltaFilePath = path.normalize(this.deltaFilePath);
-        }
-        if (this.source) {
-            this.source = path.normalize(this.source);
-        }
-        if (this.destination) {
-            this.destination = path.normalize(this.destination);
-        }
-        if (this.deleteReportFile) {
-            this.deleteReportFile = path.normalize(this.deleteReportFile);
-        }
-        if (this.forceFile) {
-            this.forceFile = path.normalize(this.forceFile);
-        }
-        if (this.ignoreFile) {
-            this.ignoreFile = path.normalize(this.ignoreFile);
-        }
     }
 }
 
@@ -92,7 +60,8 @@ export abstract class DeltaProvider {
             // Validate flags/options
             const result = await this.validateDeltaOptions(deltaOptions);
             if (result) {
-                throw new Error(result);
+                await this.logMessage(`Invalid Command Options: ${result}`, true);
+                return metrics;
             }
 
             // Make sure all the paths are normalized (windows vs linux)
