@@ -3,7 +3,8 @@ import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { DeltaCommandBase } from '../../../../lib/delta-command';
 import Utils from '../../../../lib/utils';
-import { DeltaProvider, DeltaOptions, Delta } from '../../../../lib/delta-provider';
+import { DeltaProvider, Delta } from '../../../../lib/delta-provider';
+import { DeltaOptions } from '../../../../lib/delta-options';
 
 export default class Git extends CommandBase {
   public static description = CommandBase.messages.getMessage('source.delta.git.commandDescription');
@@ -60,8 +61,10 @@ export default class Git extends CommandBase {
   protected deltas = new Map<string, string>();
 
   protected async runInternal(): Promise<void> {
-    const deltaOptions = DeltaCommandBase.getDeltaOptions(this.flags);
-    deltaOptions.deltaFilePath = this.flags.git;
+    const deltaOptions = await DeltaCommandBase.getDeltaOptions(this.flags);
+    if(!deltaOptions.deltaFilePath) {
+      deltaOptions.deltaFilePath = this.flags.git;
+    }
 
     const gitProvider = new Git.gitDeltaProvider();
     await gitProvider.run(deltaOptions);

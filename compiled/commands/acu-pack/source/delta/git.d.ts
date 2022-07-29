@@ -1,5 +1,6 @@
 import { CommandBase } from '../../../../lib/command-base';
-import { DeltaOptions, Delta } from '../../../../lib/delta-provider';
+import { Delta } from '../../../../lib/delta-provider';
+import { DeltaOptions } from '../../../../lib/delta-options';
 export default class Git extends CommandBase {
     static description: string;
     static examples: string[];

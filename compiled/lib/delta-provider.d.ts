@@ -1,18 +1,8 @@
+import { DeltaOptions } from './delta-options';
 export declare class Delta {
     deltaKind: string;
     deltaFile: string;
     constructor(deltaKind: string, deltaFile: string);
-}
-export declare class DeltaOptions {
-    deltaFilePath: string;
-    source: string;
-    destination: string;
-    deleteReportFile: string;
-    forceFile: string;
-    ignoreFile: string;
-    isDryRun: boolean;
-    fullCopyDirNames: string[];
-    normalize(): void;
 }
 export declare abstract class DeltaProvider {
     static deltaTypeKind: {

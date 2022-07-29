@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
 import Setup from '../../lib/setup';
-import { DeltaOptions } from '../../../src/lib/delta-provider'
+import { DeltaOptions } from '../../../src/lib/delta-options'
 import Utils from '../../../src/lib/utils'
 import Git from '../../../src/commands/acu-pack/source/delta/git'
 
