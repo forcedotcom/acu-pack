@@ -95,7 +95,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -115,8 +115,8 @@ USAGE
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -l, --userlist=userlist                                                           A comma delimited list of usernames
-                                                                                    to check access for.
+  -l, --applist=applist                                                             A comma delimited list of Apps to
+                                                                                    check access for.
 
   -r, --report=report                                                               The optional path for the generated
                                                                                     report. UserAccess-{ORG}.xlsx
@@ -135,10 +135,12 @@ OPTIONS
 DESCRIPTION
   Generates a report which defines user access via PermissionSet to Salewsforce Apps.
 
-EXAMPLE
-  $ sfdx admin:user:access -u myOrgAlias -l 'user1@sf.com, user2@sf.com, user3@sf.com'
-      Removes the .invalid extension from the email address associated to the list of specified users in the specified 
-  Org.
+EXAMPLES
+  $ sfdx admin:user:access -u myOrgAlias
+      Creates a report UserAccess-myOrgAlias.xlsxon User access to all the Apps based on PermisionSets and Profiles.
+  $ sfdx admin:user:access -u myOrgAlias -l 'Sales','Platform'
+      Creates a report UserAccess-myOrgAlias.xlsxon User access to the specified Apps based on PermisionSets and 
+  Profiles.
 ```
 
 _See code: [compiled/commands/acu-pack/admin/user/access.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/admin/user/access.ts)_
@@ -504,16 +506,20 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/package/build.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/build.ts)_
 
-## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Merges one SFDX package file into another.
 
 ```
 USAGE
-  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel 
+  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
+  -c, --compare                                                                     Include this flag to compare the two
+                                                                                    packages. Both packages will have
+                                                                                    common items *removed*.
+
   -d, --destination=destination                                                     (required) The destination SFDX
                                                                                     package which contains the merge
                                                                                     results. It will be created if it
