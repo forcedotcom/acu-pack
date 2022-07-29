@@ -7,11 +7,10 @@ SFDX CLI Extensions from Salesforce Customer Success Group (CSG)
 [![License](https://img.shields.io/npm/l/acu-pack.svg)](https://github.com/forcedotcom/acu-pack/blob/main/package.json)
 
 <!-- toc -->
-
-- [acu-pack](#acu-pack)
-- [Debugging your plugin](#debugging-your-plugin)
-- [Usage](#usage)
-- [Commands](#commands)
+* [acu-pack](#acu-pack)
+* [Debugging your plugin](#debugging-your-plugin)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Debugging your plugin
@@ -85,24 +84,23 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 # Commands
 
 <!-- commands -->
-
-- [`sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:admin:workspace:delete [-l <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminworkspacedelete--l-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:apex:coverage:clear [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageclear--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltagit--s-filepath--g-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltamd5--s-filepath--m-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourceprofile--p-string--m--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcexpath--o-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:admin:workspace:delete [-l <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminworkspacedelete--l-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:apex:coverage:clear [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageclear--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltagit--g-filepath--o-filepath--s-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltamd5--m-filepath--o-filepath--s-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourceprofile--p-string--m--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcexpath--o-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
 ## `sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -110,7 +108,7 @@ Removes the .invalid extension from a User's email address. This extenion is aut
 
 ```
 USAGE
-  $ sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json]
+  $ sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -133,12 +131,12 @@ OPTIONS
                                                                                     this command invocation
 
 DESCRIPTION
-  Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is
+  Removes the .invalid extension from a User's email address. This extenion is automatically added when a sandbox is 
   refreshed.
 
 EXAMPLES
   $ sfdx admin:user:unmask -u myOrgAlias -l 'user1@sf.com, user2@sf.com, user3@sf.com'
-      Removes the .invalid extension from the email address associated to the list of specified users in the specified
+      Removes the .invalid extension from the email address associated to the list of specified users in the specified 
   Org.
   $ sfdx admin:user:unmask -u myOrgAlias -f qa-users.txt
       Removes the .invalid extension from the email address associated to the list of users in the specified file in the
@@ -153,7 +151,7 @@ Deletes the Developer Console IDEWorkspace object for the specified user(s).
 
 ```
 USAGE
-  $ sfdx acu-pack:admin:workspace:delete [-l <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
+  $ sfdx acu-pack:admin:workspace:delete [-l <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -189,7 +187,7 @@ Clears the Apex Code Coverage data from the specified Org.
 
 ```
 USAGE
-  $ sfdx acu-pack:apex:coverage:clear [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json]
+  $ sfdx acu-pack:apex:coverage:clear [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -227,7 +225,7 @@ Executes Apex tests and includes Code Coverage metrics.
 
 ```
 USAGE
-  $ sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
+  $ sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -253,10 +251,10 @@ DESCRIPTION
 
 EXAMPLES
   $ sfdx acu-pack:apex:coverage:execute -u myOrgAlias
-      Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics. The command block until all tests have
+      Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics. The command block until all tests have 
   completed.
   $ sfdx acu-pack:apex:coverage:execute -u myOrgAlias -w 30
-      Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test
+      Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and waits up to 30 minutes for test 
   completion.
   $ sfdx acu-pack:apex:coverage:execute -u myOrgAlias -w 0
       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and returns immediately.
@@ -270,7 +268,7 @@ Pull Code Coverage metrics and generates a report.
 
 ```
 USAGE
-  $ sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json]
+  $ sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -311,7 +309,7 @@ Generates Apex test classes (and cls-meta files) for specified CustomObjects.
 
 ```
 USAGE
-  $ sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel
+  $ sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -341,7 +339,7 @@ DESCRIPTION
 
 EXAMPLES
   $ sfdx acu-pack:apex:scaffold -u myOrgAlias -s Account,MyObject__c'
-      Generates AccountTest.cls & MyObjectTest.cls Apex test classes (and cls-meta files) for the Account & MyObject__c
+      Generates AccountTest.cls & MyObjectTest.cls Apex test classes (and cls-meta files) for the Account & MyObject__c 
   SObject types. Random values assigned to required fields by default
   $ sfdx acu-pack:apex:scaffold -u myOrgAlias -o scaffold-options.json
       Generates Apex test classes (and cls-meta files) for specified CustomObjects. The specified options file is used.
@@ -355,7 +353,7 @@ Performs the GET REST action against the specified URL/URI.
 
 ```
 USAGE
-  $ sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json]
+  $ sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -398,7 +396,7 @@ EXAMPLES
       Performs the GET REST API action against the Account metadata type with an id of 068r0000003slVtAAI and writes the
    body to ./output/files/068r0000003slVtAAI.json.
   $ sfdx acu-pack:api:get -u myOrgAlias -m ContentVersion.VersionData -i 068r0000003slVtAAI -o ./output/files/{Id}.pdf
-      Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and
+      Performs the GET REST API action against the ContentVersion metadata type with an id of 068r0000003slVtAAI and 
   writes the VersionData field value body to 068r0000003slVtAAI.pdf.
       NOTE: Not all metadata types support field data access.
 ```
@@ -411,7 +409,7 @@ Builds a standard SFDX source format package file from the specified org's exist
 
 ```
 USAGE
-  $ sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>]
+  $ sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] 
   [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -471,7 +469,7 @@ Merges one SFDX package file into another.
 
 ```
 USAGE
-  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel
+  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -505,7 +503,7 @@ Retrieve all metadata related to Profile security/access permissions.
 
 ```
 USAGE
-  $ sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>]
+  $ sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] 
   [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -537,7 +535,7 @@ DESCRIPTION
 EXAMPLES
   $ sfdx acu-pack:package:permissions -u myOrgAlias
       Creates a package file (package-permissions.xml) which contains
-      Profile & PermissionSet metadata related to ApexClass, ApexPage, CustomApplication, CustomObject, CustomField,
+      Profile & PermissionSet metadata related to ApexClass, ApexPage, CustomApplication, CustomObject, CustomField, 
   CustomTab, PermissionSet, Profile, RecordType, Layout permissions.
   $ sfdx acu-pack:package:permissions -u myOrgAlias -m CustomObject,CustomApplication
       Creates a package file (package-permissions.xml) which contains
@@ -552,7 +550,7 @@ Generates a DataDictionary-[Org].xlsx file from an Org's Object & Field metadata
 
 ```
 USAGE
-  $ sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>]
+  $ sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] 
   [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -597,7 +595,7 @@ Retrives Profiles from Org without need to generate package.xml
 
 ```
 USAGE
-  $ sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel
+  $ sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -628,14 +626,14 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/schema/profile/retrieve.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/schema/profile/retrieve.ts)_
 
-## `sfdx acu-pack:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt
 
 ```
 USAGE
-  $ sfdx acu-pack:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r
-  <filepath>] [-c] [-a <string>] [--json] [--loglevel
+  $ sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i 
+  <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -643,7 +641,7 @@ OPTIONS
                                                                                     directories where all files should
                                                                                     be copied if one of the files
                                                                                     changed. The default list is:
-                                                                                    aura,lwc,experience
+                                                                                    aura,lwc,experiences
 
   -c, --check                                                                       Does a dry-run of a deployment.
                                                                                     Inspect the log file for results.
@@ -665,11 +663,16 @@ OPTIONS
                                                                                     files to ignore. Will override
                                                                                     md5/git file contents.
 
+  -o, --options=options                                                             A file containing the delta command
+                                                                                    options. Specifying this option will
+                                                                                    create the file if it doesn't exist
+                                                                                    already.
+
   -r, --deletereport=deletereport                                                   Path to a file to write deleted
                                                                                     files.
 
-  -s, --source=source                                                               (required) The source folder to
-                                                                                    start the delta scan from.
+  -s, --source=source                                                               The source folder to start the delta
+                                                                                    scan from.
 
   --json                                                                            format output as json
 
@@ -688,14 +691,14 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/source/delta/git.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/delta/git.ts)_
 
-## `sfdx acu-pack:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uses an MD5 hash file to detect deltas.
 
 ```
 USAGE
-  $ sfdx acu-pack:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r
-  <filepath>] [-c] [-a <string>] [--json] [--loglevel
+  $ sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i 
+  <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -703,7 +706,7 @@ OPTIONS
                                                                                     directories where all files should
                                                                                     be copied if one of the files
                                                                                     changed. The default list is:
-                                                                                    aura,lwc,experience
+                                                                                    aura,lwc,experiences
 
   -c, --check                                                                       Does a dry-run of a deployment.
                                                                                     Inspect the log file for results.
@@ -724,11 +727,16 @@ OPTIONS
 
   -m, --md5=md5                                                                     The MD5 hash list file to use
 
+  -o, --options=options                                                             A file containing the delta command
+                                                                                    options. Specifying this option will
+                                                                                    create the file if it doesn't exist
+                                                                                    already.
+
   -r, --deletereport=deletereport                                                   Path to a file to write deleted
                                                                                     files.
 
-  -s, --source=source                                                               (required) The source folder to
-                                                                                    start the delta scan from.
+  -s, --source=source                                                               The source folder to start the delta
+                                                                                    scan from.
 
   --json                                                                            format output as json
 
@@ -752,7 +760,7 @@ Generate a security report based on configured permissions.
 
 ```
 USAGE
-  $ sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel
+  $ sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -781,8 +789,8 @@ DESCRIPTION
 
 EXAMPLE
   $ sfdx acu-pack:source:permissions -u myOrgAlias
-      Reads security information from source-formatted configuration files (**/objects/*/*.object-meta.xml,
-  **/objects/*/fields/*.field-meta.xml, **/permissionsets/*.permissionset-meta.xml, **/profiles/*.profile-meta.xml)
+      Reads security information from source-formatted configuration files (**/objects/*/*.object-meta.xml, 
+  **/objects/*/fields/*.field-meta.xml, **/permissionsets/*.permissionset-meta.xml, **/profiles/*.profile-meta.xml) 
   located in default project source location and writes the 'PermissionsReport.xlsx' report file.
 ```
 
@@ -794,7 +802,7 @@ Determines the compatibility for one or more profiles metadata files with a spec
 
 ```
 USAGE
-  $ sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json]
+  $ sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -822,15 +830,15 @@ OPTIONS
       [default: warn] logging level for this command invocation
 
 DESCRIPTION
-  Determines the compatibility for one or more profiles metadata files with a specified Org. WARNING: This command
+  Determines the compatibility for one or more profiles metadata files with a specified Org. WARNING: This command 
   should be executed by a user with full read permissions to all objects & fields.
 
 EXAMPLES
   $ sfdx acu-pack:source:profile -u myOrgAlias
-      Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml
+      Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml 
   to the specified Org to detemrine deployment compatibility.
   $ sfdx acu-pack:source:profile -m true -u myOrgAlias
-      Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml
+      Compares the profile metadata files in **/profiles/*.profile-meta.xml,**/permissionsets/*.permissionset-meta.xml 
   to the specified Org to and updates the metadat files to ensuredeployment compatibility.
 ```
 
@@ -842,7 +850,7 @@ Validates XML against xpath selects and known bad values.
 
 ```
 USAGE
-  $ sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel
+  $ sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -865,5 +873,4 @@ EXAMPLE
 ```
 
 _See code: [compiled/commands/acu-pack/source/xpath.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/xpath.ts)_
-
 <!-- commandsstop -->
