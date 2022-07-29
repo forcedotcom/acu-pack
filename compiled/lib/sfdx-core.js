@@ -73,24 +73,23 @@ class SfdxCore {
         const popIndexes = [];
         let typeIndex = 0;
         for (const sType of packageObj.Package.types) {
-            if (!sType.members) {
-                continue;
-            }
-            const memPopIndexes = [];
-            let memIndex = 0;
-            for (const member of sType.members) {
-                if (!member || member === '') {
-                    memPopIndexes.push(memIndex);
+            if (sType === null || sType === void 0 ? void 0 : sType.members) {
+                const memPopIndexes = [];
+                let memIndex = 0;
+                for (const member of sType.members) {
+                    if (!member || member === '') {
+                        memPopIndexes.push(memIndex);
+                    }
+                    memIndex++;
                 }
-                ++memIndex;
+                while (memPopIndexes.length) {
+                    sType.members.splice(memPopIndexes.pop(), 1);
+                }
             }
-            while (memPopIndexes.length) {
-                sType.members.splice(memPopIndexes.pop(), 1);
-            }
-            if (!sType.members || sType.members.length === 0) {
+            if (!(sType === null || sType === void 0 ? void 0 : sType.members) || sType.members.length === 0) {
                 popIndexes.push(typeIndex);
             }
-            ++typeIndex;
+            typeIndex++;
         }
         while (popIndexes.length) {
             packageObj.Package.types.splice(popIndexes.pop(), 1);

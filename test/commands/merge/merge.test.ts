@@ -102,8 +102,6 @@ describe('Xml-Merge Tests', function () {
     it('Diffs Packages', async () => {
       await xmlMerge.mergeXmlFiles(source, destination, true);
 
-      expect(await Utils.pathExists(destination));
-
       const sMerged = await Utils.readObjectFromXmlFile(source);
       const dMerged = await Utils.readObjectFromXmlFile(destination);
 
