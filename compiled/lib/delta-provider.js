@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeltaProvider = exports.DeltaOptions = exports.Delta = void 0;
+exports.DeltaProvider = exports.Delta = void 0;
 const tslib_1 = require("tslib");
 const path = require("path");
 const fs_1 = require("fs");
 const utils_1 = require("./utils");
-const delta_command_1 = require("./delta-command");
+const delta_options_1 = require("./delta-options");
 class Delta {
     constructor(deltaKind, deltaFile) {
         this.deltaKind = deltaKind;
@@ -13,36 +13,10 @@ class Delta {
     }
 }
 exports.Delta = Delta;
-class DeltaOptions {
-    constructor() {
-        this.fullCopyDirNames = delta_command_1.DeltaCommandBase.defaultCopyDirList;
-    }
-    normalize() {
-        if (this.deltaFilePath) {
-            this.deltaFilePath = path.normalize(this.deltaFilePath);
-        }
-        if (this.source) {
-            this.source = path.normalize(this.source);
-        }
-        if (this.destination) {
-            this.destination = path.normalize(this.destination);
-        }
-        if (this.deleteReportFile) {
-            this.deleteReportFile = path.normalize(this.deleteReportFile);
-        }
-        if (this.forceFile) {
-            this.forceFile = path.normalize(this.forceFile);
-        }
-        if (this.ignoreFile) {
-            this.ignoreFile = path.normalize(this.ignoreFile);
-        }
-    }
-}
-exports.DeltaOptions = DeltaOptions;
 class DeltaProvider {
     constructor() {
         this.logFile = 'delta.log';
-        this.deltaOptions = new DeltaOptions();
+        this.deltaOptions = new delta_options_1.DeltaOptions();
     }
     static isFullCopyPath(filePath, deltaOptions) {
         if (filePath && deltaOptions) {
@@ -75,7 +49,8 @@ class DeltaProvider {
             // Validate flags/options
             const result = await this.validateDeltaOptions(deltaOptions);
             if (result) {
-                throw new Error(result);
+                await this.logMessage(`Invalid Command Options: ${result}`, true);
+                return metrics;
             }
             // Make sure all the paths are normalized (windows vs linux)
             const source = deltaOptions.source;
