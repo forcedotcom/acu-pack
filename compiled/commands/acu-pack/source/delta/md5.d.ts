@@ -12,11 +12,11 @@ export default class Md5 extends CommandBase {
             getMessage(name: string): string;
             diff(source: string): AsyncGenerator<Delta, any, any>;
             logFile: string;
-            deltaOptions: import("../../../../lib/delta-provider").DeltaOptions;
-            run(deltaOptions: import("../../../../lib/delta-provider").DeltaOptions): Promise<any>;
+            deltaOptions: import("../../../../lib/delta-options").DeltaOptions;
+            run(deltaOptions: import("../../../../lib/delta-options").DeltaOptions): Promise<any>;
             loadDeltaFile(deltaFilePath?: string): Promise<void>;
             logMessage(message: string, includeConsole?: boolean): Promise<void>;
-            validateDeltaOptions(deltaOptions: import("../../../../lib/delta-provider").DeltaOptions): Promise<string>;
+            validateDeltaOptions(deltaOptions: import("../../../../lib/delta-options").DeltaOptions): Promise<string>;
         };
         deltaTypeKind: {
             NONE: string;
@@ -24,7 +24,7 @@ export default class Md5 extends CommandBase {
             M: string;
             D: string;
         };
-        isFullCopyPath(filePath: string, deltaOptions: import("../../../../lib/delta-provider").DeltaOptions): boolean;
+        isFullCopyPath(filePath: string, deltaOptions: import("../../../../lib/delta-options").DeltaOptions): boolean;
     };
     protected static flagsConfig: any;
     protected name: string;

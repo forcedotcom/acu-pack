@@ -41,6 +41,7 @@
       "reportFlagDescription": "OPTIONAL: The path for the permissions report XLSX file. This overrides the default: %s."
     },
     "delta": {
+      "optionsFlagDescription": "A file containing the delta command options. Specifying this option will create the file if it doesn't exist already.",
       "sourceFlagDescription": "The source folder to start the delta scan from.",
       "destinationFlagDescription": "The destination folder for the deltas.",
       "forceFlagDescription": "Path to a file containing folders & files to include in the delta destination. Will override md5/git AND ignore file contents.",
