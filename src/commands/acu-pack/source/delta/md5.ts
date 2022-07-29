@@ -109,7 +109,9 @@ export default class Md5 extends CommandBase {
 
   protected async runInternal(): Promise<void> {
     const deltaOptions = await DeltaCommandBase.getDeltaOptions(this.flags);
-    deltaOptions.deltaFilePath = this.flags.md5;
+    if(!deltaOptions.deltaFilePath) {
+      deltaOptions.deltaFilePath = this.flags.md5;
+    }
 
     const gitProvider = new Md5.md5DeltaProvider();
     await gitProvider.run(deltaOptions);

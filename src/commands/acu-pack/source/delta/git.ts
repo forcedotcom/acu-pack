@@ -62,6 +62,10 @@ export default class Git extends CommandBase {
 
   protected async runInternal(): Promise<void> {
     const deltaOptions = await DeltaCommandBase.getDeltaOptions(this.flags);
+    if(!deltaOptions.deltaFilePath) {
+      deltaOptions.deltaFilePath = this.flags.git;
+    }
+
     const gitProvider = new Git.gitDeltaProvider();
     await gitProvider.run(deltaOptions);
   }
