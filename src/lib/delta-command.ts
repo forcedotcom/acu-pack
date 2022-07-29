@@ -3,7 +3,7 @@ import { CommandBase } from './command-base';
 import { DeltaOptions } from './delta-provider';
 
 export abstract class DeltaCommandBase extends CommandBase {
-  public static defaultCopyDirList: string[] = ['aura', 'lwc', 'experience'];
+  public static defaultCopyDirList: string[] = ['aura', 'lwc', 'experiences'];
 
   public static getFlagsConfig(flagsConfig: FlagsConfig): any {
     if (!flagsConfig) {
