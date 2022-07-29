@@ -16,8 +16,10 @@ class Md5 extends command_base_1.CommandBase {
         this.deltas = new Map();
     }
     async runInternal() {
-        const deltaOptions = delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
-        deltaOptions.deltaFilePath = this.flags.md5;
+        const deltaOptions = await delta_command_1.DeltaCommandBase.getDeltaOptions(this.flags);
+        if (!deltaOptions.deltaFilePath) {
+            deltaOptions.deltaFilePath = this.flags.md5;
+        }
         const gitProvider = new Md5.md5DeltaProvider();
         await gitProvider.run(deltaOptions);
     }

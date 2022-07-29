@@ -40,7 +40,6 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:api:get -u ORG_ALIAS -m ContentVer
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:build -u ORG_ALIAS -o package-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:build -u ORG_ALIAS -s -a
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml
-$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:merge -s ./test/commands/merge/package-a.xml -d ./test/commands/merge/package-b.xml -c
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:permissions -u ORG_ALIAS -x manifest/package-profile.xml
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:schema:dictionary -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:schema:profile:retrieve -u ORG_ALIAS -n Admin
@@ -48,6 +47,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:permissions -p force-app
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:profile -u ORG_ALIAS -m -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
+$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:git -o delta-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:xpath -o xpath-options.json
 ```
 
@@ -92,12 +92,12 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltagit--s-filepath--g-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltamd5--s-filepath--m-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltagit--g-filepath--o-filepath--s-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcedeltamd5--m-filepath--o-filepath--s-filepath--d-filepath--f-filepath--i-filepath--r-filepath--c--a-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourceprofile--p-string--m--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcexpath--o-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -463,20 +463,16 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/package/build.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/build.ts)_
 
-## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Merges one SFDX package file into another.
 
 ```
 USAGE
-  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel 
+  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -c, --compare                                                                     Include this flag to compare the two
-                                                                                    packages. Both packages will have
-                                                                                    common items *removed*.
-
   -d, --destination=destination                                                     (required) The destination SFDX
                                                                                     package which contains the merge
                                                                                     results. It will be created if it
@@ -630,14 +626,14 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/schema/profile/retrieve.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/schema/profile/retrieve.ts)_
 
-## `sfdx acu-pack:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status --no-renames -w <target branch> > git-diff.txt
 
 ```
 USAGE
-  $ sfdx acu-pack:source:delta:git -s <filepath> [-g <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r 
-  <filepath>] [-c] [-a <string>] [--json] [--loglevel 
+  $ sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i 
+  <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -645,7 +641,7 @@ OPTIONS
                                                                                     directories where all files should
                                                                                     be copied if one of the files
                                                                                     changed. The default list is:
-                                                                                    aura,lwc,experience
+                                                                                    aura,lwc,experiences
 
   -c, --check                                                                       Does a dry-run of a deployment.
                                                                                     Inspect the log file for results.
@@ -667,11 +663,16 @@ OPTIONS
                                                                                     files to ignore. Will override
                                                                                     md5/git file contents.
 
+  -o, --options=options                                                             A file containing the delta command
+                                                                                    options. Specifying this option will
+                                                                                    create the file if it doesn't exist
+                                                                                    already.
+
   -r, --deletereport=deletereport                                                   Path to a file to write deleted
                                                                                     files.
 
-  -s, --source=source                                                               (required) The source folder to
-                                                                                    start the delta scan from.
+  -s, --source=source                                                               The source folder to start the delta
+                                                                                    scan from.
 
   --json                                                                            format output as json
 
@@ -690,14 +691,14 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/source/delta/git.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/delta/git.ts)_
 
-## `sfdx acu-pack:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uses an MD5 hash file to detect deltas.
 
 ```
 USAGE
-  $ sfdx acu-pack:source:delta:md5 -s <filepath> [-m <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r 
-  <filepath>] [-c] [-a <string>] [--json] [--loglevel 
+  $ sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i 
+  <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -705,7 +706,7 @@ OPTIONS
                                                                                     directories where all files should
                                                                                     be copied if one of the files
                                                                                     changed. The default list is:
-                                                                                    aura,lwc,experience
+                                                                                    aura,lwc,experiences
 
   -c, --check                                                                       Does a dry-run of a deployment.
                                                                                     Inspect the log file for results.
@@ -726,11 +727,16 @@ OPTIONS
 
   -m, --md5=md5                                                                     The MD5 hash list file to use
 
+  -o, --options=options                                                             A file containing the delta command
+                                                                                    options. Specifying this option will
+                                                                                    create the file if it doesn't exist
+                                                                                    already.
+
   -r, --deletereport=deletereport                                                   Path to a file to write deleted
                                                                                     files.
 
-  -s, --source=source                                                               (required) The source folder to
-                                                                                    start the delta scan from.
+  -s, --source=source                                                               The source folder to start the delta
+                                                                                    scan from.
 
   --json                                                                            format output as json
 

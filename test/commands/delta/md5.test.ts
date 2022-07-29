@@ -3,7 +3,7 @@ import { expect } from '@salesforce/command/lib/test';
 import Setup from '../../lib/setup';
 import Utils from '../../../src/lib/utils'
 import Md5 from '../../../src/commands/acu-pack/source/delta/md5'
-import { DeltaOptions } from '../../../src/lib/delta-provider'
+import { DeltaOptions } from '../../../src/lib/delta-options'
 
 const bogusMd5FilePath = 'bogus_' + Setup.md5FilePath;
 const md5Provider = new Md5.md5DeltaProvider();
