@@ -96,7 +96,7 @@
     "lint-sav": "eslint src/**/*.ts test/**/*.ts",
     "postpack": "rimraf oclif.manifest.json",
     "posttest": "eslint src/**/*.ts",
-    "compile": "rimraf compiled && tsc -b && oclif-dev manifest",
+    "compile": "tsc -b && oclif-dev manifest",
     "readme": "oclif-dev readme",
     "test": "mocha -r ts-node/register \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
