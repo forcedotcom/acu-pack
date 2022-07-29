@@ -58,3 +58,5 @@ results.txt
 *.tsbuildinfo
 
 package-lock.json
+
+ignore/*
