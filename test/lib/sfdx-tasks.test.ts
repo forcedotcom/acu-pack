@@ -57,7 +57,9 @@ describe('Sfdx Tasks Tests', () => {
       this.timeout(0);
       const orgAlias = await SfdxTasks.getDefaultOrgAlias();
       expect(orgAlias).to.not.be.null;
-      expect(orgAlias.length).to.be.greaterThan(0);
+      if(orgAlias !== '') {
+        expect(orgAlias.length).to.be.greaterThan(0);
+      }
     });
   });
   describe('REST Tests', function () {
