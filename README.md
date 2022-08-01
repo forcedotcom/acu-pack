@@ -84,6 +84,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 # Commands
 
 <!-- commands -->
+* [`sfdx acu-pack:admin:user:access [-l <string>] [-r <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminuseraccess--l-string--r-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminuserunmask--l-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:admin:workspace:delete [-l <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packadminworkspacedelete--l-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:apex:coverage:clear [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageclear--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -92,7 +93,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemaprofileretrieve--n-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -101,6 +102,46 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcepermissions--p-string--r-string--f-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourceprofile--p-string--m--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packsourcexpath--o-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+
+## `sfdx acu-pack:admin:user:access [-l <string>] [-r <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Generates a report which defines user access via PermissionSet to Salewsforce Apps.
+
+```
+USAGE
+  $ sfdx acu-pack:admin:user:access [-l <string>] [-r <string>] [-u <string>] [--apiversion <string>] [--json] 
+  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -l, --applist=applist                                                             A comma delimited list of Apps to
+                                                                                    check access for.
+
+  -r, --report=report                                                               The optional path for the generated
+                                                                                    report. UserAccess-{ORG}.xlsx
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+DESCRIPTION
+  Generates a report which defines user access via PermissionSet to Salewsforce Apps.
+
+EXAMPLES
+  $ sfdx admin:user:access -u myOrgAlias
+      Creates a report UserAccess-myOrgAlias.xlsxon User access to all the Apps based on PermisionSets and Profiles.
+  $ sfdx admin:user:access -u myOrgAlias -l 'Sales','Platform'
+      Creates a report UserAccess-myOrgAlias.xlsxon User access to the specified Apps based on PermisionSets and 
+  Profiles.
+```
+
+_See code: [compiled/commands/acu-pack/admin/user/access.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/admin/user/access.ts)_
 
 ## `sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -463,16 +504,20 @@ EXAMPLE
 
 _See code: [compiled/commands/acu-pack/package/build.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/build.ts)_
 
-## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Merges one SFDX package file into another.
 
 ```
 USAGE
-  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [--json] [--loglevel 
+  $ sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
+  -c, --compare                                                                     Include this flag to compare the two
+                                                                                    packages. Both packages will have
+                                                                                    common items *removed*.
+
   -d, --destination=destination                                                     (required) The destination SFDX
                                                                                     package which contains the merge
                                                                                     results. It will be created if it
@@ -490,9 +535,12 @@ OPTIONS
 DESCRIPTION
   Merges one SFDX package file into another.
 
-EXAMPLE
+EXAMPLES
   $ sfdx acu-pack:package:merge -s manifest/package.xml -d manifest/package-sprint17.xml
       Merges package.xml into package-sprint17.xml
+  $ sfdx acu-pack:package:merge -s manifest/package-a.xml -d manifest/package-b.xml -c
+      Compares package-a.xml to package-b.xml and removes common elements from BOTH packages - leaving only the 
+  differences.
 ```
 
 _See code: [compiled/commands/acu-pack/package/merge.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/merge.ts)_
