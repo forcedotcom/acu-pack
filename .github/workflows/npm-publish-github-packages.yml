@@ -22,7 +22,6 @@ jobs:
       #- run: npm test 
       - run: yarn install --frozen-lockfile
       - run: yarn add sfdx-cli
-      - run: yarn run compile
       - run: yarn run test
 
   publish-gpr:
