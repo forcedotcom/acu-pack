@@ -66,6 +66,37 @@ class SfdxCore {
         return packageObj;
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    static minifyPackage(packageObj) {
+        if (!packageObj) {
+            return null;
+        }
+        const popIndexes = [];
+        let typeIndex = 0;
+        for (const sType of packageObj.Package.types) {
+            if (sType === null || sType === void 0 ? void 0 : sType.members) {
+                const memPopIndexes = [];
+                let memIndex = 0;
+                for (const member of sType.members) {
+                    if (!member || member === '') {
+                        memPopIndexes.push(memIndex);
+                    }
+                    memIndex++;
+                }
+                while (memPopIndexes.length) {
+                    sType.members.splice(memPopIndexes.pop(), 1);
+                }
+            }
+            if (!(sType === null || sType === void 0 ? void 0 : sType.members) || sType.members.length === 0) {
+                popIndexes.push(typeIndex);
+            }
+            typeIndex++;
+        }
+        while (popIndexes.length) {
+            packageObj.Package.types.splice(popIndexes.pop(), 1);
+        }
+        return packageObj;
+    }
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async writePackageFile(metadataMap, packageFilePath, append, xmlOptions) {
         // Convert into Package format
         const sfdxPackage = await SfdxCore.createPackage(metadataMap);

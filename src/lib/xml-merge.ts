@@ -1,11 +1,17 @@
 import path = require('path');
 import { promises as fs } from 'fs';
 import Utils from './utils';
+import { SfdxCore } from './sfdx-core';
+
+class MergeResult {
+    public source: any;
+    public destination: any;
+}
 
 export default class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    public static async mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, ux?: any): Promise<any> {
-        let merged: any;
+    public static async mergeXmlFiles(sourceXmlFile: string, destinationXmlFile: string, isPackageCompare?: boolean, ux?: any): Promise<any> {
+        let results = new MergeResult();
         const logFilePath = path.join(path.dirname(destinationXmlFile), 'xml-merge.log');
         try {
 
@@ -23,20 +29,27 @@ export default class XmlMerge {
             if (await Utils.pathExists(destinationXmlFile)) {
                 const destination = await Utils.readObjectFromXmlFile(destinationXmlFile);
                 await this.logMessage(`Parsed destination package: ${destinationXmlFile}`, logFilePath, ux);
-
-                merged = this.mergeObjects(source, destination);
+                results = this.mergeObjects(source, destination, isPackageCompare);
+            } else if(isPackageCompare) {
+                await this.logMessage('Destination package does not exist.', logFilePath, ux);    
+                return;
             } else {
                 await this.logMessage('Destination package does not exist - using source', logFilePath, ux);
-                merged = source;
+                results.destination = source;
             }
-            await Utils.writeObjectToXmlFile(destinationXmlFile, merged);
-            await this.logMessage(`Merged package written: ${destinationXmlFile}`, logFilePath, ux);
-
+            if(!isPackageCompare) {
+                await Utils.writeObjectToXmlFile(destinationXmlFile, results.destination);
+                await this.logMessage(`Merged package written: ${destinationXmlFile}`, logFilePath, ux);
+            } else {
+                await Utils.writeObjectToXmlFile(sourceXmlFile, results.source);
+                await Utils.writeObjectToXmlFile(destinationXmlFile, results.destination);
+                await this.logMessage(`Packages written: ${sourceXmlFile} & ${destinationXmlFile}`, logFilePath, ux);
+            }
         } catch (err) {
             await this.logMessage(err, logFilePath, ux);
         }
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
-        return merged;
+        return results.destination;
     }
 
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
@@ -44,7 +57,7 @@ export default class XmlMerge {
         let merged: any;
         if (await Utils.pathExists(destinationXmlFile)) {
             const destination = await Utils.readObjectFromXmlFile(destinationXmlFile);
-            merged = this.mergeObjects(sourceXml, destination);
+            merged = this.mergeObjects(sourceXml, destination).destination;
         } else {
             merged = sourceXml;
         }
@@ -76,49 +89,71 @@ export default class XmlMerge {
     }
 
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
-    public static mergeObjects(source: any, destination: any): any {
-        if (!source.Package) {
-            source['Package'] = {};
-        }
-        if (!source.Package.types) {
-            source.Package['types'] = [];
-        }
+    public static mergeObjects(source: any, destination: any, isPackageCompare?: boolean): MergeResult {
+        
+        const result = new MergeResult();
+        result.source = source;
+        result.destination = destination ?? new Object(destination);
 
-        const merged: any = new Object(destination);
-        if (!merged.Package) {
-            merged['Package'] = {};
+        if (!result.source.Package) {
+            result.source['Package'] = {};
         }
-        if (!merged.Package.types) {
-            merged.Package['types'] = [];
+        if (!result.source.Package.types) {
+            result.source.Package['types'] = [];
         }
-        for (const sType of source.Package.types) {
-            const dType: any = this.getType(merged.Package, sType.name[0]);
-            if (!dType) {
-                merged.Package.types.push(sType);
-                continue;
-            }
+        if (!result.destination.Package) {
+            result.destination['Package'] = {};
+        }
+        if (!result.destination.Package.types) {
+            result.destination.Package['types'] = [];
+        }
+        if(!result.destination.Package.version) {
+            result.destination.Package['version'] = result.source.Package.version;
+        } 
+        
+        for (const sType of result.source.Package.types) {
             if (!sType.members) {
                 continue;
             }
-            if (!dType.members) {
-                dType.members = sType.members;
-            } else {
-                for (const sMem of sType.members) {
-                    let dMem: string;
-                    for (const memName of dType.members) {
-                        if (sMem === memName) {
-                            dMem = memName;
-                            break;
-                        }
-                    }
-                    if (!dMem) {
-                        dType.members.push(sMem);
+            Utils.sortArray(sType.members);
+
+            const dType: any = this.getType(result.destination.Package, sType.name[0]);
+            if (!dType || !dType.members) {
+                if(!isPackageCompare) {
+                    result.destination.Package.types.push(sType);
+                }
+                continue;
+            }
+            
+            const pops = [];
+            for (const sMem of sType.members) {
+                let dMem: string;
+                for (const memName of dType.members) {
+                    if (sMem === memName) {
+                        dMem = memName;
+                        break;
                     }
                 }
+                if (!dMem) {
+                    if(!isPackageCompare) {
+                        dType.members.push(sMem);
+                    }
+                } else if(isPackageCompare) {
+                    pops.push(dMem);
+                }
             }
-            dType.members.sort();
+            // remove all common types here
+            for (const pop of pops) {
+                sType.members.splice(sType.members.indexOf(pop),1);
+                dType.members.splice(dType.members.indexOf(pop),1);
+            }
+            Utils.sortArray(dType.members);
         }
-        merged.Package.version = source.Package.version;
-        return merged;
+        // If we removed items we may need to minify
+        if(isPackageCompare) {
+            result.source = SfdxCore.minifyPackage(result.source);
+            result.destination = SfdxCore.minifyPackage(result.destination);
+        }
+        return result;
     }
 }

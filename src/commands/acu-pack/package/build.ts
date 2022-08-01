@@ -149,6 +149,7 @@ export default class Build extends CommandBase {
     // Filter excluded types
     for (const [typeName, members] of metadataMap) {
       if (!excluded.has(typeName)) {
+        Utils.sortArray(members);
         packageMap.set(typeName, members);
       }
     }
