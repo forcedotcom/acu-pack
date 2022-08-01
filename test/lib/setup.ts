@@ -31,6 +31,10 @@ export default class Setup {
         await Utils.deleteFile(Setup.md5FilePath);
         await Utils.deleteFile(Setup.gitFilePath);
 
+        await Utils.mkDirPath(folder);
+        await Utils.mkDirPath(Setup.sourceRoot);
+        await Utils.mkDirPath(Setup.destinationRoot);
+
         /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
         // @ts-ignore
         await fs.rmdir(folder, { recursive: true });
