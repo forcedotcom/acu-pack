@@ -54,4 +54,33 @@ describe('Sfdx Core Tests', () => {
       expect(pack.Package.version.length).greaterThan(0);
     });
   });
+  describe('minifyPackage Tests', function () {
+    it('Is Not Null', function () {
+      const testPackage = null;
+      expect(SfdxCore.minifyPackage(testPackage)).is.null;
+    });
+    it('Removes empty types', async function () {
+      const packageObj = await SfdxCore.getPackageBase();
+      packageObj.Package.types.push({
+        name: ['ApexClass'],
+        members: []
+      });
+      packageObj.Package.types.push({
+        name: ['CustomObject'],
+        members: ['MyObject__c','']
+      });
+      packageObj.Package.types.push({
+        name: ['Something'],
+        members: ['', null, undefined]
+      });
+      const minPackage = SfdxCore.minifyPackage(packageObj);
+
+      expect(minPackage).is.not.null;
+      expect(minPackage.Package).is.not.null;
+      expect(minPackage.Package.types).is.not.null;
+      expect(minPackage.Package.types.length).equals(1);
+      expect(minPackage.Package.types[0].name[0]).equals('CustomObject');
+      expect(minPackage.Package.types[0].members.length).equals(1);
+    });
+  });
 });
