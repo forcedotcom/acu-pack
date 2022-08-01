@@ -21,7 +21,7 @@ jobs:
       #- run: npm ci
       #- run: npm test 
       - run: yarn install --frozen-lockfile
-      - run: yarn install sfdx-cli
+      - run: yarn add sfdx-cli
       - run: yarn run compile
       - run: yarn run test
 
