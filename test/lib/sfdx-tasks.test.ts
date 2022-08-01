@@ -56,8 +56,7 @@ describe('Sfdx Tasks Tests', () => {
     it('Can Get Default Org Alias',async function () {
       this.timeout(0);
       const orgAlias = await SfdxTasks.getDefaultOrgAlias();
-      expect(orgAlias).to.not.be.null;
-      if(orgAlias !== '') {
+      if(orgAlias) {
         expect(orgAlias.length).to.be.greaterThan(0);
       }
     });
