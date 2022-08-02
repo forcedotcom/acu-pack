@@ -4,12 +4,10 @@
 name: Node.js Package
 
 on:
-  push
- #push:
-    #branches:    
-      #- 'development'
-      #- 'main'
-
+ push:
+    branches:    
+      - 'development'
+      - 'main'
 jobs:
   build:
     runs-on: ubuntu-latest
