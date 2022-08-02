@@ -13,7 +13,10 @@ export default class Constants {
     static readonly SFDX_DATA_STATUS = "sfdx force:data:bulk:status";
     static readonly SFDX_ORG_DISPLAY = "sfdx force:org:display";
     static readonly SFDX_SOURCE_STATUS = "sfdx force:source:status";
-    static readonly SFDX_GET_DEFAULT_USERNAME = "sfdx config:get defaultusername";
+    static readonly SFDX_CONFIG_GET = "sfdx config:get";
+    static readonly SFDX_CONFIG_SET = "sfdx config:set";
+    static readonly SFDX_CONFIG_DEFAULT_USERNAME = "defaultusername";
+    static readonly SFDX_CONFIG_MAX_QUERY_LIMIT = "maxQueryLimit";
     static readonly SFDX_PERMISSION_APEX_CLASS = "ApexClass";
     static readonly SFDX_PERMISSION_APEX_PAGE = "ApexPage";
     static readonly SFDX_PERMISSION_CUSTOM_APP = "CustomApplication";
