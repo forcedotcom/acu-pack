@@ -6,10 +6,10 @@ name: Node.js Package
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-  push:
-    branches:    
-      - 'development'
-      - 'main'
+  # push:
+  #   branches:    
+  #     - 'development'
+  #     - 'main'
 jobs:
   build:
     runs-on: ubuntu-latest
