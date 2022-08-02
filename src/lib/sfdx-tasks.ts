@@ -368,11 +368,34 @@ export class SfdxTasks {
         return statuses;
     }
 
-    public static async getDefaultOrgAlias(): Promise<string> {
-        const result = await SfdxCore.command(`${Constants.SFDX_GET_DEFAULT_USERNAME} --json`);
+    public static async getConfigValue(configName: string): Promise<string> {
+        const result = await SfdxCore.command(`${Constants.SFDX_CONFIG_GET} ${configName} --json`);
         return (result[0] != null
             ? result[0].value
             : null) as string;
+    }
+
+    public static async setConfigValue(configName: string, configValue: string): Promise<void> {
+        const result = await SfdxCore.command(`${Constants.SFDX_CONFIG_SET} ${configName}=${configValue} --json`);
+        if(result.failures && result.failures.length > 0 ) {
+            throw new Error(JSON.stringify(result));
+        }
+    }
+
+    public static async getMaxQueryLimit(): Promise<number> {
+        return Number(await SfdxTasks.getConfigValue(Constants.SFDX_CONFIG_MAX_QUERY_LIMIT));
+    }
+
+    public static async setMaxQueryLimit(maxQueryLimit: number): Promise<void> {
+        await SfdxTasks.setConfigValue(Constants.SFDX_CONFIG_MAX_QUERY_LIMIT, `${maxQueryLimit}`);
+    }
+
+    public static async getDefaultOrgAlias(): Promise<string> {
+        return SfdxTasks.getConfigValue(Constants.SFDX_CONFIG_DEFAULT_USERNAME);
+    }
+
+    public static async setDefaultOrgAlias(orgAlias: string): Promise<void> {
+        await SfdxTasks.setConfigValue(Constants.SFDX_CONFIG_DEFAULT_USERNAME, orgAlias);
     }
 
     public static async getUnsupportedMetadataTypes(): Promise<string[]> {

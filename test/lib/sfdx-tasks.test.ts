@@ -52,13 +52,21 @@ describe('Sfdx Tasks Tests', () => {
       expect(map.get('Bogus')).to.be.undefined;
     });
   });
-  describe('getDefaultOrgAlias Tests', function () {
-    it('Can Get Default Org Alias',async function () {
+  describe('Config Tests', function () {
+    it('Can Set/Get Config Variable',async function () {
       this.timeout(0);
-      const orgAlias = await SfdxTasks.getDefaultOrgAlias();
-      if(orgAlias) {
-        expect(orgAlias.length).to.be.greaterThan(0);
+      const varValue = 10001;
+      const existingValue = await SfdxTasks.getMaxQueryLimit();
+      try {
+        await SfdxTasks.setMaxQueryLimit(varValue);
+        const testLimit = await SfdxTasks.getMaxQueryLimit();
+        expect(testLimit).to.equal(varValue);
+      } finally {
+        if(existingValue) {
+          await SfdxTasks.setMaxQueryLimit(existingValue);
+        }
       }
+      
     });
   });
   describe('REST Tests', function () {

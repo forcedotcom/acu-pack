@@ -37,7 +37,12 @@ export declare class SfdxTasks {
     static getOrgInfo(orgAliasOrUsername: string): Promise<SfdxOrgInfo>;
     static getMapFromSourceTrackingStatus(sourceTrackingStatues: any[]): any;
     static getSourceTrackingStatus(orgAliasOrUsername: string): Promise<any[]>;
+    static getConfigValue(configName: string): Promise<string>;
+    static setConfigValue(configName: string, configValue: string): Promise<void>;
+    static getMaxQueryLimit(): Promise<number>;
+    static setMaxQueryLimit(maxQueryLimit: number): Promise<void>;
     static getDefaultOrgAlias(): Promise<string>;
+    static setDefaultOrgAlias(orgAlias: string): Promise<void>;
     static getUnsupportedMetadataTypes(): Promise<string[]>;
     private static getFolderSOQLData;
     private static getFolderFullPath;

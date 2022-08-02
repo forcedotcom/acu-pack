@@ -368,11 +368,29 @@ class SfdxTasks {
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return statuses;
     }
-    static async getDefaultOrgAlias() {
-        const result = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_GET_DEFAULT_USERNAME} --json`);
+    static async getConfigValue(configName) {
+        const result = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_CONFIG_GET} ${configName} --json`);
         return (result[0] != null
             ? result[0].value
             : null);
+    }
+    static async setConfigValue(configName, configValue) {
+        const result = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_CONFIG_SET} ${configName}=${configValue} --json`);
+        if (result.failures && result.failures.length > 0) {
+            throw new Error(JSON.stringify(result));
+        }
+    }
+    static async getMaxQueryLimit() {
+        return Number(await SfdxTasks.getConfigValue(constants_1.default.SFDX_CONFIG_MAX_QUERY_LIMIT));
+    }
+    static async setMaxQueryLimit(maxQueryLimit) {
+        await SfdxTasks.setConfigValue(constants_1.default.SFDX_CONFIG_MAX_QUERY_LIMIT, `${maxQueryLimit}`);
+    }
+    static async getDefaultOrgAlias() {
+        return SfdxTasks.getConfigValue(constants_1.default.SFDX_CONFIG_DEFAULT_USERNAME);
+    }
+    static async setDefaultOrgAlias(orgAlias) {
+        await SfdxTasks.setConfigValue(constants_1.default.SFDX_CONFIG_DEFAULT_USERNAME, orgAlias);
     }
     static async getUnsupportedMetadataTypes() {
         const result = await utils_1.default.getRestResult(utils_2.RestAction.GET, constants_1.default.METADATA_COVERAGE_REPORT_URL);
