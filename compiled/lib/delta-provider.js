@@ -28,6 +28,24 @@ class DeltaProvider {
         }
         return false;
     }
+    static getFullCopyPath(filePath, deltaOptions) {
+        let fullCopyPath = '';
+        let gotFullCopyPath = false;
+        if (filePath && deltaOptions) {
+            const pathParts = filePath.split(path.sep);
+            for (const pathPart of pathParts) {
+                fullCopyPath += pathPart + path.sep;
+                if (!gotFullCopyPath && deltaOptions.fullCopyDirNames.includes(pathPart)) {
+                    gotFullCopyPath = true;
+                    continue;
+                }
+                if (gotFullCopyPath) {
+                    break;
+                }
+            }
+        }
+        return gotFullCopyPath ? fullCopyPath : null;
+    }
     async run(deltaOptions) {
         var e_1, _a, e_2, _b, e_3, _c, e_4, _d, e_5, _e, e_6, _f, e_7, _g;
         if (!deltaOptions) {
@@ -179,17 +197,17 @@ class DeltaProvider {
                         case DeltaProvider.deltaTypeKind.A:
                         case DeltaProvider.deltaTypeKind.M: {
                             // check the source folder for associated files.
-                            const dirName = path.dirname(deltaFile);
+                            const fullCopyPath = DeltaProvider.getFullCopyPath(delta.deltaFile, deltaOptions);
+                            const dirName = fullCopyPath !== null && fullCopyPath !== void 0 ? fullCopyPath : path.dirname(deltaFile);
                             const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
-                            let foundMetadataFile = false;
                             try {
-                                for (var _t = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(dirName, false))), _u; _u = await _t.next(), !_u.done;) {
+                                for (var _t = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(dirName, fullCopyPath != null))), _u; _u = await _t.next(), !_u.done;) {
                                     const filePath = _u.value;
                                     // have we already processed this file?
                                     if (copiedSet.has(filePath)) {
                                         continue;
                                     }
-                                    if (DeltaProvider.isFullCopyPath(dirName, deltaOptions) || path.basename(filePath).startsWith(deltaFileBaseName)) {
+                                    if (filePath.startsWith(fullCopyPath) || path.basename(filePath).startsWith(deltaFileBaseName)) {
                                         // are we ignoring this file?
                                         if (ignoreSet.has(filePath)) {
                                             await this.logMessage(`Delta (${deltaKind}) ignored: ${filePath}`, true);
@@ -204,9 +222,6 @@ class DeltaProvider {
                                             metrics.Copy++;
                                             copiedSet.add(filePath);
                                         }
-                                        if (filePath.endsWith(metaFileEndsWith)) {
-                                            foundMetadataFile = true;
-                                        }
                                     }
                                 }
                             }
@@ -217,43 +232,40 @@ class DeltaProvider {
                                 }
                                 finally { if (e_6) throw e_6.error; }
                             }
-                            if (!foundMetadataFile) {
-                                // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
-                                // so let's check there
-                                const parentDirName = path.dirname(dirName);
-                                const deltaParentBaseName = `${path.basename(dirName)}.`;
+                            // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
+                            // so let's check there
+                            const parentDirName = path.dirname(dirName);
+                            const deltaParentBaseName = `${path.basename(dirName)}.`;
+                            try {
+                                for (var _v = (e_7 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(parentDirName, false))), _w; _w = await _v.next(), !_w.done;) {
+                                    const parentFilePath = _w.value;
+                                    // have we already processed this file?
+                                    if (copiedSet.has(parentFilePath)) {
+                                        continue;
+                                    }
+                                    // are we ignoring this file?
+                                    if (ignoreSet.has(parentFilePath)) {
+                                        await this.logMessage(`Delta (${deltaKind}) ignored: ${parentFilePath}`, true);
+                                        metrics.Ign++;
+                                        continue;
+                                    }
+                                    if (path.basename(parentFilePath).startsWith(deltaParentBaseName) && parentFilePath.endsWith(metaFileEndsWith)) {
+                                        const destinationPath = parentFilePath.replace(source, destination);
+                                        if (!isDryRun) {
+                                            await utils_1.default.copyFile(parentFilePath, destinationPath);
+                                        }
+                                        await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
+                                        metrics.Copy++;
+                                        copiedSet.add(parentFilePath);
+                                    }
+                                }
+                            }
+                            catch (e_7_1) { e_7 = { error: e_7_1 }; }
+                            finally {
                                 try {
-                                    for (var _v = (e_7 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(parentDirName, false))), _w; _w = await _v.next(), !_w.done;) {
-                                        const parentFilePath = _w.value;
-                                        // have we already processed this file?
-                                        if (copiedSet.has(parentFilePath)) {
-                                            continue;
-                                        }
-                                        // are we ignoring this file?
-                                        if (ignoreSet.has(parentFilePath)) {
-                                            await this.logMessage(`Delta (${deltaKind}) ignored: ${parentFilePath}`, true);
-                                            metrics.Ign++;
-                                            continue;
-                                        }
-                                        if (path.basename(parentFilePath).startsWith(deltaParentBaseName)) {
-                                            const destinationPath = parentFilePath.replace(source, destination);
-                                            if (!isDryRun) {
-                                                await utils_1.default.copyFile(parentFilePath, destinationPath);
-                                            }
-                                            await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
-                                            metrics.Copy++;
-                                            copiedSet.add(parentFilePath);
-                                            foundMetadataFile = true;
-                                        }
-                                    }
+                                    if (_w && !_w.done && (_g = _v.return)) await _g.call(_v);
                                 }
-                                catch (e_7_1) { e_7 = { error: e_7_1 }; }
-                                finally {
-                                    try {
-                                        if (_w && !_w.done && (_g = _v.return)) await _g.call(_v);
-                                    }
-                                    finally { if (e_7) throw e_7.error; }
-                                }
+                                finally { if (e_7) throw e_7.error; }
                             }
                             break;
                         }

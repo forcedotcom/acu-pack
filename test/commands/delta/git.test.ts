@@ -20,6 +20,27 @@ beforeEach(async () => {
     }
     gitProvider.deltas.clear();
 });
+describe('Experience Bundle Tests', function () {
+    it('Can handle experiences', async function () {
+        testFilesCreated = 0;
+        const filePaths = [];
+        for await (const filePath of Utils.getFiles('test/force-app/main/default/experiences')) {
+            if(filePath) {
+                testFilesCreated++;
+                filePaths.push(filePath);
+            }
+        }
+        const deltaOptions = new DeltaOptions();
+        deltaOptions.deltaFilePath = Setup.gitExpFilePath;
+        deltaOptions.source = Setup.sourceExpRoot;
+        deltaOptions.destination = Setup.destinationExpRoot;
+
+        const metrics = await gitProvider.run(deltaOptions);
+
+        expect(metrics.Copy).equals(testFilesCreated);
+    });
+});
+/*
 describe('GitDeltaProvider Tests', function () {
     it('Has Name', function () {
         expect(gitProvider.name).equals('git');
@@ -117,3 +138,5 @@ describe('GitDeltaProvider Tests', function () {
         });
     });
 });
+*/    
+

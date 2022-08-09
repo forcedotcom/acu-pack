@@ -38,6 +38,25 @@ export abstract class DeltaProvider {
         }
         return false;
     }
+
+    public static getFullCopyPath(filePath: string, deltaOptions: DeltaOptions): string {
+        let fullCopyPath = '';
+        let gotFullCopyPath = false;
+        if (filePath && deltaOptions) {
+            const pathParts = filePath.split(path.sep);
+            for (const pathPart of pathParts) {
+                fullCopyPath += pathPart + path.sep;
+                if(!gotFullCopyPath && deltaOptions.fullCopyDirNames.includes(pathPart)) {
+                    gotFullCopyPath = true;
+                    continue;
+                }
+                if(gotFullCopyPath) {
+                    break;
+                }
+            }
+        }
+        return gotFullCopyPath ? fullCopyPath : null;
+    }
     
     public async run(deltaOptions: DeltaOptions): Promise<any> {
         if (!deltaOptions) {
@@ -131,7 +150,6 @@ export abstract class DeltaProvider {
             for await (const delta of this.diff(source)) {
                 const deltaKind = delta.deltaKind;
                 const deltaFile = delta.deltaFile;
-
                 // No destination? no need to continue
                 if (!destination) {
                     continue;
@@ -155,15 +173,15 @@ export abstract class DeltaProvider {
                     case DeltaProvider.deltaTypeKind.A:
                     case DeltaProvider.deltaTypeKind.M: {
                         // check the source folder for associated files.
-                        const dirName = path.dirname(deltaFile);
+                        const fullCopyPath = DeltaProvider.getFullCopyPath(delta.deltaFile, deltaOptions);
+                        const dirName = fullCopyPath ?? path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
-                        let foundMetadataFile = false;
-                        for await (const filePath of Utils.getFiles(dirName, false)) {
+                        for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
                                 continue;
                             }
-                            if (DeltaProvider.isFullCopyPath(dirName, deltaOptions) || path.basename(filePath).startsWith(deltaFileBaseName)) {
+                            if (filePath.startsWith(fullCopyPath) || path.basename(filePath).startsWith(deltaFileBaseName)) {
                                 // are we ignoring this file?
                                 if (ignoreSet.has(filePath)) {
                                     await this.logMessage(`Delta (${deltaKind}) ignored: ${filePath}`, true);
@@ -177,37 +195,31 @@ export abstract class DeltaProvider {
                                     metrics.Copy++;
                                     copiedSet.add(filePath);
                                 }
-                                if (filePath.endsWith(metaFileEndsWith)) {
-                                    foundMetadataFile = true;
-                                }
                             }
                         }
-                        if (!foundMetadataFile) {
-                            // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
-                            // so let's check there
-                            const parentDirName = path.dirname(dirName);
-                            const deltaParentBaseName = `${path.basename(dirName)}.`;
-                            for await (const parentFilePath of Utils.getFiles(parentDirName, false)) {
-                                // have we already processed this file?
-                                if (copiedSet.has(parentFilePath)) {
-                                    continue;
+                        // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
+                        // so let's check there
+                        const parentDirName = path.dirname(dirName);
+                        const deltaParentBaseName = `${path.basename(dirName)}.`;
+                        for await (const parentFilePath of Utils.getFiles(parentDirName, false)) {
+                            // have we already processed this file?
+                            if (copiedSet.has(parentFilePath)) {
+                                continue;
+                            }
+                            // are we ignoring this file?
+                            if (ignoreSet.has(parentFilePath)) {
+                                await this.logMessage(`Delta (${deltaKind}) ignored: ${parentFilePath}`, true);
+                                metrics.Ign++;
+                                continue;
+                            }
+                            if (path.basename(parentFilePath).startsWith(deltaParentBaseName) && parentFilePath.endsWith(metaFileEndsWith)) {
+                                const destinationPath = parentFilePath.replace(source, destination);
+                                if (!isDryRun) {
+                                    await Utils.copyFile(parentFilePath, destinationPath);
                                 }
-                                // are we ignoring this file?
-                                if (ignoreSet.has(parentFilePath)) {
-                                    await this.logMessage(`Delta (${deltaKind}) ignored: ${parentFilePath}`, true);
-                                    metrics.Ign++;
-                                    continue;
-                                }
-                                if (path.basename(parentFilePath).startsWith(deltaParentBaseName)) {
-                                    const destinationPath = parentFilePath.replace(source, destination);
-                                    if (!isDryRun) {
-                                        await Utils.copyFile(parentFilePath, destinationPath);
-                                    }
-                                    await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
-                                    metrics.Copy++;
-                                    copiedSet.add(parentFilePath);
-                                    foundMetadataFile = true;
-                                }
+                                await this.logMessage(`Delta (${deltaKind}) found: ${destinationPath}`);
+                                metrics.Copy++;
+                                copiedSet.add(parentFilePath);
                             }
                         }
                         break;

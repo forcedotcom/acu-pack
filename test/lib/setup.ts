@@ -7,6 +7,9 @@ export default class Setup {
     public static destinationRoot = 'test/destination_folder';
     public static md5FilePath = 'test/md5.test.txt';
     public static gitFilePath = 'test/git.test.txt';
+    public static gitExpFilePath = 'test/git-exp.test.txt';
+    public static sourceExpRoot = 'test/force-app';
+    public static destinationExpRoot = 'test/destination_folder';
     public static orgAlias = null;// '';
     /*
     public static get orgAlias(): Promise<String> {

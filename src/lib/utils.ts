@@ -123,11 +123,14 @@ export default class Utils {
 
       for (const fileName of fileItems) {
         const filePath = path.join(folderPath, fileName);
-        if ((await fs.stat(filePath)).isDirectory() && isRecursive) {
+        if ((await fs.stat(filePath)).isDirectory()) {
           // recurse folders
-          for await (const subFilePath of Utils.getFiles(filePath)) {
-            yield subFilePath;
+          if(isRecursive) {
+            for await (const subFilePath of Utils.getFiles(filePath, isRecursive)) {
+              yield subFilePath;
+            }
           }
+          continue;
         } else {
           yield path.normalize(filePath);
         }
@@ -404,5 +407,9 @@ export default class Utils {
       result.body = err.message;
     }
     return result;
+  }
+
+  public static async isDirectory(filePath: string): Promise<boolean> {
+    return (await fs.stat(filePath)).isDirectory();
   }
 }
