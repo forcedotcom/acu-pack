@@ -284,10 +284,25 @@ describe('Utils Tests', function () {
             expect(exists).to.be.true;
         });
     }); 
-
     describe('Chunk Array test', function () {
         it('Chunk Array based on chunksize', function () {
             expect(Utils.chunkRecords(['1','2','3','4'],2)).to.eql([['1','2'],['3','4']]);
+        });
+    });
+    describe('normalizePath Test', function () {
+        it('Can handle nulls', function () {
+            const filePath: string = null;
+            expect(Utils.normalizePath(filePath)).to.equal(filePath);
+        });
+        it('Can Normalize Paths', function () {
+            const linSep = '/';
+            const pathParts = ['one','two','three','four','five'];
+            const isWin = path.sep === Utils.winPathSep;
+
+            const filePath = pathParts.join(!isWin ? path.sep: linSep);
+            const normFilePath = Utils.normalizePath(filePath);
+
+            expect(normFilePath).to.not.include(!isWin ? Utils.winPathSep : linSep);
         });
     });
 });

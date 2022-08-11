@@ -101,7 +101,7 @@ class DeltaProvider {
                         try {
                             for (var _k = (e_2 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(line))), _l; _l = await _k.next(), !_l.done;) {
                                 const filePath = _l.value;
-                                ignoreSet.add(path.normalize(filePath));
+                                ignoreSet.add(utils_1.default.normalizePath(filePath));
                                 await this.logMessage(`\t${filePath}`);
                             }
                         }
@@ -293,7 +293,7 @@ class DeltaProvider {
     async loadDeltaFile(deltaFilePath) {
         var e_8, _a;
         // only load the hash once
-        deltaFilePath = deltaFilePath ? path.normalize(deltaFilePath) : this.deltaOptions.deltaFilePath;
+        deltaFilePath = deltaFilePath ? utils_1.default.normalizePath(deltaFilePath) : this.deltaOptions.deltaFilePath;
         if (deltaFilePath && this.deltas.size === 0) {
             await this.logMessage(`Loading delta file: ${deltaFilePath}`);
             try {

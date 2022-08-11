@@ -111,7 +111,7 @@ export abstract class DeltaProvider {
                 await this.logMessage('Ignore Set:');
                 for await (const line of Utils.readFileLines(ignoreFile)) {
                     for await (const filePath of Utils.getFiles(line)) {
-                        ignoreSet.add(path.normalize(filePath));
+                        ignoreSet.add(Utils.normalizePath(filePath));
                         await this.logMessage(`\t${filePath}`);
                     }
                 }
@@ -239,7 +239,7 @@ export abstract class DeltaProvider {
 
     public async loadDeltaFile(deltaFilePath?: string): Promise<void> {
         // only load the hash once
-        deltaFilePath = deltaFilePath ? path.normalize(deltaFilePath) : this.deltaOptions.deltaFilePath;
+        deltaFilePath = deltaFilePath ? Utils.normalizePath(deltaFilePath) : this.deltaOptions.deltaFilePath;
         if (deltaFilePath && this.deltas.size === 0) {
             await this.logMessage(`Loading delta file: ${deltaFilePath}`);
             for await (const line of Utils.readFileLines(deltaFilePath)) {

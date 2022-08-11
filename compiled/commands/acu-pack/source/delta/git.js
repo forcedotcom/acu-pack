@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const path = require("path");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const delta_command_1 = require("../../../../lib/delta-command");
@@ -38,7 +37,7 @@ Git.gitDeltaProvider = class extends delta_provider_1.DeltaProvider {
     }
     processDeltaLine(deltaLine) {
         const parts = deltaLine.split(this.deltaLineToken);
-        this.deltas.set(path.normalize(parts[1]), parts[0]);
+        this.deltas.set(utils_1.default.normalizePath(parts[1]), parts[0]);
     }
     getMessage(name) {
         return command_base_1.CommandBase.messages.getMessage(name);
@@ -46,7 +45,7 @@ Git.gitDeltaProvider = class extends delta_provider_1.DeltaProvider {
     diff(source) {
         return tslib_1.__asyncGenerator(this, arguments, function* diff_1() {
             // git has already done all of the hashing/diffing for us
-            source = source ? path.normalize(source) : this.deltaOptions.source;
+            source = source ? utils_1.default.normalizePath(source) : this.deltaOptions.source;
             for (const [deltaFile, deltaKind] of this.deltas) {
                 // Did we exclude the filepath?
                 if (!deltaFile.startsWith(source)) {

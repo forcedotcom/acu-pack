@@ -49,7 +49,7 @@ Md5.md5DeltaProvider = class extends delta_provider_1.DeltaProvider {
         return tslib_1.__asyncGenerator(this, arguments, function* diff_1() {
             var e_1, _a;
             let hasUpdates = false;
-            source = source ? path.normalize(source) : this.deltaOptions.source;
+            source = source ? utils_1.default.normalizePath(source) : this.deltaOptions.source;
             try {
                 for (var _b = tslib_1.__asyncValues(utils_1.default.getFiles(source)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
                     const deltaFile = _c.value;

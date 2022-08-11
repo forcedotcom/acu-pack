@@ -49,6 +49,7 @@ export class RestResult {
 }
 
 export default class Utils {
+  public static winPathSep = '\\';
   public static logger: Logger;
   public static isJsonEnabled = false;
 
@@ -101,7 +102,7 @@ export default class Utils {
     if (isGlob) {
       fileItems = await this.glob(folderPath);
       for (const filePath of fileItems) {
-        yield path.normalize(filePath);
+        yield Utils.normalizePath(filePath);
       }
     } else {
       try {
@@ -132,7 +133,7 @@ export default class Utils {
           }
           continue;
         } else {
-          yield path.normalize(filePath);
+          yield Utils.normalizePath(filePath);
         }
       }
     }
@@ -411,5 +412,16 @@ export default class Utils {
 
   public static async isDirectory(filePath: string): Promise<boolean> {
     return (await fs.stat(filePath)).isDirectory();
+  }
+
+  public static normalizePath(filePath: string): string {
+    let newFilePath = filePath;
+    if(newFilePath) {
+      newFilePath = path.normalize(newFilePath);
+      if(path.sep !== Utils.winPathSep) {
+        newFilePath = newFilePath.replace(Utils.winPathSep, path.sep);
+      }
+    }
+    return newFilePath;
   }
 }

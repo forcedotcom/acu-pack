@@ -32,7 +32,7 @@ export default class Md5 extends CommandBase {
 
     public async *diff(source: string): AsyncGenerator<Delta, any, any> {
       let hasUpdates = false;
-      source = source ? path.normalize(source) : this.deltaOptions.source;
+      source = source ? Utils.normalizePath(source) : this.deltaOptions.source;
 
       for await (const deltaFile of Utils.getFiles(source)) {
         if (source && !deltaFile.startsWith(source)) {

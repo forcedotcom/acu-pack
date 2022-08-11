@@ -27,6 +27,7 @@ export declare class RestResult {
     private getError;
 }
 export default class Utils {
+    static winPathSep: string;
     static logger: Logger;
     static isJsonEnabled: boolean;
     static TempFilesPath: string;
@@ -72,4 +73,5 @@ export default class Utils {
     static chunkRecords(recordsToChunk: any[], chunkSize: number): any[];
     static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: []): Promise<RestResult>;
     static isDirectory(filePath: string): Promise<boolean>;
+    static normalizePath(filePath: string): string;
 }

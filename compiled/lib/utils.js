@@ -83,7 +83,7 @@ class Utils {
             if (isGlob) {
                 fileItems = yield tslib_1.__await(this.glob(folderPath));
                 for (const filePath of fileItems) {
-                    yield yield tslib_1.__await(path.normalize(filePath));
+                    yield yield tslib_1.__await(Utils.normalizePath(filePath));
                 }
             }
             else {
@@ -126,7 +126,7 @@ class Utils {
                         continue;
                     }
                     else {
-                        yield yield tslib_1.__await(path.normalize(filePath));
+                        yield yield tslib_1.__await(Utils.normalizePath(filePath));
                     }
                 }
             }
@@ -384,8 +384,19 @@ class Utils {
     static async isDirectory(filePath) {
         return (await fs_1.promises.stat(filePath)).isDirectory();
     }
+    static normalizePath(filePath) {
+        let newFilePath = filePath;
+        if (newFilePath) {
+            newFilePath = path.normalize(newFilePath);
+            if (path.sep !== Utils.winPathSep) {
+                newFilePath = newFilePath.replace(Utils.winPathSep, path.sep);
+            }
+        }
+        return newFilePath;
+    }
 }
 exports.default = Utils;
+Utils.winPathSep = '\\';
 Utils.isJsonEnabled = false;
 Utils.TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
 Utils.defaultXmlOptions = {

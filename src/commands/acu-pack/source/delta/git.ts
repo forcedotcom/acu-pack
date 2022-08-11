@@ -1,4 +1,3 @@
-import path = require('path');
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { DeltaCommandBase } from '../../../../lib/delta-command';
@@ -22,7 +21,7 @@ export default class Git extends CommandBase {
 
     public processDeltaLine(deltaLine: string): void {
       const parts = deltaLine.split(this.deltaLineToken);
-      this.deltas.set(path.normalize(parts[1]), parts[0]);
+      this.deltas.set(Utils.normalizePath(parts[1]), parts[0]);
     }
 
     public getMessage(name: string): string {
@@ -31,7 +30,7 @@ export default class Git extends CommandBase {
 
     public async *diff(source?: string): AsyncGenerator<Delta, any, any> {
       // git has already done all of the hashing/diffing for us
-      source = source ? path.normalize(source) : this.deltaOptions.source;
+      source = source ? Utils.normalizePath(source) : this.deltaOptions.source;
       for (const [deltaFile, deltaKind] of this.deltas) {
         // Did we exclude the filepath?
         if (!deltaFile.startsWith(source)) {
