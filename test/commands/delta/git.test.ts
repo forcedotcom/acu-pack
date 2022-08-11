@@ -22,6 +22,7 @@ beforeEach(async () => {
   gitProvider.deltas.clear();
 });
 describe('GitDeltaProvider Tests', function () {
+    /*
   it('Has Name', function () {
     expect(gitProvider.name).equals('git');
   });
@@ -119,6 +120,7 @@ describe('GitDeltaProvider Tests', function () {
       expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
     });
   });
+  */
   describe('Full Folder Copy Tests', function () {
     beforeEach(async () => {
       /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */

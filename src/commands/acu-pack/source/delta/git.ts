@@ -22,7 +22,7 @@ export default class Git extends CommandBase {
 
     public processDeltaLine(deltaLine: string): void {
       const parts = deltaLine.split(this.deltaLineToken);
-      this.deltas.set(parts[1], parts[0]);
+      this.deltas.set(path.normalize(parts[1]), parts[0]);
     }
 
     public getMessage(name: string): string {

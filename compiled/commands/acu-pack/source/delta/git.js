@@ -38,7 +38,7 @@ Git.gitDeltaProvider = class extends delta_provider_1.DeltaProvider {
     }
     processDeltaLine(deltaLine) {
         const parts = deltaLine.split(this.deltaLineToken);
-        this.deltas.set(parts[1], parts[0]);
+        this.deltas.set(path.normalize(parts[1]), parts[0]);
     }
     getMessage(name) {
         return command_base_1.CommandBase.messages.getMessage(name);
