@@ -121,10 +121,10 @@ describe('GitDeltaProvider Tests', function () {
   });
   describe('Full Folder Copy Tests', function () {
     beforeEach(async () => {
-      /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-      // @ts-ignore
-      if((await Utils.pathExists(path))) {
-        await fs.rm(path, { recursive: true });
+      if((await Utils.pathExists(Setup.destinationRoot))) {
+        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
+        await fs.rmdir(Setup.destinationRoot, { recursive: true });
       }
       await Utils.mkDirPath(Setup.destinationRoot);
     });
