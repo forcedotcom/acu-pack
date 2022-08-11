@@ -38,7 +38,7 @@ export default class Setup {
 
     /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
     // @ts-ignore
-    await fs.rmdir(folder, { recursive: true });
+    await fs.rm(folder, { recursive: true });
 
     let deltaKind = 'A';
     let myPath = folder;

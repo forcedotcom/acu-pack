@@ -123,7 +123,7 @@ describe('GitDeltaProvider Tests', function () {
     beforeEach(async () => {
       /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
       // @ts-ignore
-      await fs.rmdir(Setup.destinationRoot, { recursive: true });
+      await fs.rm(path, { recursive: true });
       await Utils.mkDirPath(Setup.destinationRoot);
     });
     it('Copies files correctly', async function () {
