@@ -232,7 +232,7 @@ class DeltaProvider {
                                 }
                                 finally { if (e_6) throw e_6.error; }
                             }
-                            // Sometimes the meta-data files can be located in the parent dir (staticresources & documents)
+                            // Sometimes the meta-data files can be located in the parent dir (staticresources, documents, experiences)
                             // so let's check there
                             const parentDirName = path.dirname(dirName);
                             const deltaParentBaseName = `${path.basename(dirName)}.`;
