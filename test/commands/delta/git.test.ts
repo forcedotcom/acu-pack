@@ -10,6 +10,13 @@ const gitProvider = new Git.gitDeltaProvider();
 let testFilesCreated = 0;
 
 beforeEach(async () => {
+  if((await Utils.pathExists(Setup.destinationRoot))) {
+    /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+    // @ts-ignore
+    await fs.rmdir(Setup.destinationRoot, { recursive: true });
+  }
+  await Utils.mkDirPath(Setup.destinationRoot);
+
   testFilesCreated = 0;
   for await (const testFile of Setup.createTestFiles(Setup.sourceRoot)) {
     expect(testFile).is.not.null;
@@ -120,16 +127,7 @@ describe('GitDeltaProvider Tests', function () {
     });
   });
   describe('Full Folder Copy Tests', function () {
-    beforeEach(async () => {
-      if((await Utils.pathExists(Setup.destinationRoot))) {
-        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-        // @ts-ignore
-        await fs.rmdir(Setup.destinationRoot, { recursive: true });
-      }
-      await Utils.mkDirPath(Setup.destinationRoot);
-    });
     it('Copies files correctly', async function () {
-      
       const deltaOptions = new DeltaOptions();
       deltaOptions.deltaFilePath = Setup.gitFullDirFilePath;
       deltaOptions.source = Setup.sourceForceAppRoot;
