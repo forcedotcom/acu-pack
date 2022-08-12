@@ -180,7 +180,7 @@ class DeltaProvider {
                     const delta = _s.value;
                     const deltaKind = delta.deltaKind;
                     const deltaFile = delta.deltaFile;
-                    await this.logMessage(`Delta => ${deltaFile}`);
+                    await this.logMessage(`Delta =>${deltaKind} ${deltaFile}`);
                     if (ignoreSet.has(deltaFile)) {
                         await this.logMessage(`Delta (${deltaKind}) ignored: ${deltaFile}`, true);
                         metrics.Ign++;
@@ -206,8 +206,10 @@ class DeltaProvider {
                             try {
                                 for (var _t = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(dirName, fullCopyPath != null))), _u; _u = await _t.next(), !_u.done;) {
                                     const filePath = _u.value;
+                                    await this.logMessage(`Source File => ${filePath}`);
                                     // have we already processed this file?
                                     if (copiedSet.has(filePath)) {
+                                        await this.logMessage(`Already Copied ${filePath} - skipping`);
                                         continue;
                                     }
                                     if (filePath.startsWith(fullCopyPath) || path.basename(filePath).startsWith(deltaFileBaseName)) {
@@ -244,6 +246,7 @@ class DeltaProvider {
                                     const parentFilePath = _w.value;
                                     // have we already processed this file?
                                     if (copiedSet.has(parentFilePath)) {
+                                        await this.logMessage(`Already Copied ${parentFilePath} - skipping`);
                                         continue;
                                     }
                                     // are we ignoring this file?

@@ -181,12 +181,11 @@ export abstract class DeltaProvider {
                         const fullCopyPath = DeltaProvider.getFullCopyPath(delta.deltaFile, deltaOptions);
                         const dirName = fullCopyPath ?? path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
-                        let filesFound = false;
                         for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
-                            filesFound = true;
+                            await this.logMessage(`Source File => ${filePath}`);
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
-                                await this.logMessage(`Already Coppied ${filePath} - skipping`);
+                                await this.logMessage(`Already Copied ${filePath} - skipping`);
                                 continue;
                             }
                             if (filePath.startsWith(fullCopyPath) || path.basename(filePath).startsWith(deltaFileBaseName)) {
@@ -205,9 +204,6 @@ export abstract class DeltaProvider {
                                 }
                             }
                         }
-                        if(!filesFound) {
-                            await this.logMessage(`WARNING: No File Found in ${dirName}.`, true);
-                        }
                         // Sometimes the meta-data files can be located in the parent dir (staticresources, documents, experiences)
                         // so let's check there
                         const parentDirName = path.dirname(dirName);
@@ -215,6 +211,7 @@ export abstract class DeltaProvider {
                         for await (const parentFilePath of Utils.getFiles(parentDirName, false)) {
                             // have we already processed this file?
                             if (copiedSet.has(parentFilePath)) {
+                                await this.logMessage(`Already Copied ${parentFilePath} - skipping`);
                                 continue;
                             }
                             // are we ignoring this file?
