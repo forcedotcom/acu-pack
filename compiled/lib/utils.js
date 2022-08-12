@@ -388,7 +388,7 @@ class Utils {
         let newFilePath = filePath;
         if (newFilePath) {
             newFilePath = path.normalize(newFilePath);
-            const regEx = new RegExp(path.sep === '\\' ? '/' : '\\\\', 'g');
+            const regEx = new RegExp(path.sep === '\\' ? '/' : `\\`, 'g');
             newFilePath = newFilePath.replace(regEx, path.sep);
         }
         return newFilePath;
