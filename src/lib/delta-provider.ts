@@ -268,7 +268,7 @@ export abstract class DeltaProvider {
         } else {
             await fs.appendFile(this.logFile, `${JSON.stringify(message)}${os.EOL}`);
         }
-        if (includeConsole) {
+        if (includeConsole || this.deltaOptions.logAllMessagesToConsole) {
             /* eslint-disable-next-line no-console */
             console.log(message);
         }

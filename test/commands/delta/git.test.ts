@@ -126,7 +126,6 @@ describe('GitDeltaProvider Tests', function () {
       expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
     });
   });
-  /*
   describe('Full Folder Copy Tests', function () {
     it('Copies files correctly', async function () {
       // Validate Delta File
@@ -137,6 +136,7 @@ describe('GitDeltaProvider Tests', function () {
       deltaOptions.deltaFilePath = Setup.gitFullDirFilePath;
       deltaOptions.source = Setup.sourceForceAppRoot;
       deltaOptions.destination = Setup.destinationRoot;
+      deltaOptions.logAllMessagesToConsole = true;
 
       await gitProvider.run(deltaOptions);
 
@@ -151,5 +151,4 @@ describe('GitDeltaProvider Tests', function () {
 
     });
   });
-  */
 });

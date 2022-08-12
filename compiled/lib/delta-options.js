@@ -15,6 +15,7 @@ class DeltaOptions extends options_1.OptionsBase {
         this.ignoreFile = null;
         this.isDryRun = false;
         this.fullCopyDirNames = delta_command_1.DeltaCommandBase.defaultCopyDirList;
+        this.logAllMessagesToConsole = false;
     }
     normalize() {
         if (this.deltaFilePath) {

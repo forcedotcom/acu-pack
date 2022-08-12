@@ -130,14 +130,13 @@ export default class Access extends CommandBase {
       getPermissionSetAssignmentCallback
     );
 
+    // create a workbook with a Tab for each App
+    const workbookMap = new Map<string, string[][]>();
     try {
       const reportPath = path
         .resolve(this.flags.report || Access.defaultReportPath)
         .replace(/\{ORG\}/, this.orgAlias);
       this.ux.log(`Writing Report: ${reportPath}`);
-
-      // create a workbook with a Tab for each App
-      const workbookMap = new Map<string, string[][]>();
       for (const appLabel of appAccessByAppLabel.keys() ) {
         const sheet: string[][] = [['Username', 'User Id','PermissionSet Label','PermissionSet Id','Profile Label','Profile Id','Expiration Date']];
         for (const permissionSetAssignment of appAccessByAppLabel.get(appLabel) ) {
@@ -155,6 +154,7 @@ export default class Access extends CommandBase {
       Office.writeXlxsWorkbook(workbookMap, reportPath);
     } catch (err) {
       this.ux.log('Error Writing XLSX Report: ' + JSON.stringify(err.message));
+      this.ux.log('Report: ' + JSON.stringify(workbookMap));
       throw err;
     }
   }

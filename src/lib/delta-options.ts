@@ -13,6 +13,7 @@ export class DeltaOptions extends OptionsBase {
     public ignoreFile: string = null;
     public isDryRun = false;
     public fullCopyDirNames: string[] = DeltaCommandBase.defaultCopyDirList;
+    public logAllMessagesToConsole = false;
 
     public normalize(): void {
         if (this.deltaFilePath) {
