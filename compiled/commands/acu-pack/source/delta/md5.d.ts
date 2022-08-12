@@ -25,6 +25,7 @@ export default class Md5 extends CommandBase {
             D: string;
         };
         isFullCopyPath(filePath: string, deltaOptions: import("../../../../lib/delta-options").DeltaOptions): boolean;
+        getFullCopyPath(filePath: string, deltaOptions: import("../../../../lib/delta-options").DeltaOptions): string;
     };
     protected static flagsConfig: any;
     protected name: string;

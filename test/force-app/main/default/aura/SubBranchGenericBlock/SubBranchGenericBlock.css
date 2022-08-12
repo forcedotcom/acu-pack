@@ -1,0 +1,10 @@
+.THIS {
+}
+
+.THIS .spinnerContainer {
+    position: relative;
+}
+
+.THIS .spinner {
+    position: absolute;
+}

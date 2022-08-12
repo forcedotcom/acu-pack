@@ -26,6 +26,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:apex:coverage:clear -u ORG_ALIAS
 Some common debug commands:
 
 ```sh-session
+$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:access -u ORG_ALIAS
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:unmask -u ORG_ALIAS -l test.user@trail.com.trail
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:user:unmask -u ORG_ALIAS -f ./unmask-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:admin:workspace:delete -u ORG_ALIAS

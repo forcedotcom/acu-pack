@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportFolder xmlns="http://soap.sforce.com/2006/04/metadata">
+    <folderShares>
+        <accessLevel>Manage</accessLevel>
+        <sharedTo>diana.vazquez@salesforce.com.dellmfg</sharedTo>
+        <sharedToType>User</sharedToType>
+    </folderShares>
+    <name>Acumen Solutions Reporting for Testing</name>
+</ReportFolder>

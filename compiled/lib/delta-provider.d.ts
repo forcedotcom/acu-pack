@@ -17,6 +17,7 @@ export declare abstract class DeltaProvider {
     abstract deltaLineToken: string;
     abstract deltas: Map<string, any>;
     static isFullCopyPath(filePath: string, deltaOptions: DeltaOptions): boolean;
+    static getFullCopyPath(filePath: string, deltaOptions: DeltaOptions): string;
     run(deltaOptions: DeltaOptions): Promise<any>;
     loadDeltaFile(deltaFilePath?: string): Promise<void>;
     logMessage(message: string, includeConsole?: boolean): Promise<void>;

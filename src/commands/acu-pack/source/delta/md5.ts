@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path = require('path');
+import os = require('os');
 import { flags } from '@salesforce/command';
 import md5File = require('md5-file');
 import { CommandBase } from '../../../../lib/command-base';
@@ -32,7 +33,7 @@ export default class Md5 extends CommandBase {
 
     public async *diff(source: string): AsyncGenerator<Delta, any, any> {
       let hasUpdates = false;
-      source = source ? path.normalize(source) : this.deltaOptions.source;
+      source = source ? Utils.normalizePath(source) : this.deltaOptions.source;
 
       for await (const deltaFile of Utils.getFiles(source)) {
         if (source && !deltaFile.startsWith(source)) {
@@ -90,7 +91,7 @@ export default class Md5 extends CommandBase {
           await fs.unlink(md5FilePath);
         }
         for (const [fp, data] of this.deltas) {
-          await fs.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash as string}\r\n`);
+          await fs.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash as string}${os.EOL}`);
         }
         await this.logMessage(`Updated hash file: ${md5FilePath} with ${this.deltas.size} entries.`, true);
       }

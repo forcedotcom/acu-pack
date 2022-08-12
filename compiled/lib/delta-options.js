@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeltaOptions = void 0;
-const path = require("path");
+const utils_1 = require("../lib/utils");
 const delta_command_1 = require("./delta-command");
 const options_1 = require("./options");
 class DeltaOptions extends options_1.OptionsBase {
@@ -15,25 +15,26 @@ class DeltaOptions extends options_1.OptionsBase {
         this.ignoreFile = null;
         this.isDryRun = false;
         this.fullCopyDirNames = delta_command_1.DeltaCommandBase.defaultCopyDirList;
+        this.logAllMessagesToConsole = false;
     }
     normalize() {
         if (this.deltaFilePath) {
-            this.deltaFilePath = path.normalize(this.deltaFilePath);
+            this.deltaFilePath = utils_1.default.normalizePath(this.deltaFilePath);
         }
         if (this.source) {
-            this.source = path.normalize(this.source);
+            this.source = utils_1.default.normalizePath(this.source);
         }
         if (this.destination) {
-            this.destination = path.normalize(this.destination);
+            this.destination = utils_1.default.normalizePath(this.destination);
         }
         if (this.deleteReportFile) {
-            this.deleteReportFile = path.normalize(this.deleteReportFile);
+            this.deleteReportFile = utils_1.default.normalizePath(this.deleteReportFile);
         }
         if (this.forceFile) {
-            this.forceFile = path.normalize(this.forceFile);
+            this.forceFile = utils_1.default.normalizePath(this.forceFile);
         }
         if (this.ignoreFile) {
-            this.ignoreFile = path.normalize(this.ignoreFile);
+            this.ignoreFile = utils_1.default.normalizePath(this.ignoreFile);
         }
     }
     loadDefaults() {

@@ -83,7 +83,7 @@ class Utils {
             if (isGlob) {
                 fileItems = yield tslib_1.__await(this.glob(folderPath));
                 for (const filePath of fileItems) {
-                    yield yield tslib_1.__await(path.normalize(filePath));
+                    yield yield tslib_1.__await(Utils.normalizePath(filePath));
                 }
             }
             else {
@@ -106,24 +106,27 @@ class Utils {
                 }
                 for (const fileName of fileItems) {
                     const filePath = path.join(folderPath, fileName);
-                    if ((yield tslib_1.__await(fs_1.promises.stat(filePath))).isDirectory() && isRecursive) {
-                        try {
-                            // recurse folders
-                            for (var _b = (e_1 = void 0, tslib_1.__asyncValues(Utils.getFiles(filePath))), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                                const subFilePath = _c.value;
-                                yield yield tslib_1.__await(subFilePath);
-                            }
-                        }
-                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                        finally {
+                    if ((yield tslib_1.__await(fs_1.promises.stat(filePath))).isDirectory()) {
+                        // recurse folders
+                        if (isRecursive) {
                             try {
-                                if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
+                                for (var _b = (e_1 = void 0, tslib_1.__asyncValues(Utils.getFiles(filePath, isRecursive))), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                                    const subFilePath = _c.value;
+                                    yield yield tslib_1.__await(subFilePath);
+                                }
                             }
-                            finally { if (e_1) throw e_1.error; }
+                            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                            finally {
+                                try {
+                                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
+                                }
+                                finally { if (e_1) throw e_1.error; }
+                            }
                         }
+                        continue;
                     }
                     else {
-                        yield yield tslib_1.__await(path.normalize(filePath));
+                        yield yield tslib_1.__await(Utils.normalizePath(filePath));
                     }
                 }
             }
@@ -377,6 +380,19 @@ class Utils {
             result.body = err.message;
         }
         return result;
+    }
+    static async isDirectory(filePath) {
+        return (await fs_1.promises.stat(filePath)).isDirectory();
+    }
+    static normalizePath(filePath) {
+        let newFilePath = filePath;
+        if (newFilePath) {
+            newFilePath = path.normalize(newFilePath);
+            // eslint-disable-next-line @typescript-eslint/quotes
+            const regEx = new RegExp(path.sep === '\\' ? '/' : "\\\\", 'g');
+            newFilePath = newFilePath.replace(regEx, path.sep);
+        }
+        return newFilePath;
     }
 }
 exports.default = Utils;

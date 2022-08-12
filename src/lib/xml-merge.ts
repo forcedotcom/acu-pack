@@ -1,3 +1,4 @@
+import os = require('os');
 import path = require('path');
 import { promises as fs } from 'fs';
 import Utils from './utils';
@@ -79,9 +80,9 @@ export default class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     public static async logMessage(message: string, logFile: string, ux?: any): Promise<void> {
         if (typeof message === 'string') {
-            await fs.appendFile(logFile, `${message}\r\n`);
+            await fs.appendFile(logFile, `${message}${os.EOL}`);
         } else {
-            await fs.appendFile(logFile, `${JSON.stringify(message)}\r\n`);
+            await fs.appendFile(logFile, `${JSON.stringify(message)}${os.EOL}`);
         }
         if (ux) {
             ux.log(message);
