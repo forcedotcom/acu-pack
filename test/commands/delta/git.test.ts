@@ -138,9 +138,17 @@ describe('GitDeltaProvider Tests', function () {
       deltaOptions.destination = Setup.destinationRoot;
       deltaOptions.logAllMessagesToConsole = true;
 
+      let filesCount = 0;
+      for await (const filePath of Utils.getFiles(Setup.sourceForceAppRoot)) {
+        if (filePath) {
+            filesCount++;
+        }
+      }
+      expect(25).equals(filesCount);
+
       await gitProvider.run(deltaOptions);
 
-      let filesCount = 0;
+      filesCount = 0;
       for await (const filePath of Utils.getFiles(Setup.destinationRoot)) {
         if (filePath) {
             filesCount++;

@@ -81,6 +81,11 @@ class DeltaProvider {
             const ignoreSet = new Set();
             const copiedSet = new Set();
             const metaFileEndsWith = '-meta.xml';
+            // No destination? no need to continue
+            if (!destination) {
+                await this.logMessage('No destination defined - nothing to do.');
+                return metrics;
+            }
             // Create Deleted Report File
             if (deleteReportFile && destination) {
                 try {
@@ -175,10 +180,6 @@ class DeltaProvider {
                     const delta = _s.value;
                     const deltaKind = delta.deltaKind;
                     const deltaFile = delta.deltaFile;
-                    // No destination? no need to continue
-                    if (!destination) {
-                        continue;
-                    }
                     if (ignoreSet.has(deltaFile)) {
                         await this.logMessage(`Delta (${deltaKind}) ignored: ${deltaFile}`, true);
                         metrics.Ign++;
@@ -284,10 +285,12 @@ class DeltaProvider {
                 }
                 finally { if (e_5) throw e_5.error; }
             }
-            await this.logMessage(`Metrics: ${JSON.stringify(metrics)}`, true);
         }
         catch (err) {
             await this.logMessage(err, true);
+        }
+        finally {
+            await this.logMessage(`Metrics: ${JSON.stringify(metrics)}`, true);
         }
         return metrics;
     }
