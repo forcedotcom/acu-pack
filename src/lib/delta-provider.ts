@@ -186,7 +186,7 @@ export abstract class DeltaProvider {
                             filesFound = true;
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
-                                await this.logMessage(`Already Coppied ${filePath} - skipping`, true);
+                                await this.logMessage(`Already Coppied ${filePath} - skipping`);
                                 continue;
                             }
                             if (filePath.startsWith(fullCopyPath) || path.basename(filePath).startsWith(deltaFileBaseName)) {
