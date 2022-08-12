@@ -296,14 +296,15 @@ describe('Utils Tests', function () {
             expect(Utils.normalizePath(filePath)).to.equal(filePath);
         });
         it('Can Normalize Paths', function () {
-            const linSep = '/';
+            const unixSep = '/';
+            const winSep = '\\';
             const pathParts = ['one','two','three','four','five'];
-            const isWin = path.sep === Utils.winPathSep;
+            const isWin = path.sep === '\\';
 
-            const filePath = pathParts.join(!isWin ? path.sep: linSep);
+            const filePath = pathParts.join(isWin ? unixSep : winSep);
             const normFilePath = Utils.normalizePath(filePath);
 
-            expect(normFilePath).to.not.include(!isWin ? Utils.winPathSep : linSep);
+            expect(normFilePath).to.not.include(isWin ? unixSep : winSep);
         });
     });
 });
