@@ -181,8 +181,9 @@ export abstract class DeltaProvider {
                         const fullCopyPath = DeltaProvider.getFullCopyPath(delta.deltaFile, deltaOptions);
                         const dirName = fullCopyPath ?? path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
-                        const filesFound = false;
+                        let filesFound = false;
                         for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
+                            filesFound = true;
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
                                 await this.logMessage(`Already Coppied ${filePath} - skipping`, true);
@@ -203,6 +204,9 @@ export abstract class DeltaProvider {
                                     copiedSet.add(filePath);
                                 }
                             }
+                        }
+                        if(!filesFound) {
+                            await this.logMessage(`WARNING: No File Found in ${dirName}.`, true);
                         }
                         // Sometimes the meta-data files can be located in the parent dir (staticresources, documents, experiences)
                         // so let's check there
