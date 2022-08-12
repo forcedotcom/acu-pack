@@ -388,15 +388,15 @@ class Utils {
         let newFilePath = filePath;
         if (newFilePath) {
             newFilePath = path.normalize(newFilePath);
-            if (path.sep !== Utils.winPathSep) {
-                newFilePath = newFilePath.replace(Utils.winPathSep, path.sep);
-            }
+            const regEx = new RegExp(path.sep === Utils.winPathSep ? Utils.unixPathSep : Utils.winPathSep, 'g');
+            newFilePath = newFilePath.replace(regEx, path.sep);
         }
         return newFilePath;
     }
 }
 exports.default = Utils;
 Utils.winPathSep = '\\';
+Utils.unixPathSep = '/';
 Utils.isJsonEnabled = false;
 Utils.TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
 Utils.defaultXmlOptions = {

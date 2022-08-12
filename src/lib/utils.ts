@@ -50,6 +50,7 @@ export class RestResult {
 
 export default class Utils {
   public static winPathSep = '\\';
+  public static unixPathSep = '/';
   public static logger: Logger;
   public static isJsonEnabled = false;
 
@@ -418,9 +419,9 @@ export default class Utils {
     let newFilePath = filePath;
     if(newFilePath) {
       newFilePath = path.normalize(newFilePath);
-      if(path.sep !== Utils.winPathSep) {
-        newFilePath = newFilePath.replace(Utils.winPathSep, path.sep);
-      }
+
+      const regEx = new RegExp(path.sep === Utils.winPathSep ? Utils.unixPathSep : Utils.winPathSep,'g');
+      newFilePath = newFilePath.replace(regEx, path.sep);
     }
     return newFilePath;
   }

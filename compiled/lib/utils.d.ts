@@ -28,6 +28,7 @@ export declare class RestResult {
 }
 export default class Utils {
     static winPathSep: string;
+    static unixPathSep: string;
     static logger: Logger;
     static isJsonEnabled: boolean;
     static TempFilesPath: string;
