@@ -157,6 +157,8 @@ export abstract class DeltaProvider {
                 const deltaKind = delta.deltaKind;
                 const deltaFile = delta.deltaFile;
                 
+                await this.logMessage(`Delta => ${deltaFile}`);
+
                 if (ignoreSet.has(deltaFile)) {
                     await this.logMessage(`Delta (${deltaKind}) ignored: ${deltaFile}`, true);
                     metrics.Ign++;
