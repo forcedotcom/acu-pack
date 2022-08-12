@@ -156,9 +156,6 @@ export abstract class DeltaProvider {
             for await (const delta of this.diff(source)) {
                 const deltaKind = delta.deltaKind;
                 const deltaFile = delta.deltaFile;
-                
-                await this.logMessage(`Delta =>${deltaKind} ${deltaFile}`);
-
                 if (ignoreSet.has(deltaFile)) {
                     await this.logMessage(`Delta (${deltaKind}) ignored: ${deltaFile}`, true);
                     metrics.Ign++;
@@ -179,11 +176,9 @@ export abstract class DeltaProvider {
                     case DeltaProvider.deltaTypeKind.M: {
                         // check the source folder for associated files.
                         const fullCopyPath = DeltaProvider.getFullCopyPath(deltaFile, deltaOptions);
-                        await this.logMessage(`fullCopyPath => ${fullCopyPath}`);
                         const dirName = fullCopyPath ?? path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
                         for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
-                            await this.logMessage(`Source File => ${filePath}`);
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
                                 await this.logMessage(`Already Copied ${filePath} - skipping`);
