@@ -32,7 +32,6 @@ export default class Setup {
     // These files are created at the testing root folder
     await Utils.deleteFile(Setup.md5FilePath);
     await Utils.deleteFile(Setup.gitFilePath);
-    await Utils.deleteFile(Setup.gitFullDirFilePath);
 
     await Utils.mkDirPath(folder);
     await Utils.mkDirPath(Setup.sourceRoot);
@@ -74,17 +73,5 @@ export default class Setup {
 
     await fs.appendFile(Setup.md5FilePath, `${filePath}=1${os.EOL}`);
     await fs.appendFile(Setup.gitFilePath, `${deltaKind}\t${filePath}${os.EOL}`);
-
-    const deltaLines = [
-      'test\\force-app\\main\\default\\aura\\SubBranchGenericBlock\\SubBranchGenericBlock.cmp-meta.xml',
-      'test\\force-app\\main\\default\\documents\\SharedDocuments\\SharedDocuments.txt',
-      'test\\force-app\\main\\default\\experiences\\accountTeamDisplayContainer\\brandingSets\\accountTeamDisplayContainer.html',
-      'test\\force-app\\main\\default\\reports\\AcumenSolutionsReportingforTesting\\User_Report_qce.report-meta.xml',
-      'test\\force-app\\main\\default\\staticresources\\CustomDatatableHeader.css'
-    ];
-
-    for(const deltaLine of deltaLines) {
-      await fs.appendFile(Setup.gitFullDirFilePath, `M\t${deltaLine}${os.EOL}`);
-    }
   }
 }
