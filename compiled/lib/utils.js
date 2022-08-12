@@ -388,7 +388,8 @@ class Utils {
         let newFilePath = filePath;
         if (newFilePath) {
             newFilePath = path.normalize(newFilePath);
-            const regEx = new RegExp(path.sep === '\\' ? '/' : `\\`, 'g');
+            // eslint-disable-next-line @typescript-eslint/quotes
+            const regEx = new RegExp(path.sep === '\\' ? '/' : "\\\\", 'g');
             newFilePath = newFilePath.replace(regEx, path.sep);
         }
         return newFilePath;
