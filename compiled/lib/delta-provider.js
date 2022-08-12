@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeltaProvider = exports.Delta = void 0;
 const tslib_1 = require("tslib");
+const os = require("os");
 const path = require("path");
 const fs_1 = require("fs");
 const utils_1 = require("./utils");
@@ -189,7 +190,7 @@ class DeltaProvider {
                         case DeltaProvider.deltaTypeKind.D:
                             await this.logMessage(`DELETED File: ${deltaFile}`);
                             if (deleteReportFile) {
-                                await fs_1.promises.appendFile(deleteReportFile, deltaFile + '\r\n');
+                                await fs_1.promises.appendFile(deleteReportFile, deltaFile + os.EOL);
                             }
                             metrics.Del++;
                             break;
@@ -327,10 +328,10 @@ class DeltaProvider {
     }
     async logMessage(message, includeConsole = false) {
         if (typeof message === 'string') {
-            await fs_1.promises.appendFile(this.logFile, `${message}\r\n`);
+            await fs_1.promises.appendFile(this.logFile, `${message}${os.EOL}`);
         }
         else {
-            await fs_1.promises.appendFile(this.logFile, `${JSON.stringify(message)}\r\n`);
+            await fs_1.promises.appendFile(this.logFile, `${JSON.stringify(message)}${os.EOL}`);
         }
         if (includeConsole) {
             /* eslint-disable-next-line no-console */

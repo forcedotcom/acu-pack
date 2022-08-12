@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxTasks = exports.SfdxOrgInfo = exports.SfdxJobInfo = void 0;
 const tslib_1 = require("tslib");
+const os = require("os");
 const path = require("path");
 const fs_1 = require("fs");
 const ts_types_1 = require("@salesforce/ts-types");
@@ -211,9 +212,9 @@ class SfdxTasks {
         // Create for writing - truncates if exists
         const stream = fs_1.openSync(tempFileName, 'w');
         // NOTE: Do NOT include spaces between fields...results in an error
-        fs_1.writeSync(stream, 'ApexClassId,ShouldSkipCodeCoverage\r\n');
+        fs_1.writeSync(stream, `ApexClassId,ShouldSkipCodeCoverage${os.EOL}`);
         for (const sfdxEntity of sfdxEntities) {
-            fs_1.writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}\r\n`);
+            fs_1.writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}${os.EOL}`);
         }
         const command = `${constants_1.default.SFDX_DATA_UPSERT} --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
         const results = await sfdx_core_1.SfdxCore.command(command);

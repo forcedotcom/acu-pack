@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const os = require("os");
 const path = require("path");
 const fs_1 = require("fs");
 const utils_1 = require("./utils");
@@ -75,10 +76,10 @@ class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async logMessage(message, logFile, ux) {
         if (typeof message === 'string') {
-            await fs_1.promises.appendFile(logFile, `${message}\r\n`);
+            await fs_1.promises.appendFile(logFile, `${message}${os.EOL}`);
         }
         else {
-            await fs_1.promises.appendFile(logFile, `${JSON.stringify(message)}\r\n`);
+            await fs_1.promises.appendFile(logFile, `${JSON.stringify(message)}${os.EOL}`);
         }
         if (ux) {
             ux.log(message);

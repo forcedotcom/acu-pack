@@ -1,3 +1,4 @@
+import os = require('os');
 import path = require('path');
 import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
@@ -48,7 +49,7 @@ describe('Utils Tests', function () {
         const testFileLineCount = 25;
         beforeEach(async function () {
             for (let index = 0; index < testFileLineCount; index++) {
-                await fs.appendFile(testFilePathTest, `${index}\r\n`);
+                await fs.appendFile(testFilePathTest, `${index}${os.EOL}`);
             }
         });
         it('Can read file', async function () {
