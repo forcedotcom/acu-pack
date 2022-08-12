@@ -128,6 +128,10 @@ describe('GitDeltaProvider Tests', function () {
   });
   describe('Full Folder Copy Tests', function () {
     it('Copies files correctly', async function () {
+      // Validate Delta File
+      await gitProvider.loadDeltaFile(Setup.gitFullDirFilePath);
+      expect(gitProvider.deltas.size).not.equals(0);
+
       const deltaOptions = new DeltaOptions();
       deltaOptions.deltaFilePath = Setup.gitFullDirFilePath;
       deltaOptions.source = Setup.sourceForceAppRoot;

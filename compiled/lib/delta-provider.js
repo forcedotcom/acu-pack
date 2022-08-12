@@ -316,7 +316,13 @@ class DeltaProvider {
                 }
                 finally { if (e_8) throw e_8.error; }
             }
-            await this.logMessage(`Loaded delta file: ${deltaFilePath} with ${this.deltas.size} entries.`);
+            const isEmpty = this.deltas.size === 0;
+            if (!isEmpty) {
+                await this.logMessage(`Loaded delta file: ${deltaFilePath} with ${this.deltas.size} entries.`);
+            }
+            else {
+                await this.logMessage(`WARNING: blank or invalid delta file: ${deltaFilePath}.`, true);
+            }
         }
     }
     async logMessage(message, includeConsole = false) {
