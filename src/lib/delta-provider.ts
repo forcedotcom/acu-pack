@@ -233,6 +233,8 @@ export abstract class DeltaProvider {
                         await this.logMessage(`Delta (${deltaKind}): ${deltaFile}`);
                         metrics.None++;
                         break;
+                    default:
+                        await this.logMessage(`WARNING: Unknown Delta (${deltaKind}): ${deltaFile}`);
                 }
             }
         } catch (err) {

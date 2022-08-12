@@ -180,6 +180,7 @@ class DeltaProvider {
                     const delta = _s.value;
                     const deltaKind = delta.deltaKind;
                     const deltaFile = delta.deltaFile;
+                    await this.logMessage(`Delta => ${deltaFile}`);
                     if (ignoreSet.has(deltaFile)) {
                         await this.logMessage(`Delta (${deltaKind}) ignored: ${deltaFile}`, true);
                         metrics.Ign++;
@@ -275,6 +276,8 @@ class DeltaProvider {
                             await this.logMessage(`Delta (${deltaKind}): ${deltaFile}`);
                             metrics.None++;
                             break;
+                        default:
+                            await this.logMessage(`WARNING: Unknown Delta (${deltaKind}): ${deltaFile}`);
                     }
                 }
             }
