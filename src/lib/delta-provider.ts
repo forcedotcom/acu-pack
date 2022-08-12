@@ -181,9 +181,11 @@ export abstract class DeltaProvider {
                         const fullCopyPath = DeltaProvider.getFullCopyPath(delta.deltaFile, deltaOptions);
                         const dirName = fullCopyPath ?? path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
+                        const filesFound = false;
                         for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {
+                                await this.logMessage(`Already Coppied ${filePath} - skipping`, true);
                                 continue;
                             }
                             if (filePath.startsWith(fullCopyPath) || path.basename(filePath).startsWith(deltaFileBaseName)) {
