@@ -179,6 +179,7 @@ export abstract class DeltaProvider {
                     case DeltaProvider.deltaTypeKind.M: {
                         // check the source folder for associated files.
                         const fullCopyPath = DeltaProvider.getFullCopyPath(delta.deltaFile, deltaOptions);
+                        await this.logMessage(`fullCopyPath => ${fullCopyPath}`);
                         const dirName = fullCopyPath ?? path.dirname(deltaFile);
                         const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
                         for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
