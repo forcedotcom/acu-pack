@@ -150,6 +150,6 @@ describe('GitDeltaProvider Tests', function () {
       expect(17).equals(filesCount);
 
     });
-    */
   });
+  */
 });
