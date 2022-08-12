@@ -126,6 +126,7 @@ describe('GitDeltaProvider Tests', function () {
       expect(await gitProvider.validateDeltaOptions(deltaOptions)).to.be.null;
     });
   });
+  /*
   describe('Full Folder Copy Tests', function () {
     it('Copies files correctly', async function () {
       // Validate Delta File
@@ -149,5 +150,6 @@ describe('GitDeltaProvider Tests', function () {
       expect(17).equals(filesCount);
 
     });
+    */
   });
 });
