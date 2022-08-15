@@ -27,6 +27,12 @@ export enum RestAction {
   PATCH = 'PATCH',
 }
 
+export enum IOItem {
+  File = 'File',
+  Folder = 'Folder',
+  Both = 'Both',
+}
+
 export class RestResult {
   public id: string;
   public code: number;
@@ -95,44 +101,64 @@ export default class Utils {
   }
 
   public static async *getFiles(folderPath: string, isRecursive = true): AsyncGenerator<string, void, void> {
+    for await ( const item of Utils.getItems(folderPath,IOItem.File,isRecursive)) {
+      yield item;
+    }
+  }
+
+  public static async *getFolders(folderPath: string, isRecursive = true): AsyncGenerator<string, void, void> {
+    for await ( const item of Utils.getItems(folderPath,IOItem.Folder,isRecursive)) {
+      yield item;
+    }
+  }
+
+  public static async *getItems(rootPath: string, itemKind: IOItem, isRecursive = true, depth = 0): AsyncGenerator<string, void, void> {
     let fileItems;
     // If we have a wildcarded path - lets use glob
-    const isGlob = await this.glob.hasMagic(folderPath);
+    const isGlob = await this.glob.hasMagic(rootPath);
     if (isGlob) {
-      fileItems = await this.glob(folderPath);
+      // Globs should be specific so just return
+      fileItems = await this.glob(rootPath);
       for (const filePath of fileItems) {
         yield Utils.normalizePath(filePath);
       }
-    } else {
-      try {
-        const stats = await Utils.getPathStat(folderPath);
-        // is this a file path?
-        if (stats && stats.isFile()) {
-          yield folderPath;
-          return;
-        }
-        fileItems = await fs.readdir(folderPath);
-      } catch (err) {
-        if (Utils.isENOENT(err)) {
-          /* eslint-disable-next-line no-console */
-          console.log(`WARNING: ${folderPath} not found.`);
-          return;
-        }
-        throw err;
-      }
+      return;
+    }
 
-      for (const fileName of fileItems) {
-        const filePath = path.join(folderPath, fileName);
-        if ((await fs.stat(filePath)).isDirectory()) {
-          // recurse folders
-          if(isRecursive) {
-            for await (const subFilePath of Utils.getFiles(filePath, isRecursive)) {
+    const stats = await Utils.getPathStat(rootPath);
+    if(!stats) {
+      /* eslint-disable-next-line no-console */
+      console.log(`WARNING: ${rootPath} not found.`);
+      return;
+    }
+    const isFile = stats.isFile();
+    if(isFile) {
+      if(itemKind !== IOItem.Folder) {
+        yield rootPath;
+      }
+      // Nothing else to do
+      return;
+    } else {
+      if(itemKind === IOItem.Folder) {
+        yield rootPath;
+      }
+      // Are we recursive or just starting at the root folder
+      if(isRecursive || depth === 0) {
+        depth++;
+        const subItems = await fs.readdir(rootPath);
+        for (const subItem of subItems) {
+          const subItemPath = path.join(rootPath, subItem);
+          const subStats = await Utils.getPathStat(subItemPath);
+          if(!subStats) {
+            throw new Error('Invalid Path - NO STATS');
+          }
+          if(subStats.isDirectory()) {
+            for await (const subFilePath of Utils.getItems(subItemPath, itemKind, isRecursive, depth)) {
               yield subFilePath;
             }
+          } else {
+            yield Utils.normalizePath(subItemPath);
           }
-          continue;
-        } else {
-          yield Utils.normalizePath(filePath);
         }
       }
     }
