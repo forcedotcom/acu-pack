@@ -114,7 +114,7 @@ class Build extends command_base_1.CommandBase {
                 try {
                     for (var _e = (e_3 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(packageType, folderPath, false))), _f; _f = await _e.next(), !_f.done;) {
                         const memberFile = _f.value;
-                        members.push(memberFile);
+                        members.push(memberFile.replace(folderPath + '\\', ''));
                     }
                 }
                 catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -145,32 +145,37 @@ class Build extends command_base_1.CommandBase {
                     if (filePath.endsWith(constants_1.default.METADATA_FILE_SUFFIX)) {
                         continue;
                     }
-                    const fileName = path.basename(filePath);
-                    if (fileName !== 'unfiled$public') {
+                    const itemName = path.basename(filePath);
+                    const isDir = yield tslib_1.__await(utils_1.default.isDirectory(filePath));
+                    if (itemName !== 'unfiled$public') {
                         if (isDocument) {
-                            yield yield tslib_1.__await(fileName);
+                            yield yield tslib_1.__await(itemName);
                         }
-                        else {
-                            yield yield tslib_1.__await(fileName.split('.')[0]);
+                        else if (!isDir) {
+                            yield yield tslib_1.__await(itemName.split('.')[0]);
                         }
                     }
-                    const isDir = yield tslib_1.__await(utils_1.default.isDirectory(filePath));
                     // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:
                     // Common.removeInstPkgReference(filePath, Common.canRemoveAllPackageReferences(xmlName))
-                    if (isDir && !delta_provider_1.DeltaProvider.getFullCopyPath(filePath, delta_command_1.DeltaCommandBase.defaultCopyDirList)) {
-                        const inDocuments = isDocument || folder === 'documents';
-                        try {
-                            for (var _e = (e_5 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(xmlName, filePath, inDocuments))), _f; _f = yield tslib_1.__await(_e.next()), !_f.done;) {
-                                const subFilePath = _f.value;
-                                yield yield tslib_1.__await(subFilePath);
-                            }
+                    if (isDir) {
+                        const fullCopyPath = delta_provider_1.DeltaProvider.getFullCopyPath(filePath, delta_command_1.DeltaCommandBase.defaultCopyDirList);
+                        if (fullCopyPath) {
+                            yield yield tslib_1.__await(itemName);
                         }
-                        catch (e_5_1) { e_5 = { error: e_5_1 }; }
-                        finally {
+                        else {
                             try {
-                                if (_f && !_f.done && (_b = _e.return)) yield tslib_1.__await(_b.call(_e));
+                                for (var _e = (e_5 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(xmlName, filePath, xmlName === 'Document'))), _f; _f = yield tslib_1.__await(_e.next()), !_f.done;) {
+                                    const subFilePath = _f.value;
+                                    yield yield tslib_1.__await(path.join(filePath, subFilePath));
+                                }
                             }
-                            finally { if (e_5) throw e_5.error; }
+                            catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                            finally {
+                                try {
+                                    if (_f && !_f.done && (_b = _e.return)) yield tslib_1.__await(_b.call(_e));
+                                }
+                                finally { if (e_5) throw e_5.error; }
+                            }
                         }
                     }
                 }
