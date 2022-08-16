@@ -48,7 +48,6 @@ force-app
 test.*.*
 **/delta.log
 
-
 demo/*
 
 .sfdx
@@ -62,3 +61,4 @@ results.txt
 package-lock.json
 
 ignore/*
+src-mdapi/*

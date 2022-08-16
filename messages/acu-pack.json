@@ -18,6 +18,7 @@
       "optionsFlagDescription": "A file containing the package build options. Specifying this option will create the file if it doesn't exist already.",
       "metadataFlagDescription": "A comma separated list of metadata to include. This list overrides any exclude list in the options file.",
       "sourceFlagDescription": "Set this flag to 'true' to use Salesforce's Source Tracking data as the contents for the package file.",
+      "mdapiFolderFlagDescription": "The path to the folder containging the MDAPI formatted files to create the package for.",
       "appendFlagDescription": "Set this flag to 'true' if you wish to append to the existing package.xml file. The default (false) overwrites the existing file."
     }
   },

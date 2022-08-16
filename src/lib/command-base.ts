@@ -35,7 +35,7 @@ export abstract class CommandBase extends SfdxCommand {
     this.logger.debug('Start run');
     try {
       if(this.orgAlias) {
-        this.ux.log(`Connecting to Org: ${this.orgAlias}(${this.orgId})`);
+        this.ux.log(`Connected to Org: ${this.orgAlias}(${this.orgId})`);
       }
       this.logger.debug('Start runInternal');
       await this.runInternal();

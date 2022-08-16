@@ -39,4 +39,5 @@ Constants.DEFAULT_PACKAGE_VERSION = '49.0';
 Constants.ENOENT = 'ENOENT';
 Constants.CONTENT_TYPE_APPLICATION = 'application/octetstream';
 Constants.HEADERS_CONTENT_TYPE = 'content-type';
+Constants.METADATA_FILE_SUFFIX = '-meta.xml';
 //# sourceMappingURL=constants.js.map

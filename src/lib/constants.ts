@@ -35,4 +35,5 @@ export default class Constants {
     public static readonly ENOENT = 'ENOENT';
     public static readonly CONTENT_TYPE_APPLICATION = 'application/octetstream';
     public static readonly HEADERS_CONTENT_TYPE = 'content-type';
+    public static readonly METADATA_FILE_SUFFIX = '-meta.xml';
 }

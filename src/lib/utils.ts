@@ -131,33 +131,41 @@ export default class Utils {
       console.log(`WARNING: ${rootPath} not found.`);
       return;
     }
-    const isFile = stats.isFile();
-    if(isFile) {
-      if(itemKind !== IOItem.Folder) {
+
+    if(stats.isFile()) {
+      if(itemKind !== IOItem.Folder && depth !== 0) {
         yield rootPath;
       }
       // Nothing else to do
       return;
-    } else {
-      if(itemKind === IOItem.Folder) {
-        yield rootPath;
-      }
-      // Are we recursive or just starting at the root folder
-      if(isRecursive || depth === 0) {
-        depth++;
-        const subItems = await fs.readdir(rootPath);
-        for (const subItem of subItems) {
-          const subItemPath = path.join(rootPath, subItem);
-          const subStats = await Utils.getPathStat(subItemPath);
-          if(!subStats) {
-            throw new Error('Invalid Path - NO STATS');
-          }
-          if(subStats.isDirectory()) {
-            for await (const subFilePath of Utils.getItems(subItemPath, itemKind, isRecursive, depth)) {
-              yield subFilePath;
-            }
-          } else {
+    } 
+    // We are on a folder
+    if(itemKind !== IOItem.File && depth !== 0) {
+      yield rootPath;
+    }
+    // Are we recursive or just starting at the root folder
+    if(isRecursive || depth === 0) {
+      depth++;
+      const subItems = await fs.readdir(rootPath);
+      for (const subItem of subItems) {
+        const subItemPath = path.join(rootPath, subItem);
+        const subStats = await Utils.getPathStat(subItemPath);
+        if(!subStats) {
+          throw new Error('Invalid Path - NO STATS');
+        }
+        if(subStats.isFile()) {
+          if(itemKind !== IOItem.Folder) {
             yield Utils.normalizePath(subItemPath);
+          }
+          continue;
+        }
+        // We are on a folder again 
+        if(itemKind !== IOItem.File) {
+          yield Utils.normalizePath(subItemPath);
+        }
+        if(isRecursive) {
+          for await (const subFilePath of Utils.getItems(subItemPath, itemKind, isRecursive, depth)) {
+            yield subFilePath;
           }
         }
       }

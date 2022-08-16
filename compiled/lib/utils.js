@@ -136,45 +136,50 @@ class Utils {
                 console.log(`WARNING: ${rootPath} not found.`);
                 return yield tslib_1.__await(void 0);
             }
-            const isFile = stats.isFile();
-            if (isFile) {
-                if (itemKind !== IOItem.Folder) {
+            if (stats.isFile()) {
+                if (itemKind !== IOItem.Folder && depth !== 0) {
                     yield yield tslib_1.__await(rootPath);
                 }
                 // Nothing else to do
                 return yield tslib_1.__await(void 0);
             }
-            else {
-                if (itemKind === IOItem.Folder) {
-                    yield yield tslib_1.__await(rootPath);
-                }
-                // Are we recursive or just starting at the root folder
-                if (isRecursive || depth === 0) {
-                    depth++;
-                    const subItems = yield tslib_1.__await(fs_1.promises.readdir(rootPath));
-                    for (const subItem of subItems) {
-                        const subItemPath = path.join(rootPath, subItem);
-                        const subStats = yield tslib_1.__await(Utils.getPathStat(subItemPath));
-                        if (!subStats) {
-                            throw new Error('Invalid Path - NO STATS');
-                        }
-                        if (subStats.isDirectory()) {
-                            try {
-                                for (var _b = (e_3 = void 0, tslib_1.__asyncValues(Utils.getItems(subItemPath, itemKind, isRecursive, depth))), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                                    const subFilePath = _c.value;
-                                    yield yield tslib_1.__await(subFilePath);
-                                }
-                            }
-                            catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                            finally {
-                                try {
-                                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                                }
-                                finally { if (e_3) throw e_3.error; }
-                            }
-                        }
-                        else {
+            // We are on a folder
+            if (itemKind !== IOItem.File && depth !== 0) {
+                yield yield tslib_1.__await(rootPath);
+            }
+            // Are we recursive or just starting at the root folder
+            if (isRecursive || depth === 0) {
+                depth++;
+                const subItems = yield tslib_1.__await(fs_1.promises.readdir(rootPath));
+                for (const subItem of subItems) {
+                    const subItemPath = path.join(rootPath, subItem);
+                    const subStats = yield tslib_1.__await(Utils.getPathStat(subItemPath));
+                    if (!subStats) {
+                        throw new Error('Invalid Path - NO STATS');
+                    }
+                    if (subStats.isFile()) {
+                        if (itemKind !== IOItem.Folder) {
                             yield yield tslib_1.__await(Utils.normalizePath(subItemPath));
+                        }
+                        continue;
+                    }
+                    // We are on a folder again 
+                    if (itemKind !== IOItem.File) {
+                        yield yield tslib_1.__await(Utils.normalizePath(subItemPath));
+                    }
+                    if (isRecursive) {
+                        try {
+                            for (var _b = (e_3 = void 0, tslib_1.__asyncValues(Utils.getItems(subItemPath, itemKind, isRecursive, depth))), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                                const subFilePath = _c.value;
+                                yield yield tslib_1.__await(subFilePath);
+                            }
+                        }
+                        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                        finally {
+                            try {
+                                if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
+                            }
+                            finally { if (e_3) throw e_3.error; }
                         }
                     }
                 }
@@ -187,8 +192,8 @@ class Utils {
             if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
                 return yield tslib_1.__await(void 0);
             }
-            const rl = readline_1.createInterface({
-                input: fs_2.createReadStream(filePath),
+            const rl = (0, readline_1.createInterface)({
+                input: (0, fs_2.createReadStream)(filePath),
                 // Note: we use the crlfDelay option to recognize all instances of CR LF
                 // ('\r\n') in input.txt as a single line break.
                 crlfDelay: Infinity,

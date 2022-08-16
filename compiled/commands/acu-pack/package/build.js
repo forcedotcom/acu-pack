@@ -9,13 +9,185 @@ const utils_1 = require("../../../lib/utils");
 const package_options_1 = require("../../../lib/package-options");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 const options_factory_1 = require("../../../lib/options-factory");
+const constants_1 = require("../../../lib/constants");
+const delta_provider_1 = require("../../../lib/delta-provider");
+const delta_command_1 = require("../../../lib/delta-command");
 class Build extends command_base_1.CommandBase {
-    async runInternal() {
+    static async getMetadataMapFromOrg(orgAlias, ux, options, cmdFlags) {
         var e_1, _a;
         var _b;
+        const metadataMap = new Map();
+        const excluded = new Set(options.excludeMetadataTypes);
+        let filterMetadataTypes = null;
+        if (cmdFlags.metadata) {
+            filterMetadataTypes = new Set();
+            for (const metaName of cmdFlags.metadata.split(',')) {
+                filterMetadataTypes.add(metaName.trim());
+            }
+        }
+        if (cmdFlags.source) {
+            const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(orgAlias);
+            if (!statuses || statuses.length === 0) {
+                ux.log('No Source Tracking changes found.');
+                return;
+            }
+            const results = sfdx_tasks_1.SfdxTasks.getMapFromSourceTrackingStatus(statuses);
+            if (results.conflicts.size > 0) {
+                ux.log('WARNING: The following conflicts were found:');
+                for (const [conflictType, members] of results.conflicts) {
+                    ux.log(`\t${conflictType}`);
+                    for (const member of members) {
+                        ux.log(`\t\t${member}`);
+                    }
+                }
+                throw new Error('All Conflicts must be resolved.');
+            }
+            if (results.deletes.size > 0) {
+                ux.log('WARNING: The following deleted items need to be handled manually:');
+                for (const [deleteType, members] of results.deletes) {
+                    ux.log(`\t${deleteType}`);
+                    for (const member of members) {
+                        ux.log(`\t\t${member}`);
+                    }
+                }
+            }
+            if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
+                ux.log('No Deployable Source Tracking changes found.');
+                return;
+            }
+            for (const [typeName, members] of results.map) {
+                if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
+                    continue;
+                }
+                metadataMap.set(typeName, members);
+            }
+        }
+        else {
+            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(orgAlias);
+            const describeMetadatas = new Set();
+            for (const metadata of describeMetadata) {
+                if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
+                    continue;
+                }
+                describeMetadatas.add(metadata);
+            }
+            let counter = 0;
+            // Are we including namespaces?
+            const namespaces = cmdFlags.namespaces ? new Set(cmdFlags.namespaces.split()) : new Set();
+            try {
+                for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
+                    const entry = _d.value;
+                    // If specific members were defined previously - just use them
+                    metadataMap.set(entry.name, entry.members);
+                    ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+        }
+        return metadataMap;
+    }
+    static async getMetadataMapFromFolder(folder, ux, options) {
+        var e_2, _a, e_3, _b;
+        const metadataMap = new Map();
+        const excluded = new Set(options.excludeMetadataTypes);
+        if (!excluded) {
+            return;
+        }
+        if (!(await utils_1.default.pathExists(folder))) {
+            throw new Error(`The specified MDAPI folder does not exist: ${folder}`);
+        }
+        try {
+            // Get all the folders from the root of the MDAPI folder
+            for (var _c = tslib_1.__asyncValues(utils_1.default.getFolders(folder, false)), _d; _d = await _c.next(), !_d.done;) {
+                const folderPath = _d.value;
+                const packageType = options.mdapiMap.get(path.basename(folderPath));
+                if (!packageType) {
+                    continue;
+                }
+                const members = [];
+                try {
+                    for (var _e = (e_3 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(packageType, folderPath, false))), _f; _f = await _e.next(), !_f.done;) {
+                        const memberFile = _f.value;
+                        members.push(memberFile);
+                    }
+                }
+                catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                finally {
+                    try {
+                        if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
+                    }
+                    finally { if (e_3) throw e_3.error; }
+                }
+                metadataMap.set(packageType, members);
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        return metadataMap;
+    }
+    static getMDAPIFiles(xmlName, folder, isDocument = false) {
+        return tslib_1.__asyncGenerator(this, arguments, function* getMDAPIFiles_1() {
+            var e_4, _a, e_5, _b;
+            try {
+                for (var _c = tslib_1.__asyncValues(utils_1.default.getItems(folder, utils_1.IOItem.Both, false)), _d; _d = yield tslib_1.__await(_c.next()), !_d.done;) {
+                    const filePath = _d.value;
+                    if (filePath.endsWith(constants_1.default.METADATA_FILE_SUFFIX)) {
+                        continue;
+                    }
+                    const fileName = path.basename(filePath);
+                    if (fileName !== 'unfiled$public') {
+                        if (isDocument) {
+                            yield yield tslib_1.__await(fileName);
+                        }
+                        else {
+                            yield yield tslib_1.__await(fileName.split('.')[0]);
+                        }
+                    }
+                    const isDir = yield tslib_1.__await(utils_1.default.isDirectory(filePath));
+                    // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:
+                    // Common.removeInstPkgReference(filePath, Common.canRemoveAllPackageReferences(xmlName))
+                    if (isDir && !delta_provider_1.DeltaProvider.getFullCopyPath(filePath, delta_command_1.DeltaCommandBase.defaultCopyDirList)) {
+                        const inDocuments = isDocument || folder === 'documents';
+                        try {
+                            for (var _e = (e_5 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(xmlName, filePath, inDocuments))), _f; _f = yield tslib_1.__await(_e.next()), !_f.done;) {
+                                const subFilePath = _f.value;
+                                yield yield tslib_1.__await(subFilePath);
+                            }
+                        }
+                        catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                        finally {
+                            try {
+                                if (_f && !_f.done && (_b = _e.return)) yield tslib_1.__await(_b.call(_e));
+                            }
+                            finally { if (e_5) throw e_5.error; }
+                        }
+                    }
+                }
+            }
+            catch (e_4_1) { e_4 = { error: e_4_1 }; }
+            finally {
+                try {
+                    if (_d && !_d.done && (_a = _c.return)) yield tslib_1.__await(_a.call(_c));
+                }
+                finally { if (e_4) throw e_4.error; }
+            }
+        });
+    }
+    async runInternal() {
         // Validate the package path
-        const packageFileName = this.flags.package || Build.defaultPackageFileName;
-        const packageDir = path.dirname(packageFileName);
+        const packageFileName = this.flags.package || constants_1.default.DEFAULT_PACKAGE_PATH;
+        const packageDir = path.dirname(this.flags.folder ? this.flags.folder : packageFileName);
         if (packageDir && !(await utils_1.default.pathExists(packageDir))) {
             this.raiseError(`The specified package folder does not exist: '${packageDir}'`);
         }
@@ -31,82 +203,21 @@ class Build extends command_base_1.CommandBase {
             options = new package_options_1.PackageOptions();
             await options.loadDefaults();
         }
-        const excluded = new Set(options.excludeMetadataTypes);
-        // Are we including namespaces?
-        const namespaces = this.flags.namespaces ? new Set(this.flags.namespaces.split()) : new Set();
-        const describeMetadatas = new Set();
-        this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
-        let filterMetadataTypes = null;
-        if (this.flags.metadata) {
-            filterMetadataTypes = new Set();
-            for (const metaName of this.flags.metadata.split(',')) {
-                filterMetadataTypes.add(metaName.trim());
+        let metadataMap = null;
+        try {
+            if (this.flags.folder) {
+                metadataMap = await Build.getMetadataMapFromFolder(this.flags.folder, this.ux, options);
+            }
+            else {
+                this.ux.log(`Gathering metadata from Org: ${this.orgAlias}(${this.orgId})`);
+                metadataMap = await Build.getMetadataMapFromOrg(this.orgAlias, this.ux, options, this.flags);
             }
         }
-        const metadataMap = new Map();
-        if (this.flags.source) {
-            const statuses = await sfdx_tasks_1.SfdxTasks.getSourceTrackingStatus(this.orgAlias);
-            if (!statuses || statuses.length === 0) {
-                this.ux.log('No Source Tracking changes found.');
-                return;
-            }
-            const results = sfdx_tasks_1.SfdxTasks.getMapFromSourceTrackingStatus(statuses);
-            if (results.conflicts.size > 0) {
-                this.ux.log('WARNING: The following conflicts were found:');
-                for (const [conflictType, members] of results.conflicts) {
-                    this.ux.log(`\t${conflictType}`);
-                    for (const member of members) {
-                        this.ux.log(`\t\t${member}`);
-                    }
-                }
-                this.raiseError('All Conflicts must be resolved.');
-            }
-            if (results.deletes.size > 0) {
-                this.ux.log('WARNING: The following deleted items need to be handled manually:');
-                for (const [deleteType, members] of results.deletes) {
-                    this.ux.log(`\t${deleteType}`);
-                    for (const member of members) {
-                        this.ux.log(`\t\t${member}`);
-                    }
-                }
-            }
-            if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
-                this.ux.log('No Deployable Source Tracking changes found.');
-                return;
-            }
-            for (const [typeName, members] of results.map) {
-                if ((filterMetadataTypes && !filterMetadataTypes.has(typeName)) || excluded.has(typeName)) {
-                    continue;
-                }
-                metadataMap.set(typeName, members);
-            }
-        }
-        else {
-            const describeMetadata = await sfdx_tasks_1.SfdxTasks.describeMetadata(this.orgAlias);
-            for (const metadata of describeMetadata) {
-                if ((filterMetadataTypes && !filterMetadataTypes.has(metadata.xmlName)) || excluded.has(metadata.xmlName)) {
-                    continue;
-                }
-                describeMetadatas.add(metadata);
-            }
-            let counter = 0;
-            try {
-                for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
-                    const entry = _d.value;
-                    // If specific members were defined previously - just use them
-                    metadataMap.set(entry.name, entry.members);
-                    this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
+        catch (err) {
+            this.raiseError(err.message);
         }
         const packageMap = new Map();
+        const excluded = new Set(options.excludeMetadataTypes);
         // Filter excluded types
         for (const [typeName, members] of metadataMap) {
             if (!excluded.has(typeName)) {
@@ -122,7 +233,6 @@ class Build extends command_base_1.CommandBase {
 }
 exports.default = Build;
 Build.description = command_base_1.CommandBase.messages.getMessage('package.build.commandDescription');
-Build.defaultPackageFileName = 'package.xml';
 Build.examples = [
     `$ sfdx acu-pack:package:build -o options/package-options.json -x manifest/package-acu.xml -u myOrgAlias
     Builds a SFDX package file (./manifest/package.xml) which contains all the metadata from the myOrgAlias.
@@ -132,7 +242,7 @@ Build.flagsConfig = {
     package: command_1.flags.string({
         char: 'x',
         description: command_base_1.CommandBase.messages.getMessage('package.build.packageFlagDescription', [
-            Build.defaultPackageFileName,
+            constants_1.default.DEFAULT_PACKAGE_NAME,
         ]),
     }),
     metadata: command_1.flags.string({
@@ -148,8 +258,12 @@ Build.flagsConfig = {
         description: command_base_1.CommandBase.messages.getMessage('namespacesFlagDescription'),
     }),
     source: command_1.flags.boolean({
-        char: 's',
+        char: 't',
         description: command_base_1.CommandBase.messages.getMessage('package.build.sourceFlagDescription'),
+    }),
+    folder: command_1.flags.string({
+        char: 'f',
+        description: command_base_1.CommandBase.messages.getMessage('package.build.mdapiFolderFlagDescription'),
     }),
     append: command_1.flags.boolean({
         char: 'a',
