@@ -101,7 +101,7 @@ export default class Utils {
     if (isGlob) {
       fileItems = await this.glob(folderPath);
       for (const filePath of fileItems) {
-        yield path.normalize(filePath);
+        yield Utils.normalizePath(filePath);
       }
     } else {
       try {
@@ -123,13 +123,16 @@ export default class Utils {
 
       for (const fileName of fileItems) {
         const filePath = path.join(folderPath, fileName);
-        if ((await fs.stat(filePath)).isDirectory() && isRecursive) {
+        if ((await fs.stat(filePath)).isDirectory()) {
           // recurse folders
-          for await (const subFilePath of Utils.getFiles(filePath)) {
-            yield subFilePath;
+          if(isRecursive) {
+            for await (const subFilePath of Utils.getFiles(filePath, isRecursive)) {
+              yield subFilePath;
+            }
           }
+          continue;
         } else {
-          yield path.normalize(filePath);
+          yield Utils.normalizePath(filePath);
         }
       }
     }
@@ -404,5 +407,21 @@ export default class Utils {
       result.body = err.message;
     }
     return result;
+  }
+
+  public static async isDirectory(filePath: string): Promise<boolean> {
+    return (await fs.stat(filePath)).isDirectory();
+  }
+
+  public static normalizePath(filePath: string): string {
+    let newFilePath = filePath;
+    if(newFilePath) {
+      newFilePath = path.normalize(newFilePath);
+
+      // eslint-disable-next-line @typescript-eslint/quotes
+      const regEx = new RegExp(path.sep === '\\' ? '/' : "\\\\",'g');
+      newFilePath = newFilePath.replace(regEx, path.sep);
+    }
+    return newFilePath;
   }
 }

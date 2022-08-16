@@ -1,4 +1,4 @@
-import path = require('path');
+import Utils from '../lib/utils';
 import { DeltaCommandBase } from './delta-command';
 import { OptionsBase } from './options';
 
@@ -13,25 +13,26 @@ export class DeltaOptions extends OptionsBase {
     public ignoreFile: string = null;
     public isDryRun = false;
     public fullCopyDirNames: string[] = DeltaCommandBase.defaultCopyDirList;
+    public logAllMessagesToConsole = false;
 
     public normalize(): void {
         if (this.deltaFilePath) {
-            this.deltaFilePath = path.normalize(this.deltaFilePath);
+            this.deltaFilePath = Utils.normalizePath(this.deltaFilePath);
         }
         if (this.source) {
-            this.source = path.normalize(this.source);
+            this.source = Utils.normalizePath(this.source);
         }
         if (this.destination) {
-            this.destination = path.normalize(this.destination);
+            this.destination = Utils.normalizePath(this.destination);
         }
         if (this.deleteReportFile) {
-            this.deleteReportFile = path.normalize(this.deleteReportFile);
+            this.deleteReportFile = Utils.normalizePath(this.deleteReportFile);
         }
         if (this.forceFile) {
-            this.forceFile = path.normalize(this.forceFile);
+            this.forceFile = Utils.normalizePath(this.forceFile);
         }
         if (this.ignoreFile) {
-            this.ignoreFile = path.normalize(this.ignoreFile);
+            this.ignoreFile = Utils.normalizePath(this.ignoreFile);
         }
     }
 

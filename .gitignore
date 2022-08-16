@@ -44,6 +44,8 @@ force-app
 **/test/destination_folder
 !**/test/lib/merge/package*.xml
 **/test/*.test.*
+!**/test/git-full-dir.test.txt
+test.*.*
 **/delta.log
 
 

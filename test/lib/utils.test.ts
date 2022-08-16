@@ -1,3 +1,4 @@
+import os = require('os');
 import path = require('path');
 import { promises as fs } from 'fs';
 import { expect } from '@salesforce/command/lib/test';
@@ -48,7 +49,7 @@ describe('Utils Tests', function () {
         const testFileLineCount = 25;
         beforeEach(async function () {
             for (let index = 0; index < testFileLineCount; index++) {
-                await fs.appendFile(testFilePathTest, `${index}\r\n`);
+                await fs.appendFile(testFilePathTest, `${index}${os.EOL}`);
             }
         });
         it('Can read file', async function () {
@@ -284,10 +285,26 @@ describe('Utils Tests', function () {
             expect(exists).to.be.true;
         });
     }); 
-
     describe('Chunk Array test', function () {
         it('Chunk Array based on chunksize', function () {
             expect(Utils.chunkRecords(['1','2','3','4'],2)).to.eql([['1','2'],['3','4']]);
+        });
+    });
+    describe('normalizePath Test', function () {
+        it('Can handle nulls', function () {
+            const filePath: string = null;
+            expect(Utils.normalizePath(filePath)).to.equal(filePath);
+        });
+        it('Can Normalize Paths', function () {
+            const unixSep = '/';
+            const winSep = '\\';
+            const pathParts = ['one','two','three','four','five'];
+            const isWin = path.sep === '\\';
+
+            const filePath = pathParts.join(isWin ? unixSep : winSep);
+            const normFilePath = Utils.normalizePath(filePath);
+
+            expect(normFilePath).to.not.include(isWin ? unixSep : winSep);
         });
     });
 });

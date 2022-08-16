@@ -71,4 +71,6 @@ export default class Utils {
     static writeFile(filePath: string, contents: any): Promise<void>;
     static chunkRecords(recordsToChunk: any[], chunkSize: number): any[];
     static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: []): Promise<RestResult>;
+    static isDirectory(filePath: string): Promise<boolean>;
+    static normalizePath(filePath: string): string;
 }

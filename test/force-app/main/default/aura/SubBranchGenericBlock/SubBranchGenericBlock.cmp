@@ -1,0 +1,4 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" controller="QuestionFormAuraService">
+    <div class="slds-box slds-size_3-of-4">
+    </div>     
+</aura:component>

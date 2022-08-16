@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const path = require("path");
+const os = require("os");
 const fs_1 = require("fs");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
@@ -33,7 +34,7 @@ class Dictionary extends command_base_1.CommandBase {
                     continue;
                 }
                 for (const name of this.options.outputDefMap.keys()) {
-                    fileStream.write(`*${name}\r\n`);
+                    fileStream.write(`*${name}${os.EOL}`);
                     const collection = schema[name];
                     if (!collection) {
                         continue;
@@ -74,7 +75,7 @@ class Dictionary extends command_base_1.CommandBase {
                                     }
                                 }
                             }
-                            fileStream.write(`${JSON.stringify(row)}\r\n`);
+                            fileStream.write(`${JSON.stringify(row)}${os.EOL}`);
                         }
                     }
                     catch (e_1_1) { e_1 = { error: e_1_1 }; }

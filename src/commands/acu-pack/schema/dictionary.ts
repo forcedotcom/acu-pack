@@ -1,4 +1,5 @@
 import path = require('path');
+import os = require('os');
 import { createWriteStream } from 'fs';
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
@@ -68,7 +69,7 @@ export default class Dictionary extends CommandBase {
           continue;
         }
         for (const name of this.options.outputDefMap.keys()) {
-          fileStream.write(`*${name}\r\n`);
+          fileStream.write(`*${name}${os.EOL}`);
           const collection = schema[name];
           if (!collection) {
             continue;
@@ -110,7 +111,7 @@ export default class Dictionary extends CommandBase {
                 }
               }
             }
-            fileStream.write(`${JSON.stringify(row)}\r\n`);
+            fileStream.write(`${JSON.stringify(row)}${os.EOL}`);
           }
         }
         schemas.add(schema.name);

@@ -86,6 +86,20 @@ describe('DeltaProvider Tests', function () {
       deltaOptions.fullCopyDirNames = ['foldername'];
       expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.true;
     });
+
+    it('Can Get Full Copy Path', async function () {
+      const deltaOptions = await DeltaCommandBase.getDeltaOptions(config);
+      
+      const partsPath = `anything${path.sep}${deltaOptions.fullCopyDirNames[0]}${path.sep}parent${path.sep}something.txt`;
+      expect(DeltaProvider.isFullCopyPath(partsPath, deltaOptions)).is.true;
+
+      const fullCopyPath = DeltaProvider.getFullCopyPath(partsPath,deltaOptions);
+      expect(`anything${path.sep}${deltaOptions.fullCopyDirNames[0]}${path.sep}parent${path.sep}`).equals(fullCopyPath);
+
+      const parts = ['anything', 'foldername','something.txt'];
+      const notFullCopyPath = DeltaProvider.getFullCopyPath(parts.join(path.sep),deltaOptions);
+      expect(notFullCopyPath).to.be.null;
+    });
   });
 
   function validateFlags(flagsConfig: any): void {
