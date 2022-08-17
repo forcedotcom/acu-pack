@@ -149,7 +149,7 @@ export default class Build extends CommandBase {
       }
       const members = [];
       for await (const memberFile of Build.getMDAPIFiles(packageType, folderPath, false)) {
-        members.push(memberFile.replace(folderPath+'\\',''));
+        members.push(memberFile.replace(folderPath+path.sep,''));
       }
       metadataMap.set(packageType,members);
     }
