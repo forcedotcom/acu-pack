@@ -114,7 +114,7 @@ class Build extends command_base_1.CommandBase {
                 try {
                     for (var _e = (e_3 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(packageType, folderPath, false))), _f; _f = await _e.next(), !_f.done;) {
                         const memberFile = _f.value;
-                        members.push(memberFile.replace(folderPath + '\\', ''));
+                        members.push(memberFile.replace(folderPath + path.sep, ''));
                     }
                 }
                 catch (e_3_1) { e_3 = { error: e_3_1 }; }
