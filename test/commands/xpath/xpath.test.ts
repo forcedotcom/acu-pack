@@ -14,7 +14,7 @@ beforeEach(async () => {
   const options = await OptionsFactory.get(XPathOptions);
   // load the default values
   options.rules.clear();
-  options.rules.set('test.profile-meta.xml', [
+  options.rules.set('./*.profile-meta.xml', [
     {
       name: 'Bad FieldPermissions',
       xPath: "//*[local-name()='Profile']/*[local-name()='fieldPermissions']/*[local-name()='field']/text()",
