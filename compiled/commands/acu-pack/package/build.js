@@ -242,6 +242,8 @@ Build.examples = [
     `$ sfdx acu-pack:package:build -o options/package-options.json -x manifest/package-acu.xml -u myOrgAlias
     Builds a SFDX package file (./manifest/package.xml) which contains all the metadata from the myOrgAlias.
     The options defined (options/package-options.json) are honored when building the package.`,
+    `$ sfdx acu-pack:package:build -f deploy
+    Builds a SFDX package file (./manifest/package.xml) from the MDAPI formatted data in the deploy folder .`
 ];
 Build.flagsConfig = {
     package: command_1.flags.string({

@@ -94,7 +94,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--s--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-t] [-f <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--t--f-string--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagepermissions--x-string--m-string--n-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packschemadictionary--r-string--n-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -446,14 +446,15 @@ EXAMPLES
 
 _See code: [compiled/commands/acu-pack/api/get.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/api/get.ts)_
 
-## `sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-t] [-f <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Builds a standard SFDX source format package file from the specified org's existing metadata.
 
 ```
 USAGE
-  $ sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-s] [-a] [-u <string>] 
-  [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-t] [-f <string>] [-a] [-u 
+  <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   -a, --append                                                                      Set this flag to 'true' if you wish
@@ -461,6 +462,10 @@ OPTIONS
                                                                                     package.xml file. The default
                                                                                     (false) overwrites the existing
                                                                                     file.
+
+  -f, --folder=folder                                                               The path to the folder containging
+                                                                                    the MDAPI formatted files to create
+                                                                                    the package for.
 
   -m, --metadata=metadata                                                           A comma separated list of metadata
                                                                                     to include. This list overrides any
@@ -476,7 +481,7 @@ OPTIONS
                                                                                     create the file if it doesn't exist
                                                                                     already.
 
-  -s, --source                                                                      Set this flag to 'true' to use
+  -t, --source                                                                      Set this flag to 'true' to use
                                                                                     Salesforce's Source Tracking data as
                                                                                     the contents for the package file.
 
@@ -498,10 +503,12 @@ OPTIONS
 DESCRIPTION
   Builds a standard SFDX source format package file from the specified org's existing metadata.
 
-EXAMPLE
+EXAMPLES
   $ sfdx acu-pack:package:build -o options/package-options.json -x manifest/package-acu.xml -u myOrgAlias
       Builds a SFDX package file (./manifest/package.xml) which contains all the metadata from the myOrgAlias.
       The options defined (options/package-options.json) are honored when building the package.
+  $ sfdx acu-pack:package:build -f deploy
+      Builds a SFDX package file (./manifest/package.xml) from the MDAPI formatted data in the deploy folder .
 ```
 
 _See code: [compiled/commands/acu-pack/package/build.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/build.ts)_
@@ -687,47 +694,42 @@ USAGE
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -a, --copyfulldir=copyfulldir                                                     Specifies a comma delimited list of
-                                                                                    directories where all files should
-                                                                                    be copied if one of the files
-                                                                                    changed. The default list is:
-                                                                                    aura,lwc,experiences
+  -a, --copyfulldir=copyfulldir
+      Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The
+      default list is: aura,lwc,experiences,territory2Models,waveTemplates
 
-  -c, --check                                                                       Does a dry-run of a deployment.
-                                                                                    Inspect the log file for results.
-                                                                                    NOTE: This option is ignored if no
-                                                                                    (d)estination option is provided.
+  -c, --check
+      Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination
+      option is provided.
 
-  -d, --destination=destination                                                     The destination folder for the
-                                                                                    deltas.
+  -d, --destination=destination
+      The destination folder for the deltas.
 
-  -f, --force=force                                                                 Path to a file containing folders &
-                                                                                    files to include in the delta
-                                                                                    destination. Will override md5/git
-                                                                                    AND ignore file contents.
+  -f, --force=force
+      Path to a file containing folders & files to include in the delta destination. Will override md5/git AND ignore file
+      contents.
 
-  -g, --git=git                                                                     The output of a git-diff command
-                                                                                    (https://git-scm.com/docs/git-diff)
+  -g, --git=git
+      The output of a git-diff command (https://git-scm.com/docs/git-diff)
 
-  -i, --ignore=ignore                                                               Path to a file containing folders &
-                                                                                    files to ignore. Will override
-                                                                                    md5/git file contents.
+  -i, --ignore=ignore
+      Path to a file containing folders & files to ignore. Will override md5/git file contents.
 
-  -o, --options=options                                                             A file containing the delta command
-                                                                                    options. Specifying this option will
-                                                                                    create the file if it doesn't exist
-                                                                                    already.
+  -o, --options=options
+      A file containing the delta command options. Specifying this option will create the file if it doesn't exist
+      already.
 
-  -r, --deletereport=deletereport                                                   Path to a file to write deleted
-                                                                                    files.
+  -r, --deletereport=deletereport
+      Path to a file to write deleted files.
 
-  -s, --source=source                                                               The source folder to start the delta
-                                                                                    scan from.
+  -s, --source=source
+      The source folder to start the delta scan from.
 
-  --json                                                                            format output as json
+  --json
+      format output as json
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)
+      [default: warn] logging level for this command invocation
 
 DESCRIPTION
   Uses a git-diff file to detect deltas. Generate a git-diff.txt diff file as follows: git --no-pager diff --name-status
@@ -752,46 +754,42 @@ USAGE
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -a, --copyfulldir=copyfulldir                                                     Specifies a comma delimited list of
-                                                                                    directories where all files should
-                                                                                    be copied if one of the files
-                                                                                    changed. The default list is:
-                                                                                    aura,lwc,experiences
+  -a, --copyfulldir=copyfulldir
+      Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The
+      default list is: aura,lwc,experiences,territory2Models,waveTemplates
 
-  -c, --check                                                                       Does a dry-run of a deployment.
-                                                                                    Inspect the log file for results.
-                                                                                    NOTE: This option is ignored if no
-                                                                                    (d)estination option is provided.
+  -c, --check
+      Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination
+      option is provided.
 
-  -d, --destination=destination                                                     The destination folder for the
-                                                                                    deltas.
+  -d, --destination=destination
+      The destination folder for the deltas.
 
-  -f, --force=force                                                                 Path to a file containing folders &
-                                                                                    files to include in the delta
-                                                                                    destination. Will override md5/git
-                                                                                    AND ignore file contents.
+  -f, --force=force
+      Path to a file containing folders & files to include in the delta destination. Will override md5/git AND ignore file
+      contents.
 
-  -i, --ignore=ignore                                                               Path to a file containing folders &
-                                                                                    files to ignore. Will override
-                                                                                    md5/git file contents.
+  -i, --ignore=ignore
+      Path to a file containing folders & files to ignore. Will override md5/git file contents.
 
-  -m, --md5=md5                                                                     The MD5 hash list file to use
+  -m, --md5=md5
+      The MD5 hash list file to use
 
-  -o, --options=options                                                             A file containing the delta command
-                                                                                    options. Specifying this option will
-                                                                                    create the file if it doesn't exist
-                                                                                    already.
+  -o, --options=options
+      A file containing the delta command options. Specifying this option will create the file if it doesn't exist
+      already.
 
-  -r, --deletereport=deletereport                                                   Path to a file to write deleted
-                                                                                    files.
+  -r, --deletereport=deletereport
+      Path to a file to write deleted files.
 
-  -s, --source=source                                                               The source folder to start the delta
-                                                                                    scan from.
+  -s, --source=source
+      The source folder to start the delta scan from.
 
-  --json                                                                            format output as json
+  --json
+      format output as json
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)
+      [default: warn] logging level for this command invocation
 
 DESCRIPTION
   Uses an MD5 hash file to detect deltas.
