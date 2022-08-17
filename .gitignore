@@ -61,4 +61,4 @@ results.txt
 package-lock.json
 
 ignore/*
-src-mdapi/*
+deploy/*
