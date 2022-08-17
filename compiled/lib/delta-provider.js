@@ -7,6 +7,7 @@ const path = require("path");
 const fs_1 = require("fs");
 const utils_1 = require("./utils");
 const delta_options_1 = require("./delta-options");
+const constants_1 = require("./constants");
 class Delta {
     constructor(deltaKind, deltaFile) {
         this.deltaKind = deltaKind;
@@ -19,24 +20,14 @@ class DeltaProvider {
         this.logFile = 'delta.log';
         this.deltaOptions = new delta_options_1.DeltaOptions();
     }
-    static isFullCopyPath(filePath, deltaOptions) {
-        if (filePath && deltaOptions) {
-            for (const dirName of deltaOptions.fullCopyDirNames) {
-                if (filePath.includes(`${path.sep}${dirName}${path.sep}`)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    static getFullCopyPath(filePath, deltaOptions) {
+    static getFullCopyPath(filePath, fullCopyDirNames) {
         let fullCopyPath = '';
         let gotFullCopyPath = false;
-        if (filePath && deltaOptions) {
+        if (filePath && fullCopyDirNames) {
             const pathParts = filePath.split(path.sep);
             for (const pathPart of pathParts) {
                 fullCopyPath += pathPart + path.sep;
-                if (!gotFullCopyPath && deltaOptions.fullCopyDirNames.includes(pathPart)) {
+                if (!gotFullCopyPath && fullCopyDirNames.includes(pathPart)) {
                     gotFullCopyPath = true;
                     continue;
                 }
@@ -80,7 +71,6 @@ class DeltaProvider {
             const isDryRun = deltaOptions.isDryRun;
             const ignoreSet = new Set();
             const copiedSet = new Set();
-            const metaFileEndsWith = '-meta.xml';
             // No destination? no need to continue
             if (!destination) {
                 await this.logMessage('No destination defined - nothing to do.');
@@ -199,7 +189,7 @@ class DeltaProvider {
                         case DeltaProvider.deltaTypeKind.A:
                         case DeltaProvider.deltaTypeKind.M: {
                             // check the source folder for associated files.
-                            const fullCopyPath = DeltaProvider.getFullCopyPath(deltaFile, deltaOptions);
+                            const fullCopyPath = DeltaProvider.getFullCopyPath(deltaFile, deltaOptions.fullCopyDirNames);
                             const dirName = fullCopyPath !== null && fullCopyPath !== void 0 ? fullCopyPath : path.dirname(deltaFile);
                             const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
                             try {
@@ -253,7 +243,7 @@ class DeltaProvider {
                                         metrics.Ign++;
                                         continue;
                                     }
-                                    if (path.basename(parentFilePath).startsWith(deltaParentBaseName) && parentFilePath.endsWith(metaFileEndsWith)) {
+                                    if (path.basename(parentFilePath).startsWith(deltaParentBaseName) && parentFilePath.endsWith(constants_1.default.METADATA_FILE_SUFFIX)) {
                                         const destinationPath = parentFilePath.replace(source, destination);
                                         if (!isDryRun) {
                                             await utils_1.default.copyFile(parentFilePath, destinationPath);

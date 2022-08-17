@@ -13,7 +13,9 @@ beforeEach(async () => {
   testFilesCreated = 0;
   for await (const testFile of Setup.createTestFiles(Setup.sourceRoot)) {
     expect(testFile).is.not.null;
-    testFilesCreated++;
+    if(! (await Utils.isDirectory(testFile))) {
+      testFilesCreated++;
+    }
   }
   expect(testFilesCreated).to.be.greaterThan(0);
   if (await Utils.pathExists(bogusGitFilePath)) {

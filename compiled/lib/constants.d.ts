@@ -2,7 +2,8 @@ export default class Constants {
     static readonly PLUGIN_NAME = "acu-pack";
     static readonly DEFAULT_XML_NAMESPACE = "http://soap.sforce.com/2006/04/metadata";
     static readonly METADATA_COVERAGE_REPORT_URL = "https://mdcoverage.secure.force.com/services/apexrest/report";
-    static readonly DEFAULT_PACKAGE_PATH = "manifest/package.xml";
+    static readonly DEFAULT_PACKAGE_NAME = "package.xml";
+    static readonly DEFAULT_PACKAGE_PATH: string;
     static readonly SFDX_DESCRIBE_METADATA = "sfdx force:mdapi:describemetadata";
     static readonly SFDX_APEX_EXECUTE = "sfdx force:apex:execute";
     static readonly SFDX_SOURCE_RETRIEVE = "sfdx force:source:retrieve";
@@ -34,4 +35,5 @@ export default class Constants {
     static readonly ENOENT = "ENOENT";
     static readonly CONTENT_TYPE_APPLICATION = "application/octetstream";
     static readonly HEADERS_CONTENT_TYPE = "content-type";
+    static readonly METADATA_FILE_SUFFIX = "-meta.xml";
 }

@@ -40,8 +40,7 @@ describe('Utils Tests', function () {
             for await (const file of Utils.getFiles(testFilePath)) {
                 files.push(file);
             }
-            expect(files.length).equal(1);
-            expect(files[0]).equal(testFilePath);
+            expect(files.length).equal(0);
         });
     });
     describe('readFileLines Test', function () {

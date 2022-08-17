@@ -15,6 +15,11 @@ export declare enum RestAction {
     DELETE = "DELETE",
     PATCH = "PATCH"
 }
+export declare enum IOItem {
+    File = "File",
+    Folder = "Folder",
+    Both = "Both"
+}
 export declare class RestResult {
     id: string;
     code: number;
@@ -49,6 +54,8 @@ export default class Utils {
     private static bent;
     static log(logMessage: string, logLevel: string, isJsonEnabled?: boolean): Promise<void>;
     static getFiles(folderPath: string, isRecursive?: boolean): AsyncGenerator<string, void, void>;
+    static getFolders(folderPath: string, isRecursive?: boolean): AsyncGenerator<string, void, void>;
+    static getItems(rootPath: string, itemKind: IOItem, isRecursive?: boolean, depth?: number): AsyncGenerator<string, void, void>;
     static readFileLines(filePath: string): AsyncGenerator<string, void, void>;
     static readFile(filePath: string, options?: any): Promise<string>;
     static pathExists(pathToCheck: string): Promise<boolean>;

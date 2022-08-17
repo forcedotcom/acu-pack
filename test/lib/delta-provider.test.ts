@@ -69,36 +69,36 @@ describe('DeltaProvider Tests', function () {
     it('Can Handle Nulls', async function () {
       const deltaOptions = await DeltaCommandBase.getDeltaOptions(config);
       deltaOptions.fullCopyDirNames = null;
-      expect(DeltaProvider.isFullCopyPath(null, null)).is.false;
-      expect(DeltaProvider.isFullCopyPath('', null)).is.false;
-      expect(DeltaProvider.isFullCopyPath(null, deltaOptions)).is.false;
+      expect(DeltaProvider.getFullCopyPath(null, null)).is.null;
+      expect(DeltaProvider.getFullCopyPath('', null)).is.null;
+      expect(DeltaProvider.getFullCopyPath(null, deltaOptions.fullCopyDirNames)).is.null;
     });
 
     it('Can Identify Full Copy Dir Names', async function () {
       const deltaOptions = await DeltaCommandBase.getDeltaOptions(config);
       
       let parts = ['anything', deltaOptions.fullCopyDirNames[0],'something.txt'];
-      expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.true;
+      expect(DeltaProvider.getFullCopyPath(parts.join(path.sep), deltaOptions.fullCopyDirNames)).is.not.null;
       
       parts = ['anything', 'foldername','something.txt'];
-      expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.false;
+      expect(DeltaProvider.getFullCopyPath(parts.join(path.sep), deltaOptions.fullCopyDirNames)).is.null;
       
       deltaOptions.fullCopyDirNames = ['foldername'];
-      expect(DeltaProvider.isFullCopyPath(parts.join(path.sep), deltaOptions)).is.true;
+      expect(DeltaProvider.getFullCopyPath(parts.join(path.sep), deltaOptions.fullCopyDirNames)).is.not.null;
     });
 
     it('Can Get Full Copy Path', async function () {
       const deltaOptions = await DeltaCommandBase.getDeltaOptions(config);
       
       const partsPath = `anything${path.sep}${deltaOptions.fullCopyDirNames[0]}${path.sep}parent${path.sep}something.txt`;
-      expect(DeltaProvider.isFullCopyPath(partsPath, deltaOptions)).is.true;
+      expect(DeltaProvider.getFullCopyPath(partsPath, deltaOptions.fullCopyDirNames)).is.not.null;
 
-      const fullCopyPath = DeltaProvider.getFullCopyPath(partsPath,deltaOptions);
+      const fullCopyPath = DeltaProvider.getFullCopyPath(partsPath,deltaOptions.fullCopyDirNames);
       expect(`anything${path.sep}${deltaOptions.fullCopyDirNames[0]}${path.sep}parent${path.sep}`).equals(fullCopyPath);
 
       const parts = ['anything', 'foldername','something.txt'];
-      const notFullCopyPath = DeltaProvider.getFullCopyPath(parts.join(path.sep),deltaOptions);
-      expect(notFullCopyPath).to.be.null;
+      const notFullCopyPath = DeltaProvider.getFullCopyPath(parts.join(path.sep),deltaOptions.fullCopyDirNames);
+      expect(notFullCopyPath).is.null;
     });
   });
 
