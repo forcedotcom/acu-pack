@@ -170,7 +170,8 @@ export default class Build extends CommandBase {
         if(isDocument) {
           yield itemName;
         } else if(!isDir) {
-          yield itemName.split('.')[0];
+          const parts = itemName.split('.');
+          yield parts.slice(0, parts.length - 1).join('.');
         }
       }
       // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:
