@@ -130,6 +130,7 @@ describe('GitDeltaProvider Tests', function () {
       }
       await Utils.mkDirPath(Setup.destinationRoot);
     });
+    
     it('Copies files correctly', async function () {
       // Validate Delta File
       await gitProvider.loadDeltaFile(Setup.gitFullDirFilePath);
@@ -146,7 +147,7 @@ describe('GitDeltaProvider Tests', function () {
             filesCount++;
         }
       }
-      expect(25).equals(filesCount);
+      expect(28).equals(filesCount);
 
       await gitProvider.run(deltaOptions);
 
@@ -157,7 +158,7 @@ describe('GitDeltaProvider Tests', function () {
         }
       }
 
-      expect(17).equals(filesCount);
+      expect(18).equals(filesCount);
 
     });
   });

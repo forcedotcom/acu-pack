@@ -8,6 +8,7 @@ const fs_1 = require("fs");
 const utils_1 = require("./utils");
 const delta_options_1 = require("./delta-options");
 const constants_1 = require("./constants");
+const schema_utils_1 = require("./schema-utils");
 class Delta {
     constructor(deltaKind, deltaFile) {
         this.deltaKind = deltaKind;
@@ -191,7 +192,8 @@ class DeltaProvider {
                             // check the source folder for associated files.
                             const fullCopyPath = DeltaProvider.getFullCopyPath(deltaFile, deltaOptions.fullCopyDirNames);
                             const dirName = fullCopyPath !== null && fullCopyPath !== void 0 ? fullCopyPath : path.dirname(deltaFile);
-                            const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
+                            // const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
+                            const deltaFileBaseName = schema_utils_1.default.getMetadataBaseName(deltaFile);
                             try {
                                 for (var _t = (e_6 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(dirName, fullCopyPath != null))), _u; _u = await _t.next(), !_u.done;) {
                                     const filePath = _u.value;

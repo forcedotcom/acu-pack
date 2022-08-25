@@ -10,6 +10,7 @@ import { OptionsFactory } from '../../../lib/options-factory';
 import Constants from '../../../lib/constants';
 import { DeltaProvider } from '../../../lib/delta-provider';
 import { DeltaCommandBase } from '../../../lib/delta-command';
+import SchemaUtils from '../../../lib/schema-utils';
 
 export default class Build extends CommandBase {
   public static description = CommandBase.messages.getMessage('package.build.commandDescription');
@@ -170,8 +171,7 @@ export default class Build extends CommandBase {
         if(isDocument) {
           yield itemName;
         } else if(!isDir) {
-          const parts = itemName.split('.');
-          yield parts.slice(0, parts.length - 1).join('.');
+          yield SchemaUtils.getMetadataBaseName(itemName);
         }
       }
       // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:

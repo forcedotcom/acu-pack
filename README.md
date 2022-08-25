@@ -48,7 +48,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:schema:profile:retrieve -u ORG_ALI
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:permissions -p force-app
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:profile -u ORG_ALIAS -m -o test
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:md5 -m test/md5.test.txt -s test/force-app -d test/deploy
-$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:git -g test/git.test.txt -s test/force-app -d test/deploy
+$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:git -g test/git-full-dir.test.txt -s test/force-app -d test/deploy
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:delta:git -o delta-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:xpath -o xpath-options.json
 ```
