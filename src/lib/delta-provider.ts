@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import Utils from './utils';
 import { DeltaOptions } from './delta-options';
 import Constants from './constants';
+import SchemaUtils from './schema-utils';
 
 export class Delta {
     public deltaKind: string;
@@ -166,7 +167,8 @@ export abstract class DeltaProvider {
                         // check the source folder for associated files.
                         const fullCopyPath = DeltaProvider.getFullCopyPath(deltaFile, deltaOptions.fullCopyDirNames);
                         const dirName = fullCopyPath ?? path.dirname(deltaFile);
-                        const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
+                        // const deltaFileBaseName = `${path.basename(deltaFile).split('.')[0]}.`;
+                        const deltaFileBaseName = SchemaUtils.getMetadataBaseName(deltaFile);
                         for await (const filePath of Utils.getFiles(dirName, fullCopyPath != null)) {
                             // have we already processed this file?
                             if (copiedSet.has(filePath)) {

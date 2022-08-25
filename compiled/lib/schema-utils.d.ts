@@ -5,4 +5,5 @@ export default class SchemaUtils {
     static CONTEXT_SCHEMA: string;
     private static dynamicContext;
     static getDynamicSchemaData(schema: any, dynamicCode: string, collection: any[]): Generator<any, void, string[]>;
+    static getMetadataBaseName(metadataFilePath: string): string;
 }

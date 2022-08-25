@@ -1,4 +1,5 @@
 import * as vm from 'vm';
+import path = require('path');
 
 export default class SchemaUtils {
 
@@ -48,5 +49,10 @@ export default class SchemaUtils {
             const row = vm.runInNewContext(dynamicCode, context);
             yield row;
         }
+    }
+
+    public static getMetadataBaseName(metadataFilePath: string): string {
+        const parts = path.basename(metadataFilePath).split('.');
+        return parts.slice(0, parts.length - 1).join('.');
     }
 }

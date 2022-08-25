@@ -12,6 +12,7 @@ const options_factory_1 = require("../../../lib/options-factory");
 const constants_1 = require("../../../lib/constants");
 const delta_provider_1 = require("../../../lib/delta-provider");
 const delta_command_1 = require("../../../lib/delta-command");
+const schema_utils_1 = require("../../../lib/schema-utils");
 class Build extends command_base_1.CommandBase {
     static async getMetadataMapFromOrg(orgAlias, ux, options, cmdFlags) {
         var e_1, _a;
@@ -152,7 +153,7 @@ class Build extends command_base_1.CommandBase {
                             yield yield tslib_1.__await(itemName);
                         }
                         else if (!isDir) {
-                            yield yield tslib_1.__await(itemName.split('.')[0]);
+                            yield yield tslib_1.__await(schema_utils_1.default.getMetadataBaseName(itemName));
                         }
                     }
                     // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const vm = require("vm");
+const path = require("path");
 class SchemaUtils {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static *getDynamicSchemaData(schema, dynamicCode, collection) {
@@ -23,6 +24,10 @@ class SchemaUtils {
             const row = vm.runInNewContext(dynamicCode, context);
             yield row;
         }
+    }
+    static getMetadataBaseName(metadataFilePath) {
+        const parts = path.basename(metadataFilePath).split('.');
+        return parts.slice(0, parts.length - 1).join('.');
     }
 }
 exports.default = SchemaUtils;
