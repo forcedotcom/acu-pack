@@ -5,7 +5,7 @@ class Constants {
 exports.default = Constants;
 Constants.PLUGIN_NAME = 'acu-pack';
 Constants.DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
-Constants.METADATA_COVERAGE_REPORT_URL = 'https://mdcoverage.secure.force.com/services/apexrest/report';
+Constants.METADATA_COVERAGE_REPORT_URL = 'https://dx-extended-coverage.my.salesforce-sites.com/services/apexrest/report';
 Constants.DEFAULT_PACKAGE_NAME = 'package.xml';
 Constants.DEFAULT_PACKAGE_PATH = 'manifest/' + Constants.DEFAULT_PACKAGE_NAME;
 Constants.SFDX_DESCRIBE_METADATA = 'sfdx force:mdapi:describemetadata';
