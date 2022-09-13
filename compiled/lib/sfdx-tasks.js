@@ -43,7 +43,7 @@ class SfdxTasks {
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return !response || !response.metadataObjects
             ? []
-            : (0, ts_types_1.ensureArray)(response.metadataObjects);
+            : ts_types_1.ensureArray(response.metadataObjects);
     }
     static async executeAnonymousBlock(usernameOrAlias, apexFilePath, logLevel = 'debug') {
         const response = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_APEX_EXECUTE} --json --loglevel ${logLevel} -u ${usernameOrAlias} --apexcodefile ${apexFilePath}`);
@@ -156,7 +156,7 @@ class SfdxTasks {
             if (results) {
                 let resultsArray;
                 try {
-                    resultsArray = (0, ts_types_1.ensureArray)(results);
+                    resultsArray = ts_types_1.ensureArray(results);
                 }
                 catch (_a) {
                     resultsArray = [results];
@@ -181,7 +181,7 @@ class SfdxTasks {
             if (results) {
                 let resultsArray;
                 try {
-                    resultsArray = (0, ts_types_1.ensureArray)(results);
+                    resultsArray = ts_types_1.ensureArray(results);
                 }
                 catch (_a) {
                     resultsArray = [results];
@@ -210,11 +210,11 @@ class SfdxTasks {
         const tempFileName = 'apexTestQueueItems.csv';
         // Create the file for the bulk upsert
         // Create for writing - truncates if exists
-        const stream = (0, fs_1.openSync)(tempFileName, 'w');
+        const stream = fs_1.openSync(tempFileName, 'w');
         // NOTE: Do NOT include spaces between fields...results in an error
-        (0, fs_1.writeSync)(stream, `ApexClassId,ShouldSkipCodeCoverage${os.EOL}`);
+        fs_1.writeSync(stream, `ApexClassId,ShouldSkipCodeCoverage${os.EOL}`);
         for (const sfdxEntity of sfdxEntities) {
-            (0, fs_1.writeSync)(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}${os.EOL}`);
+            fs_1.writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}${os.EOL}`);
         }
         const command = `${constants_1.default.SFDX_DATA_UPSERT} --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;
         const results = await sfdx_core_1.SfdxCore.command(command);
@@ -331,7 +331,7 @@ class SfdxTasks {
         }
         let resultsArray;
         try {
-            resultsArray = (0, ts_types_1.ensureArray)(results);
+            resultsArray = ts_types_1.ensureArray(results);
         }
         catch (_a) {
             resultsArray = [results];
@@ -395,6 +395,9 @@ class SfdxTasks {
     }
     static async getUnsupportedMetadataTypes() {
         const result = await utils_1.default.getRestResult(utils_2.RestAction.GET, constants_1.default.METADATA_COVERAGE_REPORT_URL);
+        if (!result || result.isError === true) {
+            return [];
+        }
         const myMap = new Map(Object.entries(result.getContent().types));
         const types = [];
         for (const [key, value] of myMap) {
