@@ -5,6 +5,7 @@ class Constants {
 exports.default = Constants;
 Constants.PLUGIN_NAME = 'acu-pack';
 Constants.DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
+// public static readonly METADATA_COVERAGE_REPORT_URL = 'https://mdcoverage.secure.force.com/services/apexrest/report';
 Constants.METADATA_COVERAGE_REPORT_URL = 'https://dx-extended-coverage.my.salesforce-sites.com/services/apexrest/report';
 Constants.DEFAULT_PACKAGE_NAME = 'package.xml';
 Constants.DEFAULT_PACKAGE_PATH = 'manifest/' + Constants.DEFAULT_PACKAGE_NAME;
@@ -40,4 +41,5 @@ Constants.ENOENT = 'ENOENT';
 Constants.CONTENT_TYPE_APPLICATION = 'application/octetstream';
 Constants.HEADERS_CONTENT_TYPE = 'content-type';
 Constants.METADATA_FILE_SUFFIX = '-meta.xml';
+Constants.HTTP_STATUS_REDIRECT = [301];
 //# sourceMappingURL=constants.js.map

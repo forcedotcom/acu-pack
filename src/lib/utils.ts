@@ -40,6 +40,25 @@ export class RestResult {
   public isError = false;
   public contentType: string;
   public isBinary = false;
+  public headers: any;
+  
+  public get isRedirect(): boolean {
+    if(!Constants.HTTP_STATUS_REDIRECT) {
+      return false;
+    }
+    for(const statusCode of Constants.HTTP_STATUS_REDIRECT) {
+      if(this.code === statusCode) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public get redirectUrl(): string {
+    return this.isRedirect
+      ? this.headers?.location as string
+      : null;
+  }
 
   public throw(): Error {
     throw this.getError();
@@ -409,37 +428,43 @@ export default class Utils {
     parameter?: any,
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     headers?: any,
-    validStatusCodes?: []
+    validStatusCodes?: [],
+    isFollowRedirects = true
   ): Promise<RestResult> {
-    const result = new RestResult();
+    let result: RestResult = null;
+    const apiPromise = Utils.bent(action.toString(), headers || {}, validStatusCodes || [200]);
+    let tempUrl = url;
+    do {
+      result = new RestResult();
+      try {
+        const response = await apiPromise(tempUrl, parameter);
+        // Do we have content?
+        result.headers = response.headers;
+        result.code = response.statusCode;
+        switch (result.code) {
+          case NO_CONTENT_CODE:
+            return result;
+          default:
+            // Read payload
+            /* eslint-disable-next-line camelcase */
+            response.content_type = response.headers[Constants.HEADERS_CONTENT_TYPE];
+            if (response.content_type === Constants.CONTENT_TYPE_APPLICATION) {
+              result.body = Buffer.from(await response.arrayBuffer());
+              result.isBinary = true;
+            } else {
+              result.body = await response.json();
+            }
 
-    try {
-      const apiPromise = Utils.bent(action.toString(), headers || {}, validStatusCodes || [200]);
-      const response = await apiPromise(url, parameter);
-
-      // Do we have content?
-      result.code = response.statusCode;
-      switch (result.code) {
-        case NO_CONTENT_CODE:
-          return result;
-        default:
-          // Read payload
-          /* eslint-disable-next-line camelcase */
-          response.content_type = response.headers[Constants.HEADERS_CONTENT_TYPE];
-          if (response.content_type === Constants.CONTENT_TYPE_APPLICATION) {
-            result.body = Buffer.from(await response.arrayBuffer());
-            result.isBinary = true;
-          } else {
-            result.body = await response.json();
-          }
-
-          return result;
+            return result;
+        }
+      } catch (err) {
+        result.isError = true;
+        result.code = err.statusCode;
+        result.body = err.message;
+        result.headers = err.headers;
+        tempUrl = result.redirectUrl;
       }
-    } catch (err) {
-      result.isError = true;
-      result.code = err.statusCode;
-      result.body = err.message;
-    }
+    } while(isFollowRedirects && result.isRedirect)
     return result;
   }
 

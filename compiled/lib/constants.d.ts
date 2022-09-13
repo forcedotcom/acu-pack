@@ -36,4 +36,5 @@ export default class Constants {
     static readonly CONTENT_TYPE_APPLICATION = "application/octetstream";
     static readonly HEADERS_CONTENT_TYPE = "content-type";
     static readonly METADATA_FILE_SUFFIX = "-meta.xml";
+    static readonly HTTP_STATUS_REDIRECT: number[];
 }

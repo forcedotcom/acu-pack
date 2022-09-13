@@ -27,6 +27,9 @@ export declare class RestResult {
     isError: boolean;
     contentType: string;
     isBinary: boolean;
+    headers: any;
+    get isRedirect(): boolean;
+    get redirectUrl(): string;
     throw(): Error;
     getContent(): any;
     private getError;
@@ -77,7 +80,7 @@ export default class Utils {
     static deleteDirectory(dirPath: string): Promise<void>;
     static writeFile(filePath: string, contents: any): Promise<void>;
     static chunkRecords(recordsToChunk: any[], chunkSize: number): any[];
-    static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: []): Promise<RestResult>;
+    static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: [], isFollowRedirects?: boolean): Promise<RestResult>;
     static isDirectory(filePath: string): Promise<boolean>;
     static normalizePath(filePath: string): string;
 }
