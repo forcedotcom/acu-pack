@@ -401,6 +401,9 @@ export class SfdxTasks {
 
     public static async getUnsupportedMetadataTypes(): Promise<string[]> {
         const result = await Utils.getRestResult(RestAction.GET, Constants.METADATA_COVERAGE_REPORT_URL);
+        if(!result || result.isError === true) {
+            return []as string[];
+        }
         const myMap = new Map<string, any>(Object.entries(result.getContent().types));
         const types = [];
         for (const [key, value] of myMap) {
