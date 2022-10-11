@@ -15,7 +15,7 @@
     "@salesforce/core": "^2.37.1",
     "@salesforce/kit": "^1.5.44",
     "@salesforce/ts-types": "^1.5.20",
-    "@xmldom/xmldom": "^0.8.2",
+    "@xmldom/xmldom": "^0.8.3",
     "await-spawn": "^3.0.0",
     "bent": "^7.3.12",
     "glob": "^7.2.3",
