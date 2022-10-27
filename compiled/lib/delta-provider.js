@@ -27,7 +27,12 @@ class DeltaProvider {
         if (filePath && fullCopyDirNames) {
             const pathParts = filePath.split(path.sep);
             for (const pathPart of pathParts) {
-                fullCopyPath += pathPart + path.sep;
+                // This will avoid returning a full file path when the file is
+                // the metdata file for an experience bundle - we only want the filename
+                const newPathPart = pathPart.endsWith(constants_1.default.METADATA_FILE_SUFFIX)
+                    ? pathPart.split('.')[0]
+                    : pathPart;
+                fullCopyPath += newPathPart + path.sep;
                 if (!gotFullCopyPath && fullCopyDirNames.includes(pathPart)) {
                     gotFullCopyPath = true;
                     continue;
