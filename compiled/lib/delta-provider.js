@@ -21,28 +21,31 @@ class DeltaProvider {
         this.logFile = 'delta.log';
         this.deltaOptions = new delta_options_1.DeltaOptions();
     }
-    static getFullCopyPath(filePath, fullCopyDirNames) {
+    static getFullCopyPath(filePath, fullCopyDirNames, allowFullCopyPathWithExt = false) {
         let fullCopyPath = '';
         let gotFullCopyPath = false;
         if (filePath && fullCopyDirNames) {
             const pathParts = filePath.split(path.sep);
             for (const pathPart of pathParts) {
+                if (gotFullCopyPath) {
+                    const newPathPart = pathPart.endsWith(constants_1.default.METADATA_FILE_SUFFIX)
+                        ? pathPart.split('.')[0]
+                        : pathPart;
+                    fullCopyPath += newPathPart + path.sep;
+                    break;
+                }
                 // This will avoid returning a full file path when the file is
                 // the metdata file for an experience bundle - we only want the filename
-                const newPathPart = pathPart.endsWith(constants_1.default.METADATA_FILE_SUFFIX)
-                    ? pathPart.split('.')[0]
-                    : pathPart;
-                fullCopyPath += newPathPart + path.sep;
+                fullCopyPath += pathPart + path.sep;
                 if (!gotFullCopyPath && fullCopyDirNames.includes(pathPart)) {
                     gotFullCopyPath = true;
                     continue;
                 }
-                if (gotFullCopyPath) {
-                    break;
-                }
             }
         }
-        return gotFullCopyPath ? fullCopyPath : null;
+        // A full copy path should not have a file ext - its a directory
+        // NOTE: a directory *could* be names with an ext so we provide the argument switch
+        return gotFullCopyPath && (allowFullCopyPathWithExt || !path.extname(fullCopyPath)) ? fullCopyPath : null;
     }
     async run(deltaOptions) {
         var e_1, _a, e_2, _b, e_3, _c, e_4, _d, e_5, _e, e_6, _f, e_7, _g;

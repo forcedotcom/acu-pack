@@ -31,28 +31,33 @@ export abstract class DeltaProvider {
     public abstract deltaLineToken: string;
     public abstract deltas: Map<string, any>;
 
-    public static getFullCopyPath(filePath: string, fullCopyDirNames: string[]): string {
+    public static getFullCopyPath(filePath: string, fullCopyDirNames: string[], allowFullCopyPathWithExt = false): string {
         let fullCopyPath = '';
         let gotFullCopyPath = false;
         if (filePath && fullCopyDirNames) {
             const pathParts = filePath.split(path.sep);
             for (const pathPart of pathParts) {
-                // This will avoid returning a full file path when the file is
-                // the metdata file for an experience bundle - we only want the filename
-                const newPathPart = pathPart.endsWith(Constants.METADATA_FILE_SUFFIX)
+                if(gotFullCopyPath) {
+                    const newPathPart = pathPart.endsWith(Constants.METADATA_FILE_SUFFIX)
                     ? pathPart.split('.')[0]
                     : pathPart;
-                fullCopyPath += newPathPart + path.sep;
+                    fullCopyPath += newPathPart + path.sep;
+                    break;
+                }
+                // This will avoid returning a full file path when the file is
+                // the metdata file for an experience bundle - we only want the filename
+                
+                fullCopyPath += pathPart + path.sep;
                 if(!gotFullCopyPath && fullCopyDirNames.includes(pathPart)) {
                     gotFullCopyPath = true;
                     continue;
                 }
-                if(gotFullCopyPath) {
-                    break;
-                }
+                
             }
         }
-        return gotFullCopyPath ? fullCopyPath : null;
+        // A full copy path should not have a file ext - its a directory
+        // NOTE: a directory *could* be names with an ext so we provide the argument switch
+        return gotFullCopyPath && (allowFullCopyPathWithExt || !path.extname(fullCopyPath)) ? fullCopyPath : null;
     }
     
     public async run(deltaOptions: DeltaOptions): Promise<any> {
