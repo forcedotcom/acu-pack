@@ -147,7 +147,7 @@ describe('GitDeltaProvider Tests', function () {
             filesCount++;
         }
       }
-      expect(28).equals(filesCount);
+      expect(29).equals(filesCount);
 
       await gitProvider.run(deltaOptions);
 
@@ -158,7 +158,7 @@ describe('GitDeltaProvider Tests', function () {
         }
       }
 
-      expect(18).equals(filesCount);
+      expect(19).equals(filesCount);
 
     });
   });

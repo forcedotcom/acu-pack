@@ -4,3 +4,5 @@ M	test\force-app\main\default\experiences\accountTeamDisplayContainer\brandingSe
 M	test\force-app\main\default\reports\AcumenSolutionsReportingforTesting\User_Report_qce.report-meta.xml
 M	test\force-app\main\default\staticresources\CustomDatatableHeader.css
 M	test\force-app\main\default\customMetadata\Facility_Access_Settings.AccessMinutesAfterProgramStart.md
+M	test\force-app\main\default\experiences\accountTeamDisplayContainer.site-meta.xml
+M	test\force-app\main\default\experiences\bogus.json
