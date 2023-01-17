@@ -72,7 +72,7 @@ $ sfdx plugins:link
 Otherwise install the plug-in:
 
 ```
-$ sfdx plugins:install https://GITHUBUSERNAME:PAT@github.com/forcedotcom/acu-pack.git
+$ sfdx plugins:install https://github.com/forcedotcom/acu-pack
 ```
 
 Verify link/install:
