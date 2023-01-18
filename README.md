@@ -61,24 +61,24 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:source:xpath -o xpath-options.json
    ![Debug image](.images/vscodeScreenshot.png){width=480 height=278}
    Congrats, you are debugging!
 
-# Usage
+# Installation
 
 If you are contributing to this repo - you can just link the plugin to SFDX CLI:
 
 ```
-$ sfdx plugins:link
+sfdx plugins:link
 ```
 
 Otherwise install the plug-in:
 
 ```
-$ sfdx plugins:install https://github.com/forcedotcom/acu-pack
+sfdx plugins:install https://github.com/forcedotcom/acu-pack
 ```
 
 Verify link/install:
 
 ```
-$ sfdx acu-pack -h
+sfdx acu-pack -h
 ```
 
 NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_allowlist)
