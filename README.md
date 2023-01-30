@@ -2,8 +2,8 @@
 
 SFDX CLI Extensions from Salesforce Customer Success Group (CSG)
 
-[![Version](https://img.shields.io/npm/v/acu-pack.svg)](https://www.npmjs.com/package/acu-pack/acu-pack)
-[![Downloads/week](https://img.shields.io/npm/dw/acu-pack.svg)](https://www.npmjs.com/package/acu-pack/acu-pack)
+[![Version](https://img.shields.io/npm/v/acu-pack.svg)](https://www.npmjs.com/package/@salesforce/acu-pack)
+[![Downloads/week](https://img.shields.io/npm/dw/acu-pack.svg)](https://www.npmjs.com/package/@salesforce/acu-pack)
 [![License](https://img.shields.io/npm/l/acu-pack.svg)](https://github.com/forcedotcom/acu-pack/blob/main/package.json)
 
 <!-- toc -->
