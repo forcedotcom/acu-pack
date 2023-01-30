@@ -72,7 +72,7 @@ sfdx plugins:link
 Otherwise install the plug-in:
 
 ```
-sfdx plugins:install https://github.com/forcedotcom/acu-pack
+sfdx plugins:install @salesforce/acu-pack
 ```
 
 Verify link/install:
