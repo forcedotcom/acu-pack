@@ -59,6 +59,7 @@ results.txt
 *.tsbuildinfo
 
 package-lock.json
+oclif.manifest.json
 
 ignore/*
 deploy/*
