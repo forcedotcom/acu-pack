@@ -38,6 +38,7 @@ $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:apex:scaffold -u ORG_ALIAS -s Acco
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:apex:scaffold -u ORG_ALIAS -o scaffold-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:api:get -u ORG_ALIAS -m Account -i INSTANCE_ID
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:api:get -u ORG_ALIAS -m ContentVersion.VersionData -i INSTANCE_ID -o MyOrg-{Id}.pdf
+$ NODE_OPTIONS=--inspect-brk bin/run acu-pack:api:file:post -u TRAIL -r test/ContentVersion.csv
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:build -u ORG_ALIAS -o package-options.json
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:build -u ORG_ALIAS -s -a
 $ NODE_OPTIONS=--inspect-brk bin/run acu-pack:package:build -f deploy

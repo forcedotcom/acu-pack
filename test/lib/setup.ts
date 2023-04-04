@@ -11,6 +11,7 @@ export default class Setup {
   public static gitFullDirFilePath = 'test/git-full-dir.test.txt';
   public static sourceForceAppRoot = 'test/force-app';
   public static orgAlias = null; // '';
+  public static csvTestFilePath = 'test/records.csv';
   /*
     public static get orgAlias(): Promise<String> {
         return (async () => {

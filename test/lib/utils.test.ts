@@ -5,6 +5,7 @@ import { expect } from '@salesforce/command/lib/test';
 import Utils from '../../src/lib/utils';
 import Setup from './setup'
 
+
 let testItemCount = 0;
 let testFilePath;
 const testObject = { test: true };
@@ -18,6 +19,7 @@ beforeEach(async () => {
         }
     }
 });
+
 describe('Utils Tests', function () {
     const bogusPath = 'bogus_path';
     describe('getFiles Test', function () {
@@ -306,4 +308,46 @@ describe('Utils Tests', function () {
             expect(normFilePath).to.not.include(isWin ? unixSep : winSep);
         });
     });
+    describe('parseDelimitedLine Test', function () {
+        it('Can handle nulls', function () {
+            expect(Utils.parseDelimitedLine(null)).to.be.null;
+        });
+        it('Can handle empty strings', function () {
+            expect(Utils.parseDelimitedLine('')).to.deep.equal([]);
+        });
+        it('Can pare delimited strings', function () {
+            expect(Utils.parseDelimitedLine('one,two,three')).to.deep.equal(['one','two','three']);
+            expect(Utils.parseDelimitedLine(',two,three')).to.deep.equal([null,'two','three']);
+            expect(Utils.parseDelimitedLine('one,two,')).to.deep.equal(['one','two',null]);
+            expect(Utils.parseDelimitedLine('"one,two",three')).to.deep.equal(['one,two','three']);
+            expect(Utils.parseDelimitedLine('    ,three')).to.deep.equal(['    ','three']);
+            expect(Utils.parseDelimitedLine('"",two,three1')).to.deep.equal(['','two','three1']);
+            expect(Utils.parseDelimitedLine('\'\',two,three2')).to.deep.equal(['','two','three2']);
+        });
+    });
+    describe('parseCSVFile Test', function () {
+        it('Can handle nulls', async function () {
+            for await (const csvObj of Utils.parseCSVFile(null)) {
+                expect(csvObj).to.be.null;
+            }
+        });
+        it('Can handle empty strings', async function () {
+            for await (const csvObj of Utils.parseCSVFile('')) {
+                expect(csvObj).to.be.null;
+            }
+        });
+        it('Can parse CSV File', async function () {
+            let counter = 0;
+            const results = [
+                {first: 'mike', middle: null, last: 'smith', street: '123 Main St.', city: ' Sterling', state: ' VA', zip: ' 20166'},
+                {first: 'matt', middle: 'james', last: 'perlish', street: '"321 King, common, way"', city: 'Doublin', state: 'ME', zip: ' 55321'},
+                {first: 'Julie', middle: null, last: 'Smith', street: null, city: null, state: null, zip: null},
+            ]
+            for await (const csvObj of Utils.parseCSVFile(Setup.csvTestFilePath)) {
+                expect(csvObj).to.deep.equal(results[counter]);        
+                counter++;
+            }
+        });
+    });
 });
+

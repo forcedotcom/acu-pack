@@ -24,7 +24,7 @@ export enum RestAction {
   PUT = 'PUT',
   POST = 'POST',
   DELETE = 'DELETE',
-  PATCH = 'PATCH',
+  PATCH = 'PATCH'
 }
 
 export enum IOItem {
@@ -76,6 +76,7 @@ export class RestResult {
 export default class Utils {
   public static logger: Logger;
   public static isJsonEnabled = false;
+  public static RedaFileBase64EncodingOption = {encoding: 'base64'};
 
   public static TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
   public static defaultXmlOptions = {
@@ -482,5 +483,72 @@ export default class Utils {
       newFilePath = newFilePath.replace(regEx, path.sep);
     }
     return newFilePath;
+  }
+
+  public static parseDelimitedLine(delimitedLine: string, delimiter = ',', wrapperChars= ['"','\'']): string[] {
+    if(delimitedLine === null) {
+      return null;
+    }
+    const parts: string[] = [];
+    let part: string = null;
+    let inWrapper = false;
+    const addPart = function(ch: string): string {
+      part = part  ? part + ch : ch;
+      return part;
+    }
+    let lastChar: string = null;
+    for(const ch of delimitedLine) {
+      lastChar = ch;
+      if(lastChar === delimiter) {
+        if(inWrapper) {
+          addPart(lastChar);
+        } else {
+          // insert a blank string if part is null
+          parts.push(part);
+          part = null;
+        }
+        continue;
+      }
+      // is this part wrapped? (i.e. "this is wrapped, becuase it has the delimiter")
+      if(wrapperChars.includes(lastChar)){
+        inWrapper = !inWrapper;
+        if(part === null) {
+          part = '';
+        }
+        continue;
+      }
+      addPart(lastChar);
+    }
+    // do we have a trailing part?
+    if(part || lastChar === delimiter) {
+      parts.push(part);
+    }
+    return parts;
+  }
+
+  public static async* parseCSVFile(csvFilePath: string, delimiter = ',', wrapperChars= ['"','\'']): AsyncGenerator<any, void, void> {
+    if(csvFilePath === null) {
+      return null;
+    }
+
+    let headers: string[] = null;
+    
+    for await (const line of this.readFileLines(csvFilePath)) {
+      const parts = this.parseDelimitedLine(line,delimiter,wrapperChars);
+      if(!parts) {
+        continue;        
+      }
+      if(!headers) {
+        headers = parts
+        continue;
+      }
+      const csvObj = {};
+      for(let index = 0; index < headers.length; index++) {
+        const header = headers[index];
+        csvObj[header] = index < parts.length ? parts[index] :  null;
+      }
+      yield csvObj;
+
+    }
   }
 }

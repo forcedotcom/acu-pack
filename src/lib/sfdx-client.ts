@@ -137,6 +137,27 @@ export class SfdxClient {
         }
     }
 
+    /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
+    public async doMultiPart(action: RestAction, record: any, filePath: string, validStatusCodes = [200] ): Promise<RestResult> {
+        if (!record) {
+            throw new Error('record parameter is required.');
+        }
+        if (!filePath) {
+            throw new Error('filePath parameter is required.');
+        }
+        
+        const id = Utils.getFieldValue(record, SfdxClient.defailtIdField, true);
+        // Delete the id field as SFDC API returns BAD_REQUEST if the object has an ID
+        if(id) {
+            delete record[SfdxClient.defailtIdField];
+        }
+        
+        const uri = await this.getUri('ContentVersion');
+        const result = await this.handleResponse(RestAction.POST, uri, record, validStatusCodes);
+        result.id = id;
+        return result;
+    }
+
     public async* do(action: RestAction, metaDataType: string, records: any[] = null, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = [200]): AsyncGenerator<RestResult, void, void> {
         if (!metaDataType) {
             throw new Error('metadataType parameter is required.');
@@ -176,31 +197,7 @@ export class SfdxClient {
         return result.body[result.body.length - 1].version as string;
     }
 
-    private async doInternal(action: RestAction = RestAction.GET, metaDataType: string = null, record: any = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
-        const uri = await this.getUri(metaDataType, null, apiKind);
-        return await this.handleResponse(action, uri, record, validStatusCodes);
-    }
-
-    private async* doInternalByIds(action: RestAction = RestAction.GET, metaDataType: string = null, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): AsyncGenerator<any, void, void> {
-        for (const record of records) {
-            yield await this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes);
-        }
-    }
-
-    private async doInternalById(action: RestAction = RestAction.GET, metaDataType: string = null, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
-        let id = null;
-        if (apiKind !== ApiKind.COMPOSITE && record) {
-            id = Utils.getFieldValue(record, recordIdField, true);
-            // Delete the id field as SFDC API restuen BAD_REQUEST if the object has an ID
-            delete record[recordIdField];
-        }
-        const uri = await this.getUri(metaDataType, id, apiKind);
-        const result = await this.handleResponse(action, uri, record, validStatusCodes);
-        result.id = id;
-        return result;
-    }
-
-    private async getUri(metaDataType: string = null, id: string = null, apiKind: ApiKind = ApiKind.DEFAULT): Promise<string> {
+    public async getUri(metaDataType: string = null, id: string = null, apiKind: ApiKind = ApiKind.DEFAULT): Promise<string> {
         await this.initialize(false);
         if (!this.apiVersion) {
             this.apiVersion = await this.getMaxApiVersion();
@@ -231,6 +228,30 @@ export class SfdxClient {
         return uri;
     }
 
+    private async doInternal(action: RestAction = RestAction.GET, metaDataType: string = null, record: any = null, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
+        const uri = await this.getUri(metaDataType, null, apiKind);
+        return await this.handleResponse(action, uri, record, validStatusCodes);
+    }
+
+    private async* doInternalByIds(action: RestAction = RestAction.GET, metaDataType: string = null, records: any[], recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): AsyncGenerator<any, void, void> {
+        for (const record of records) {
+            yield await this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes);
+        }
+    }
+
+    private async doInternalById(action: RestAction = RestAction.GET, metaDataType: string = null, record: any, recordIdField: string = SfdxClient.defailtIdField, apiKind: ApiKind = ApiKind.DEFAULT, validStatusCodes = null): Promise<RestResult> {
+        let id = null;
+        if (apiKind !== ApiKind.COMPOSITE && record) {
+            id = Utils.getFieldValue(record, recordIdField, true);
+            // Delete the id field as SFDC API returns BAD_REQUEST if the object has an ID
+            delete record[recordIdField];
+        }
+        const uri = await this.getUri(metaDataType, id, apiKind);
+        const result = await this.handleResponse(action, uri, record, validStatusCodes);
+        result.id = id;
+        return result;
+    }
+    
     private async handleResponse(action: RestAction = RestAction.GET, uri: string, record: any = null, validStatusCodes = null): Promise<RestResult> {
         return await Utils.getRestResult(action, uri, record, this.headers, validStatusCodes);
     }

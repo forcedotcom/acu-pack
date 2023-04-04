@@ -37,6 +37,9 @@ export declare class RestResult {
 export default class Utils {
     static logger: Logger;
     static isJsonEnabled: boolean;
+    static RedaFileBase64EncodingOption: {
+        encoding: string;
+    };
     static TempFilesPath: string;
     static defaultXmlOptions: {
         renderOpts: {
@@ -83,4 +86,6 @@ export default class Utils {
     static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: [], isFollowRedirects?: boolean): Promise<RestResult>;
     static isDirectory(filePath: string): Promise<boolean>;
     static normalizePath(filePath: string): string;
+    static parseDelimitedLine(delimitedLine: string, delimiter?: string, wrapperChars?: string[]): string[];
+    static parseCSVFile(csvFilePath: string, delimiter?: string, wrapperChars?: string[]): AsyncGenerator<any, void, void>;
 }

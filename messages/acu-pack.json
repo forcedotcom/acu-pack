@@ -115,6 +115,13 @@
     }
   },
   "api": {
+    "file": {
+      "post": {
+        "commandDescription": "\r\nUploads ContentVersion files using a multi-part message when necessary.",
+        "recordsFlagDescription": "The Path to the file (CSV) containing the ContentVersion record data to upload",
+        "fileFolderFlagDescription": "The path to the folder containing the files to upload as VersionData."
+      }
+    },
     "get": {
       "commandDescription": "\r\nPerforms the GET REST action against the specified URL/URI.",
       "metadataFlagDescription": "The metadata to execute the API against. The dot operator can be used to retrieve a specific field (i.e. ContentVersion.VersionData)",

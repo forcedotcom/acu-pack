@@ -21,12 +21,13 @@ export declare class SfdxClient {
     getByRecords(metaDataType: string, records: any[], recordIdField?: string, apiKind?: ApiKind): AsyncGenerator<RestResult, void, void>;
     updateByRecord(metaDataType: string, record: any, recordIdField?: string, apiKind?: ApiKind): Promise<RestResult>;
     updateByRecords(metaDataType: string, records: any[], recordIdField?: string, apiKind?: ApiKind): AsyncGenerator<RestResult, void, void>;
+    doMultiPart(action: RestAction, record: any, filePath: string, validStatusCodes?: number[]): Promise<RestResult>;
     do(action: RestAction, metaDataType: string, records?: any[], recordIdField?: string, apiKind?: ApiKind, validStatusCodes?: number[]): AsyncGenerator<RestResult, void, void>;
     doComposite(action: RestAction, record: any, validStatusCodes?: number[]): Promise<RestResult>;
     getMaxApiVersion(): Promise<string>;
+    getUri(metaDataType?: string, id?: string, apiKind?: ApiKind): Promise<string>;
     private doInternal;
     private doInternalByIds;
     private doInternalById;
-    private getUri;
     private handleResponse;
 }

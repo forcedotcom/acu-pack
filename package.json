@@ -18,6 +18,7 @@
     "@xmldom/xmldom": "^0.8.4",
     "await-spawn": "^3.0.0",
     "bent": "^7.3.12",
+    "form-data": "^4.0.0",
     "glob": "^7.2.3",
     "jsforce": "^1.11.0",
     "md5-file": "^5.0.0",
