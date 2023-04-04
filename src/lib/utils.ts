@@ -429,7 +429,7 @@ export default class Utils {
     parameter?: any,
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     headers?: any,
-    validStatusCodes?: [],
+    validStatusCodes?: number[],
     isFollowRedirects = true
   ): Promise<RestResult> {
     let result: RestResult = null;
