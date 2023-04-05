@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const path = require("path");
-const os = require("os");
 const fs_1 = require("fs");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
@@ -13,6 +12,7 @@ const utils_1 = require("../../../lib/utils");
 const schema_utils_1 = require("../../../lib/schema-utils");
 const schema_options_1 = require("../../../lib/schema-options");
 const sfdx_query_1 = require("../../../lib/sfdx-query");
+const constants_1 = require("../../../lib/constants");
 class Dictionary extends command_base_1.CommandBase {
     async runInternal() {
         var e_1, _a, e_2, _b;
@@ -22,7 +22,7 @@ class Dictionary extends command_base_1.CommandBase {
         const sortedTypeNames = await this.getSortedTypeNames(this.orgAlias);
         // sortedTypeNames = ['Account', 'Case', 'Lead'];
         // Create for writing - truncates if exists
-        const fileStream = (0, fs_1.createWriteStream)(schemaTmpFile, { flags: 'w' });
+        const fileStream = fs_1.createWriteStream(schemaTmpFile, { flags: 'w' });
         let counter = 0;
         const schemas = new Set();
         for (const metaDataType of sortedTypeNames) {
@@ -34,7 +34,7 @@ class Dictionary extends command_base_1.CommandBase {
                     continue;
                 }
                 for (const name of this.options.outputDefMap.keys()) {
-                    fileStream.write(`*${name}${os.EOL}`);
+                    fileStream.write(`*${name}${constants_1.default.EOL}`);
                     const collection = schema[name];
                     if (!collection) {
                         continue;
@@ -75,7 +75,7 @@ class Dictionary extends command_base_1.CommandBase {
                                     }
                                 }
                             }
-                            fileStream.write(`${JSON.stringify(row)}${os.EOL}`);
+                            fileStream.write(`${JSON.stringify(row)}${constants_1.default.EOL}`);
                         }
                     }
                     catch (e_1_1) { e_1 = { error: e_1_1 }; }

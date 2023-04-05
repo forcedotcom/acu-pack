@@ -1,4 +1,3 @@
-import os = require('os');
 import path = require('path');
 import { openSync, writeSync } from 'fs';
 import { ensureArray } from '@salesforce/ts-types';
@@ -203,9 +202,9 @@ export class SfdxTasks {
         // Create for writing - truncates if exists
         const stream = openSync(tempFileName, 'w');
         // NOTE: Do NOT include spaces between fields...results in an error
-        writeSync(stream, `ApexClassId,ShouldSkipCodeCoverage${os.EOL}`);
+        writeSync(stream, `ApexClassId,ShouldSkipCodeCoverage${Constants.EOL}`);
         for (const sfdxEntity of sfdxEntities) {
-            writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}${os.EOL}`);
+            writeSync(stream, `${sfdxEntity.id},${shouldSkipCodeCoverage}${Constants.EOL}`);
         }
 
         const command = `${Constants.SFDX_DATA_UPSERT} --json -s ApexTestQueueItem -i Id -f "${tempFileName}" -u ${usernameOrAlias}`;

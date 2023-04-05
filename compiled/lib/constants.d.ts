@@ -37,4 +37,7 @@ export default class Constants {
     static readonly HEADERS_CONTENT_TYPE = "content-type";
     static readonly METADATA_FILE_SUFFIX = "-meta.xml";
     static readonly HTTP_STATUS_REDIRECT: number[];
+    static readonly EOL: string;
+    static readonly CR = "\r";
+    static readonly LF = "\n";
 }

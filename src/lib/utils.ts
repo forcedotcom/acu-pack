@@ -485,7 +485,7 @@ export default class Utils {
     return newFilePath;
   }
 
-  public static parseDelimitedLine(delimitedLine: string, delimiter = ',', wrapperChars= ['"','\'']): string[] {
+  public static parseDelimitedLine(delimitedLine: string, delimiter = ',', wrapperChars= ['"','\''], skipChars = [Constants.EOL, Constants.CR, Constants.LF]): string[] {
     if(delimitedLine === null) {
       return null;
     }
@@ -499,6 +499,9 @@ export default class Utils {
     let lastChar: string = null;
     for(const ch of delimitedLine) {
       lastChar = ch;
+      if(skipChars.includes(lastChar)) {
+        continue;
+      }
       if(lastChar === delimiter) {
         if(inWrapper) {
           addPart(lastChar);

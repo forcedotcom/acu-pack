@@ -10,4 +10,5 @@ export default class post extends CommandBase {
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
     protected runInternal(): Promise<void>;
+    private sanitizeContentVersion;
 }

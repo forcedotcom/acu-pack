@@ -86,6 +86,6 @@ export default class Utils {
     static getRestResult(action: RestAction, url: string, parameter?: any, headers?: any, validStatusCodes?: number[], isFollowRedirects?: boolean): Promise<RestResult>;
     static isDirectory(filePath: string): Promise<boolean>;
     static normalizePath(filePath: string): string;
-    static parseDelimitedLine(delimitedLine: string, delimiter?: string, wrapperChars?: string[]): string[];
+    static parseDelimitedLine(delimitedLine: string, delimiter?: string, wrapperChars?: string[], skipChars?: string[]): string[];
     static parseCSVFile(csvFilePath: string, delimiter?: string, wrapperChars?: string[]): AsyncGenerator<any, void, void>;
 }

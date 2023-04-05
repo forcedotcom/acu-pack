@@ -1,5 +1,4 @@
 import path = require('path');
-import os = require('os');
 import { createWriteStream } from 'fs';
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../lib/command-base';
@@ -10,6 +9,7 @@ import Utils from '../../../lib/utils';
 import SchemaUtils from '../../../lib/schema-utils';
 import SchemaOptions from '../../../lib/schema-options';
 import { SfdxQuery } from '../../../lib/sfdx-query';
+import Constants from '../../../lib/constants';
 
 export default class Dictionary extends CommandBase {
   public static description = CommandBase.messages.getMessage('schema.dictionary.commandDescription');
@@ -69,7 +69,7 @@ export default class Dictionary extends CommandBase {
           continue;
         }
         for (const name of this.options.outputDefMap.keys()) {
-          fileStream.write(`*${name}${os.EOL}`);
+          fileStream.write(`*${name}${Constants.EOL}`);
           const collection = schema[name];
           if (!collection) {
             continue;
@@ -111,7 +111,7 @@ export default class Dictionary extends CommandBase {
                 }
               }
             }
-            fileStream.write(`${JSON.stringify(row)}${os.EOL}`);
+            fileStream.write(`${JSON.stringify(row)}${Constants.EOL}`);
           }
         }
         schemas.add(schema.name);

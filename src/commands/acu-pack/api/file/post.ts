@@ -1,19 +1,19 @@
-import path = require('path');
 import * as fs from 'fs';
 import * as FormData from 'form-data';
 import { flags } from '@salesforce/command';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxClient } from '../../../../lib/sfdx-client';
 import Utils, { RestAction } from '../../../../lib/utils';
+import Constants from '../../../../lib/constants';
 
 export default class post extends CommandBase {
   public static description = CommandBase.messages.getMessage('api.file.post.commandDescription');
 
   public static examples = [
-    `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv -f ./upload-files
-    Uploads the ContentVersion records defined in ContentVersions.csv and uses the file located in ./upload-files.`,
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
+    Uploads the ContentVersion records defined in ContentVersions.csv.`,
   ];
-
+  
   protected static flagsConfig = {
     records: flags.string({
       char: 'r',
@@ -33,24 +33,29 @@ export default class post extends CommandBase {
   protected static requiresProject = false;
 
   protected async runInternal(): Promise<void> {
-    if(!(await Utils.pathExists(this.flags.records))) {
-      this.raiseError(`Path does not exists: ${this.flags.records as string}.`);
-      return;
-    }
+    const records: string = this.flags.records
 
-    this.ux.log(this.flags.folder);
-    if(this.flags.folder && !(await Utils.pathExists(this.flags.folder))) {
-      this.raiseError(`Path does not exists: ${this.flags.folder as string}.`);
+    this.logger.debug('Executing api:file:post');
+
+    this.logger.debug(`Records: ${records}`);
+    if(!(await Utils.pathExists(records))) {
+      this.raiseError(`Path does not exists: ${records}.`);
       return;
     }
 
     const sfdxClient = new SfdxClient(this.orgAlias);
     const errors= [];
-    for await( const contentVersion of Utils.parseCSVFile(this.flags.records)) {
+    for await( const contentVersionRaw of Utils.parseCSVFile(records)) {
+      this.logger.debug(`RAW ContentVersion from CSV: ${JSON.stringify(contentVersionRaw)}`);
+
+      const contentVersion = this.sanitizeContentVersion(contentVersionRaw);
       const fileName: string = contentVersion.PathOnClient;
-      const filePath: string = 'VersionData' in contentVersion
-        ? contentVersion.VersionData 
-        : path.join(this.flags.folder, contentVersion.PathOnClient);
+      const filePath: string = contentVersion.VersionData ?? fileName;
+
+      if(!filePath) {
+        errors.push(`No file path found for record: ${JSON.stringify(contentVersion)}.`);
+        continue;
+      }
 
       if(!(await Utils.pathExists(filePath))) {
         this.raiseError(`Path does not exists: ${filePath}.`);
@@ -61,7 +66,8 @@ export default class post extends CommandBase {
       const data = fs.createReadStream(filePath);
 
       const form = new FormData();
-      form.append('entity_content', JSON.stringify(contentVersion), {
+      const formContent = JSON.stringify(contentVersion);
+      form.append('entity_content', formContent, {
         contentType: 'application/json',
       });
       form.append('VersionData', data, {
@@ -69,6 +75,7 @@ export default class post extends CommandBase {
         contentType: 'application/octet-stream',
       });
 
+      this.logger.debug(`POSTing: ${fileName}`);
       const result = await Utils.getRestResult(
         RestAction.POST,
         uri,
@@ -78,9 +85,10 @@ export default class post extends CommandBase {
       );
 
       if(result.isError){
-        errors.push(`Error uploading: ${filePath} (${result.code})=> ${result.body as string}\r\nForm Data: ${JSON.stringify(form)}`)
+        errors.push(`Error uploading: ${filePath} (${result.code}) => ${result.body as string}}${Constants.EOL}${formContent}`);
+        this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}\r\nForm Data: ${JSON.stringify(form)}`);
       } else {
-        this.ux.log(`ContentVersion ${result.body.id as string} created for file: ${fileName}`)
+        this.ux.log(`ContentVersion ${result.body.id as string} created for file: ${fileName}`);
       }
     }
     if(errors.length > 0) {
@@ -90,5 +98,15 @@ export default class post extends CommandBase {
       }
       this.raiseError('Upload Failed');
     }
+  }
+
+  private sanitizeContentVersion(raw: any): any {
+    const removeProps = ['Id', 'FileType'];
+    for( const prop of removeProps) {
+      if(prop in raw) {
+        delete raw[prop];
+      }
+    }
+    return raw;
   }
 }

@@ -209,8 +209,8 @@ class Utils {
             if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
                 return yield tslib_1.__await(void 0);
             }
-            const rl = (0, readline_1.createInterface)({
-                input: (0, fs_2.createReadStream)(filePath),
+            const rl = readline_1.createInterface({
+                input: fs_2.createReadStream(filePath),
                 // Note: we use the crlfDelay option to recognize all instances of CR LF
                 // ('\r\n') in input.txt as a single line break.
                 crlfDelay: Infinity,
@@ -472,7 +472,7 @@ class Utils {
         }
         return newFilePath;
     }
-    static parseDelimitedLine(delimitedLine, delimiter = ',', wrapperChars = ['"', '\'']) {
+    static parseDelimitedLine(delimitedLine, delimiter = ',', wrapperChars = ['"', '\''], skipChars = [constants_1.default.EOL, constants_1.default.CR, constants_1.default.LF]) {
         if (delimitedLine === null) {
             return null;
         }
@@ -486,6 +486,9 @@ class Utils {
         let lastChar = null;
         for (const ch of delimitedLine) {
             lastChar = ch;
+            if (skipChars.includes(lastChar)) {
+                continue;
+            }
             if (lastChar === delimiter) {
                 if (inWrapper) {
                     addPart(lastChar);

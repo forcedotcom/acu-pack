@@ -1,4 +1,3 @@
-import os = require('os');
 import path = require('path');
 import { promises as fs } from 'fs';
 import Utils from './utils';
@@ -165,7 +164,7 @@ export abstract class DeltaProvider {
                     case DeltaProvider.deltaTypeKind.D:
                         await this.logMessage(`DELETED File: ${deltaFile}`);
                         if (deleteReportFile) {
-                            await fs.appendFile(deleteReportFile, deltaFile + os.EOL);
+                            await fs.appendFile(deleteReportFile, deltaFile + Constants.EOL);
                         }
                         metrics.Del++;
                         break;
@@ -269,9 +268,9 @@ export abstract class DeltaProvider {
 
     public async logMessage(message: string, includeConsole = false): Promise<void> {
         if (typeof message === 'string') {
-            await fs.appendFile(this.logFile, `${message}${os.EOL}`);
+            await fs.appendFile(this.logFile, `${message}${Constants.EOL}`);
         } else {
-            await fs.appendFile(this.logFile, `${JSON.stringify(message)}${os.EOL}`);
+            await fs.appendFile(this.logFile, `${JSON.stringify(message)}${Constants.EOL}`);
         }
         if (includeConsole || this.deltaOptions.logAllMessagesToConsole) {
             /* eslint-disable-next-line no-console */

@@ -1,12 +1,12 @@
 import { promises as fs } from 'fs';
 import path = require('path');
-import os = require('os');
 import { flags } from '@salesforce/command';
 import md5File = require('md5-file');
 import { CommandBase } from '../../../../lib/command-base';
 import { DeltaCommandBase } from '../../../../lib/delta-command';
 import Utils from '../../../../lib/utils';
 import { DeltaProvider, Delta } from '../../../../lib/delta-provider';
+import Constants from '../../../../lib/constants';
 
 export default class Md5 extends CommandBase {
   public static description = CommandBase.messages.getMessage('source.delta.md5.commandDescription');
@@ -91,7 +91,7 @@ export default class Md5 extends CommandBase {
           await fs.unlink(md5FilePath);
         }
         for (const [fp, data] of this.deltas) {
-          await fs.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash as string}${os.EOL}`);
+          await fs.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash as string}${Constants.EOL}`);
         }
         await this.logMessage(`Updated hash file: ${md5FilePath} with ${this.deltas.size} entries.`, true);
       }
