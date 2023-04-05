@@ -11,7 +11,8 @@ export default class post extends CommandBase {
 
   public static examples = [
     `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
-    Uploads the ContentVersion records defined in ContentVersions.csv.`,
+    Uploads the ContentVersion records defined in ContentVersions.csv. 
+    NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
   ];
   
   protected static flagsConfig = {
@@ -19,10 +20,6 @@ export default class post extends CommandBase {
       char: 'r',
       description: CommandBase.messages.getMessage('api.file.post.recordsFlagDescription'),
       required: true,
-    }),
-    folder: flags.string({
-      char: 'f',
-      description: CommandBase.messages.getMessage('api.file.post.fileFolderFlagDescription'),
     }),
   };
 

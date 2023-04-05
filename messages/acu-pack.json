@@ -118,8 +118,7 @@
     "file": {
       "post": {
         "commandDescription": "\r\nUploads ContentVersion files using a multi-part message when necessary.",
-        "recordsFlagDescription": "The Path to the file (CSV) containing the ContentVersion record data to upload",
-        "fileFolderFlagDescription": "The path to the folder containing the files to upload as VersionData."
+        "recordsFlagDescription": "The Path to the file (CSV) containing the ContentVersion record data to upload"
       }
     },
     "get": {

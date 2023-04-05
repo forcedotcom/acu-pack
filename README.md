@@ -94,6 +94,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:api:file:post -r <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapifilepost--r-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-t] [-f <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--t--f-string--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -144,7 +145,7 @@ EXAMPLES
   Profiles.
 ```
 
-_See code: [compiled/commands/acu-pack/admin/user/access.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/admin/user/access.ts)_
+_See code: [compiled/commands/acu-pack/admin/user/access.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/admin/user/access.ts)_
 
 ## `sfdx acu-pack:admin:user:unmask [-l <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -187,7 +188,7 @@ EXAMPLES
    specified Org.
 ```
 
-_See code: [compiled/commands/acu-pack/admin/user/unmask.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/admin/user/unmask.ts)_
+_See code: [compiled/commands/acu-pack/admin/user/unmask.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/admin/user/unmask.ts)_
 
 ## `sfdx acu-pack:admin:workspace:delete [-l <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -223,7 +224,7 @@ EXAMPLES
       Deletes the Developer Console IDEWorkspace objects for the specified list of users (-l).
 ```
 
-_See code: [compiled/commands/acu-pack/admin/workspace/delete.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/admin/workspace/delete.ts)_
+_See code: [compiled/commands/acu-pack/admin/workspace/delete.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/admin/workspace/delete.ts)_
 
 ## `sfdx acu-pack:apex:coverage:clear [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -261,7 +262,7 @@ EXAMPLE
       Deletes the existing instances of ApexCodeCoverageAggregate from the specific Org.
 ```
 
-_See code: [compiled/commands/acu-pack/apex/coverage/clear.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/apex/coverage/clear.ts)_
+_See code: [compiled/commands/acu-pack/apex/coverage/clear.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/apex/coverage/clear.ts)_
 
 ## `sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -304,7 +305,7 @@ EXAMPLES
       Enqueues Apex Tests to be run in myOrgAlias with Code Coverage metrics and returns immediately.
 ```
 
-_See code: [compiled/commands/acu-pack/apex/coverage/execute.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/apex/coverage/execute.ts)_
+_See code: [compiled/commands/acu-pack/apex/coverage/execute.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/apex/coverage/execute.ts)_
 
 ## `sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -345,7 +346,7 @@ EXAMPLE
       Pulls the Code Coverage metrics from myOrgAlias and generates a CodeCoverageReport-myOrgAlias.xlsx report.
 ```
 
-_See code: [compiled/commands/acu-pack/apex/coverage/report.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/apex/coverage/report.ts)_
+_See code: [compiled/commands/acu-pack/apex/coverage/report.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/apex/coverage/report.ts)_
 
 ## `sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -389,7 +390,43 @@ EXAMPLES
       Generates Apex test classes (and cls-meta files) for specified CustomObjects. The specified options file is used.
 ```
 
-_See code: [compiled/commands/acu-pack/apex/scaffold.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/apex/scaffold.ts)_
+_See code: [compiled/commands/acu-pack/apex/scaffold.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/apex/scaffold.ts)_
+
+## `sfdx acu-pack:api:file:post -r <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Uploads ContentVersion files using a multi-part message when necessary.
+
+```
+USAGE
+  $ sfdx acu-pack:api:file:post -r <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -r, --records=records                                                             (required) The Path to the file
+                                                                                    (CSV) containing the ContentVersion
+                                                                                    record data to upload
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+DESCRIPTION
+  Uploads ContentVersion files using a multi-part message when necessary.
+
+EXAMPLE
+  $ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
+      Uploads the ContentVersion records defined in ContentVersions.csv. 
+      NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient
+```
+
+_See code: [compiled/commands/acu-pack/api/file/post.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/api/file/post.ts)_
 
 ## `sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -445,7 +482,7 @@ EXAMPLES
       NOTE: Not all metadata types support field data access.
 ```
 
-_See code: [compiled/commands/acu-pack/api/get.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/api/get.ts)_
+_See code: [compiled/commands/acu-pack/api/get.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/api/get.ts)_
 
 ## `sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-t] [-f <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -512,7 +549,7 @@ EXAMPLES
       Builds a SFDX package file (./manifest/package.xml) from the MDAPI formatted data in the deploy folder .
 ```
 
-_See code: [compiled/commands/acu-pack/package/build.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/build.ts)_
+_See code: [compiled/commands/acu-pack/package/build.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/package/build.ts)_
 
 ## `sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -553,7 +590,7 @@ EXAMPLES
   differences.
 ```
 
-_See code: [compiled/commands/acu-pack/package/merge.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/merge.ts)_
+_See code: [compiled/commands/acu-pack/package/merge.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/package/merge.ts)_
 
 ## `sfdx acu-pack:package:permissions [-x <string>] [-m <string>] [-n <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -600,7 +637,7 @@ EXAMPLES
       Profile & PermissionSet metadata related to CustomObject & CustomApplication permissions.
 ```
 
-_See code: [compiled/commands/acu-pack/package/permissions.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/package/permissions.ts)_
+_See code: [compiled/commands/acu-pack/package/permissions.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/package/permissions.ts)_
 
 ## `sfdx acu-pack:schema:dictionary [-r <string>] [-n <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -645,7 +682,7 @@ EXAMPLE
       Generates a DataDictionary-myOrgAlias.xlsx file from an Org's configured Object & Field metadata.
 ```
 
-_See code: [compiled/commands/acu-pack/schema/dictionary.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/schema/dictionary.ts)_
+_See code: [compiled/commands/acu-pack/schema/dictionary.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/schema/dictionary.ts)_
 
 ## `sfdx acu-pack:schema:profile:retrieve -n <array> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -682,7 +719,7 @@ EXAMPLE
       Retrieves 5 profiles at a time. Default Path - force-app/main/default/profile
 ```
 
-_See code: [compiled/commands/acu-pack/schema/profile/retrieve.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/schema/profile/retrieve.ts)_
+_See code: [compiled/commands/acu-pack/schema/profile/retrieve.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/schema/profile/retrieve.ts)_
 
 ## `sfdx acu-pack:source:delta:git [-g <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -742,7 +779,7 @@ EXAMPLE
       -(s)ource 'force-app' and copies them to -(d)estination 'deploy'
 ```
 
-_See code: [compiled/commands/acu-pack/source/delta/git.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/delta/git.ts)_
+_See code: [compiled/commands/acu-pack/source/delta/git.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/source/delta/git.ts)_
 
 ## `sfdx acu-pack:source:delta:md5 [-m <filepath>] [-o <filepath>] [-s <filepath>] [-d <filepath>] [-f <filepath>] [-i <filepath>] [-r <filepath>] [-c] [-a <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -801,7 +838,7 @@ EXAMPLE
       -(s)ource 'force-app' and copies them to -(d)estination 'deploy'
 ```
 
-_See code: [compiled/commands/acu-pack/source/delta/md5.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/delta/md5.ts)_
+_See code: [compiled/commands/acu-pack/source/delta/md5.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/source/delta/md5.ts)_
 
 ## `sfdx acu-pack:source:permissions [-p <string>] [-r <string>] [-f <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -843,7 +880,7 @@ EXAMPLE
   located in default project source location and writes the 'PermissionsReport.xlsx' report file.
 ```
 
-_See code: [compiled/commands/acu-pack/source/permissions.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/permissions.ts)_
+_See code: [compiled/commands/acu-pack/source/permissions.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/source/permissions.ts)_
 
 ## `sfdx acu-pack:source:profile [-p <string>] [-m] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -891,7 +928,7 @@ EXAMPLES
   to the specified Org to and updates the metadat files to ensuredeployment compatibility.
 ```
 
-_See code: [compiled/commands/acu-pack/source/profile.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/profile.ts)_
+_See code: [compiled/commands/acu-pack/source/profile.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/source/profile.ts)_
 
 ## `sfdx acu-pack:source:xpath [-o <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -921,5 +958,5 @@ EXAMPLE
       Validates the project source from the x-path rules specified in 'xpath-options.json'
 ```
 
-_See code: [compiled/commands/acu-pack/source/xpath.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.0/compiled/commands/acu-pack/source/xpath.ts)_
+_See code: [compiled/commands/acu-pack/source/xpath.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/source/xpath.ts)_
 <!-- commandsstop -->

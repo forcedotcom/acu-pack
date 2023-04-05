@@ -74,7 +74,7 @@ class post extends command_base_1.CommandBase {
         }
     }
     sanitizeContentVersion(raw) {
-        const removeProps = ['id', 'filetype'];
+        const removeProps = ['Id', 'FileType'];
         for (const prop of removeProps) {
             if (prop in raw) {
                 delete raw[prop];
@@ -87,17 +87,14 @@ exports.default = post;
 post.description = command_base_1.CommandBase.messages.getMessage('api.file.post.commandDescription');
 post.examples = [
     `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
-    Uploads the ContentVersion records defined in ContentVersions.csv.`,
+    Uploads the ContentVersion records defined in ContentVersions.csv. 
+    NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
 ];
 post.flagsConfig = {
     records: command_1.flags.string({
         char: 'r',
         description: command_base_1.CommandBase.messages.getMessage('api.file.post.recordsFlagDescription'),
         required: true,
-    }),
-    folder: command_1.flags.string({
-        char: 'f',
-        description: command_base_1.CommandBase.messages.getMessage('api.file.post.fileFolderFlagDescription'),
     }),
 };
 // Comment this out if your command does not require an org username
