@@ -40,4 +40,6 @@ export default class Constants {
     static readonly EOL: string;
     static readonly CR = "\r";
     static readonly LF = "\n";
+    static readonly CONENTVERSION_MAX_SIZE = 37000000;
+    static readonly MIME_JSON = "application/json";
 }

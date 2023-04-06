@@ -2,6 +2,7 @@ import path = require('path');
 import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
+import mime = require('mime-types');
 import xpath = require('xpath');
 import { DOMParser as dom } from '@xmldom/xmldom';
 import * as xml2js from 'xml2js';
@@ -553,5 +554,9 @@ export default class Utils {
       yield csvObj;
 
     }
+  }
+
+  public static getMIMEType(filename: string): string {
+    return mime.lookup(filename) as string;
   }
 }

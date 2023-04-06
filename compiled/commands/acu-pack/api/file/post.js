@@ -19,7 +19,6 @@ class post extends command_base_1.CommandBase {
             this.raiseError(`Path does not exists: ${records}.`);
             return;
         }
-        const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
         const errors = [];
         try {
             for (var _c = tslib_1.__asyncValues(utils_1.default.parseCSVFile(records)), _d; _d = await _c.next(), !_d.done;) {
@@ -36,25 +35,21 @@ class post extends command_base_1.CommandBase {
                     this.raiseError(`Path does not exists: ${filePath}.`);
                     return;
                 }
-                const uri = await sfdxClient.getUri('ContentVersion');
-                const data = fs.createReadStream(filePath);
-                const form = new FormData();
-                const formContent = JSON.stringify(contentVersion);
-                form.append('entity_content', formContent, {
-                    contentType: 'application/json',
-                });
-                form.append('VersionData', data, {
-                    filename: fileName,
-                    contentType: 'application/octet-stream',
-                });
-                this.logger.debug(`POSTing: ${fileName}`);
-                const result = await utils_1.default.getRestResult(utils_1.RestAction.POST, uri, form, form.getHeaders({ Authorization: `Bearer ${this.connection.accessToken}` }), [200, 201]);
-                if (result.isError) {
-                    errors.push(`Error uploading: ${filePath} (${result.code}) => ${result.body}}${constants_1.default.EOL}${formContent}`);
-                    this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}\r\nForm Data: ${JSON.stringify(form)}`);
+                const stats = await utils_1.default.getPathStat(filePath);
+                // Do we need to use a multi-part POST?
+                let result = null;
+                if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
+                    result = await this.postObjectMultipart('ContentVersion', contentVersion, fileName, filePath);
                 }
                 else {
-                    this.ux.log(`ContentVersion ${result.body.id} created for file: ${fileName}`);
+                    result = await this.postObject('ContentVersion', contentVersion, filePath);
+                }
+                if (result.isError) {
+                    errors.push(`Error uploading: ${filePath} (${result.code}) => ${result.body}}${constants_1.default.EOL}`);
+                    this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}`);
+                }
+                else {
+                    this.ux.log(`ContentVersion ${result.id} created for file: ${fileName}`);
                 }
             }
         }
@@ -73,6 +68,52 @@ class post extends command_base_1.CommandBase {
             this.raiseError('Upload Failed');
         }
     }
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async postObject(objectName, objectRecord, filePath) {
+        this.logger.debug(`POSTing: ${objectName} `);
+        this.logger.debug(`POSTing: ${JSON.stringify(objectRecord)}`);
+        const result = new utils_1.RestResult();
+        const base64Body = await utils_1.default.readFile(filePath, utils_1.default.RedaFileBase64EncodingOption);
+        objectRecord.VersionData = base64Body;
+        const postResult = await this.connection.sobject(objectName).insert(objectRecord);
+        if (postResult.success) {
+            result.id = postResult.id;
+        }
+        else {
+            result.code = 400;
+            result.body = JSON.stringify(postResult.errors);
+        }
+        return result;
+    }
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async postObjectMultipart(objectName, objectRecord, fileName, filePath) {
+        this.logger.debug(`multi-part-POSTing: ${objectName} `);
+        this.logger.debug(`multi-part-POSTing: ${JSON.stringify(objectRecord)}`);
+        const form = new FormData();
+        const formContent = JSON.stringify(objectRecord);
+        const metaName = post.formDataInfo[objectName].MetaName;
+        form.append(metaName, formContent, {
+            contentType: constants_1.default.MIME_JSON,
+        });
+        const dataName = post.formDataInfo[objectName].DataName;
+        const data = fs.createReadStream(filePath);
+        form.append(dataName, data, {
+            filename: fileName,
+            contentType: utils_1.default.getMIMEType(fileName), // 'application/octet-stream',
+        });
+        this.logger.debug(`POSTing: ${fileName}`);
+        const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
+        const uri = await sfdxClient.getUri(objectName);
+        const result = await utils_1.default.getRestResult(utils_1.RestAction.POST, uri, form, form.getHeaders({ Authorization: `Bearer ${this.connection.accessToken}` }), [200, 201]);
+        // Log the form data if an error occurs
+        if (result.isError) {
+            this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}\r\nForm Data: ${JSON.stringify(form)}`);
+        }
+        else {
+            result.id = result.body.id;
+        }
+        return result;
+    }
     sanitizeContentVersion(raw) {
         const removeProps = ['Id', 'FileType'];
         for (const prop of removeProps) {
@@ -84,6 +125,16 @@ class post extends command_base_1.CommandBase {
     }
 }
 exports.default = post;
+post.formDataInfo = {
+    ContentVersion: {
+        MetaName: 'entity_content',
+        DataName: 'VersionData'
+    },
+    Document: {
+        MetaName: 'entity_document',
+        DataName: 'Document'
+    },
+};
 post.description = command_base_1.CommandBase.messages.getMessage('api.file.post.commandDescription');
 post.examples = [
     `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv

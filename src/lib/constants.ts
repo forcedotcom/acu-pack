@@ -44,4 +44,6 @@ export default class Constants {
   public static readonly EOL = os.EOL;
   public static readonly CR = '\r';
   public static readonly LF = '\n';
+  public static readonly CONENTVERSION_MAX_SIZE = 37000000;
+  public static readonly MIME_JSON = 'application/json';
 }

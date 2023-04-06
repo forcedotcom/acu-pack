@@ -88,4 +88,5 @@ export default class Utils {
     static normalizePath(filePath: string): string;
     static parseDelimitedLine(delimitedLine: string, delimiter?: string, wrapperChars?: string[], skipChars?: string[]): string[];
     static parseCSVFile(csvFilePath: string, delimiter?: string, wrapperChars?: string[]): AsyncGenerator<any, void, void>;
+    static getMIMEType(filename: string): string;
 }

@@ -6,6 +6,7 @@ const path = require("path");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
 const readline_1 = require("readline");
+const mime = require("mime-types");
 const xpath = require("xpath");
 const xmldom_1 = require("@xmldom/xmldom");
 const xml2js = require("xml2js");
@@ -550,6 +551,9 @@ class Utils {
                 finally { if (e_5) throw e_5.error; }
             }
         });
+    }
+    static getMIMEType(filename) {
+        return mime.lookup(filename);
     }
 }
 exports.default = Utils;

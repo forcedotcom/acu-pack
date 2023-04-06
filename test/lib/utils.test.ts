@@ -369,5 +369,16 @@ describe('Utils Tests', function () {
         counter++;
       }
     });
+    describe('getMIMEType Test', function () {
+      it('Can handle nulls', function () {
+        expect(Utils.getMIMEType(null)).to.be.false;
+      });
+      it('Can handle empty strings', function () {
+        expect(Utils.getMIMEType('')).to.be.false;
+      });
+      it('Can lookup MIME Types', function () {
+        expect(Utils.getMIMEType('mime.json')).to.equal(Constants.MIME_JSON);
+      });
+    });
   });
 });
