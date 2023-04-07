@@ -13,6 +13,7 @@ class post extends command_base_1.CommandBase {
         var e_1, _a;
         var _b;
         const records = this.flags.records;
+        const columns = this.flags.columns ? this.flags.columns.split(',') : null;
         this.logger.debug('Executing api:file:post');
         this.logger.debug(`Records: ${records}`);
         if (!(await utils_1.default.pathExists(records))) {
@@ -20,11 +21,13 @@ class post extends command_base_1.CommandBase {
             return;
         }
         const errors = [];
+        let counter = 0;
         try {
             for (var _c = tslib_1.__asyncValues(utils_1.default.parseCSVFile(records)), _d; _d = await _c.next(), !_d.done;) {
                 const contentVersionRaw = _d.value;
+                counter++;
                 this.logger.debug(`RAW ContentVersion from CSV: ${JSON.stringify(contentVersionRaw)}`);
-                const contentVersion = this.sanitizeContentVersion(contentVersionRaw);
+                const contentVersion = this.sanitizeContentVersion(contentVersionRaw, columns);
                 const fileName = contentVersion.PathOnClient;
                 const filePath = (_b = contentVersion.VersionData) !== null && _b !== void 0 ? _b : fileName;
                 if (!filePath) {
@@ -38,19 +41,25 @@ class post extends command_base_1.CommandBase {
                 const stats = await utils_1.default.getPathStat(filePath);
                 // Do we need to use a multi-part POST?
                 let result = null;
-                if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
-                    result = await this.postObjectMultipart('ContentVersion', contentVersion, fileName, filePath);
+                try {
+                    if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
+                        result = await this.postObjectMultipart('ContentVersion', contentVersion, fileName, filePath);
+                    }
+                    else {
+                        result = await this.postObject('ContentVersion', contentVersion, filePath);
+                    }
                 }
-                else {
-                    result = await this.postObject('ContentVersion', contentVersion, filePath);
+                catch (err) {
+                    result = new utils_1.RestResult();
+                    result.code = 0;
+                    result.isError = true;
+                    result.body = `Exception: ${err.message}`;
                 }
                 if (result.isError) {
-                    errors.push(`Error uploading: ${filePath} (${result.code}) => ${result.body}}${constants_1.default.EOL}`);
+                    errors.push(`Error uploading: (${counter}) ${filePath} (${result.code}) => ${result.body}}`);
                     this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}`);
                 }
-                else {
-                    this.ux.log(`ContentVersion ${result.id} created for file: ${fileName}`);
-                }
+                this.ux.log(`(${counter}) ContentVersion ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -107,18 +116,37 @@ class post extends command_base_1.CommandBase {
         const result = await utils_1.default.getRestResult(utils_1.RestAction.POST, uri, form, form.getHeaders({ Authorization: `Bearer ${this.connection.accessToken}` }), [200, 201]);
         // Log the form data if an error occurs
         if (result.isError) {
-            this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}\r\nForm Data: ${JSON.stringify(form)}`);
+            this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}${constants_1.default.EOL}Form Data: ${JSON.stringify(form)}`);
         }
         else {
             result.id = result.body.id;
         }
         return result;
     }
-    sanitizeContentVersion(raw) {
-        const removeProps = ['Id', 'FileType'];
-        for (const prop of removeProps) {
-            if (prop in raw) {
-                delete raw[prop];
+    sanitizeContentVersion(raw, columns = []) {
+        if (columns) {
+            const newRaw = {};
+            for (const column of columns) {
+                if (column in raw) {
+                    newRaw[column] = raw[column];
+                }
+                else {
+                    this.raiseError(`The specified column/field ('${column}') does not exist in CSV record: ${JSON.stringify(raw)}`);
+                }
+            }
+            const keys = Object.keys(raw);
+            for (const key of keys) {
+                if (columns.includes(key)) {
+                    continue;
+                }
+                delete raw[key];
+            }
+        }
+        else {
+            for (const key of ['Id', 'FileType']) {
+                if (key in raw) {
+                    delete raw[key];
+                }
             }
         }
         return raw;
@@ -146,6 +174,11 @@ post.flagsConfig = {
         char: 'r',
         description: command_base_1.CommandBase.messages.getMessage('api.file.post.recordsFlagDescription'),
         required: true,
+    }),
+    columns: command_1.flags.string({
+        char: 'c',
+        description: command_base_1.CommandBase.messages.getMessage('api.file.post.columnsFlagDescription'),
+        required: false,
     }),
 };
 // Comment this out if your command does not require an org username

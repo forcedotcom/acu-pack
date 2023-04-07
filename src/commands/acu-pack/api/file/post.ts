@@ -20,6 +20,8 @@ export default class post extends CommandBase {
     },
   };
 
+  public static readonly 
+
   public static description = CommandBase.messages.getMessage('api.file.post.commandDescription');
 
   public static examples = [
@@ -34,6 +36,11 @@ export default class post extends CommandBase {
       description: CommandBase.messages.getMessage('api.file.post.recordsFlagDescription'),
       required: true,
     }),
+    columns: flags.string({
+      char: 'c',
+      description: CommandBase.messages.getMessage('api.file.post.columnsFlagDescription'),
+      required: false,
+    }),
   };
 
   // Comment this out if your command does not require an org username
@@ -44,7 +51,7 @@ export default class post extends CommandBase {
 
   protected async runInternal(): Promise<void> {
     const records: string = this.flags.records
-
+    const columns: string[] = this.flags.columns ? this.flags.columns.split(',') : null;
     this.logger.debug('Executing api:file:post');
 
     this.logger.debug(`Records: ${records}`);
@@ -54,10 +61,12 @@ export default class post extends CommandBase {
     }
     
     const errors= [];
+    let counter = 0;
     for await( const contentVersionRaw of Utils.parseCSVFile(records)) {
+      counter++;
       this.logger.debug(`RAW ContentVersion from CSV: ${JSON.stringify(contentVersionRaw)}`);
       
-      const contentVersion = this.sanitizeContentVersion(contentVersionRaw);
+      const contentVersion = this.sanitizeContentVersion(contentVersionRaw, columns);
       const fileName: string = contentVersion.PathOnClient;
       const filePath: string = contentVersion.VersionData ?? fileName;
 
@@ -74,17 +83,24 @@ export default class post extends CommandBase {
 
       // Do we need to use a multi-part POST?
       let result: RestResult = null;
-      if (stats.size > Constants.CONENTVERSION_MAX_SIZE) {
-        result = await this.postObjectMultipart('ContentVersion',contentVersion, fileName, filePath);
-      } else {
-        result = await this.postObject('ContentVersion',contentVersion, filePath);
+      try {
+        if (stats.size > Constants.CONENTVERSION_MAX_SIZE) {
+          result = await this.postObjectMultipart('ContentVersion',contentVersion, fileName, filePath);
+        } else {
+          result = await this.postObject('ContentVersion',contentVersion, filePath);
+        }
+      }
+      catch(err) {
+        result = new RestResult();
+        result.code = 0;
+        result.isError = true;
+        result.body = `Exception: ${err.message as string}`;
       }
       if(result.isError){
-        errors.push(`Error uploading: ${filePath} (${result.code}) => ${result.body as string}}${Constants.EOL}`);
+        errors.push(`Error uploading: (${counter}) ${filePath} (${result.code}) => ${result.body as string}}`);
         this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}`);
-      } else {
-        this.ux.log(`ContentVersion ${result.id} created for file: ${fileName}`);
       }
+      this.ux.log(`(${counter}) ContentVersion ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
     }
     if(errors.length > 0) {
       this.ux.log('The following records failed:');
@@ -148,19 +164,36 @@ export default class post extends CommandBase {
 
     // Log the form data if an error occurs
     if(result.isError){
-      this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}\r\nForm Data: ${JSON.stringify(form)}`);
+      this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}${Constants.EOL}Form Data: ${JSON.stringify(form)}`);
     } else {
       result.id = result.body.id;
     }
     return result;
   }
 
-  private sanitizeContentVersion(raw: any): any {
-    const removeProps = ['Id', 'FileType'];
-    for( const prop of removeProps) {
-      if(prop in raw) {
-        delete raw[prop];
+  private sanitizeContentVersion(raw: any, columns: string[] = []): any {
+    if(columns) {
+      const newRaw = {};
+      for( const column of columns) {
+        if(column in raw) {
+          newRaw[column] = raw[column];
+        } else {
+          this.raiseError(`The specified column/field ('${column}') does not exist in CSV record: ${JSON.stringify(raw)}`);
+        }
       }
+      const keys = Object.keys(raw);
+      for( const key of keys) {
+        if(columns.includes(key)) {
+          continue;
+        }
+        delete raw[key];
+      }  
+    } else {
+      for( const key of ['Id', 'FileType']) {
+        if(key in raw) {
+          delete raw[key];
+        }
+      }  
     }
     return raw;
   }

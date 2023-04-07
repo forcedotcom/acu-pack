@@ -11,10 +11,12 @@ export default class post extends CommandBase {
             DataName: string;
         };
     };
+    static readonly: any;
     static description: string;
     static examples: string[];
     protected static flagsConfig: {
         records: flags.Discriminated<flags.String>;
+        columns: flags.Discriminated<flags.String>;
     };
     protected static requiresUsername: boolean;
     protected static requiresProject: boolean;
