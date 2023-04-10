@@ -9,12 +9,23 @@ const sfdx_client_1 = require("../../../../lib/sfdx-client");
 const utils_1 = require("../../../../lib/utils");
 const constants_1 = require("../../../../lib/constants");
 class post extends command_base_1.CommandBase {
+    constructor() {
+        super(...arguments);
+        this.metadataInfo = null;
+    }
     async runInternal() {
         var e_1, _a;
         var _b;
+        const objectName = this.flags.metadata;
+        this.metadataInfo = post.metaDataInfo[objectName];
         const records = this.flags.records;
         const columns = this.flags.columns ? this.flags.columns.split(',') : null;
         this.logger.debug('Executing api:file:post');
+        this.logger.debug(`MetdataInfo: ${JSON.stringify(this.metadataInfo)}`);
+        if (!this.metadataInfo) {
+            this.raiseError(`MetaDataInfo not found for: ${objectName}.`);
+            return;
+        }
         this.logger.debug(`Records: ${records}`);
         if (!(await utils_1.default.pathExists(records))) {
             this.raiseError(`Path does not exists: ${records}.`);
@@ -24,14 +35,14 @@ class post extends command_base_1.CommandBase {
         let counter = 0;
         try {
             for (var _c = tslib_1.__asyncValues(utils_1.default.parseCSVFile(records)), _d; _d = await _c.next(), !_d.done;) {
-                const contentVersionRaw = _d.value;
+                const recordRaw = _d.value;
                 counter++;
-                this.logger.debug(`RAW ContentVersion from CSV: ${JSON.stringify(contentVersionRaw)}`);
-                const contentVersion = this.sanitizeContentVersion(contentVersionRaw, columns);
-                const fileName = contentVersion.PathOnClient;
-                const filePath = (_b = contentVersion.VersionData) !== null && _b !== void 0 ? _b : fileName;
+                this.logger.debug(`RAW ${objectName} from CSV: ${JSON.stringify(recordRaw)}`);
+                const record = this.sanitizeRecord(recordRaw, columns);
+                const fileName = record[this.metadataInfo.Filename];
+                const filePath = (_b = record[this.metadataInfo.DataName]) !== null && _b !== void 0 ? _b : fileName;
                 if (!filePath) {
-                    errors.push(`No file path found for record: ${JSON.stringify(contentVersion)}.`);
+                    errors.push(`No file path found for record: ${JSON.stringify(record)}.`);
                     continue;
                 }
                 if (!(await utils_1.default.pathExists(filePath))) {
@@ -43,10 +54,10 @@ class post extends command_base_1.CommandBase {
                 let result = null;
                 try {
                     if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
-                        result = await this.postObjectMultipart('ContentVersion', contentVersion, fileName, filePath);
+                        result = await this.postObjectMultipart(objectName, record, fileName, filePath);
                     }
                     else {
-                        result = await this.postObject('ContentVersion', contentVersion, filePath);
+                        result = await this.postObject(objectName, record, filePath);
                     }
                 }
                 catch (err) {
@@ -59,7 +70,7 @@ class post extends command_base_1.CommandBase {
                     errors.push(`Error uploading: (${counter}) ${filePath} (${result.code}) => ${result.body}}`);
                     this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}`);
                 }
-                this.ux.log(`(${counter}) ContentVersion ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
+                this.ux.log(`(${counter}) ${objectName} ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -82,8 +93,8 @@ class post extends command_base_1.CommandBase {
         this.logger.debug(`POSTing: ${objectName} `);
         this.logger.debug(`POSTing: ${JSON.stringify(objectRecord)}`);
         const result = new utils_1.RestResult();
-        const base64Body = await utils_1.default.readFile(filePath, utils_1.default.RedaFileBase64EncodingOption);
-        objectRecord.VersionData = base64Body;
+        const base64Body = await utils_1.default.readFile(filePath, utils_1.default.ReadFileBase64EncodingOption);
+        objectRecord[this.metadataInfo.DataName] = base64Body;
         const postResult = await this.connection.sobject(objectName).insert(objectRecord);
         if (postResult.success) {
             result.id = postResult.id;
@@ -100,11 +111,11 @@ class post extends command_base_1.CommandBase {
         this.logger.debug(`multi-part-POSTing: ${JSON.stringify(objectRecord)}`);
         const form = new FormData();
         const formContent = JSON.stringify(objectRecord);
-        const metaName = post.formDataInfo[objectName].MetaName;
+        const metaName = post.metaDataInfo[objectName].MetaName;
         form.append(metaName, formContent, {
             contentType: constants_1.default.MIME_JSON,
         });
-        const dataName = post.formDataInfo[objectName].DataName;
+        const dataName = post.metaDataInfo[objectName].DataName;
         const data = fs.createReadStream(filePath);
         form.append(dataName, data, {
             filename: fileName,
@@ -123,7 +134,7 @@ class post extends command_base_1.CommandBase {
         }
         return result;
     }
-    sanitizeContentVersion(raw, columns = []) {
+    sanitizeRecord(raw, columns = []) {
         if (columns) {
             const newRaw = {};
             for (const column of columns) {
@@ -153,23 +164,35 @@ class post extends command_base_1.CommandBase {
     }
 }
 exports.default = post;
-post.formDataInfo = {
+post.metaDataInfo = {
     ContentVersion: {
         MetaName: 'entity_content',
-        DataName: 'VersionData'
+        DataName: 'VersionData',
+        Filename: 'PathOnClient'
     },
     Document: {
         MetaName: 'entity_document',
-        DataName: 'Document'
+        DataName: 'Body',
+        Filename: 'PathOnClient'
+    },
+    Attachment: {
+        MetaName: 'entity_document',
+        DataName: 'Body',
+        Filename: 'Name'
     },
 };
 post.description = command_base_1.CommandBase.messages.getMessage('api.file.post.commandDescription');
 post.examples = [
-    `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv
     Uploads the ContentVersion records defined in ContentVersions.csv. 
     NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
 ];
 post.flagsConfig = {
+    metadata: command_1.flags.string({
+        char: 'm',
+        description: command_base_1.CommandBase.messages.getMessage('api.file.post.metadataFlagDescription'),
+        required: true,
+    }),
     records: command_1.flags.string({
         char: 'r',
         description: command_base_1.CommandBase.messages.getMessage('api.file.post.recordsFlagDescription'),

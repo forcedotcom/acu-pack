@@ -210,8 +210,8 @@ class Utils {
             if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
                 return yield tslib_1.__await(void 0);
             }
-            const rl = readline_1.createInterface({
-                input: fs_2.createReadStream(filePath),
+            const rl = (0, readline_1.createInterface)({
+                input: (0, fs_2.createReadStream)(filePath),
                 // Note: we use the crlfDelay option to recognize all instances of CR LF
                 // ('\r\n') in input.txt as a single line break.
                 crlfDelay: Infinity,
@@ -558,7 +558,7 @@ class Utils {
 }
 exports.default = Utils;
 Utils.isJsonEnabled = false;
-Utils.RedaFileBase64EncodingOption = { encoding: 'base64' };
+Utils.ReadFileBase64EncodingOption = { encoding: 'base64' };
 Utils.TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
 Utils.defaultXmlOptions = {
     renderOpts: { pretty: true, indent: '    ', newline: '\n' },

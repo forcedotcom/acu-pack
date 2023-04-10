@@ -77,7 +77,7 @@ export class RestResult {
 export default class Utils {
   public static logger: Logger;
   public static isJsonEnabled = false;
-  public static RedaFileBase64EncodingOption = {encoding: 'base64'};
+  public static ReadFileBase64EncodingOption = {encoding: 'base64'};
 
   public static TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
   public static defaultXmlOptions = {

@@ -9,14 +9,21 @@ import Constants from '../../../../lib/constants';
 
 export default class post extends CommandBase {
 
-  public static readonly formDataInfo = {
+  public static readonly metaDataInfo = {
     ContentVersion: {
       MetaName: 'entity_content',
-      DataName: 'VersionData'
+      DataName: 'VersionData',
+      Filename: 'PathOnClient'
     },
     Document: {
       MetaName: 'entity_document',
-      DataName: 'Document'
+      DataName: 'Body',
+      Filename: 'PathOnClient'
+    },
+    Attachment: {
+      MetaName: 'entity_document',
+      DataName: 'Body',
+      Filename: 'Name'
     },
   };
 
@@ -25,12 +32,17 @@ export default class post extends CommandBase {
   public static description = CommandBase.messages.getMessage('api.file.post.commandDescription');
 
   public static examples = [
-    `$ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv
     Uploads the ContentVersion records defined in ContentVersions.csv. 
     NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
   ];
   
   protected static flagsConfig = {
+    metadata: flags.string({
+      char: 'm',
+      description: CommandBase.messages.getMessage('api.file.post.metadataFlagDescription'),
+      required: true,
+    }),
     records: flags.string({
       char: 'r',
       description: CommandBase.messages.getMessage('api.file.post.recordsFlagDescription'),
@@ -49,10 +61,20 @@ export default class post extends CommandBase {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
 
+  protected metadataInfo: any = null;
+
   protected async runInternal(): Promise<void> {
+    const objectName = this.flags.metadata as string;
+    this.metadataInfo = post.metaDataInfo[objectName];
     const records: string = this.flags.records
     const columns: string[] = this.flags.columns ? this.flags.columns.split(',') : null;
     this.logger.debug('Executing api:file:post');
+
+    this.logger.debug(`MetdataInfo: ${JSON.stringify(this.metadataInfo)}`);
+    if(!this.metadataInfo) {
+      this.raiseError(`MetaDataInfo not found for: ${objectName}.`);
+      return;
+    }
 
     this.logger.debug(`Records: ${records}`);
     if(!(await Utils.pathExists(records))) {
@@ -62,16 +84,16 @@ export default class post extends CommandBase {
     
     const errors= [];
     let counter = 0;
-    for await( const contentVersionRaw of Utils.parseCSVFile(records)) {
+    for await( const recordRaw of Utils.parseCSVFile(records)) {
       counter++;
-      this.logger.debug(`RAW ContentVersion from CSV: ${JSON.stringify(contentVersionRaw)}`);
+      this.logger.debug(`RAW ${objectName} from CSV: ${JSON.stringify(recordRaw)}`);
       
-      const contentVersion = this.sanitizeContentVersion(contentVersionRaw, columns);
-      const fileName: string = contentVersion.PathOnClient;
-      const filePath: string = contentVersion.VersionData ?? fileName;
+      const record = this.sanitizeRecord(recordRaw, columns);
+      const fileName: string = record[this.metadataInfo.Filename];
+      const filePath: string = record[this.metadataInfo.DataName] ?? fileName;
 
       if(!filePath) {
-        errors.push(`No file path found for record: ${JSON.stringify(contentVersion)}.`);
+        errors.push(`No file path found for record: ${JSON.stringify(record)}.`);
         continue;
       }
 
@@ -85,9 +107,9 @@ export default class post extends CommandBase {
       let result: RestResult = null;
       try {
         if (stats.size > Constants.CONENTVERSION_MAX_SIZE) {
-          result = await this.postObjectMultipart('ContentVersion',contentVersion, fileName, filePath);
+          result = await this.postObjectMultipart(objectName,record, fileName, filePath);
         } else {
-          result = await this.postObject('ContentVersion',contentVersion, filePath);
+          result = await this.postObject(objectName,record, filePath);
         }
       }
       catch(err) {
@@ -100,7 +122,7 @@ export default class post extends CommandBase {
         errors.push(`Error uploading: (${counter}) ${filePath} (${result.code}) => ${result.body as string}}`);
         this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}`);
       }
-      this.ux.log(`(${counter}) ContentVersion ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
+      this.ux.log(`(${counter}) ${objectName} ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
     }
     if(errors.length > 0) {
       this.ux.log('The following records failed:');
@@ -117,8 +139,8 @@ export default class post extends CommandBase {
     this.logger.debug(`POSTing: ${JSON.stringify(objectRecord)}`);
     const result: RestResult = new RestResult();
    
-    const base64Body = await Utils.readFile(filePath, Utils.RedaFileBase64EncodingOption);
-    objectRecord.VersionData = base64Body;
+    const base64Body = await Utils.readFile(filePath, Utils.ReadFileBase64EncodingOption);
+    objectRecord[this.metadataInfo.DataName] = base64Body;
 
     const postResult: RecordResult = await this.connection.sobject(objectName).insert(objectRecord);
     if(postResult.success) {
@@ -138,12 +160,12 @@ export default class post extends CommandBase {
     const form = new FormData();
     const formContent = JSON.stringify(objectRecord);
 
-    const metaName = post.formDataInfo[objectName].MetaName;
+    const metaName = post.metaDataInfo[objectName].MetaName;
     form.append(metaName, formContent, {
       contentType: Constants.MIME_JSON,
     });
 
-    const dataName = post.formDataInfo[objectName].DataName;
+    const dataName = post.metaDataInfo[objectName].DataName;
     const data = fs.createReadStream(filePath);
     form.append(dataName, data, {
       filename: fileName,
@@ -171,7 +193,7 @@ export default class post extends CommandBase {
     return result;
   }
 
-  private sanitizeContentVersion(raw: any, columns: string[] = []): any {
+  private sanitizeRecord(raw: any, columns: string[] = []): any {
     if(columns) {
       const newRaw = {};
       for( const column of columns) {

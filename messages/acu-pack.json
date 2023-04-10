@@ -117,6 +117,7 @@
   "api": {
     "file": {
       "post": {
+        "metadataFlagDescription": "The MetaData Type name to upload",
         "commandDescription": "\r\nUploads ContentVersion files using a multi-part message when necessary.",
         "recordsFlagDescription": "The Path to the file (CSV) containing the ContentVersion record data to upload",
         "columnsFlagDescription": "A comma seperated list of the columns to use from the CSV file. If not specififed, all the columns are used."

@@ -22,7 +22,7 @@ class Dictionary extends command_base_1.CommandBase {
         const sortedTypeNames = await this.getSortedTypeNames(this.orgAlias);
         // sortedTypeNames = ['Account', 'Case', 'Lead'];
         // Create for writing - truncates if exists
-        const fileStream = fs_1.createWriteStream(schemaTmpFile, { flags: 'w' });
+        const fileStream = (0, fs_1.createWriteStream)(schemaTmpFile, { flags: 'w' });
         let counter = 0;
         const schemas = new Set();
         for (const metaDataType of sortedTypeNames) {
