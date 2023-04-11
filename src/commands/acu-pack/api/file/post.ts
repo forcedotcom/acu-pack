@@ -18,7 +18,7 @@ export default class post extends CommandBase {
     Document: {
       MetaName: 'entity_document',
       DataName: 'Body',
-      Filename: 'PathOnClient'
+      Filename: 'Name'
     },
     Attachment: {
       MetaName: 'entity_document',
