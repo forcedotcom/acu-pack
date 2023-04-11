@@ -486,7 +486,7 @@ export default class Utils {
     return newFilePath;
   }
 
-  public static parseDelimitedLine(delimitedLine: string, delimiter = ',', wrapperChars= ['"','\''], skipChars = [Constants.EOL, Constants.CR, Constants.LF]): string[] {
+  public static parseDelimitedLine(delimitedLine: string, delimiter = ',', wrapperChars = Constants.DEFAULT_CSV_TEXT_WRAPPERS, skipChars = [Constants.EOL, Constants.CR, Constants.LF]): string[] {
     if(delimitedLine === null) {
       return null;
     }
@@ -530,7 +530,7 @@ export default class Utils {
     return parts;
   }
 
-  public static async* parseCSVFile(csvFilePath: string, delimiter = ',', wrapperChars= ['"','\'']): AsyncGenerator<any, void, void> {
+  public static async* parseCSVFile(csvFilePath: string, delimiter = ',', wrapperChars = Constants.DEFAULT_CSV_TEXT_WRAPPERS): AsyncGenerator<any, void, void> {
     if(csvFilePath === null) {
       return null;
     }

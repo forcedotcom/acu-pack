@@ -48,4 +48,5 @@ Constants.CR = '\r';
 Constants.LF = '\n';
 Constants.CONENTVERSION_MAX_SIZE = 37000000;
 Constants.MIME_JSON = 'application/json';
+Constants.DEFAULT_CSV_TEXT_WRAPPERS = ['"'];
 //# sourceMappingURL=constants.js.map

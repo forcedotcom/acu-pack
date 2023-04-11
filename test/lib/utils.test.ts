@@ -327,7 +327,8 @@ describe('Utils Tests', function () {
       expect(Utils.parseDelimitedLine('"one,two",three')).to.deep.equal(['one,two', 'three']);
       expect(Utils.parseDelimitedLine('    ,three')).to.deep.equal(['    ', 'three']);
       expect(Utils.parseDelimitedLine('"",two,three1')).to.deep.equal(['', 'two', 'three1']);
-      expect(Utils.parseDelimitedLine("'',two,three2")).to.deep.equal(['', 'two', 'three2']);
+      expect(Utils.parseDelimitedLine(`one,"Mike's Command, two",,,three`)).to.deep.equal(
+        ['one', `Mike's Command, two`,null,null,'three']);
     });
   });
   describe('parseCSVFile Test', function () {

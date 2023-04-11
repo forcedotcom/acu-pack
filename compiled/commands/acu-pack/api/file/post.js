@@ -126,6 +126,7 @@ class post extends command_base_1.CommandBase {
         const uri = await sfdxClient.getUri(objectName);
         const result = await utils_1.default.getRestResult(utils_1.RestAction.POST, uri, form, form.getHeaders({ Authorization: `Bearer ${this.connection.accessToken}` }), [200, 201]);
         // Log the form data if an error occurs
+        // TODO: write errors to log file - always  
         if (result.isError) {
             this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}${constants_1.default.EOL}Form Data: ${JSON.stringify(form)}`);
         }
@@ -187,6 +188,7 @@ post.examples = [
     Uploads the ContentVersion records defined in ContentVersions.csv. 
     NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
 ];
+// TODO add allOrNothing for error flag
 post.flagsConfig = {
     metadata: command_1.flags.string({
         char: 'm',

@@ -473,7 +473,7 @@ class Utils {
         }
         return newFilePath;
     }
-    static parseDelimitedLine(delimitedLine, delimiter = ',', wrapperChars = ['"', '\''], skipChars = [constants_1.default.EOL, constants_1.default.CR, constants_1.default.LF]) {
+    static parseDelimitedLine(delimitedLine, delimiter = ',', wrapperChars = constants_1.default.DEFAULT_CSV_TEXT_WRAPPERS, skipChars = [constants_1.default.EOL, constants_1.default.CR, constants_1.default.LF]) {
         if (delimitedLine === null) {
             return null;
         }
@@ -517,7 +517,7 @@ class Utils {
         }
         return parts;
     }
-    static parseCSVFile(csvFilePath, delimiter = ',', wrapperChars = ['"', '\'']) {
+    static parseCSVFile(csvFilePath, delimiter = ',', wrapperChars = constants_1.default.DEFAULT_CSV_TEXT_WRAPPERS) {
         return tslib_1.__asyncGenerator(this, arguments, function* parseCSVFile_1() {
             var e_5, _a;
             if (csvFilePath === null) {

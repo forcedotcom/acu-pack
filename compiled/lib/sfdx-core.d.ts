@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export declare class SfdxCore {
     static ASTERIX: string;
     static MAIN: string;

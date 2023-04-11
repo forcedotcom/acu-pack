@@ -46,4 +46,5 @@ export default class Constants {
   public static readonly LF = '\n';
   public static readonly CONENTVERSION_MAX_SIZE = 37000000;
   public static readonly MIME_JSON = 'application/json';
+  public static readonly DEFAULT_CSV_TEXT_WRAPPERS = ['"'];
 }

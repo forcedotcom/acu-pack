@@ -37,6 +37,7 @@ export default class post extends CommandBase {
     NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
   ];
   
+  // TODO add allOrNothing for error flag
   protected static flagsConfig = {
     metadata: flags.string({
       char: 'm',
@@ -185,6 +186,7 @@ export default class post extends CommandBase {
     );
 
     // Log the form data if an error occurs
+    // TODO: write errors to log file - always  
     if(result.isError){
       this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}${Constants.EOL}Form Data: ${JSON.stringify(form)}`);
     } else {
