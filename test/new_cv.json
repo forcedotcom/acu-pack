@@ -1,0 +1,16 @@
+--boundary_string
+Content-Disposition: form-data; name="entity_content";
+Content-Type: application/json
+
+{
+    "ContentDocumentId" : "069Dn000002fRVnIAM",
+    "PathOnClient": "Q1 Sales Brochure.pdf"
+}
+
+--boundary_string
+Content-Type: application/octet-stream
+Content-Disposition: form-data; name="VersionData"; filename="Q1 Sales Brochure.pdf"
+
+Binary data goes here.
+
+--boundary_string--

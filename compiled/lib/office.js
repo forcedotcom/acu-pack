@@ -26,7 +26,7 @@ class Office {
                 sheetName = sheetName.slice(0, 31);
                 xlsx_1.utils.book_append_sheet(workbook, worksheet, sheetName);
             }
-            xlsx_1.writeFile(workbook, xlxsFilePath);
+            (0, xlsx_1.writeFile)(workbook, xlxsFilePath);
         }
     }
 }

@@ -1,5 +1,6 @@
 import { expect } from '@salesforce/command/lib/test';
 import { SfdxCore } from '../../src/lib/sfdx-core';
+import Utils from '../../src/lib/utils';
 
 describe('Sfdx Core Tests', () => {
   describe('getPackageBase Tests', function () {
@@ -81,6 +82,21 @@ describe('Sfdx Core Tests', () => {
       expect(minPackage.Package.types.length).equals(1);
       expect(minPackage.Package.types[0].name[0]).equals('CustomObject');
       expect(minPackage.Package.types[0].members.length).equals(1);
+    });
+  });
+  describe('writePackageFile Tests', function () {
+    let packMap;
+    const packageFilePath = './test/writePackageFileText.xml';
+    before(() => {
+      packMap = new Map<string, string[]>();
+      packMap.set('t1', ['t1m1', 't1m2', 't1m3', 't1m4']);
+      packMap.set('t2', ['t2m1', 't2m2', 't2m3', 't2m4']);
+    });
+    after(async () => {
+      await Utils.deleteFile(packageFilePath);
+    });
+    it('Writes Package', async function () {
+      expect(await SfdxCore.writePackageFile(packMap,packageFilePath,false)).is.not.null;
     });
   });
 });

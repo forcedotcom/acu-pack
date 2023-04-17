@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path = require('path');
-import os = require('os');
 import Utils from '../../src/lib/utils';
+import Constants from '../../src/lib/constants';
 
 export default class Setup {
   public static sourceRoot = 'test/source_folder';
@@ -11,6 +11,7 @@ export default class Setup {
   public static gitFullDirFilePath = 'test/git-full-dir.test.txt';
   public static sourceForceAppRoot = 'test/force-app';
   public static orgAlias = null; // '';
+  public static csvTestFilePath = 'test/records.csv';
   /*
     public static get orgAlias(): Promise<String> {
         return (async () => {
@@ -48,9 +49,9 @@ export default class Setup {
     for (let x = 0; x < count; x++) {
       for (let y = 0; y < count; y++) {
         filePath = path.join(myPath, `myfile.${y}.txt`);
-        await fs.appendFile(filePath, `${y}${os.EOL}`);
-        await fs.appendFile(Setup.md5FilePath, `${filePath}=${y}${os.EOL}`);
-        await fs.appendFile(Setup.gitFilePath, `${deltaKind}\t${filePath}${os.EOL}`);
+        await fs.appendFile(filePath, `${y}${Constants.EOL}`);
+        await fs.appendFile(Setup.md5FilePath, `${filePath}=${y}${Constants.EOL}`);
+        await fs.appendFile(Setup.gitFilePath, `${deltaKind}\t${filePath}${Constants.EOL}`);
         deltaKind = deltaKind === 'A' ? 'M' : 'A';
         yield filePath;
       }
@@ -61,17 +62,17 @@ export default class Setup {
 
     // Create staticresources folder structure
     filePath = path.join(folder, 'folder.resource-meta.xml');
-    await fs.appendFile(filePath, `1${os.EOL}`);
+    await fs.appendFile(filePath, `1${Constants.EOL}`);
     yield filePath;
 
     const folderPath = path.join(folder, 'folder');
     await Utils.mkDirPath(folderPath);
 
     filePath = path.join(folderPath, 'file1.txt');
-    await fs.appendFile(filePath, `1${os.EOL}`);
+    await fs.appendFile(filePath, `1${Constants.EOL}`);
     yield filePath;
 
-    await fs.appendFile(Setup.md5FilePath, `${filePath}=1${os.EOL}`);
-    await fs.appendFile(Setup.gitFilePath, `${deltaKind}\t${filePath}${os.EOL}`);
+    await fs.appendFile(Setup.md5FilePath, `${filePath}=1${Constants.EOL}`);
+    await fs.appendFile(Setup.gitFilePath, `${deltaKind}\t${filePath}${Constants.EOL}`);
   }
 }

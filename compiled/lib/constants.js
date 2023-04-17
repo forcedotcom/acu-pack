@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const os = require("os");
 class Constants {
 }
 exports.default = Constants;
@@ -42,4 +43,10 @@ Constants.CONTENT_TYPE_APPLICATION = 'application/octetstream';
 Constants.HEADERS_CONTENT_TYPE = 'content-type';
 Constants.METADATA_FILE_SUFFIX = '-meta.xml';
 Constants.HTTP_STATUS_REDIRECT = [301];
+Constants.EOL = os.EOL;
+Constants.CR = '\r';
+Constants.LF = '\n';
+Constants.CONENTVERSION_MAX_SIZE = 37000000;
+Constants.MIME_JSON = 'application/json';
+Constants.DEFAULT_CSV_TEXT_WRAPPERS = ['"'];
 //# sourceMappingURL=constants.js.map

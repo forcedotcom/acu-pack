@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = require("fs");
 const path = require("path");
-const os = require("os");
 const command_1 = require("@salesforce/command");
 const md5File = require("md5-file");
 const command_base_1 = require("../../../../lib/command-base");
 const delta_command_1 = require("../../../../lib/delta-command");
 const utils_1 = require("../../../../lib/utils");
 const delta_provider_1 = require("../../../../lib/delta-provider");
+const constants_1 = require("../../../../lib/constants");
 class Md5 extends command_base_1.CommandBase {
     constructor() {
         super(...arguments);
@@ -116,7 +116,7 @@ Md5.md5DeltaProvider = class extends delta_provider_1.DeltaProvider {
                     yield tslib_1.__await(fs_1.promises.unlink(md5FilePath));
                 }
                 for (const [fp, data] of this.deltas) {
-                    yield tslib_1.__await(fs_1.promises.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash}${os.EOL}`));
+                    yield tslib_1.__await(fs_1.promises.appendFile(md5FilePath, `${fp}${this.deltaLineToken}${data.hash}${constants_1.default.EOL}`));
                 }
                 yield tslib_1.__await(this.logMessage(`Updated hash file: ${md5FilePath} with ${this.deltas.size} entries.`, true));
             }

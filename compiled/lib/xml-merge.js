@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const os = require("os");
 const path = require("path");
 const fs_1 = require("fs");
 const utils_1 = require("./utils");
 const sfdx_core_1 = require("./sfdx-core");
+const constants_1 = require("./constants");
 class MergeResult {
 }
 class XmlMerge {
@@ -76,10 +76,10 @@ class XmlMerge {
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async logMessage(message, logFile, ux) {
         if (typeof message === 'string') {
-            await fs_1.promises.appendFile(logFile, `${message}${os.EOL}`);
+            await fs_1.promises.appendFile(logFile, `${message}${constants_1.default.EOL}`);
         }
         else {
-            await fs_1.promises.appendFile(logFile, `${JSON.stringify(message)}${os.EOL}`);
+            await fs_1.promises.appendFile(logFile, `${JSON.stringify(message)}${constants_1.default.EOL}`);
         }
         if (ux) {
             ux.log(message);

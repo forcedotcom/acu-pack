@@ -2,6 +2,7 @@ import path = require('path');
 import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
+import mime = require('mime-types');
 import xpath = require('xpath');
 import { DOMParser as dom } from '@xmldom/xmldom';
 import * as xml2js from 'xml2js';
@@ -24,7 +25,7 @@ export enum RestAction {
   PUT = 'PUT',
   POST = 'POST',
   DELETE = 'DELETE',
-  PATCH = 'PATCH',
+  PATCH = 'PATCH'
 }
 
 export enum IOItem {
@@ -76,6 +77,7 @@ export class RestResult {
 export default class Utils {
   public static logger: Logger;
   public static isJsonEnabled = false;
+  public static ReadFileBase64EncodingOption = {encoding: 'base64'};
 
   public static TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
   public static defaultXmlOptions = {
@@ -428,7 +430,7 @@ export default class Utils {
     parameter?: any,
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     headers?: any,
-    validStatusCodes?: [],
+    validStatusCodes?: number[],
     isFollowRedirects = true
   ): Promise<RestResult> {
     let result: RestResult = null;
@@ -482,5 +484,79 @@ export default class Utils {
       newFilePath = newFilePath.replace(regEx, path.sep);
     }
     return newFilePath;
+  }
+
+  public static parseDelimitedLine(delimitedLine: string, delimiter = ',', wrapperChars = Constants.DEFAULT_CSV_TEXT_WRAPPERS, skipChars = [Constants.EOL, Constants.CR, Constants.LF]): string[] {
+    if(delimitedLine === null) {
+      return null;
+    }
+    const parts: string[] = [];
+    let part: string = null;
+    let inWrapper = false;
+    const addPart = function(ch: string): string {
+      part = part  ? part + ch : ch;
+      return part;
+    }
+    let lastChar: string = null;
+    for(const ch of delimitedLine) {
+      lastChar = ch;
+      if(skipChars.includes(lastChar)) {
+        continue;
+      }
+      if(lastChar === delimiter) {
+        if(inWrapper) {
+          addPart(lastChar);
+        } else {
+          // insert a blank string if part is null
+          parts.push(part);
+          part = null;
+        }
+        continue;
+      }
+      // is this part wrapped? (i.e. "this is wrapped, becuase it has the delimiter")
+      if(wrapperChars.includes(lastChar)){
+        inWrapper = !inWrapper;
+        if(part === null) {
+          part = '';
+        }
+        continue;
+      }
+      addPart(lastChar);
+    }
+    // do we have a trailing part?
+    if(part || lastChar === delimiter) {
+      parts.push(part);
+    }
+    return parts;
+  }
+
+  public static async* parseCSVFile(csvFilePath: string, delimiter = ',', wrapperChars = Constants.DEFAULT_CSV_TEXT_WRAPPERS): AsyncGenerator<any, void, void> {
+    if(csvFilePath === null) {
+      return null;
+    }
+
+    let headers: string[] = null;
+    
+    for await (const line of this.readFileLines(csvFilePath)) {
+      const parts = this.parseDelimitedLine(line,delimiter,wrapperChars);
+      if(!parts) {
+        continue;        
+      }
+      if(!headers) {
+        headers = parts
+        continue;
+      }
+      const csvObj = {};
+      for(let index = 0; index < headers.length; index++) {
+        const header = headers[index];
+        csvObj[header] = index < parts.length ? parts[index] :  null;
+      }
+      yield csvObj;
+
+    }
+  }
+
+  public static getMIMEType(filename: string): string {
+    return mime.lookup(filename) as string;
   }
 }

@@ -6,6 +6,7 @@ const path = require("path");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
 const readline_1 = require("readline");
+const mime = require("mime-types");
 const xpath = require("xpath");
 const xmldom_1 = require("@xmldom/xmldom");
 const xml2js = require("xml2js");
@@ -209,8 +210,8 @@ class Utils {
             if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
                 return yield tslib_1.__await(void 0);
             }
-            const rl = readline_1.createInterface({
-                input: fs_2.createReadStream(filePath),
+            const rl = (0, readline_1.createInterface)({
+                input: (0, fs_2.createReadStream)(filePath),
                 // Note: we use the crlfDelay option to recognize all instances of CR LF
                 // ('\r\n') in input.txt as a single line break.
                 crlfDelay: Infinity,
@@ -472,9 +473,92 @@ class Utils {
         }
         return newFilePath;
     }
+    static parseDelimitedLine(delimitedLine, delimiter = ',', wrapperChars = constants_1.default.DEFAULT_CSV_TEXT_WRAPPERS, skipChars = [constants_1.default.EOL, constants_1.default.CR, constants_1.default.LF]) {
+        if (delimitedLine === null) {
+            return null;
+        }
+        const parts = [];
+        let part = null;
+        let inWrapper = false;
+        const addPart = function (ch) {
+            part = part ? part + ch : ch;
+            return part;
+        };
+        let lastChar = null;
+        for (const ch of delimitedLine) {
+            lastChar = ch;
+            if (skipChars.includes(lastChar)) {
+                continue;
+            }
+            if (lastChar === delimiter) {
+                if (inWrapper) {
+                    addPart(lastChar);
+                }
+                else {
+                    // insert a blank string if part is null
+                    parts.push(part);
+                    part = null;
+                }
+                continue;
+            }
+            // is this part wrapped? (i.e. "this is wrapped, becuase it has the delimiter")
+            if (wrapperChars.includes(lastChar)) {
+                inWrapper = !inWrapper;
+                if (part === null) {
+                    part = '';
+                }
+                continue;
+            }
+            addPart(lastChar);
+        }
+        // do we have a trailing part?
+        if (part || lastChar === delimiter) {
+            parts.push(part);
+        }
+        return parts;
+    }
+    static parseCSVFile(csvFilePath, delimiter = ',', wrapperChars = constants_1.default.DEFAULT_CSV_TEXT_WRAPPERS) {
+        return tslib_1.__asyncGenerator(this, arguments, function* parseCSVFile_1() {
+            var e_5, _a;
+            if (csvFilePath === null) {
+                return yield tslib_1.__await(null);
+            }
+            let headers = null;
+            try {
+                for (var _b = tslib_1.__asyncValues(this.readFileLines(csvFilePath)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
+                    const line = _c.value;
+                    const parts = this.parseDelimitedLine(line, delimiter, wrapperChars);
+                    if (!parts) {
+                        continue;
+                    }
+                    if (!headers) {
+                        headers = parts;
+                        continue;
+                    }
+                    const csvObj = {};
+                    for (let index = 0; index < headers.length; index++) {
+                        const header = headers[index];
+                        csvObj[header] = index < parts.length ? parts[index] : null;
+                    }
+                    yield yield tslib_1.__await(csvObj);
+                }
+            }
+            catch (e_5_1) { e_5 = { error: e_5_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
+                }
+                finally { if (e_5) throw e_5.error; }
+            }
+        });
+    }
+    static getMIMEType(filename) {
+        return mime.lookup(filename);
+    }
 }
 exports.default = Utils;
 Utils.isJsonEnabled = false;
+Utils.ReadFileBase64EncodingOption = { encoding: 'base64' };
 Utils.TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
 Utils.defaultXmlOptions = {
     renderOpts: { pretty: true, indent: '    ', newline: '\n' },
