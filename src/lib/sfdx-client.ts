@@ -1,6 +1,9 @@
+import * as fs from 'fs';
+import * as FormData from 'form-data';
 import { SfdxTasks, SfdxOrgInfo } from './sfdx-tasks';
 import Utils from './utils';
 import { RestAction, RestResult } from './utils';
+import  Constants from './/constants'
 
 export const NO_CONTENT_CODE = 204;
 
@@ -11,6 +14,24 @@ export enum ApiKind {
 }
 
 export class SfdxClient {
+    public static readonly metaDataInfo = {
+        ContentVersion: {
+            MetaName: 'entity_content',
+            DataName: 'VersionData',
+            Filename: 'PathOnClient'
+        },
+        Document: {
+            MetaName: 'entity_document',
+            DataName: 'Body',
+            Filename: 'Name'
+        },
+        Attachment: {
+            MetaName: 'entity_document',
+            DataName: 'Body',
+            Filename: 'Name'
+        },
+    };
+
     private static defailtIdField = 'id';
 
     private headers = {};
@@ -155,6 +176,39 @@ export class SfdxClient {
         const uri = await this.getUri('ContentVersion');
         const result = await this.handleResponse(RestAction.POST, uri, record, validStatusCodes);
         result.id = id;
+        return result;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public async postObjectMultipart(objectName: string, objectRecord: any, fileName: string, filePath: string): Promise<any> {
+        const form = new FormData();
+        const formContent = JSON.stringify(objectRecord);
+
+        const metaName = SfdxClient.metaDataInfo[objectName].MetaName;
+        form.append(metaName, formContent, {
+            contentType: Constants.MIME_JSON,
+        });
+
+        const dataName = SfdxClient.metaDataInfo[objectName].DataName;
+        const data = fs.createReadStream(filePath);
+        form.append(dataName, data, {
+        filename: fileName,
+        contentType: Utils.getMIMEType(fileName), // 'application/octet-stream',
+        });
+
+        const uri = await this.getUri(objectName);
+        const result = await Utils.getRestResult(
+            RestAction.POST,
+            uri,
+            form,
+            form.getHeaders({ Authorization: `Bearer ${this.orgInfo.accessToken}` }),
+            [200,201]
+        );
+
+        // Log the form data if an error occurs
+        if(!result.isError){
+            result.id = result.body.id;
+        }
         return result;
     }
 

@@ -9,7 +9,7 @@ SFDX CLI Extensions from Salesforce Customer Success Group (CSG)
 <!-- toc -->
 * [acu-pack](#acu-pack)
 * [Debugging your plugin](#debugging-your-plugin)
-* [Usage](#usage)
+* [Installation](#installation)
 * [Commands](#commands)
 <!-- tocstop -->
 
@@ -94,7 +94,7 @@ NOTE: [Installing unsigned plugins automatically](https://developer.salesforce.c
 * [`sfdx acu-pack:apex:coverage:execute [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoverageexecute--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:apex:coverage:report [-r <string>] [-w <integer>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexcoveragereport--r-string--w-integer--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:apex:scaffold [-s <string>] [-o <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapexscaffold--s-string--o-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx acu-pack:api:file:post -r <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapifilepost--r-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx acu-pack:api:file:post -m <string> -r <string> [-c <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapifilepost--m-string--r-string--c-string--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:api:get -m <string> -i <string> [-o <string>] [-t] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packapiget--m-string--i-string--o-string--t--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:build [-x <string>] [-m <string>] [-o <string>] [-n <string>] [-t] [-f <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagebuild--x-string--m-string--o-string--n-string--t--f-string--a--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx acu-pack:package:merge -s <filepath> -d <filepath> [-c] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-acu-packpackagemerge--s-filepath--d-filepath--c---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -392,16 +392,27 @@ EXAMPLES
 
 _See code: [compiled/commands/acu-pack/apex/scaffold.ts](https://github.com/forcedotcom/acu-pack/blob/v2.0.2/compiled/commands/acu-pack/apex/scaffold.ts)_
 
-## `sfdx acu-pack:api:file:post -r <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx acu-pack:api:file:post -m <string> -r <string> [-c <string>] [-a] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Uploads ContentVersion files using a multi-part message when necessary.
 
 ```
 USAGE
-  $ sfdx acu-pack:api:file:post -r <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx acu-pack:api:file:post -m <string> -r <string> [-c <string>] [-a] [-u <string>] [--apiversion <string>] 
+  [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
+  -a, --allornothing                                                                Set this flag to stop the upload
+                                                                                    process on the first error
+
+  -c, --columns=columns                                                             A comma seperated list of the
+                                                                                    columns to use from the CSV file. If
+                                                                                    not specififed, all the columns are
+                                                                                    used.
+
+  -m, --metadata=metadata                                                           (required) The MetaData Type name to
+                                                                                    upload
+
   -r, --records=records                                                             (required) The Path to the file
                                                                                     (CSV) containing the ContentVersion
                                                                                     record data to upload
@@ -420,9 +431,18 @@ OPTIONS
 DESCRIPTION
   Uploads ContentVersion files using a multi-part message when necessary.
 
-EXAMPLE
-  $ sfdx acu-pack:api:file:post -u myOrgAlias -r ContentVersions.csv
+EXAMPLES
+  $ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv
       Uploads the ContentVersion records defined in ContentVersions.csv. 
+      NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient
+  $ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv -c 
+  ContentDocumentId,VersionData,PathOnClient
+      Uploads the ContentVersion records defined in ContentVersions.csv using only the columns: 
+  ContentDocumentId,VersionData,PathOnClient. 
+      NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient
+  $ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv -a
+      Uploads the ContentVersion records defined in ContentVersions.csv. The whole process will stop on the first 
+  failure.
       NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient
 ```
 

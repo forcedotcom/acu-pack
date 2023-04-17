@@ -2,9 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxClient = exports.ApiKind = exports.NO_CONTENT_CODE = void 0;
 const tslib_1 = require("tslib");
+const fs = require("fs");
+const FormData = require("form-data");
 const sfdx_tasks_1 = require("./sfdx-tasks");
 const utils_1 = require("./utils");
 const utils_2 = require("./utils");
+const constants_1 = require(".//constants");
 exports.NO_CONTENT_CODE = 204;
 var ApiKind;
 (function (ApiKind) {
@@ -193,6 +196,28 @@ class SfdxClient {
         result.id = id;
         return result;
     }
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async postObjectMultipart(objectName, objectRecord, fileName, filePath) {
+        const form = new FormData();
+        const formContent = JSON.stringify(objectRecord);
+        const metaName = SfdxClient.metaDataInfo[objectName].MetaName;
+        form.append(metaName, formContent, {
+            contentType: constants_1.default.MIME_JSON,
+        });
+        const dataName = SfdxClient.metaDataInfo[objectName].DataName;
+        const data = fs.createReadStream(filePath);
+        form.append(dataName, data, {
+            filename: fileName,
+            contentType: utils_1.default.getMIMEType(fileName), // 'application/octet-stream',
+        });
+        const uri = await this.getUri(objectName);
+        const result = await utils_1.default.getRestResult(utils_2.RestAction.POST, uri, form, form.getHeaders({ Authorization: `Bearer ${this.orgInfo.accessToken}` }), [200, 201]);
+        // Log the form data if an error occurs
+        if (!result.isError) {
+            result.id = result.body.id;
+        }
+        return result;
+    }
     do(action, metaDataType, records = null, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
         return tslib_1.__asyncGenerator(this, arguments, function* do_1() {
             var e_5, _a;
@@ -296,5 +321,22 @@ class SfdxClient {
     }
 }
 exports.SfdxClient = SfdxClient;
+SfdxClient.metaDataInfo = {
+    ContentVersion: {
+        MetaName: 'entity_content',
+        DataName: 'VersionData',
+        Filename: 'PathOnClient'
+    },
+    Document: {
+        MetaName: 'entity_document',
+        DataName: 'Body',
+        Filename: 'Name'
+    },
+    Attachment: {
+        MetaName: 'entity_document',
+        DataName: 'Body',
+        Filename: 'Name'
+    },
+};
 SfdxClient.defailtIdField = 'id';
 //# sourceMappingURL=sfdx-client.js.map

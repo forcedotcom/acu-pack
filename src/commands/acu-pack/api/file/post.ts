@@ -1,31 +1,11 @@
-import * as fs from 'fs';
-import * as FormData from 'form-data';
 import { flags } from '@salesforce/command';
 import { ErrorResult, RecordResult } from 'jsforce';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxClient } from '../../../../lib/sfdx-client';
-import Utils, { RestAction, RestResult } from '../../../../lib/utils';
+import Utils, { RestResult } from '../../../../lib/utils';
 import Constants from '../../../../lib/constants';
 
 export default class post extends CommandBase {
-
-  public static readonly metaDataInfo = {
-    ContentVersion: {
-      MetaName: 'entity_content',
-      DataName: 'VersionData',
-      Filename: 'PathOnClient'
-    },
-    Document: {
-      MetaName: 'entity_document',
-      DataName: 'Body',
-      Filename: 'Name'
-    },
-    Attachment: {
-      MetaName: 'entity_document',
-      DataName: 'Body',
-      Filename: 'Name'
-    },
-  };
 
   public static readonly 
 
@@ -35,9 +15,14 @@ export default class post extends CommandBase {
     `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv
     Uploads the ContentVersion records defined in ContentVersions.csv. 
     NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv -c ContentDocumentId,VersionData,PathOnClient
+    Uploads the ContentVersion records defined in ContentVersions.csv using only the columns: ContentDocumentId,VersionData,PathOnClient. 
+    NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv -a
+    Uploads the ContentVersion records defined in ContentVersions.csv. The whole process will stop on the first failure.
+    NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
   ];
   
-  // TODO add allOrNothing for error flag
   protected static flagsConfig = {
     metadata: flags.string({
       char: 'm',
@@ -54,6 +39,11 @@ export default class post extends CommandBase {
       description: CommandBase.messages.getMessage('api.file.post.columnsFlagDescription'),
       required: false,
     }),
+    allornothing: flags.boolean({
+      char: 'a',
+      description: CommandBase.messages.getMessage('api.file.post.allOrNothingFlagDescription'),
+      required: false,
+    }),
   };
 
   // Comment this out if your command does not require an org username
@@ -66,7 +56,7 @@ export default class post extends CommandBase {
 
   protected async runInternal(): Promise<void> {
     const objectName = this.flags.metadata as string;
-    this.metadataInfo = post.metaDataInfo[objectName];
+    this.metadataInfo = SfdxClient.metaDataInfo[objectName];
     const records: string = this.flags.records
     const columns: string[] = this.flags.columns ? this.flags.columns.split(',') : null;
     this.logger.debug('Executing api:file:post');
@@ -83,9 +73,13 @@ export default class post extends CommandBase {
       return;
     }
     
+    const sfdxClient = new SfdxClient(this.orgAlias);
     const errors= [];
     let counter = 0;
     for await( const recordRaw of Utils.parseCSVFile(records)) {
+      if(errors.length > 0 && (this.flags.allornothing as boolean)) {
+        break;
+      }
       counter++;
       this.logger.debug(`RAW ${objectName} from CSV: ${JSON.stringify(recordRaw)}`);
       
@@ -108,9 +102,9 @@ export default class post extends CommandBase {
       let result: RestResult = null;
       try {
         if (stats.size > Constants.CONENTVERSION_MAX_SIZE) {
-          result = await this.postObjectMultipart(objectName,record, fileName, filePath);
+          result = await sfdxClient.postObjectMultipart(objectName, record, fileName, filePath);
         } else {
-          result = await this.postObject(objectName,record, filePath);
+          result = await this.postObject(objectName, record, filePath);
         }
       }
       catch(err) {
@@ -125,6 +119,7 @@ export default class post extends CommandBase {
       }
       this.ux.log(`(${counter}) ${objectName} ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
     }
+
     if(errors.length > 0) {
       this.ux.log('The following records failed:');
       for(const error of errors) {
@@ -149,48 +144,6 @@ export default class post extends CommandBase {
     } else {
       result.code = 400;
       result.body = JSON.stringify((postResult as ErrorResult).errors);
-    }
-    return result;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  protected async postObjectMultipart(objectName: string, objectRecord: any, fileName: string, filePath: string): Promise<any> {
-    this.logger.debug(`multi-part-POSTing: ${objectName} `);
-    this.logger.debug(`multi-part-POSTing: ${JSON.stringify(objectRecord)}`);
-
-    const form = new FormData();
-    const formContent = JSON.stringify(objectRecord);
-
-    const metaName = post.metaDataInfo[objectName].MetaName;
-    form.append(metaName, formContent, {
-      contentType: Constants.MIME_JSON,
-    });
-
-    const dataName = post.metaDataInfo[objectName].DataName;
-    const data = fs.createReadStream(filePath);
-    form.append(dataName, data, {
-      filename: fileName,
-      contentType: Utils.getMIMEType(fileName), // 'application/octet-stream',
-    });
-
-    this.logger.debug(`POSTing: ${fileName}`);
-
-    const sfdxClient = new SfdxClient(this.orgAlias);
-    const uri = await sfdxClient.getUri(objectName);
-    const result = await Utils.getRestResult(
-      RestAction.POST,
-      uri,
-      form,
-      form.getHeaders({ Authorization: `Bearer ${this.connection.accessToken}` }),
-      [200,201]
-    );
-
-    // Log the form data if an error occurs
-    // TODO: write errors to log file - always  
-    if(result.isError){
-      this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body as string}${Constants.EOL}Form Data: ${JSON.stringify(form)}`);
-    } else {
-      result.id = result.body.id;
     }
     return result;
   }

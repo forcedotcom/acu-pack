@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const fs = require("fs");
-const FormData = require("form-data");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_client_1 = require("../../../../lib/sfdx-client");
@@ -17,7 +15,7 @@ class post extends command_base_1.CommandBase {
         var e_1, _a;
         var _b;
         const objectName = this.flags.metadata;
-        this.metadataInfo = post.metaDataInfo[objectName];
+        this.metadataInfo = sfdx_client_1.SfdxClient.metaDataInfo[objectName];
         const records = this.flags.records;
         const columns = this.flags.columns ? this.flags.columns.split(',') : null;
         this.logger.debug('Executing api:file:post');
@@ -31,11 +29,15 @@ class post extends command_base_1.CommandBase {
             this.raiseError(`Path does not exists: ${records}.`);
             return;
         }
+        const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
         const errors = [];
         let counter = 0;
         try {
             for (var _c = tslib_1.__asyncValues(utils_1.default.parseCSVFile(records)), _d; _d = await _c.next(), !_d.done;) {
                 const recordRaw = _d.value;
+                if (errors.length > 0 && this.flags.allornothing) {
+                    break;
+                }
                 counter++;
                 this.logger.debug(`RAW ${objectName} from CSV: ${JSON.stringify(recordRaw)}`);
                 const record = this.sanitizeRecord(recordRaw, columns);
@@ -54,7 +56,7 @@ class post extends command_base_1.CommandBase {
                 let result = null;
                 try {
                     if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
-                        result = await this.postObjectMultipart(objectName, record, fileName, filePath);
+                        result = await sfdxClient.postObjectMultipart(objectName, record, fileName, filePath);
                     }
                     else {
                         result = await this.postObject(objectName, record, filePath);
@@ -105,36 +107,6 @@ class post extends command_base_1.CommandBase {
         }
         return result;
     }
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async postObjectMultipart(objectName, objectRecord, fileName, filePath) {
-        this.logger.debug(`multi-part-POSTing: ${objectName} `);
-        this.logger.debug(`multi-part-POSTing: ${JSON.stringify(objectRecord)}`);
-        const form = new FormData();
-        const formContent = JSON.stringify(objectRecord);
-        const metaName = post.metaDataInfo[objectName].MetaName;
-        form.append(metaName, formContent, {
-            contentType: constants_1.default.MIME_JSON,
-        });
-        const dataName = post.metaDataInfo[objectName].DataName;
-        const data = fs.createReadStream(filePath);
-        form.append(dataName, data, {
-            filename: fileName,
-            contentType: utils_1.default.getMIMEType(fileName), // 'application/octet-stream',
-        });
-        this.logger.debug(`POSTing: ${fileName}`);
-        const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
-        const uri = await sfdxClient.getUri(objectName);
-        const result = await utils_1.default.getRestResult(utils_1.RestAction.POST, uri, form, form.getHeaders({ Authorization: `Bearer ${this.connection.accessToken}` }), [200, 201]);
-        // Log the form data if an error occurs
-        // TODO: write errors to log file - always  
-        if (result.isError) {
-            this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}${constants_1.default.EOL}Form Data: ${JSON.stringify(form)}`);
-        }
-        else {
-            result.id = result.body.id;
-        }
-        return result;
-    }
     sanitizeRecord(raw, columns = []) {
         if (columns) {
             const newRaw = {};
@@ -165,30 +137,18 @@ class post extends command_base_1.CommandBase {
     }
 }
 exports.default = post;
-post.metaDataInfo = {
-    ContentVersion: {
-        MetaName: 'entity_content',
-        DataName: 'VersionData',
-        Filename: 'PathOnClient'
-    },
-    Document: {
-        MetaName: 'entity_document',
-        DataName: 'Body',
-        Filename: 'Name'
-    },
-    Attachment: {
-        MetaName: 'entity_document',
-        DataName: 'Body',
-        Filename: 'Name'
-    },
-};
 post.description = command_base_1.CommandBase.messages.getMessage('api.file.post.commandDescription');
 post.examples = [
     `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv
     Uploads the ContentVersion records defined in ContentVersions.csv. 
     NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv -c ContentDocumentId,VersionData,PathOnClient
+    Uploads the ContentVersion records defined in ContentVersions.csv using only the columns: ContentDocumentId,VersionData,PathOnClient. 
+    NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
+    `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv -a
+    Uploads the ContentVersion records defined in ContentVersions.csv. The whole process will stop on the first failure.
+    NOTE: filename = PathOnClient, filePath = ContentVersion then PathOnClient`,
 ];
-// TODO add allOrNothing for error flag
 post.flagsConfig = {
     metadata: command_1.flags.string({
         char: 'm',
@@ -203,6 +163,11 @@ post.flagsConfig = {
     columns: command_1.flags.string({
         char: 'c',
         description: command_base_1.CommandBase.messages.getMessage('api.file.post.columnsFlagDescription'),
+        required: false,
+    }),
+    allornothing: command_1.flags.boolean({
+        char: 'a',
+        description: command_base_1.CommandBase.messages.getMessage('api.file.post.allOrNothingFlagDescription'),
         required: false,
     }),
 };
