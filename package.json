@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/acu-pack",
   "description": "SFDX CLI Extensions",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "Salesforce Customer Success Group (CSG)",
   "bugs": {
     "url": "https://github.com/forcedotcom/acu-pack/issues"
