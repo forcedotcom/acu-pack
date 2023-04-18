@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const path = require("path");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
@@ -15,8 +14,6 @@ const delta_command_1 = require("../../../lib/delta-command");
 const schema_utils_1 = require("../../../lib/schema-utils");
 class Build extends command_base_1.CommandBase {
     static async getMetadataMapFromOrg(orgAlias, ux, options, cmdFlags) {
-        var e_1, _a;
-        var _b;
         const metadataMap = new Map();
         const excluded = new Set(options.excludeMetadataTypes);
         let filterMetadataTypes = null;
@@ -52,7 +49,7 @@ class Build extends command_base_1.CommandBase {
                     }
                 }
             }
-            if (!((_b = results.map) === null || _b === void 0 ? void 0 : _b.size)) {
+            if (!results.map?.size) {
                 ux.log('No Deployable Source Tracking changes found.');
                 return;
             }
@@ -75,26 +72,15 @@ class Build extends command_base_1.CommandBase {
             let counter = 0;
             // Are we including namespaces?
             const namespaces = cmdFlags.namespaces ? new Set(cmdFlags.namespaces.split()) : new Set();
-            try {
-                for (var _c = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)), _d; _d = await _c.next(), !_d.done;) {
-                    const entry = _d.value;
-                    // If specific members were defined previously - just use them
-                    metadataMap.set(entry.name, entry.members);
-                    ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-                }
-                finally { if (e_1) throw e_1.error; }
+            for await (const entry of sfdx_tasks_1.SfdxTasks.getTypesForPackage(orgAlias, describeMetadatas, namespaces)) {
+                // If specific members were defined previously - just use them
+                metadataMap.set(entry.name, entry.members);
+                ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
             }
         }
         return metadataMap;
     }
     static async getMetadataMapFromFolder(folder, ux, options) {
-        var e_2, _a, e_3, _b;
         const metadataMap = new Map();
         const excluded = new Set(options.excludeMetadataTypes);
         if (!excluded) {
@@ -103,92 +89,49 @@ class Build extends command_base_1.CommandBase {
         if (!(await utils_1.default.pathExists(folder))) {
             throw new Error(`The specified MDAPI folder does not exist: ${folder}`);
         }
-        try {
-            // Get all the folders from the root of the MDAPI folder
-            for (var _c = tslib_1.__asyncValues(utils_1.default.getFolders(folder, false)), _d; _d = await _c.next(), !_d.done;) {
-                const folderPath = _d.value;
-                const packageType = options.mdapiMap.get(path.basename(folderPath));
-                if (!packageType) {
-                    continue;
-                }
-                const members = [];
-                try {
-                    for (var _e = (e_3 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(packageType, folderPath, false))), _f; _f = await _e.next(), !_f.done;) {
-                        const memberFile = _f.value;
-                        members.push(memberFile.replace(folderPath + path.sep, ''));
-                    }
-                }
-                catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
-                    }
-                    finally { if (e_3) throw e_3.error; }
-                }
-                metadataMap.set(packageType, members);
+        // Get all the folders from the root of the MDAPI folder
+        for await (const folderPath of utils_1.default.getFolders(folder, false)) {
+            const packageType = options.mdapiMap.get(path.basename(folderPath));
+            if (!packageType) {
+                continue;
             }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+            const members = [];
+            for await (const memberFile of Build.getMDAPIFiles(packageType, folderPath, false)) {
+                members.push(memberFile.replace(folderPath + path.sep, ''));
             }
-            finally { if (e_2) throw e_2.error; }
+            metadataMap.set(packageType, members);
         }
         return metadataMap;
     }
-    static getMDAPIFiles(xmlName, folder, isDocument = false) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getMDAPIFiles_1() {
-            var e_4, _a, e_5, _b;
-            try {
-                for (var _c = tslib_1.__asyncValues(utils_1.default.getItems(folder, utils_1.IOItem.Both, false)), _d; _d = yield tslib_1.__await(_c.next()), !_d.done;) {
-                    const filePath = _d.value;
-                    if (filePath.endsWith(constants_1.default.METADATA_FILE_SUFFIX)) {
-                        continue;
-                    }
-                    const itemName = path.basename(filePath);
-                    const isDir = yield tslib_1.__await(utils_1.default.isDirectory(filePath));
-                    if (itemName !== 'unfiled$public') {
-                        if (isDocument) {
-                            yield yield tslib_1.__await(itemName);
-                        }
-                        else if (!isDir) {
-                            yield yield tslib_1.__await(schema_utils_1.default.getMetadataBaseName(itemName));
-                        }
-                    }
-                    // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:
-                    // Common.removeInstPkgReference(filePath, Common.canRemoveAllPackageReferences(xmlName))
-                    if (isDir) {
-                        const fullCopyPath = delta_provider_1.DeltaProvider.getFullCopyPath(filePath, delta_command_1.DeltaCommandBase.defaultCopyDirList);
-                        if (fullCopyPath) {
-                            yield yield tslib_1.__await(itemName);
-                        }
-                        else {
-                            try {
-                                for (var _e = (e_5 = void 0, tslib_1.__asyncValues(Build.getMDAPIFiles(xmlName, filePath, xmlName === 'Document'))), _f; _f = yield tslib_1.__await(_e.next()), !_f.done;) {
-                                    const subFilePath = _f.value;
-                                    yield yield tslib_1.__await(path.join(filePath, subFilePath));
-                                }
-                            }
-                            catch (e_5_1) { e_5 = { error: e_5_1 }; }
-                            finally {
-                                try {
-                                    if (_f && !_f.done && (_b = _e.return)) yield tslib_1.__await(_b.call(_e));
-                                }
-                                finally { if (e_5) throw e_5.error; }
-                            }
-                        }
+    static async *getMDAPIFiles(xmlName, folder, isDocument = false) {
+        for await (const filePath of utils_1.default.getItems(folder, utils_1.IOItem.Both, false)) {
+            if (filePath.endsWith(constants_1.default.METADATA_FILE_SUFFIX)) {
+                continue;
+            }
+            const itemName = path.basename(filePath);
+            const isDir = await utils_1.default.isDirectory(filePath);
+            if (itemName !== 'unfiled$public') {
+                if (isDocument) {
+                    yield itemName;
+                }
+                else if (!isDir) {
+                    yield schema_utils_1.default.getMetadataBaseName(itemName);
+                }
+            }
+            // if not os.path.isdir(filePath) and xmlName in INST_PKG_REF_METADATA:
+            // Common.removeInstPkgReference(filePath, Common.canRemoveAllPackageReferences(xmlName))
+            if (isDir) {
+                const fullCopyPath = delta_provider_1.DeltaProvider.getFullCopyPath(filePath, delta_command_1.DeltaCommandBase.defaultCopyDirList);
+                if (fullCopyPath) {
+                    yield itemName;
+                }
+                else {
+                    for await (const subFilePath of Build.getMDAPIFiles(xmlName, filePath, xmlName === 'Document')) {
+                        yield path.join(filePath, subFilePath);
                     }
                 }
             }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) yield tslib_1.__await(_a.call(_c));
-                }
-                finally { if (e_4) throw e_4.error; }
-            }
-        });
+        }
     }
     async runInternal() {
         // Validate the package path

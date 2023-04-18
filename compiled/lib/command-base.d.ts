@@ -1,7 +1,7 @@
 import { SfdxCommand } from '@salesforce/command';
 import { Messages, Connection } from '@salesforce/core';
 export declare abstract class CommandBase extends SfdxCommand {
-    static messages: Messages;
+    static messages: Messages<string>;
     static args: {
         name: string;
     }[];

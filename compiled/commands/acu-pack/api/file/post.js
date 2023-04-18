@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_client_1 = require("../../../../lib/sfdx-client");
@@ -12,8 +11,6 @@ class post extends command_base_1.CommandBase {
         this.metadataInfo = null;
     }
     async runInternal() {
-        var e_1, _a;
-        var _b;
         const objectName = this.flags.metadata;
         this.metadataInfo = sfdx_client_1.SfdxClient.metaDataInfo[objectName];
         const records = this.flags.records;
@@ -32,55 +29,45 @@ class post extends command_base_1.CommandBase {
         const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
         const errors = [];
         let counter = 0;
-        try {
-            for (var _c = tslib_1.__asyncValues(utils_1.default.parseCSVFile(records)), _d; _d = await _c.next(), !_d.done;) {
-                const recordRaw = _d.value;
-                if (errors.length > 0 && this.flags.allornothing) {
-                    break;
-                }
-                counter++;
-                this.logger.debug(`RAW ${objectName} from CSV: ${JSON.stringify(recordRaw)}`);
-                const record = this.sanitizeRecord(recordRaw, columns);
-                const fileName = record[this.metadataInfo.Filename];
-                const filePath = (_b = record[this.metadataInfo.DataName]) !== null && _b !== void 0 ? _b : fileName;
-                if (!filePath) {
-                    errors.push(`No file path found for record: ${JSON.stringify(record)}.`);
-                    continue;
-                }
-                if (!(await utils_1.default.pathExists(filePath))) {
-                    this.raiseError(`Path does not exists: ${filePath}.`);
-                    return;
-                }
-                const stats = await utils_1.default.getPathStat(filePath);
-                // Do we need to use a multi-part POST?
-                let result = null;
-                try {
-                    if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
-                        result = await sfdxClient.postObjectMultipart(objectName, record, fileName, filePath);
-                    }
-                    else {
-                        result = await this.postObject(objectName, record, filePath);
-                    }
-                }
-                catch (err) {
-                    result = new utils_1.RestResult();
-                    result.code = 0;
-                    result.isError = true;
-                    result.body = `Exception: ${err.message}`;
-                }
-                if (result.isError) {
-                    errors.push(`Error uploading: (${counter}) ${filePath} (${result.code}) => ${result.body}}`);
-                    this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}`);
-                }
-                this.ux.log(`(${counter}) ${objectName} ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
+        for await (const recordRaw of utils_1.default.parseCSVFile(records)) {
+            if (errors.length > 0 && this.flags.allornothing) {
+                break;
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
+            counter++;
+            this.logger.debug(`RAW ${objectName} from CSV: ${JSON.stringify(recordRaw)}`);
+            const record = this.sanitizeRecord(recordRaw, columns);
+            const fileName = record[this.metadataInfo.Filename];
+            const filePath = record[this.metadataInfo.DataName] ?? fileName;
+            if (!filePath) {
+                errors.push(`No file path found for record: ${JSON.stringify(record)}.`);
+                continue;
+            }
+            if (!(await utils_1.default.pathExists(filePath))) {
+                this.raiseError(`Path does not exists: ${filePath}.`);
+                return;
+            }
+            const stats = await utils_1.default.getPathStat(filePath);
+            // Do we need to use a multi-part POST?
+            let result = null;
             try {
-                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+                if (stats.size > constants_1.default.CONENTVERSION_MAX_SIZE) {
+                    result = await sfdxClient.postObjectMultipart(objectName, record, fileName, filePath);
+                }
+                else {
+                    result = await this.postObject(objectName, record, filePath);
+                }
             }
-            finally { if (e_1) throw e_1.error; }
+            catch (err) {
+                result = new utils_1.RestResult();
+                result.code = 0;
+                result.isError = true;
+                result.body = `Exception: ${err.message}`;
+            }
+            if (result.isError) {
+                errors.push(`Error uploading: (${counter}) ${filePath} (${result.code}) => ${result.body}}`);
+                this.logger.debug(`Error api:file:post failed: ${filePath} (${result.code})=> ${result.body}`);
+            }
+            this.ux.log(`(${counter}) ${objectName} ${result.isError ? 'FAILED' : result.id} for file: ${fileName}`);
         }
         if (errors.length > 0) {
             this.ux.log('The following records failed:');
@@ -97,13 +84,15 @@ class post extends command_base_1.CommandBase {
         const result = new utils_1.RestResult();
         const base64Body = await utils_1.default.readFile(filePath, utils_1.default.ReadFileBase64EncodingOption);
         objectRecord[this.metadataInfo.DataName] = base64Body;
-        const postResult = await this.connection.sobject(objectName).insert(objectRecord);
-        if (postResult.success) {
-            result.id = postResult.id;
-        }
-        else {
-            result.code = 400;
-            result.body = JSON.stringify(postResult.errors);
+        const saveResults = await this.connection.sobject(objectName).create(objectRecord);
+        for (const saveResult of saveResults) {
+            if (saveResult.success) {
+                result.id = saveResult.id;
+            }
+            else {
+                result.code = 400;
+                result.body = saveResult;
+            }
         }
         return result;
     }

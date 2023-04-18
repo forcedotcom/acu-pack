@@ -1,5 +1,5 @@
 import { UX } from '@salesforce/command';
-import { Connection } from 'jsforce';
+import { Connection } from '@salesforce/core';
 export declare class ProfileDownload {
     sfdxCon: Connection;
     orgAlias: string;

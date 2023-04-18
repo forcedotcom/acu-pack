@@ -1,6 +1,6 @@
 import path = require('path');
 import { UX } from '@salesforce/command';
-import { Connection } from 'jsforce';
+import { Connection } from '@salesforce/core';
 import Utils from './utils';
 import { SfdxQuery } from './sfdx-query';
 import Constants from './constants';
@@ -158,20 +158,12 @@ export class ProfileDownload {
     return this.profileFilePath;
   }
 
-  public retrieveProfileMetaData(profileName: string): Promise<any> {
+  public async retrieveProfileMetaData(profileName: string): Promise<any> {
     if (!profileName) {
       return null;
     }
-    return new Promise((resolve, reject) => {
-      this.sfdxCon.metadata
-        .readSync('Profile', profileName)
-        .then((data) => {
-          resolve(Array.isArray(data) ? data[0] : data);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    const result = await this.sfdxCon.metadata.read('Profile', profileName);
+    return Array.isArray(result) ? result[0] : result;
   }
 
   public async getProfileMetaData(profileName: string): Promise<void> {

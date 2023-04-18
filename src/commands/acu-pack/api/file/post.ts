@@ -1,5 +1,4 @@
 import { flags } from '@salesforce/command';
-import { ErrorResult, RecordResult } from 'jsforce';
 import { CommandBase } from '../../../../lib/command-base';
 import { SfdxClient } from '../../../../lib/sfdx-client';
 import Utils, { RestResult } from '../../../../lib/utils';
@@ -138,13 +137,16 @@ export default class post extends CommandBase {
     const base64Body = await Utils.readFile(filePath, Utils.ReadFileBase64EncodingOption);
     objectRecord[this.metadataInfo.DataName] = base64Body;
 
-    const postResult: RecordResult = await this.connection.sobject(objectName).insert(objectRecord);
-    if(postResult.success) {
-      result.id = postResult.id;
-    } else {
-      result.code = 400;
-      result.body = JSON.stringify((postResult as ErrorResult).errors);
+    const saveResults = await this.connection.sobject(objectName).create(objectRecord);
+    for( const saveResult of saveResults) {
+      if(saveResult.success) {
+        result.id = saveResult.id;
+      } else {
+        result.code = 400;
+        result.body = saveResult;
+      }
     }
+
     return result;
   }
 

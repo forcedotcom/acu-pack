@@ -1,29 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const sfdx_tasks_1 = require("../../../../lib/sfdx-tasks");
 class Execute extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a, e_2, _b, e_3, _c;
         this.ux.log('Checking for pending tests...');
         let recordCount = 0;
-        try {
-            for (var _d = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias)), _e; _e = await _d.next(), !_e.done;) {
-                recordCount = _e.value;
-                if (recordCount === 0) {
-                    break;
-                }
+        for await (recordCount of sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias)) {
+            if (recordCount === 0) {
+                break;
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_e && !_e.done && (_a = _d.return)) await _a.call(_d);
-            }
-            finally { if (e_1) throw e_1.error; }
         }
         if (recordCount !== 0) {
             this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
@@ -54,18 +42,8 @@ class Execute extends command_base_1.CommandBase {
             else {
                 this.ux.log('Waiting for tests to complete...');
             }
-            try {
-                for (var _f = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.waitForJob(this.orgAlias, jobInfo, waitCountMaxSeconds)), _g; _g = await _f.next(), !_g.done;) {
-                    jobInfo = _g.value;
-                    this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
-                }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_g && !_g.done && (_b = _f.return)) await _b.call(_f);
-                }
-                finally { if (e_2) throw e_2.error; }
+            for await (jobInfo of sfdx_tasks_1.SfdxTasks.waitForJob(this.orgAlias, jobInfo, waitCountMaxSeconds)) {
+                this.ux.log(`${new Date().toJSON()} state: ${jobInfo.state} id: ${jobInfo.id} batch: ${jobInfo.batchId} isDone: ${jobInfo.isDone()}`);
             }
             if (!jobInfo.isDone()) {
                 this.raiseError(`Timeout while waiting for Apex Test Job to Complete:${JSON.stringify(jobInfo)}`);
@@ -74,21 +52,11 @@ class Execute extends command_base_1.CommandBase {
         }
         this.ux.log('All Apex Tests Started');
         const createdDate = jobInfo.createdDate || new Date().toJSON();
-        try {
-            for (var _h = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds, createdDate)), _j; _j = await _h.next(), !_j.done;) {
-                recordCount = _j.value;
-                if (recordCount === 0) {
-                    break;
-                }
-                this.ux.log(`${recordCount} Apex Test(s) remaining.`);
+        for await (recordCount of sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds, createdDate)) {
+            if (recordCount === 0) {
+                break;
             }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (_j && !_j.done && (_c = _h.return)) await _c.call(_h);
-            }
-            finally { if (e_3) throw e_3.error; }
+            this.ux.log(`${recordCount} Apex Test(s) remaining.`);
         }
         if (recordCount !== 0) {
             this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);

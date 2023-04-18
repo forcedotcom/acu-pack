@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const path = require("path");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
@@ -10,7 +9,6 @@ const sfdx_core_1 = require("../../../lib/sfdx-core");
 const utils_1 = require("../../../lib/utils");
 class Permissions extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a;
         // Gather metadata names to include
         const metaNames = utils_1.default.sortArray(this.flags.metadata ? this.flags.metadata.split() : sfdx_permission_1.SfdxPermission.defaultPermissionMetaTypes);
         this.metaNames = new Set(metaNames);
@@ -42,19 +40,9 @@ class Permissions extends command_base_1.CommandBase {
         this.ux.log(`Generating: ${this.packageFileName}`);
         const metadataMap = new Map();
         let counter = 0;
-        try {
-            for (var _b = tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)), _c; _c = await _b.next(), !_c.done;) {
-                const entry = _c.value;
-                metadataMap.set(entry.name, entry.members);
-                this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
-            }
-            finally { if (e_1) throw e_1.error; }
+        for await (const entry of sfdx_tasks_1.SfdxTasks.getTypesForPackage(this.orgAlias, describeMetadatas, this.namespaces)) {
+            metadataMap.set(entry.name, entry.members);
+            this.ux.log(`Processed (${++counter}/${describeMetadatas.size}): ${entry.name}`);
         }
         // Write the final package
         await sfdx_core_1.SfdxCore.writePackageFile(metadataMap, this.packageFileName);

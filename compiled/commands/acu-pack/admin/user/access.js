@@ -32,7 +32,6 @@ class Access extends command_base_1.CommandBase {
         return appAccessByAppLabel;
     }
     async runInternal() {
-        var _a, _b, _c, _d;
         let apps = null;
         if (this.flags.applist) {
             apps = this.flags.applist.split(',');
@@ -45,7 +44,7 @@ class Access extends command_base_1.CommandBase {
             permissionSetMap.set(permissionSet.Id, permissionSet);
         }
         let query = 'SELECT Id, ApplicationId, Name, Label FROM AppMenuItem';
-        if ((apps === null || apps === void 0 ? void 0 : apps.length) > 0) {
+        if (apps?.length > 0) {
             const appsFilter = `'${apps.join("','")}'`;
             query += ` WHERE Label IN (${appsFilter})`;
             this.ux.log(`Getting Specific App Access: ${appsFilter}`);
@@ -81,11 +80,11 @@ class Access extends command_base_1.CommandBase {
                 const sheet = [['Username', 'User Id', 'PermissionSet Label', 'PermissionSet Id', 'Profile Label', 'Profile Id', 'Expiration Date']];
                 for (const permissionSetAssignment of appAccessByAppLabel.get(appLabel)) {
                     sheet.push([
-                        (_a = permissionSetAssignment.Assignee) === null || _a === void 0 ? void 0 : _a.Username,
+                        permissionSetAssignment.Assignee?.Username,
                         permissionSetAssignment.AssigneeId,
-                        (_b = permissionSetAssignment.PermissionSet) === null || _b === void 0 ? void 0 : _b.Label,
+                        permissionSetAssignment.PermissionSet?.Label,
                         permissionSetAssignment.PermissionSetId,
-                        (_d = (_c = permissionSetAssignment.PermissionSet) === null || _c === void 0 ? void 0 : _c.Profile) === null || _d === void 0 ? void 0 : _d.Name,
+                        permissionSetAssignment.PermissionSet?.Profile?.Name,
                         permissionSetAssignment.ExpirationDate,
                     ]);
                 }

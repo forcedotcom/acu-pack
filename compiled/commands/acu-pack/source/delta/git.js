@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const delta_command_1 = require("../../../../lib/delta-command");
@@ -42,19 +41,17 @@ Git.gitDeltaProvider = class extends delta_provider_1.DeltaProvider {
     getMessage(name) {
         return command_base_1.CommandBase.messages.getMessage(name);
     }
-    diff(source) {
-        return tslib_1.__asyncGenerator(this, arguments, function* diff_1() {
-            // git has already done all of the hashing/diffing for us
-            source = source ? utils_1.default.normalizePath(source) : this.deltaOptions.source;
-            for (const [deltaFile, deltaKind] of this.deltas) {
-                // Did we exclude the filepath?
-                if (!deltaFile.startsWith(source)) {
-                    yield tslib_1.__await(this.logMessage(`Skipping delta file line: '${deltaFile}' not in source path: '${source}'.`, true));
-                    continue;
-                }
-                yield yield tslib_1.__await(new delta_provider_1.Delta(deltaKind, deltaFile));
+    async *diff(source) {
+        // git has already done all of the hashing/diffing for us
+        source = source ? utils_1.default.normalizePath(source) : this.deltaOptions.source;
+        for (const [deltaFile, deltaKind] of this.deltas) {
+            // Did we exclude the filepath?
+            if (!deltaFile.startsWith(source)) {
+                await this.logMessage(`Skipping delta file line: '${deltaFile}' not in source path: '${source}'.`, true);
+                continue;
             }
-        });
+            yield new delta_provider_1.Delta(deltaKind, deltaFile);
+        }
     }
     async validateDeltaOptions(deltaOptions) {
         // Currently we don't allow creating the git-diff file

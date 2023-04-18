@@ -117,20 +117,12 @@ class ProfileDownload {
         await Promise.all(resultsArray);
         return this.profileFilePath;
     }
-    retrieveProfileMetaData(profileName) {
+    async retrieveProfileMetaData(profileName) {
         if (!profileName) {
             return null;
         }
-        return new Promise((resolve, reject) => {
-            this.sfdxCon.metadata
-                .readSync('Profile', profileName)
-                .then((data) => {
-                resolve(Array.isArray(data) ? data[0] : data);
-            })
-                .catch((err) => {
-                reject(err);
-            });
-        });
+        const result = await this.sfdxCon.metadata.read('Profile', profileName);
+        return Array.isArray(result) ? result[0] : result;
     }
     async getProfileMetaData(profileName) {
         if (!profileName) {
