@@ -1,31 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
 const office_1 = require("../../../../lib/office");
 class Report extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a;
-        var _b;
         this.ux.log('Checking for pending tests...');
         const waitCountMaxSeconds = (this.flags.wait || Report.defaultJobStatusWaitMax) * 60;
         let recordCount = 0;
-        try {
-            for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)), _d; _d = await _c.next(), !_d.done;) {
-                recordCount = _d.value;
-                if (recordCount === 0) {
-                    break;
-                }
+        for await (recordCount of sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias, waitCountMaxSeconds)) {
+            if (recordCount === 0) {
+                break;
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-            }
-            finally { if (e_1) throw e_1.error; }
         }
         if (recordCount !== 0) {
             this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
@@ -74,7 +61,7 @@ class Report extends command_base_1.CommandBase {
         ];
         for (const record of records) {
             sheetData.push([
-                (_b = record.ApexClass) === null || _b === void 0 ? void 0 : _b.Name,
+                record.ApexClass?.Name,
                 record.MethodName,
                 record.Message,
                 record.StackTrace,

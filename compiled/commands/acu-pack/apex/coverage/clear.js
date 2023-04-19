@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
@@ -8,23 +7,12 @@ const sfdx_client_1 = require("../../../../lib/sfdx-client");
 const utils_1 = require("../../../../lib/utils");
 class Clear extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a, e_2, _b;
         this.ux.log('Checking for pending tests...');
         let recordCount = 0;
-        try {
-            for (var _c = tslib_1.__asyncValues(sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias)), _d; _d = await _c.next(), !_d.done;) {
-                recordCount = _d.value;
-                if (recordCount === 0) {
-                    break;
-                }
+        for await (recordCount of sfdx_query_1.SfdxQuery.waitForApexTests(this.orgAlias)) {
+            if (recordCount === 0) {
+                break;
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-            }
-            finally { if (e_1) throw e_1.error; }
         }
         if (recordCount !== 0) {
             this.raiseError(`${recordCount} Apex Test(s) are still executing - please try again later.`);
@@ -44,20 +32,10 @@ class Clear extends command_base_1.CommandBase {
                 this.ux.log(`Clearing ${records.length} ${metaDataType} records...`);
                 let counter = 0;
                 const sfdxClient = new sfdx_client_1.SfdxClient(this.orgAlias);
-                try {
-                    for (var _e = (e_2 = void 0, tslib_1.__asyncValues(sfdxClient.do(utils_1.RestAction.DELETE, metaDataType, records, 'Id', sfdx_client_1.ApiKind.TOOLING, [
-                        sfdx_client_1.NO_CONTENT_CODE,
-                    ]))), _f; _f = await _e.next(), !_f.done;) {
-                        const result = _f.value;
-                        this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result.getContent()}`);
-                    }
-                }
-                catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                finally {
-                    try {
-                        if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
-                    }
-                    finally { if (e_2) throw e_2.error; }
+                for await (const result of sfdxClient.do(utils_1.RestAction.DELETE, metaDataType, records, 'Id', sfdx_client_1.ApiKind.TOOLING, [
+                    sfdx_client_1.NO_CONTENT_CODE,
+                ])) {
+                    this.ux.log(`(${++counter}/${records.length}) Deleted id: ${result.getContent()}`);
                 }
                 this.ux.log('Cleared.');
             }

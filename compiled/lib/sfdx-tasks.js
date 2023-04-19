@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxTasks = exports.SfdxOrgInfo = exports.SfdxJobInfo = void 0;
-const tslib_1 = require("tslib");
 const path = require("path");
 const fs_1 = require("fs");
 const ts_types_1 = require("@salesforce/ts-types");
@@ -57,74 +56,41 @@ class SfdxTasks {
     static async initializeProject(projectName) {
         return await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_PROJECT_CREATE} --projectname ${projectName}`);
     }
-    static getTypesForPackage(usernameOrAlias, describeMetadatas, namespaces = null) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getTypesForPackage_1() {
-            var e_1, _a, e_2, _b, e_3, _c;
-            let folderPathMap;
-            for (const describeMetadata of describeMetadatas) {
-                const members = [];
-                if (!describeMetadata.inFolder) {
-                    try {
-                        for (var _d = (e_1 = void 0, tslib_1.__asyncValues(this.listMetadata(usernameOrAlias, describeMetadata.xmlName, namespaces))), _e; _e = yield tslib_1.__await(_d.next()), !_e.done;) {
-                            const result = _e.value;
-                            members.push(result.fullName);
-                        }
-                    }
-                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                    finally {
-                        try {
-                            if (_e && !_e.done && (_a = _d.return)) yield tslib_1.__await(_a.call(_d));
-                        }
-                        finally { if (e_1) throw e_1.error; }
-                    }
+    static async *getTypesForPackage(usernameOrAlias, describeMetadatas, namespaces = null) {
+        let folderPathMap;
+        for (const describeMetadata of describeMetadatas) {
+            const members = [];
+            if (!describeMetadata.inFolder) {
+                for await (const result of this.listMetadata(usernameOrAlias, describeMetadata.xmlName, namespaces)) {
+                    members.push(result.fullName);
                 }
-                else {
-                    const folderMetaName = describeMetadata.xmlName === sfdx_core_1.SfdxCore.EMAIL_TEMPLATE_XML_NAME
-                        ? sfdx_core_1.SfdxCore.EMAIL_TEMPLATE_XML_NAME
-                        : `${describeMetadata.xmlName}Folder`;
-                    // Get SOQL folder data (ONCE!)
-                    if (!folderPathMap) {
-                        folderPathMap = yield tslib_1.__await(this.getFolderSOQLData(usernameOrAlias));
-                    }
-                    try {
-                        // Iterate all the folder metas
-                        for (var _f = (e_2 = void 0, tslib_1.__asyncValues(this.listMetadata(usernameOrAlias, folderMetaName, namespaces))), _g; _g = yield tslib_1.__await(_f.next()), !_g.done;) {
-                            const folderMeta = _g.value;
-                            // Set the parent Id (used for nested folders)
-                            // Salesforce does not return the full path in the metadada
-                            //
-                            const folderPath = folderPathMap.has(folderMeta.id)
-                                ? folderPathMap.get(folderMeta.id)
-                                : folderMeta.fullName;
-                            // Add the meta for just the folder
-                            members.push(folderPath);
-                            try {
-                                for (var _h = (e_3 = void 0, tslib_1.__asyncValues(this.listMetadataInFolder(usernameOrAlias, describeMetadata.xmlName, folderMeta.fullName))), _j; _j = yield tslib_1.__await(_h.next()), !_j.done;) {
-                                    const inFolderMetadata = _j.value;
-                                    // Add the meta for the item in the folder
-                                    members.push([folderPath, path.basename(inFolderMetadata.fullName)].join('/'));
-                                }
-                            }
-                            catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                            finally {
-                                try {
-                                    if (_j && !_j.done && (_c = _h.return)) yield tslib_1.__await(_c.call(_h));
-                                }
-                                finally { if (e_3) throw e_3.error; }
-                            }
-                        }
-                    }
-                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                    finally {
-                        try {
-                            if (_g && !_g.done && (_b = _f.return)) yield tslib_1.__await(_b.call(_f));
-                        }
-                        finally { if (e_2) throw e_2.error; }
-                    }
-                }
-                yield yield tslib_1.__await({ name: describeMetadata.xmlName, members });
             }
-        });
+            else {
+                const folderMetaName = describeMetadata.xmlName === sfdx_core_1.SfdxCore.EMAIL_TEMPLATE_XML_NAME
+                    ? sfdx_core_1.SfdxCore.EMAIL_TEMPLATE_XML_NAME
+                    : `${describeMetadata.xmlName}Folder`;
+                // Get SOQL folder data (ONCE!)
+                if (!folderPathMap) {
+                    folderPathMap = await this.getFolderSOQLData(usernameOrAlias);
+                }
+                // Iterate all the folder metas
+                for await (const folderMeta of this.listMetadata(usernameOrAlias, folderMetaName, namespaces)) {
+                    // Set the parent Id (used for nested folders)
+                    // Salesforce does not return the full path in the metadada
+                    //
+                    const folderPath = folderPathMap.has(folderMeta.id)
+                        ? folderPathMap.get(folderMeta.id)
+                        : folderMeta.fullName;
+                    // Add the meta for just the folder
+                    members.push(folderPath);
+                    for await (const inFolderMetadata of this.listMetadataInFolder(usernameOrAlias, describeMetadata.xmlName, folderMeta.fullName)) {
+                        // Add the meta for the item in the folder
+                        members.push([folderPath, path.basename(inFolderMetadata.fullName)].join('/'));
+                    }
+                }
+            }
+            yield { name: describeMetadata.xmlName, members };
+        }
     }
     static async listMetadatas(usernameOrAlias, metadataTypes, namespaces = null) {
         const response = new Map();
@@ -148,55 +114,51 @@ class SfdxTasks {
         }
         return response;
     }
-    static listMetadata(usernameOrAlias, metadataType, namespaces = null) {
-        return tslib_1.__asyncGenerator(this, arguments, function* listMetadata_1() {
-            const results = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`));
-            // If there are no instances of the metadatatype SFDX just returns {status:0}
-            if (results) {
-                let resultsArray;
-                try {
-                    resultsArray = (0, ts_types_1.ensureArray)(results);
-                }
-                catch (_a) {
-                    resultsArray = [results];
-                }
-                for (const result of resultsArray) {
-                    // If we have a metadata namespace AND
-                    //  We are excluding namespaces OR
-                    //  The list of allowed namespaces does not include the metdata namespace
-                    // Continue.
-                    if (result.namespacePrefix && (!namespaces || !namespaces.has(result.namespacePrefix))) {
-                        continue;
-                    }
-                    yield yield tslib_1.__await(result);
-                }
+    static async *listMetadata(usernameOrAlias, metadataType, namespaces = null) {
+        const results = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} -u ${usernameOrAlias}`);
+        // If there are no instances of the metadatatype SFDX just returns {status:0}
+        if (results) {
+            let resultsArray;
+            try {
+                resultsArray = (0, ts_types_1.ensureArray)(results);
             }
-        });
+            catch {
+                resultsArray = [results];
+            }
+            for (const result of resultsArray) {
+                // If we have a metadata namespace AND
+                //  We are excluding namespaces OR
+                //  The list of allowed namespaces does not include the metdata namespace
+                // Continue.
+                if (result.namespacePrefix && (!namespaces || !namespaces.has(result.namespacePrefix))) {
+                    continue;
+                }
+                yield result;
+            }
+        }
     }
-    static listMetadataInFolder(usernameOrAlias, metadataType, folderName, namespaces = null) {
-        return tslib_1.__asyncGenerator(this, arguments, function* listMetadataInFolder_1() {
-            const results = yield tslib_1.__await(sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`));
-            // If there are no instances of the metadatatype SFDX just returns {status:0}
-            if (results) {
-                let resultsArray;
-                try {
-                    resultsArray = (0, ts_types_1.ensureArray)(results);
-                }
-                catch (_a) {
-                    resultsArray = [results];
-                }
-                for (const result of resultsArray) {
-                    // If we have a metadata namespace AND
-                    //  We are excluding namespaces OR
-                    //  The list of allowed namespaces does not include the metdata namespace
-                    // Continue.
-                    if (result.namespacePrefix && (!namespaces || !namespaces.has(result.namespacePrefix))) {
-                        continue;
-                    }
-                    yield yield tslib_1.__await(result);
-                }
+    static async *listMetadataInFolder(usernameOrAlias, metadataType, folderName, namespaces = null) {
+        const results = await sfdx_core_1.SfdxCore.command(`${constants_1.default.SFDX_MDAPI_LISTMETADATA} --json -m ${metadataType} --folder ${folderName} -u ${usernameOrAlias}`);
+        // If there are no instances of the metadatatype SFDX just returns {status:0}
+        if (results) {
+            let resultsArray;
+            try {
+                resultsArray = (0, ts_types_1.ensureArray)(results);
             }
-        });
+            catch {
+                resultsArray = [results];
+            }
+            for (const result of resultsArray) {
+                // If we have a metadata namespace AND
+                //  We are excluding namespaces OR
+                //  The list of allowed namespaces does not include the metdata namespace
+                // Continue.
+                if (result.namespacePrefix && (!namespaces || !namespaces.has(result.namespacePrefix))) {
+                    continue;
+                }
+                yield result;
+            }
+        }
     }
     static async describeObject(usernameOrAlias, objectName) {
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
@@ -232,19 +194,17 @@ class SfdxTasks {
         newJobInfo.statusCount++;
         return newJobInfo;
     }
-    static waitForJob(usernameOrAlias, jobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
-        return tslib_1.__asyncGenerator(this, arguments, function* waitForJob_1() {
-            const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
-            jobInfo.statusCount = 0;
-            while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
-                yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
-                jobInfo = yield tslib_1.__await(SfdxTasks.getBulkJobStatus(usernameOrAlias, jobInfo));
-                jobInfo.maxStatusCount = maxCounter;
-                jobInfo.statusCount++;
-                yield yield tslib_1.__await(jobInfo);
-            }
-            return yield tslib_1.__await(jobInfo);
-        });
+    static async *waitForJob(usernameOrAlias, jobInfo, maxWaitSeconds = -1, sleepMiliseconds = 5000) {
+        const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
+        jobInfo.statusCount = 0;
+        while ((maxCounter <= 0 || jobInfo.statusCount <= maxCounter) && !jobInfo.isDone()) {
+            await utils_1.default.sleep(sleepMiliseconds);
+            jobInfo = await SfdxTasks.getBulkJobStatus(usernameOrAlias, jobInfo);
+            jobInfo.maxStatusCount = maxCounter;
+            jobInfo.statusCount++;
+            yield jobInfo;
+        }
+        return jobInfo;
     }
     static async getOrgInfo(orgAliasOrUsername) {
         if (!orgAliasOrUsername) {
@@ -332,7 +292,7 @@ class SfdxTasks {
         try {
             resultsArray = (0, ts_types_1.ensureArray)(results);
         }
-        catch (_a) {
+        catch {
             resultsArray = [results];
         }
         const statuses = [];

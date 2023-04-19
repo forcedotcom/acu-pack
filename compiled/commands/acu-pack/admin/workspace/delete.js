@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../../lib/command-base");
 const sfdx_query_1 = require("../../../../lib/sfdx-query");
@@ -9,7 +8,6 @@ const sfdx_client_1 = require("../../../../lib/sfdx-client");
 const utils_1 = require("../../../../lib/utils");
 class Delete extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a;
         const usernames = [];
         if (this.flags.userlist) {
             for (const username of this.flags.userlist.split(',')) {
@@ -35,18 +33,8 @@ class Delete extends command_base_1.CommandBase {
                 continue;
             }
             try {
-                try {
-                    for (var _b = (e_1 = void 0, tslib_1.__asyncValues(sfdxClient.do(utils_1.RestAction.DELETE, 'IDEWorkspace', workspaceRecords, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE]))), _c; _c = await _b.next(), !_c.done;) {
-                        const result = _c.value;
-                        this.ux.log(`Deleted Workspace(${result.getContent()}) for user: '${username}'.`);
-                    }
-                }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
-                    }
-                    finally { if (e_1) throw e_1.error; }
+                for await (const result of sfdxClient.do(utils_1.RestAction.DELETE, 'IDEWorkspace', workspaceRecords, 'Id', sfdx_client_1.ApiKind.TOOLING, [sfdx_client_1.NO_CONTENT_CODE])) {
+                    this.ux.log(`Deleted Workspace(${result.getContent()}) for user: '${username}'.`);
                 }
             }
             catch (err) {

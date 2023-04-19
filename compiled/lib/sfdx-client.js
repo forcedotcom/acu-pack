@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxClient = exports.ApiKind = exports.NO_CONTENT_CODE = void 0;
-const tslib_1 = require("tslib");
 const fs = require("fs");
 const FormData = require("form-data");
 const sfdx_tasks_1 = require("./sfdx-tasks");
@@ -37,27 +36,14 @@ class SfdxClient {
     setApiVersion(apiVersion) {
         this.apiVersion = apiVersion.toString();
     }
-    getMetadataSchemas(apiKind = ApiKind.DEFAULT) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getMetadataSchemas_1() {
-            var e_1, _a;
-            const result = yield tslib_1.__await(this.doInternal(utils_2.RestAction.GET, null, apiKind));
-            if (result.isError) {
-                result.throw();
-            }
-            try {
-                for (var _b = tslib_1.__asyncValues(result.body.sobjects), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const metaDataType = _c.value;
-                    yield yield tslib_1.__await(metaDataType);
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
-        });
+    async *getMetadataSchemas(apiKind = ApiKind.DEFAULT) {
+        const result = await this.doInternal(utils_2.RestAction.GET, null, apiKind);
+        if (result.isError) {
+            result.throw();
+        }
+        for await (const metaDataType of result.body.sobjects) {
+            yield metaDataType;
+        }
     }
     async getMetadataSchema(metaDataType, apiKind = ApiKind.DEFAULT) {
         if (!metaDataType) {
@@ -82,59 +68,33 @@ class SfdxClient {
         }
         return result;
     }
-    getByIds(metaDataType, ids, apiKind = ApiKind.DEFAULT) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getByIds_1() {
-            var e_2, _a;
-            if (!metaDataType) {
-                throw new Error('metadataType parameter is required.');
+    async *getByIds(metaDataType, ids, apiKind = ApiKind.DEFAULT) {
+        if (!metaDataType) {
+            throw new Error('metadataType parameter is required.');
+        }
+        if (!ids) {
+            throw new Error('id parameter is required.');
+        }
+        for await (const result of this.doInternalByIds(utils_2.RestAction.GET, metaDataType, ids, null, apiKind)) {
+            if (result.isError) {
+                result.throw();
             }
-            if (!ids) {
-                throw new Error('id parameter is required.');
-            }
-            try {
-                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(utils_2.RestAction.GET, metaDataType, ids, null, apiKind)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const result = _c.value;
-                    if (result.isError) {
-                        result.throw();
-                    }
-                    yield yield tslib_1.__await(result);
-                }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_2) throw e_2.error; }
-            }
-        });
+            yield result;
+        }
     }
-    getByRecords(metaDataType, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getByRecords_1() {
-            var e_3, _a;
-            if (!metaDataType) {
-                throw new Error('metadataType parameter is required.');
+    async *getByRecords(metaDataType, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
+        if (!metaDataType) {
+            throw new Error('metadataType parameter is required.');
+        }
+        if (!records) {
+            throw new Error('records parameter is required.');
+        }
+        for await (const result of this.doInternalByIds(utils_2.RestAction.GET, metaDataType, records, recordIdField, apiKind)) {
+            if (result.isError) {
+                result.throw();
             }
-            if (!records) {
-                throw new Error('records parameter is required.');
-            }
-            try {
-                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(utils_2.RestAction.GET, metaDataType, records, recordIdField, apiKind)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const result = _c.value;
-                    if (result.isError) {
-                        result.throw();
-                    }
-                    yield yield tslib_1.__await(result);
-                }
-            }
-            catch (e_3_1) { e_3 = { error: e_3_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_3) throw e_3.error; }
-            }
-        });
+            yield result;
+        }
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     async updateByRecord(metaDataType, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
@@ -150,33 +110,20 @@ class SfdxClient {
         }
         return result;
     }
-    updateByRecords(metaDataType, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
-        return tslib_1.__asyncGenerator(this, arguments, function* updateByRecords_1() {
-            var e_4, _a;
-            if (!metaDataType) {
-                throw new Error('metadataType parameter is required.');
+    async *updateByRecords(metaDataType, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT) {
+        if (!metaDataType) {
+            throw new Error('metadataType parameter is required.');
+        }
+        if (!records) {
+            throw new Error('records parameter is required.');
+        }
+        // Salesforce uses PATCH for updates
+        for await (const result of this.doInternalByIds(utils_2.RestAction.PATCH, metaDataType, records, recordIdField, apiKind, [exports.NO_CONTENT_CODE])) {
+            if (result.isError) {
+                result.throw();
             }
-            if (!records) {
-                throw new Error('records parameter is required.');
-            }
-            try {
-                // Salesforce uses PATCH for updates
-                for (var _b = tslib_1.__asyncValues(this.doInternalByIds(utils_2.RestAction.PATCH, metaDataType, records, recordIdField, apiKind, [exports.NO_CONTENT_CODE])), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const result = _c.value;
-                    if (result.isError) {
-                        result.throw();
-                    }
-                    yield yield tslib_1.__await(result);
-                }
-            }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_4) throw e_4.error; }
-            }
-        });
+            yield result;
+        }
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     async doMultiPart(action, record, filePath, validStatusCodes = [200]) {
@@ -218,34 +165,21 @@ class SfdxClient {
         }
         return result;
     }
-    do(action, metaDataType, records = null, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
-        return tslib_1.__asyncGenerator(this, arguments, function* do_1() {
-            var e_5, _a;
-            if (!metaDataType) {
-                throw new Error('metadataType parameter is required.');
-            }
-            if (records) {
-                try {
-                    for (var _b = tslib_1.__asyncValues(this.doInternalByIds(action, metaDataType, records, recordIdField, apiKind, validStatusCodes)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                        const result = _c.value;
-                        if (result.isError) {
-                            result.throw();
-                        }
-                        yield yield tslib_1.__await(result);
-                    }
+    async *do(action, metaDataType, records = null, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = [200]) {
+        if (!metaDataType) {
+            throw new Error('metadataType parameter is required.');
+        }
+        if (records) {
+            for await (const result of this.doInternalByIds(action, metaDataType, records, recordIdField, apiKind, validStatusCodes)) {
+                if (result.isError) {
+                    result.throw();
                 }
-                catch (e_5_1) { e_5 = { error: e_5_1 }; }
-                finally {
-                    try {
-                        if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                    }
-                    finally { if (e_5) throw e_5.error; }
-                }
+                yield result;
             }
-            else {
-                yield yield tslib_1.__await(yield tslib_1.__await(this.doInternal(action, metaDataType, apiKind, null, validStatusCodes)));
-            }
-        });
+        }
+        else {
+            yield await this.doInternal(action, metaDataType, apiKind, null, validStatusCodes);
+        }
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     async doComposite(action = utils_2.RestAction.GET, record, validStatusCodes = [200]) {
@@ -297,12 +231,10 @@ class SfdxClient {
         const uri = await this.getUri(metaDataType, null, apiKind);
         return await this.handleResponse(action, uri, record, validStatusCodes);
     }
-    doInternalByIds(action = utils_2.RestAction.GET, metaDataType = null, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
-        return tslib_1.__asyncGenerator(this, arguments, function* doInternalByIds_1() {
-            for (const record of records) {
-                yield yield tslib_1.__await(yield tslib_1.__await(this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes)));
-            }
-        });
+    async *doInternalByIds(action = utils_2.RestAction.GET, metaDataType = null, records, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
+        for (const record of records) {
+            yield await this.doInternalById(action, metaDataType, record, recordIdField, apiKind, validStatusCodes);
+        }
     }
     async doInternalById(action = utils_2.RestAction.GET, metaDataType = null, record, recordIdField = SfdxClient.defailtIdField, apiKind = ApiKind.DEFAULT, validStatusCodes = null) {
         let id = null;

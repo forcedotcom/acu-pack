@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const path = require("path");
 const fs_1 = require("fs");
 const command_1 = require("@salesforce/command");
@@ -15,7 +14,6 @@ const sfdx_query_1 = require("../../../lib/sfdx-query");
 const constants_1 = require("../../../lib/constants");
 class Dictionary extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a, e_2, _b;
         // Read/Write the options file if it does not exist already
         this.options = await options_factory_1.OptionsFactory.get(schema_options_1.default, this.flags.options);
         const schemaTmpFile = `schema-${this.orgAlias}.tmp`;
@@ -57,33 +55,23 @@ class Dictionary extends command_base_1.CommandBase {
                     }
                     const fieldDefinitionMap = await this.entityDefinitionValues(metaDataType, entityDefinitionFields);
                     const dynamicCode = this.options.getDynamicCode(name);
-                    try {
-                        for (var _c = (e_1 = void 0, tslib_1.__asyncValues(schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection))), _d; _d = await _c.next(), !_d.done;) {
-                            const row = _d.value;
-                            if (row.length === 0) {
-                                continue;
-                            }
-                            const nameFieldValue = row[nameFieldIndex];
-                            const fieldDefinitionRecord = fieldDefinitionMap.get(nameFieldValue);
-                            if (fieldDefinitionRecord != null) {
-                                for (let index = 0; index < outputDefs.length; index++) {
-                                    const outputDef = outputDefs[index];
-                                    for (const entityDefinitionField of entityDefinitionFields) {
-                                        if (outputDef.includes(`|${schema_utils_1.default.ENTITY_DEFINITION}.${entityDefinitionField}`)) {
-                                            row[index] = fieldDefinitionRecord[entityDefinitionField];
-                                        }
+                    for await (const row of schema_utils_1.default.getDynamicSchemaData(schema, dynamicCode, collection)) {
+                        if (row.length === 0) {
+                            continue;
+                        }
+                        const nameFieldValue = row[nameFieldIndex];
+                        const fieldDefinitionRecord = fieldDefinitionMap.get(nameFieldValue);
+                        if (fieldDefinitionRecord != null) {
+                            for (let index = 0; index < outputDefs.length; index++) {
+                                const outputDef = outputDefs[index];
+                                for (const entityDefinitionField of entityDefinitionFields) {
+                                    if (outputDef.includes(`|${schema_utils_1.default.ENTITY_DEFINITION}.${entityDefinitionField}`)) {
+                                        row[index] = fieldDefinitionRecord[entityDefinitionField];
                                     }
                                 }
                             }
-                            fileStream.write(`${JSON.stringify(row)}${constants_1.default.EOL}`);
                         }
-                    }
-                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                    finally {
-                        try {
-                            if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-                        }
-                        finally { if (e_1) throw e_1.error; }
+                        fileStream.write(`${JSON.stringify(row)}${constants_1.default.EOL}`);
                     }
                 }
                 schemas.add(schema.name);
@@ -101,29 +89,19 @@ class Dictionary extends command_base_1.CommandBase {
             const workbookMap = new Map();
             let sheetName = null;
             let sheet = null;
-            try {
-                for (var _e = tslib_1.__asyncValues(utils_1.default.readFileLines(schemaTmpFile)), _f; _f = await _e.next(), !_f.done;) {
-                    const line = _f.value;
-                    if (line.startsWith('*')) {
-                        sheetName = line.substring(1);
-                        const outputDefs = this.options.outputDefMap.get(sheetName);
-                        const headers = this.getColumnRow(outputDefs);
-                        sheet = workbookMap.get(sheetName);
-                        if (!sheet) {
-                            sheet = [[...headers]];
-                            workbookMap.set(sheetName, sheet);
-                        }
-                        continue;
+            for await (const line of utils_1.default.readFileLines(schemaTmpFile)) {
+                if (line.startsWith('*')) {
+                    sheetName = line.substring(1);
+                    const outputDefs = this.options.outputDefMap.get(sheetName);
+                    const headers = this.getColumnRow(outputDefs);
+                    sheet = workbookMap.get(sheetName);
+                    if (!sheet) {
+                        sheet = [[...headers]];
+                        workbookMap.set(sheetName, sheet);
                     }
-                    sheet.push(JSON.parse(line));
+                    continue;
                 }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
-                }
-                finally { if (e_2) throw e_2.error; }
+                sheet.push(JSON.parse(line));
             }
             office_1.Office.writeXlxsWorkbook(workbookMap, reportPath);
         }

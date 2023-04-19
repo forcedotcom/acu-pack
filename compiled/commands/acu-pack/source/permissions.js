@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const path = require("path");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
@@ -14,7 +13,6 @@ class Permissions extends command_base_1.CommandBase {
         this.defaultReportHeaderName = '_HEADERS_';
     }
     async runInternal() {
-        var e_1, _a;
         if (!this.flags.source) {
             this.flags.source = (await sfdx_project_1.default.default()).getDefaultDirectory();
         }
@@ -28,27 +26,17 @@ class Permissions extends command_base_1.CommandBase {
             this.permissions = new Map();
             for (const folder of folders) {
                 this.ux.log(`Scanning metadata in: ${folder}`);
-                try {
-                    for (var _b = (e_1 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(folder))), _c; _c = await _b.next(), !_c.done;) {
-                        const filePath = _c.value;
-                        const json = await utils_1.default.readObjectFromXmlFile(filePath);
-                        if (json.CustomObject) {
-                            this.processObjectMeta(filePath, json);
-                        }
-                        if (json.CustomField) {
-                            this.processFieldMeta(filePath, json);
-                        }
-                        if (json.PermissionSet || json.Profile) {
-                            this.processPermissionSetMeta(filePath, json);
-                        }
+                for await (const filePath of utils_1.default.getFiles(folder)) {
+                    const json = await utils_1.default.readObjectFromXmlFile(filePath);
+                    if (json.CustomObject) {
+                        this.processObjectMeta(filePath, json);
                     }
-                }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    if (json.CustomField) {
+                        this.processFieldMeta(filePath, json);
                     }
-                    finally { if (e_1) throw e_1.error; }
+                    if (json.PermissionSet || json.Profile) {
+                        this.processPermissionSetMeta(filePath, json);
+                    }
                 }
             }
             this.ux.log('Building Permissions Report');
