@@ -61,7 +61,6 @@ class DeltaCommandBase extends command_base_1.CommandBase {
         return flagsConfig;
     }
     static async getDeltaOptions(commandFlags) {
-        var _a, _b, _c, _d, _e;
         let deltaOptions = new delta_options_1.DeltaOptions();
         if (!commandFlags) {
             return deltaOptions;
@@ -71,11 +70,11 @@ class DeltaCommandBase extends command_base_1.CommandBase {
             deltaOptions = await options_factory_1.OptionsFactory.get(delta_options_1.DeltaOptions, commandFlags.options);
         }
         else {
-            deltaOptions.deltaFilePath = (_a = commandFlags.deltaFilePath) !== null && _a !== void 0 ? _a : null;
-            deltaOptions.source = (_b = commandFlags.source) !== null && _b !== void 0 ? _b : null;
-            deltaOptions.destination = (_c = commandFlags.destination) !== null && _c !== void 0 ? _c : null;
-            deltaOptions.forceFile = (_d = commandFlags.force) !== null && _d !== void 0 ? _d : null;
-            deltaOptions.ignoreFile = (_e = commandFlags.ignore) !== null && _e !== void 0 ? _e : null;
+            deltaOptions.deltaFilePath = commandFlags.deltaFilePath ?? null;
+            deltaOptions.source = commandFlags.source ?? null;
+            deltaOptions.destination = commandFlags.destination ?? null;
+            deltaOptions.forceFile = commandFlags.force ?? null;
+            deltaOptions.ignoreFile = commandFlags.ignore ?? null;
             if (commandFlags.copyfulldir) {
                 deltaOptions.fullCopyDirNames = commandFlags.copyfulldir.split(',');
             }

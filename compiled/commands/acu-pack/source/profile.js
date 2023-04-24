@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const command_1 = require("@salesforce/command");
 const command_base_1 = require("../../../lib/command-base");
 const utils_1 = require("../../../lib/utils");
@@ -8,7 +7,6 @@ const sfdx_permission_1 = require("../../../lib/sfdx-permission");
 const sfdx_tasks_1 = require("../../../lib/sfdx-tasks");
 class Profile extends command_base_1.CommandBase {
     async runInternal() {
-        var e_1, _a, e_2, _b;
         const sourceFolders = !this.flags.source ? Profile.defaultPermissionsGlobs : this.flags.source.split(',');
         this.permissions = new Map();
         let gotStandardTabs = false;
@@ -19,28 +17,18 @@ class Profile extends command_base_1.CommandBase {
                 continue;
             }
             this.ux.log(`Reading metadata in: ${sourceFolder}`);
-            try {
-                for (var _c = (e_1 = void 0, tslib_1.__asyncValues(utils_1.default.getFiles(sourceFolder.trim()))), _d; _d = await _c.next(), !_d.done;) {
-                    const filePath = _d.value;
-                    this.ux.log(`\tProcessing: ${filePath}`);
-                    const json = await utils_1.default.readObjectFromXmlFile(filePath);
-                    if (!json.PermissionSet && !json.Profile) {
-                        this.ux.log(`\tUnable to process file: ${filePath}`);
-                        continue;
-                    }
-                    // Read all the CustomObject typenames PermissionSet from and add to the customObjects Set
-                    const permSet = sfdx_permission_1.PermissionSet.fromXml(filePath, json);
-                    custObjs.push(...Array.from(permSet.getPermissionCollection(sfdx_permission_1.SfdxPermission.customObject).keys()));
-                    // Add to collection for update later
-                    sourceFilePaths.add(filePath);
+            for await (const filePath of utils_1.default.getFiles(sourceFolder.trim())) {
+                this.ux.log(`\tProcessing: ${filePath}`);
+                const json = await utils_1.default.readObjectFromXmlFile(filePath);
+                if (!json.PermissionSet && !json.Profile) {
+                    this.ux.log(`\tUnable to process file: ${filePath}`);
+                    continue;
                 }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
-                }
-                finally { if (e_1) throw e_1.error; }
+                // Read all the CustomObject typenames PermissionSet from and add to the customObjects Set
+                const permSet = sfdx_permission_1.PermissionSet.fromXml(filePath, json);
+                custObjs.push(...Array.from(permSet.getPermissionCollection(sfdx_permission_1.SfdxPermission.customObject).keys()));
+                // Add to collection for update later
+                sourceFilePaths.add(filePath);
             }
         }
         // Debug
@@ -79,22 +67,12 @@ class Profile extends command_base_1.CommandBase {
                     continue;
                 default: {
                     const nameSet = new Set();
-                    try {
-                        for (var _e = (e_2 = void 0, tslib_1.__asyncValues(sfdx_tasks_1.SfdxTasks.listMetadata(this.orgAlias, permissionMetaDataType))), _f; _f = await _e.next(), !_f.done;) {
-                            const metaData = _f.value;
-                            if (!metaData.fullName) {
-                                this.ux.log(`Error No fullName field on type ${permissionMetaDataType}`);
-                                continue;
-                            }
-                            nameSet.add(metaData.fullName);
+                    for await (const metaData of sfdx_tasks_1.SfdxTasks.listMetadata(this.orgAlias, permissionMetaDataType)) {
+                        if (!metaData.fullName) {
+                            this.ux.log(`Error No fullName field on type ${permissionMetaDataType}`);
+                            continue;
                         }
-                    }
-                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                    finally {
-                        try {
-                            if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
-                        }
-                        finally { if (e_2) throw e_2.error; }
+                        nameSet.add(metaData.fullName);
                     }
                     orgMetaDataMap.set(permissionMetaDataType, nameSet);
                 }

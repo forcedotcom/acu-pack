@@ -124,7 +124,6 @@ class Scaffold extends command_base_1.CommandBase {
             return value;
         };
         const getDec = (fld, maxLength) => {
-            var _a;
             if (!fld) {
                 this.raiseError('The fld argument cannot be null.');
             }
@@ -133,7 +132,7 @@ class Scaffold extends command_base_1.CommandBase {
             if (!numLen || numLen === 0 || numLen > maxLength) {
                 numLen = maxLength;
             }
-            const scale = (_a = fld.scale) !== null && _a !== void 0 ? _a : 0;
+            const scale = fld.scale ?? 0;
             for (let index = 1; index <= numLen - scale; index++) {
                 num += get1Rand();
             }
@@ -166,7 +165,6 @@ class Scaffold extends command_base_1.CommandBase {
             return null;
         };
         const getValue = (fld) => {
-            var _a, _b;
             if (!fld) {
                 this.raiseError('The fld argument cannot be null.');
             }
@@ -216,7 +214,7 @@ class Scaffold extends command_base_1.CommandBase {
                     return `'${phone.substr(0, 40)}'`;
                 }
                 case 'multipicklist': {
-                    if (((_a = fld.picklistValues) === null || _a === void 0 ? void 0 : _a.length) === 0) {
+                    if (fld.picklistValues?.length === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
                     }
                     const count = Math.floor(fld.picklistValues.length / 3);
@@ -224,7 +222,7 @@ class Scaffold extends command_base_1.CommandBase {
                     return values ? `'${values.join(';').replace(/'/g, "\\'")}'` : null;
                 }
                 case 'picklist': {
-                    if (((_b = fld.picklistValues) === null || _b === void 0 ? void 0 : _b.length) === 0) {
+                    if (fld.picklistValues?.length === 0) {
                         this.ux.log(`Skipping: ${fld.name} (${fld.type}) - no picklist values.`);
                     }
                     const value = getPicklist(fld.picklistValues, 1);

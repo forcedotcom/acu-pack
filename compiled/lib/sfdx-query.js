@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SfdxQuery = exports.SfdxCodeCoverageItem = exports.SfdxCodeCoverage = exports.SfdxObjectPermission = exports.SfdxFieldPermission = exports.SfdxPermission = exports.SfdxPermissionSet = exports.SfdxFolder = exports.SfdxSeupEntityAccess = exports.SfdxEntity = void 0;
-const tslib_1 = require("tslib");
 const constants_1 = require("./constants");
 const sfdx_core_1 = require("./sfdx-core");
 const utils_1 = require("./utils");
@@ -118,7 +117,6 @@ class SfdxQuery {
     }
     // Pulls SfdxPermissionSet for Profile & PermissionsSet info
     static async getPermissions(usernameOrAlias) {
-        var _a;
         const query = 'SELECT Id,Name,Profile.Name,IsOwnedByProfile FROM PermissionSet ORDER BY Profile.Name, Name';
         const records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
         const profileMap = new Map();
@@ -126,7 +124,7 @@ class SfdxQuery {
             const profile = new SfdxPermissionSet();
             profile.id = record.Id;
             profile.name = record.Name;
-            profile.profileName = (_a = record.Profile) === null || _a === void 0 ? void 0 : _a.Name;
+            profile.profileName = record.Profile?.Name;
             profile.isOwnedByProfile = record.IsOwnedByProfile;
             profileMap.set(profile.id, profile);
         }
@@ -263,7 +261,6 @@ class SfdxQuery {
         return apexClasses;
     }
     static async getCodeCoverage(usernameOrAlias) {
-        var _a;
         if (!usernameOrAlias) {
             return null;
         }
@@ -274,55 +271,40 @@ class SfdxQuery {
         for (const record of records) {
             const coverageItem = new SfdxCodeCoverageItem();
             coverageItem.id = record.ApexClassOrTriggerId;
-            coverageItem.name = (_a = record.ApexClassOrTrigger) === null || _a === void 0 ? void 0 : _a.Name;
+            coverageItem.name = record.ApexClassOrTrigger?.Name;
             coverageItem.uncoveredLines = record.Coverage.uncoveredLines || [];
             coverageItem.coveredLines = record.Coverage.coveredLines || [];
             codeCoverage.codeCoverage.push(coverageItem);
         }
         return codeCoverage;
     }
-    static waitForRecordCount(usernameOrAlias, query, recordCount = 0, maxWaitSeconds = 60, sleepMiliseconds = 5000) {
-        return tslib_1.__asyncGenerator(this, arguments, function* waitForRecordCount_1() {
-            const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
-            let counter = 0;
-            let records = [];
-            while (maxCounter <= 0 || counter <= maxCounter) {
-                yield tslib_1.__await(utils_1.default.sleep(sleepMiliseconds));
-                records = yield tslib_1.__await(SfdxQuery.doSoqlQuery(usernameOrAlias, query));
-                yield yield tslib_1.__await(records.length);
-                counter++;
-                if (records.length === recordCount) {
-                    break;
-                }
+    static async *waitForRecordCount(usernameOrAlias, query, recordCount = 0, maxWaitSeconds = 60, sleepMiliseconds = 5000) {
+        const maxCounter = (maxWaitSeconds * 1000) / sleepMiliseconds;
+        let counter = 0;
+        let records = [];
+        while (maxCounter <= 0 || counter <= maxCounter) {
+            await utils_1.default.sleep(sleepMiliseconds);
+            records = await SfdxQuery.doSoqlQuery(usernameOrAlias, query);
+            yield records.length;
+            counter++;
+            if (records.length === recordCount) {
+                break;
             }
-        });
+        }
     }
-    static waitForApexTests(username, waitCountMaxSeconds = 0, createdDate = new Date().toJSON()) {
-        return tslib_1.__asyncGenerator(this, arguments, function* waitForApexTests_1() {
-            var e_1, _a;
-            const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;
-            const targetCount = 0;
-            let recordCount = 0;
-            // Check every 30 seconds or waitCountMaxSeconds so we don't waste a bunch of queries
-            const interval = waitCountMaxSeconds >= 30 ? 30000 : waitCountMaxSeconds;
-            try {
-                for (var _b = tslib_1.__asyncValues(SfdxQuery.waitForRecordCount(username, query, targetCount, waitCountMaxSeconds, interval)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    recordCount = _c.value;
-                    yield yield tslib_1.__await(recordCount);
-                    if (recordCount === targetCount) {
-                        break;
-                    }
-                }
+    static async *waitForApexTests(username, waitCountMaxSeconds = 0, createdDate = new Date().toJSON()) {
+        const query = `SELECT ApexClassId, ShouldSkipCodeCoverage, Status, CreatedDate FROM ApexTestQueueItem WHERE CreatedDate > ${createdDate} AND Status NOT IN ('Completed', 'Failed', 'Aborted')`;
+        const targetCount = 0;
+        let recordCount = 0;
+        // Check every 30 seconds or waitCountMaxSeconds so we don't waste a bunch of queries
+        const interval = waitCountMaxSeconds >= 30 ? 30000 : waitCountMaxSeconds;
+        for await (recordCount of SfdxQuery.waitForRecordCount(username, query, targetCount, waitCountMaxSeconds, interval)) {
+            yield recordCount;
+            if (recordCount === targetCount) {
+                break;
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
-            return yield tslib_1.__await(recordCount);
-        });
+        }
+        return recordCount;
     }
     // Gets the SfdxSetupEntityAccess inforamtion for the specified SetupEntityTypes
     static getInClause(values = [''], isValueNumeric = false) {

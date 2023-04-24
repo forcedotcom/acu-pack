@@ -89,7 +89,7 @@ class XmlMerge {
     static mergeObjects(source, destination, isPackageCompare) {
         const result = new MergeResult();
         result.source = source;
-        result.destination = destination !== null && destination !== void 0 ? destination : new Object(destination);
+        result.destination = destination ?? new Object(destination);
         if (!result.source.Package) {
             result.source['Package'] = {};
         }

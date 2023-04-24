@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestResult = exports.IOItem = exports.RestAction = exports.LoggerLevel = exports.NO_CONTENT_CODE = void 0;
-const tslib_1 = require("tslib");
 const path = require("path");
 const fs_1 = require("fs");
 const fs_2 = require("fs");
@@ -53,9 +52,8 @@ class RestResult {
         return false;
     }
     get redirectUrl() {
-        var _a;
         return this.isRedirect
-            ? (_a = this.headers) === null || _a === void 0 ? void 0 : _a.location
+            ? this.headers?.location
             : null;
     }
     throw() {
@@ -98,141 +96,89 @@ class Utils {
             }
         }
     }
-    static getFiles(folderPath, isRecursive = true) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getFiles_1() {
-            var e_1, _a;
-            try {
-                for (var _b = tslib_1.__asyncValues(Utils.getItems(folderPath, IOItem.File, isRecursive)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const item = _c.value;
-                    yield yield tslib_1.__await(item);
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_1) throw e_1.error; }
-            }
-        });
+    static async *getFiles(folderPath, isRecursive = true) {
+        for await (const item of Utils.getItems(folderPath, IOItem.File, isRecursive)) {
+            yield item;
+        }
     }
-    static getFolders(folderPath, isRecursive = true) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getFolders_1() {
-            var e_2, _a;
-            try {
-                for (var _b = tslib_1.__asyncValues(Utils.getItems(folderPath, IOItem.Folder, isRecursive)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const item = _c.value;
-                    yield yield tslib_1.__await(item);
-                }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_2) throw e_2.error; }
-            }
-        });
+    static async *getFolders(folderPath, isRecursive = true) {
+        for await (const item of Utils.getItems(folderPath, IOItem.Folder, isRecursive)) {
+            yield item;
+        }
     }
-    static getItems(rootPath, itemKind, isRecursive = true, depth = 0) {
-        return tslib_1.__asyncGenerator(this, arguments, function* getItems_1() {
-            var e_3, _a;
-            let fileItems;
-            // If we have a wildcarded path - lets use glob
-            const isGlob = yield tslib_1.__await(this.glob.hasMagic(rootPath));
-            if (isGlob) {
-                // Globs should be specific so just return
-                fileItems = yield tslib_1.__await(this.glob(rootPath));
-                for (const filePath of fileItems) {
-                    yield yield tslib_1.__await(Utils.normalizePath(filePath));
+    static async *getItems(rootPath, itemKind, isRecursive = true, depth = 0) {
+        let fileItems;
+        // If we have a wildcarded path - lets use glob
+        const isGlob = await this.glob.hasMagic(rootPath);
+        if (isGlob) {
+            // Globs should be specific so just return
+            fileItems = await this.glob(rootPath);
+            for (const filePath of fileItems) {
+                yield Utils.normalizePath(filePath);
+            }
+            return;
+        }
+        const stats = await Utils.getPathStat(rootPath);
+        if (!stats) {
+            /* eslint-disable-next-line no-console */
+            console.log(`WARNING: ${rootPath} not found.`);
+            return;
+        }
+        if (stats.isFile()) {
+            if (itemKind !== IOItem.Folder && depth !== 0) {
+                yield rootPath;
+            }
+            // Nothing else to do
+            return;
+        }
+        // We are on a folder
+        if (itemKind !== IOItem.File && depth !== 0) {
+            yield rootPath;
+        }
+        // Are we recursive or just starting at the root folder
+        if (isRecursive || depth === 0) {
+            depth++;
+            const subItems = await fs_1.promises.readdir(rootPath);
+            for (const subItem of subItems) {
+                const subItemPath = path.join(rootPath, subItem);
+                const subStats = await Utils.getPathStat(subItemPath);
+                if (!subStats) {
+                    throw new Error('Invalid Path - NO STATS');
                 }
-                return yield tslib_1.__await(void 0);
-            }
-            const stats = yield tslib_1.__await(Utils.getPathStat(rootPath));
-            if (!stats) {
-                /* eslint-disable-next-line no-console */
-                console.log(`WARNING: ${rootPath} not found.`);
-                return yield tslib_1.__await(void 0);
-            }
-            if (stats.isFile()) {
-                if (itemKind !== IOItem.Folder && depth !== 0) {
-                    yield yield tslib_1.__await(rootPath);
+                if (subStats.isFile()) {
+                    if (itemKind !== IOItem.Folder) {
+                        yield Utils.normalizePath(subItemPath);
+                    }
+                    continue;
                 }
-                // Nothing else to do
-                return yield tslib_1.__await(void 0);
-            }
-            // We are on a folder
-            if (itemKind !== IOItem.File && depth !== 0) {
-                yield yield tslib_1.__await(rootPath);
-            }
-            // Are we recursive or just starting at the root folder
-            if (isRecursive || depth === 0) {
-                depth++;
-                const subItems = yield tslib_1.__await(fs_1.promises.readdir(rootPath));
-                for (const subItem of subItems) {
-                    const subItemPath = path.join(rootPath, subItem);
-                    const subStats = yield tslib_1.__await(Utils.getPathStat(subItemPath));
-                    if (!subStats) {
-                        throw new Error('Invalid Path - NO STATS');
-                    }
-                    if (subStats.isFile()) {
-                        if (itemKind !== IOItem.Folder) {
-                            yield yield tslib_1.__await(Utils.normalizePath(subItemPath));
-                        }
-                        continue;
-                    }
-                    // We are on a folder again 
-                    if (itemKind !== IOItem.File) {
-                        yield yield tslib_1.__await(Utils.normalizePath(subItemPath));
-                    }
-                    if (isRecursive) {
-                        try {
-                            for (var _b = (e_3 = void 0, tslib_1.__asyncValues(Utils.getItems(subItemPath, itemKind, isRecursive, depth))), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                                const subFilePath = _c.value;
-                                yield yield tslib_1.__await(subFilePath);
-                            }
-                        }
-                        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                        finally {
-                            try {
-                                if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                            }
-                            finally { if (e_3) throw e_3.error; }
-                        }
+                // We are on a folder again 
+                if (itemKind !== IOItem.File) {
+                    yield Utils.normalizePath(subItemPath);
+                }
+                if (isRecursive) {
+                    for await (const subFilePath of Utils.getItems(subItemPath, itemKind, isRecursive, depth)) {
+                        yield subFilePath;
                     }
                 }
             }
-        });
+        }
     }
-    static readFileLines(filePath) {
-        return tslib_1.__asyncGenerator(this, arguments, function* readFileLines_1() {
-            var e_4, _a;
-            if (!(yield tslib_1.__await(Utils.pathExists(filePath)))) {
-                return yield tslib_1.__await(void 0);
-            }
-            const rl = (0, readline_1.createInterface)({
-                input: (0, fs_2.createReadStream)(filePath),
-                // Note: we use the crlfDelay option to recognize all instances of CR LF
-                // ('\r\n') in input.txt as a single line break.
-                crlfDelay: Infinity,
-            });
-            try {
-                // Walk the file
-                /* eslint-disable @typescript-eslint/ban-ts-comment */
-                // @ts-ignore
-                for (var rl_1 = tslib_1.__asyncValues(rl), rl_1_1; rl_1_1 = yield tslib_1.__await(rl_1.next()), !rl_1_1.done;) {
-                    const line = rl_1_1.value;
-                    yield yield tslib_1.__await(line);
-                }
-            }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (rl_1_1 && !rl_1_1.done && (_a = rl_1.return)) yield tslib_1.__await(_a.call(rl_1));
-                }
-                finally { if (e_4) throw e_4.error; }
-            }
+    static async *readFileLines(filePath) {
+        if (!(await Utils.pathExists(filePath))) {
+            return;
+        }
+        const rl = (0, readline_1.createInterface)({
+            input: (0, fs_2.createReadStream)(filePath),
+            // Note: we use the crlfDelay option to recognize all instances of CR LF
+            // ('\r\n') in input.txt as a single line break.
+            crlfDelay: Infinity,
         });
+        // Walk the file
+        /* eslint-disable @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
+        for await (const line of rl) {
+            yield line;
+        }
     }
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
     static async readFile(filePath, options) {
@@ -361,7 +307,7 @@ class Utils {
         if (!metadata) {
             return null;
         }
-        const options = xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions;
+        const options = xmlOptions ?? Utils.defaultXmlOptions;
         let xml = new xml2js.Builder(options).buildObject(metadata);
         if (options.eofChar) {
             xml += options.eofChar;
@@ -383,7 +329,7 @@ class Utils {
         if (!filePath) {
             return null;
         }
-        const options = xmlOptions !== null && xmlOptions !== void 0 ? xmlOptions : Utils.defaultXmlOptions;
+        const options = xmlOptions ?? Utils.defaultXmlOptions;
         const xmlString = await fs_1.promises.readFile(filePath, options.encoding);
         /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return await new xml2js.Parser(options).parseStringPromise(xmlString);
@@ -517,40 +463,27 @@ class Utils {
         }
         return parts;
     }
-    static parseCSVFile(csvFilePath, delimiter = ',', wrapperChars = constants_1.default.DEFAULT_CSV_TEXT_WRAPPERS) {
-        return tslib_1.__asyncGenerator(this, arguments, function* parseCSVFile_1() {
-            var e_5, _a;
-            if (csvFilePath === null) {
-                return yield tslib_1.__await(null);
+    static async *parseCSVFile(csvFilePath, delimiter = ',', wrapperChars = constants_1.default.DEFAULT_CSV_TEXT_WRAPPERS) {
+        if (csvFilePath === null) {
+            return null;
+        }
+        let headers = null;
+        for await (const line of this.readFileLines(csvFilePath)) {
+            const parts = this.parseDelimitedLine(line, delimiter, wrapperChars);
+            if (!parts) {
+                continue;
             }
-            let headers = null;
-            try {
-                for (var _b = tslib_1.__asyncValues(this.readFileLines(csvFilePath)), _c; _c = yield tslib_1.__await(_b.next()), !_c.done;) {
-                    const line = _c.value;
-                    const parts = this.parseDelimitedLine(line, delimiter, wrapperChars);
-                    if (!parts) {
-                        continue;
-                    }
-                    if (!headers) {
-                        headers = parts;
-                        continue;
-                    }
-                    const csvObj = {};
-                    for (let index = 0; index < headers.length; index++) {
-                        const header = headers[index];
-                        csvObj[header] = index < parts.length ? parts[index] : null;
-                    }
-                    yield yield tslib_1.__await(csvObj);
-                }
+            if (!headers) {
+                headers = parts;
+                continue;
             }
-            catch (e_5_1) { e_5 = { error: e_5_1 }; }
-            finally {
-                try {
-                    if (_c && !_c.done && (_a = _b.return)) yield tslib_1.__await(_a.call(_b));
-                }
-                finally { if (e_5) throw e_5.error; }
+            const csvObj = {};
+            for (let index = 0; index < headers.length; index++) {
+                const header = headers[index];
+                csvObj[header] = index < parts.length ? parts[index] : null;
             }
-        });
+            yield csvObj;
+        }
     }
     static getMIMEType(filename) {
         return mime.lookup(filename);
