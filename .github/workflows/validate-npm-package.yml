@@ -26,4 +26,5 @@ jobs:
           yarn add sfdx-cli
           yarn run test
           npm publish --dry-run
+          echo "Validating if package version exists in registry. Job will fail if version in package.json already exists..."
           npm diff | grep version -q
