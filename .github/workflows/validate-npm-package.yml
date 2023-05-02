@@ -1,14 +1,14 @@
 # This workflow will run tests using node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Node.js Package
+name: Validate npm package
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Git Repository
