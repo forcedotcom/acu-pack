@@ -20,10 +20,9 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
           
-      - name: Run Tests
+      - name: Validate npm package
         run: |
           yarn install --frozen-lockfile
           yarn add sfdx-cli
-          yarn run testn
+          yarn run test
           npm publish --dry-run
-
