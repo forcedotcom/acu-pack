@@ -1,14 +1,22 @@
+# This workflow will publish npm package to registry
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
 name: Publish Package to npm registry
+
 on:
-  push:
+  pull_request:
     branches:
-    - main
+      - main
+    types:
+      - closed
   workflow_dispatch:
+  
 jobs:
-  build:
+  publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Git Repository
         uses: actions/checkout@v3
         
       - name: Setup Node
