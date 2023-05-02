@@ -25,7 +25,7 @@
     "mime-types": "^2.1.35",
     "tslib": "^2",
     "xlsx": "^0.17.5",
-    "xml2js": "^0.4.23",
+    "xml2js": "^0.5.0",
     "xpath": "0.0.32"
   },
   "devDependencies": {
