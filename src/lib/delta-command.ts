@@ -4,7 +4,7 @@ import { DeltaOptions } from './delta-options';
 import { OptionsFactory } from './options-factory';
 
 export abstract class DeltaCommandBase extends CommandBase {
-  public static defaultCopyDirList: string[] = ['aura', 'lwc', 'experiences', 'staticresources', 'territory2Models', 'waveTemplates'];
+  public static defaultCopyDirList: string[] = ['aura', 'lwc', 'experiences', 'staticresources', 'territory2Models', 'waveTemplates', 'bots'];
 
   public static getFlagsConfig(flagsConfig: FlagsConfig): any {
     if (!flagsConfig) {
