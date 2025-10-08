@@ -32,6 +32,8 @@ export abstract class CommandBase extends SfdxCommand {
   protected gotError = false;
 
   public async run(): Promise<void> {
+    const disclaimer = CommandBase.messages.getMessage('disclaimer');
+    this.ux.log(disclaimer);
     this.logger.debug('Start run');
     try {
       if(this.orgAlias) {
