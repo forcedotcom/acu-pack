@@ -29,6 +29,8 @@ class CommandBase extends command_1.SfdxCommand {
         return this.org.getConnection();
     }
     async run() {
+        const disclaimer = CommandBase.messages.getMessage('disclaimer');
+        this.ux.log(disclaimer);
         this.logger.debug('Start run');
         try {
             if (this.orgAlias) {
