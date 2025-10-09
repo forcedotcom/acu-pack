@@ -1,12 +1,3 @@
-
-
-# WARNING
-### This package has reached End of Life and is no longer supported
-### Please use [sf-pack](https://www.npmjs.com/package/@salesforce/sf-pack) instead
-# WARNING
-
-
-
 # acu-pack
 
 SFDX CLI Extensions from Salesforce Customer Success Group (CSG)
