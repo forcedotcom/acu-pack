@@ -65,7 +65,6 @@ class Execute extends command_base_1.CommandBase {
         this.ux.log('Apex Tests Completed');
     }
 }
-exports.default = Execute;
 Execute.defaultJobStatusWaitMax = -1;
 Execute.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.execute.commandDescription');
 Execute.examples = [
@@ -88,4 +87,5 @@ Execute.flagsConfig = {
 Execute.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Execute.requiresProject = false;
+exports.default = Execute;
 //# sourceMappingURL=execute.js.map

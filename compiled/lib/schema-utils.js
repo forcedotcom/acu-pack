@@ -30,7 +30,6 @@ class SchemaUtils {
         return parts.slice(0, parts.length - 1).join('.');
     }
 }
-exports.default = SchemaUtils;
 SchemaUtils.ENTITY_DEFINITION = 'EntityDefinition';
 SchemaUtils.CONTEXT_FIELD = 'ctx';
 SchemaUtils.CONTEXT_FIELD_NAME = SchemaUtils.CONTEXT_FIELD + '.name';
@@ -52,4 +51,5 @@ SchemaUtils.dynamicContext = {
         }
     }
 };
+exports.default = SchemaUtils;
 //# sourceMappingURL=schema-utils.js.map

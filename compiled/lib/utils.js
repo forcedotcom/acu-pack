@@ -20,7 +20,7 @@ var LoggerLevel;
     LoggerLevel["warn"] = "warn";
     LoggerLevel["error"] = "error";
     LoggerLevel["fatal"] = "fatal";
-})(LoggerLevel = exports.LoggerLevel || (exports.LoggerLevel = {}));
+})(LoggerLevel || (exports.LoggerLevel = LoggerLevel = {}));
 var RestAction;
 (function (RestAction) {
     RestAction["GET"] = "GET";
@@ -28,13 +28,13 @@ var RestAction;
     RestAction["POST"] = "POST";
     RestAction["DELETE"] = "DELETE";
     RestAction["PATCH"] = "PATCH";
-})(RestAction = exports.RestAction || (exports.RestAction = {}));
+})(RestAction || (exports.RestAction = RestAction = {}));
 var IOItem;
 (function (IOItem) {
     IOItem["File"] = "File";
     IOItem["Folder"] = "Folder";
     IOItem["Both"] = "Both";
-})(IOItem = exports.IOItem || (exports.IOItem = {}));
+})(IOItem || (exports.IOItem = IOItem = {}));
 class RestResult {
     constructor() {
         this.isError = false;
@@ -489,7 +489,6 @@ class Utils {
         return mime.lookup(filename);
     }
 }
-exports.default = Utils;
 Utils.isJsonEnabled = false;
 Utils.ReadFileBase64EncodingOption = { encoding: 'base64' };
 Utils.TempFilesPath = 'Processing_AcuPack_Temp_DoNotUse';
@@ -503,4 +502,5 @@ Utils.reqUtils = require('util');
 Utils.reqGlob = require('glob');
 Utils.glob = Utils.reqUtils.promisify(Utils.reqGlob);
 Utils.bent = require('bent');
+exports.default = Utils;
 //# sourceMappingURL=utils.js.map

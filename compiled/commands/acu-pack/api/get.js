@@ -21,7 +21,6 @@ class Unmask extends command_base_1.CommandBase {
         }
     }
 }
-exports.default = Unmask;
 Unmask.description = command_base_1.CommandBase.messages.getMessage('api.get.commandDescription');
 Unmask.examples = [
     `$ sfdx acu-pack:api:get -u myOrgAlias -m Account -i 068r0000003slVtAAI
@@ -56,4 +55,5 @@ Unmask.flagsConfig = {
 Unmask.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Unmask.requiresProject = false;
+exports.default = Unmask;
 //# sourceMappingURL=get.js.map
