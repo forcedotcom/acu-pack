@@ -20,7 +20,6 @@ class Git extends command_base_1.CommandBase {
         await gitProvider.run(deltaOptions);
     }
 }
-exports.default = Git;
 Git.description = command_base_1.CommandBase.messages.getMessage('source.delta.git.commandDescription');
 Git.examples = [
     `$ sfdx acu-pack:source:delta:git -g git.txt -s force-app -d deploy
@@ -67,4 +66,5 @@ Git.flagsConfig = delta_command_1.DeltaCommandBase.getFlagsConfig({
         description: command_base_1.CommandBase.messages.getMessage('source.delta.git.gitFlagDescription'),
     }),
 });
+exports.default = Git;
 //# sourceMappingURL=git.js.map

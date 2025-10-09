@@ -10,5 +10,6 @@
     "**/bin": true,
     "**compiled/**/*": true
   },
-  "salesforcedx-vscode-core.show-cli-success-msg": false
+  "salesforcedx-vscode-core.show-cli-success-msg": false,
+  "xml.preferences.showSchemaDocumentationType": "none"
 }

@@ -1,12 +1,3 @@
-
-
-# WARNING
-### This package has reached End of Life and is no longer supported
-### Please use [sf-pack](https://www.npmjs.com/package/@salesforce/sf-pack) instead
-# WARNING
-
-
-
 # acu-pack
 
 SFDX CLI Extensions from Salesforce Customer Success Group (CSG)
@@ -768,7 +759,7 @@ USAGE
 OPTIONS
   -a, --copyfulldir=copyfulldir
       Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The
-      default list is: aura,lwc,experiences,staticresources,territory2Models,waveTemplates
+      default list is: aura,lwc,experiences,territory2Models,waveTemplates
 
   -c, --check
       Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination
@@ -828,7 +819,7 @@ USAGE
 OPTIONS
   -a, --copyfulldir=copyfulldir
       Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The
-      default list is: aura,lwc,experiences,staticresources,territory2Models,waveTemplates
+      default list is: aura,lwc,experiences,territory2Models,waveTemplates
 
   -c, --check
       Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination
@@ -1661,7 +1652,7 @@ USAGE
 OPTIONS
   -a, --copyfulldir=copyfulldir
       Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The
-      default list is: aura,lwc,experiences,staticresources,territory2Models,waveTemplates
+      default list is: aura,lwc,experiences,territory2Models,waveTemplates
 
   -c, --check
       Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination
@@ -1721,7 +1712,7 @@ USAGE
 OPTIONS
   -a, --copyfulldir=copyfulldir
       Specifies a comma delimited list of directories where all files should be copied if one of the files changed. The
-      default list is: aura,lwc,experiences,staticresources,territory2Models,waveTemplates
+      default list is: aura,lwc,experiences,territory2Models,waveTemplates
 
   -c, --check
       Does a dry-run of a deployment. Inspect the log file for results. NOTE: This option is ignored if no (d)estination

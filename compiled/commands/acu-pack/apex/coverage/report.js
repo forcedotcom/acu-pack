@@ -76,7 +76,6 @@ class Report extends command_base_1.CommandBase {
         this.ux.log(`${reportPath} written.`);
     }
 }
-exports.default = Report;
 Report.defaultJobStatusWaitMax = -1;
 Report.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.report.commandDescription');
 Report.defaultReportPath = 'CodeCoverageReport-{ORG}.xlsx';
@@ -103,4 +102,5 @@ Report.flagsConfig = {
 Report.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Report.requiresProject = false;
+exports.default = Report;
 //# sourceMappingURL=report.js.map

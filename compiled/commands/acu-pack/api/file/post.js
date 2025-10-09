@@ -123,7 +123,6 @@ class post extends command_base_1.CommandBase {
         return raw;
     }
 }
-exports.default = post;
 post.description = command_base_1.CommandBase.messages.getMessage('api.file.post.commandDescription');
 post.examples = [
     `$ sfdx acu-pack:api:file:post -u myOrgAlias -m ContentVersion -r ContentVersions.csv
@@ -162,4 +161,5 @@ post.flagsConfig = {
 post.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 post.requiresProject = false;
+exports.default = post;
 //# sourceMappingURL=post.js.map

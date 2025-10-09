@@ -31,6 +31,10 @@ class CommandBase extends command_1.SfdxCommand {
     async run() {
         this.logger.debug('Start run');
         try {
+            const disclaimer = CommandBase.messages.getMessage('disclaimer');
+            if (disclaimer) {
+                this.ux.log(disclaimer);
+            }
             if (this.orgAlias) {
                 this.ux.log(`Connected to Org: ${this.orgAlias}(${this.orgId})`);
             }

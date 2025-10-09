@@ -49,7 +49,6 @@ class ProfileRetrieve extends command_base_1.CommandBase {
         await utils_1.default.deleteDirectory(path.join(process.cwd(), utils_1.default.TempFilesPath));
     }
 }
-exports.default = ProfileRetrieve;
 ProfileRetrieve.description = command_base_1.CommandBase.messages.getMessage('schema.profile.retrieve.commandDescription');
 ProfileRetrieve.examples = [
     `
@@ -68,4 +67,5 @@ ProfileRetrieve.flagsConfig = {
 ProfileRetrieve.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 ProfileRetrieve.requiresProject = true;
+exports.default = ProfileRetrieve;
 //# sourceMappingURL=retrieve.js.map

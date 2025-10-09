@@ -13,12 +13,6 @@ class OptionsSettings {
 }
 exports.OptionsSettings = OptionsSettings;
 class OptionsBase {
-    // Make sure we have a default ctor
-    constructor() {
-        // This field should NOT be serialized see includeField method below
-        this.version = 1.0;
-        this.prvSettings = new OptionsSettings();
-    }
     get settings() {
         return this.prvSettings;
     }
@@ -26,6 +20,12 @@ class OptionsBase {
         if (optionSettings) {
             this.prvSettings = optionSettings;
         }
+    }
+    // Make sure we have a default ctor
+    constructor() {
+        // This field should NOT be serialized see includeField method below
+        this.version = 1.0;
+        this.prvSettings = new OptionsSettings();
     }
     get isCurrentVersion() {
         return this.version === this.currentVersion;

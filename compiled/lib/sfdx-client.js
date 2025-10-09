@@ -13,7 +13,7 @@ var ApiKind;
     ApiKind["DEFAULT"] = "";
     ApiKind["TOOLING"] = "tooling";
     ApiKind["COMPOSITE"] = "composite";
-})(ApiKind = exports.ApiKind || (exports.ApiKind = {}));
+})(ApiKind || (exports.ApiKind = ApiKind = {}));
 class SfdxClient {
     constructor(orgAliasOrUsername) {
         this.headers = {};

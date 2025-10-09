@@ -1,4 +1,5 @@
 {
+  "disclaimer": "*** WARNING ***\n\r*** acu-pack has reached End of Life and is no longer supported ***\r\n*** Please use @salesforce/sf-pack instead ***\n\r*** WARNING ***",
   "namespacesFlagDescription": "A comma separated list of namespaces to include when retrieveing metadata. By default namespaces are excluded.",
   "package": {
     "merge": {

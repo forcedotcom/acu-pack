@@ -113,7 +113,6 @@ class Unmask extends command_base_1.CommandBase {
         }
     }
 }
-exports.default = Unmask;
 Unmask.description = command_base_1.CommandBase.messages.getMessage('admin.user.unmask.commandDescription');
 Unmask.examples = [
     `$ sfdx admin:user:unmask -u myOrgAlias -l 'user1@sf.com, user2@sf.com, user3@sf.com'
@@ -135,4 +134,5 @@ Unmask.flagsConfig = {
 Unmask.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Unmask.requiresProject = false;
+exports.default = Unmask;
 //# sourceMappingURL=unmask.js.map

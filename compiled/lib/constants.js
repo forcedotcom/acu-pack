@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = require("os");
 class Constants {
 }
-exports.default = Constants;
 Constants.PLUGIN_NAME = 'acu-pack';
 Constants.DEFAULT_XML_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata';
 // public static readonly METADATA_COVERAGE_REPORT_URL = 'https://mdcoverage.secure.force.com/services/apexrest/report';
@@ -49,4 +48,5 @@ Constants.LF = '\n';
 Constants.CONENTVERSION_MAX_SIZE = 37000000;
 Constants.MIME_JSON = 'application/json';
 Constants.DEFAULT_CSV_TEXT_WRAPPERS = ['"'];
+exports.default = Constants;
 //# sourceMappingURL=constants.js.map

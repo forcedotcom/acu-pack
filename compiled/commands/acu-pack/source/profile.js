@@ -164,7 +164,6 @@ class Profile extends command_base_1.CommandBase {
         return;
     }
 }
-exports.default = Profile;
 Profile.defaultSourceFolder = null;
 Profile.defaultPermissionsGlobs = [
     '**/profiles/*.profile-meta.xml',
@@ -198,4 +197,5 @@ Profile.flagsConfig = {
 };
 Profile.requiresProject = false;
 Profile.requiresUsername = true;
+exports.default = Profile;
 //# sourceMappingURL=profile.js.map

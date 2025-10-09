@@ -99,7 +99,6 @@ class Access extends command_base_1.CommandBase {
         }
     }
 }
-exports.default = Access;
 Access.description = command_base_1.CommandBase.messages.getMessage('admin.user.access.commandDescription');
 Access.defaultReportPath = 'UserAccess-{ORG}.xlsx';
 Access.examples = [
@@ -124,4 +123,5 @@ Access.flagsConfig = {
 Access.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Access.requiresProject = false;
+exports.default = Access;
 //# sourceMappingURL=access.js.map

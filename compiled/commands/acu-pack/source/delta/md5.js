@@ -24,7 +24,6 @@ class Md5 extends command_base_1.CommandBase {
         await gitProvider.run(deltaOptions);
     }
 }
-exports.default = Md5;
 Md5.description = command_base_1.CommandBase.messages.getMessage('source.delta.md5.commandDescription');
 Md5.examples = [
     `$ sfdx acu-pack:source:delta:md5 -m md5.txt -s force-app -d deploy
@@ -115,4 +114,5 @@ Md5.flagsConfig = delta_command_1.DeltaCommandBase.getFlagsConfig({
         description: command_base_1.CommandBase.messages.getMessage('source.delta.md5.md5FlagDescription'),
     }),
 });
+exports.default = Md5;
 //# sourceMappingURL=md5.js.map

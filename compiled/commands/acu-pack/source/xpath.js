@@ -45,7 +45,6 @@ class XPath extends command_base_1.CommandBase {
         return;
     }
 }
-exports.default = XPath;
 XPath.description = command_base_1.CommandBase.messages.getMessage('source.xpath.commandDescription');
 XPath.defaultOptionsFileName = 'xpath-options.json';
 XPath.examples = [
@@ -58,4 +57,5 @@ XPath.flagsConfig = {
         description: command_base_1.CommandBase.messages.getMessage('source.xpath.optionsFlagDescription'),
     }),
 };
+exports.default = XPath;
 //# sourceMappingURL=xpath.js.map

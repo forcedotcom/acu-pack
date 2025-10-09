@@ -166,7 +166,6 @@ class Permissions extends command_base_1.CommandBase {
         this.permissions.set(permSet.name, permSet);
     }
 }
-exports.default = Permissions;
 Permissions.defaultReportPath = 'PermissionsReport.xlsx';
 // Order Matters here!
 Permissions.defaultMetadataFolders = [
@@ -202,4 +201,5 @@ Permissions.flagsConfig = {
     }),
 };
 Permissions.requiresProject = true;
+exports.default = Permissions;
 //# sourceMappingURL=permissions.js.map

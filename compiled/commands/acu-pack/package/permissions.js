@@ -49,7 +49,6 @@ class Permissions extends command_base_1.CommandBase {
         return;
     }
 }
-exports.default = Permissions;
 Permissions.packageFileName = 'package-permissions.xml';
 Permissions.description = command_base_1.CommandBase.messages.getMessage('package.permissions.commandDescription');
 Permissions.examples = [
@@ -82,4 +81,5 @@ Permissions.flagsConfig = {
 Permissions.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Permissions.requiresProject = false;
+exports.default = Permissions;
 //# sourceMappingURL=permissions.js.map
