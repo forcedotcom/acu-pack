@@ -86,5 +86,5 @@ class DeltaCommandBase extends command_base_1.CommandBase {
     }
 }
 exports.DeltaCommandBase = DeltaCommandBase;
-DeltaCommandBase.defaultCopyDirList = ['aura', 'lwc', 'experiences', 'territory2Models', 'waveTemplates'];
+DeltaCommandBase.defaultCopyDirList = ['aura', 'lwc', 'experiences', 'staticresources', 'territory2Models', 'waveTemplates', 'bots'];
 //# sourceMappingURL=delta-command.js.map
