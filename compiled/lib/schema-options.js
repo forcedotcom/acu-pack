@@ -146,6 +146,6 @@ class SchemaOptions extends options_1.OptionsBase {
         return SchemaOptions.CURRENT_VERSION;
     }
 }
-exports.default = SchemaOptions;
 SchemaOptions.CURRENT_VERSION = 1.0;
+exports.default = SchemaOptions;
 //# sourceMappingURL=schema-options.js.map

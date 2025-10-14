@@ -157,7 +157,6 @@ class Dictionary extends command_base_1.CommandBase {
         return valueMap;
     }
 }
-exports.default = Dictionary;
 Dictionary.description = command_base_1.CommandBase.messages.getMessage('schema.dictionary.commandDescription');
 Dictionary.defaultReportPath = 'DataDictionary-{ORG}.xlsx';
 Dictionary.examples = [
@@ -182,4 +181,5 @@ Dictionary.flagsConfig = {
 };
 // Comment this out if your command does not require an org username
 Dictionary.requiresUsername = true;
+exports.default = Dictionary;
 //# sourceMappingURL=dictionary.js.map

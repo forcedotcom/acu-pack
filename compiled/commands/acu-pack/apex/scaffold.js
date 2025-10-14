@@ -242,7 +242,6 @@ class Scaffold extends command_base_1.CommandBase {
         return getValue(field);
     }
 }
-exports.default = Scaffold;
 Scaffold.description = command_base_1.CommandBase.messages.getMessage('apex.scaffold.commandDescription');
 Scaffold.examples = [
     `$ sfdx acu-pack:apex:scaffold -u myOrgAlias -s Account,MyObject__c'
@@ -270,4 +269,5 @@ Scaffold.META_XML = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<status>Active</status>\n' +
     '</ApexClass>';
 Scaffold.MAX_CLASS_NAME_LENGTH = 40;
+exports.default = Scaffold;
 //# sourceMappingURL=scaffold.js.map

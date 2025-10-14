@@ -180,7 +180,6 @@ class Build extends command_base_1.CommandBase {
         return;
     }
 }
-exports.default = Build;
 Build.description = command_base_1.CommandBase.messages.getMessage('package.build.commandDescription');
 Build.examples = [
     `$ sfdx acu-pack:package:build -o options/package-options.json -x manifest/package-acu.xml -u myOrgAlias
@@ -225,4 +224,5 @@ Build.flagsConfig = {
 Build.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Build.requiresProject = false;
+exports.default = Build;
 //# sourceMappingURL=build.js.map

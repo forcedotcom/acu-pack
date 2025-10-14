@@ -42,7 +42,6 @@ class Clear extends command_base_1.CommandBase {
         }
     }
 }
-exports.default = Clear;
 Clear.defaultJobStatusWaitMax = -1;
 Clear.description = command_base_1.CommandBase.messages.getMessage('apex.coverage.clear.commandDescription');
 // Don't include ApexCodeCoverage as these records appear to be auto-generate if they are deleted;
@@ -67,4 +66,5 @@ Clear.flagsConfig = {
 Clear.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Clear.requiresProject = false;
+exports.default = Clear;
 //# sourceMappingURL=clear.js.map

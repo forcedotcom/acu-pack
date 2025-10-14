@@ -43,7 +43,6 @@ class Delete extends command_base_1.CommandBase {
         }
     }
 }
-exports.default = Delete;
 Delete.description = command_base_1.CommandBase.messages.getMessage('admin.workspace.delete.commandDescription');
 Delete.examples = [
     `$ sfdx admin:workspace:delete -u myOrgAlias
@@ -61,4 +60,5 @@ Delete.flagsConfig = {
 Delete.requiresUsername = true;
 // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
 Delete.requiresProject = false;
+exports.default = Delete;
 //# sourceMappingURL=delete.js.map
